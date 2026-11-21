@@ -1,6 +1,6 @@
 import { type Icon, IconLogout, IconMessages } from "@tabler/icons-react";
 import { Link } from "@tanstack/react-router";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { BrandName } from "@/components/edition/brand-name";
 import { Strip, StripItem } from "@/components/layout/strip";
 import { openNewOrganization } from "@/components/organizations/new-organization-dialog";
@@ -19,7 +19,7 @@ import {
   type NavigationLink,
   useNavigationItems,
 } from "@/lib/navigation";
-import { ORB_PALETTES } from "@/lib/orb-palette";
+import mangabaMark from "@/assets/openbot-logo.png";
 import {
   useOrganizationChoices,
   useWaitingInvitationCount,
@@ -41,9 +41,6 @@ import {
 } from "./account-label";
 import { useSignOut } from "./use-sign-out";
 
-/** The orb's palette: periwinkle, the nearest of the eight to Mangaba Bot's own mark. */
-const ORB_COLORS = ORB_PALETTES[2];
-
 /** Mangaba Bot's orb at the top of the strip. It goes home, as the product's name did. */
 function HomeOrb() {
   return (
@@ -52,17 +49,11 @@ function HomeOrb() {
       className="flex size-9 items-center justify-center rounded-full outline-hidden ring-sidebar-ring focus-visible:ring-2"
       to="/"
     >
-      <span
+      <img
+        alt=""
         aria-hidden="true"
-        className="bot-orb-still inline-block size-7 rounded-full ring-1 ring-foreground/10"
-        style={
-          {
-            "--c1": ORB_COLORS.c1,
-            "--c2": ORB_COLORS.c2,
-            "--c3": ORB_COLORS.c3,
-            "--c4": ORB_COLORS.c4,
-          } as CSSProperties
-        }
+        className="inline-block size-7 object-contain"
+        src={mangabaMark}
       />
     </Link>
   );

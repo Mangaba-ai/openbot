@@ -1168,6 +1168,8 @@ pub fn compose(
     // for. Unset, the server runs the team edition, with its admin screens, its fintech Bots and a
     // computer per Bot. See docs/personal-edition.md.
     env.insert("OPENBOT_EDITION".into(), "personal".into());
+    // Mangaba Bot: no bar selling CopilotKit's self-hosting help.
+    env.insert("OPENBOT_SELF_HOST_BANNER".into(), "false".into());
 
     // Which package the deployment runs. Without it the server falls back rather than using the one
     // that came with the deployment, and the Bots somebody was given are not the Bots they get.
