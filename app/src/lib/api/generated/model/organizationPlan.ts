@@ -3,12 +3,12 @@
  */
 
 /**
- * Whether this OpenBot needs the organization to be on a plan, and where the organization stands. When required is true, its Bots run only while status is trialing or active.
+ * Whether this Mangaba Bot needs the organization to be on a plan, and where the organization stands. When required is true, its Bots run only while status is trialing or active.
  */
 export interface OrganizationPlan {
-  /** True when this OpenBot runs an organization's Bots only while it is on a plan or its free trial. */
+  /** True when this Mangaba Bot runs an organization's Bots only while it is on a plan or its free trial. */
   required: boolean;
-  /** not_required when this OpenBot needs no plan. trialing during the free trial, which a card on file starts. active on the plan. past_due when a payment failed and the card needs updating. none when the organization has no plan or trial yet, or its plan ended. unknown when the plan couldn't be read just now; Bots keep running meanwhile. */
+  /** not_required when this Mangaba Bot needs no plan. trialing during the free trial, which a card on file starts. active on the plan. past_due when a payment failed and the card needs updating. none when the organization has no plan or trial yet, or its plan ended. unknown when the plan couldn't be read just now; Bots keep running meanwhile. */
   status: string;
   /**
    * When the free trial ends, while status is trialing. Null otherwise.

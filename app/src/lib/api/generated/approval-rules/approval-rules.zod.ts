@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Return what the organization decides about asking, for everybody: whether the reviewer reads every action, whether people may save rules of their own, the most a person may allow for commands on their own computer, and what people may do about each kind of action OpenBot asks about by name. Everybody in the organization may read them, because they decide what each person's own choices come to.
+ * Return what the organization decides about asking, for everybody: whether the reviewer reads every action, whether people may save rules of their own, the most a person may allow for commands on their own computer, and what people may do about each kind of action Mangaba Bot asks about by name. Everybody in the organization may read them, because they decide what each person's own choices come to.
  * @summary Read the organization's approval settings
  */
 
@@ -603,7 +603,7 @@ export const DeleteApprovalRuleHeader = zod.object({
 export const DeleteApprovalRuleResponse = zod.void();
 
 /**
- * Turn a description in English into approval rules for the organization, written by the deployment's model and checked against the tools, kinds of action and Bots this OpenBot has. Rules that check are read back by a second call that never saw the description, so the explanation says what they do, not what was asked for. Nothing is saved. The audit trail records the description and what it became. Only an administrator may ask.
+ * Turn a description in English into approval rules for the organization, written by the deployment's model and checked against the tools, kinds of action and Bots this Mangaba Bot has. Rules that check are read back by a second call that never saw the description, so the explanation says what they do, not what was asked for. Nothing is saved. The audit trail records the description and what it became. Only an administrator may ask.
  * @summary Write approval rules from a description
  */
 
@@ -703,7 +703,7 @@ export const TranslateApprovalRulesResponse = zod.object({
 });
 
 /**
- * Say what candidate rules would have changed about the actions the approval gate already decided, without saving them: the asks they would remove, the asks they would add, and the actions whose answer no rule changes. Also says whether the rules check against this OpenBot's tools and Bots. Only an administrator may ask.
+ * Say what candidate rules would have changed about the actions the approval gate already decided, without saving them: the asks they would remove, the asks they would add, and the actions whose answer no rule changes. Also says whether the rules check against this Mangaba Bot's tools and Bots. Only an administrator may ask.
  * @summary Test approval rules against what Bots already did
  */
 
@@ -920,7 +920,7 @@ export const ReplayApprovalRulesResponse = zod.object({
 });
 
 /**
- * Add several rules to the organization's approval rules together. Every rule is checked first against this OpenBot's tools, kinds of action and Bots, and none is saved unless all of them check: a rule that matches nothing would read as protection and protect nothing. The audit trail records the save once, with the rules before and after and the sentence they were written from when they were described in English. Only an administrator may save them.
+ * Add several rules to the organization's approval rules together. Every rule is checked first against this Mangaba Bot's tools, kinds of action and Bots, and none is saved unless all of them check: a rule that matches nothing would read as protection and protect nothing. The audit trail records the save once, with the rules before and after and the sentence they were written from when they were described in English. Only an administrator may save them.
  * @summary Save several approval rules as one change
  */
 

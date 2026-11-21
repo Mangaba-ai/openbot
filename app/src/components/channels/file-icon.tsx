@@ -17,7 +17,7 @@ import {
 } from "@openbot/shared/attachments";
 
 /**
- * The icon for each kind of file OpenBot takes, keyed by the one list of them
+ * The icon for each kind of file Mangaba Bot takes, keyed by the one list of them
  * (`ACCEPTED_FILE_TYPES` in shared/attachments.ts). Typed as a record over every type on that list,
  * so a type added there does not build until it has an icon here.
  */

@@ -25,7 +25,7 @@ export type Problem = {
   /** Only a Windows restart fixes this: the window offers one instead of Try again. */
   restart_windows?: boolean | null;
   /**
-   * Which thing went wrong while connecting to an OpenBot that runs elsewhere. The window reads it
+   * Which thing went wrong while connecting to an Mangaba Bot that runs elsewhere. The window reads it
    * only to choose what to offer next (`ConnectToOpenBot`); the sentence is still `said`.
    */
   kind?: string | null;
@@ -112,7 +112,7 @@ export function TroubleshootingLogs({
     <div className="troubleshooting">
       <p>
         Paste these logs into the AI assistant you use, such as Claude or
-        ChatGPT, and ask what went wrong. OpenBot takes out keys, passwords and
+        ChatGPT, and ask what went wrong. Mangaba Bot takes out keys, passwords and
         your email address first.
       </p>
       <div className="row">
@@ -181,8 +181,8 @@ export function TroubleshootingLogs({
  * `onRetry`, where the screen has no other way to run what failed again: Try again, in the card.
  * The install behind the account step had none, and its failure sat there with nothing to press.
  *
- * An OpenBot that needs a newer version of this app is not a failure: wherever one shows, it says
- * "Update OpenBot" with this app's update (`AppTooOld`).
+ * An Mangaba Bot that needs a newer version of this app is not a failure: wherever one shows, it says
+ * "Update Mangaba Bot" with this app's update (`AppTooOld`).
  */
 export function Failure({
   problem,

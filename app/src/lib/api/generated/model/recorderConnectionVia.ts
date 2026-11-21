@@ -3,7 +3,7 @@
  */
 
 /**
- * How it was connected: from OpenBot in a browser, by OpenBot Desktop, by OpenBot for the person's own OpenBot browser, or by OpenBot for one recording in a Bot's browser.
+ * How it was connected: from Mangaba Bot in a browser, by Mangaba Bot Desktop, by Mangaba Bot for the person's own Mangaba Bot browser, or by Mangaba Bot for one recording in a Bot's browser.
  */
 export type RecorderConnectionVia =
   (typeof RecorderConnectionVia)[keyof typeof RecorderConnectionVia];

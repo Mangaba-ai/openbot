@@ -3,7 +3,7 @@
  */
 
 /**
- * How much one Bot may reach the person outside OpenBot: all of it, only what needs them (its questions and approvals), or nothing.
+ * How much one Bot may reach the person outside Mangaba Bot: all of it, only what needs them (its questions and approvals), or nothing.
  */
 export type BotNotifyLevel =
   (typeof BotNotifyLevel)[keyof typeof BotNotifyLevel];

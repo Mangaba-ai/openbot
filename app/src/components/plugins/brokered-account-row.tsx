@@ -78,7 +78,7 @@ const RECHECK_FAILED =
  * nothing at all.
  *
  * The app's `connectsWith` (listApps) answers it: `sign-in`, `key`, `nothing`, or `unreadable` where
- * OpenBot can't tell from what it recorded. A row branches on the three kinds below, never on the
+ * Mangaba Bot can't tell from what it recorded. A row branches on the three kinds below, never on the
  * answer itself, so each branch asks the same question.
  */
 export type { BrokeredAccountKind };
@@ -86,7 +86,7 @@ export type { BrokeredAccountKind };
 /**
  * Which of the three an app's `connectsWith` is.
  *
- * Everything that is not `nothing` and not `key` is consent, including one OpenBot couldn't read:
+ * Everything that is not `nothing` and not `key` is consent, including one Mangaba Bot couldn't read:
  * sending somebody to a consent screen that turns out not to exist is a refusal they can read, where
  * an empty form is a box they cannot fill in.
  */
@@ -281,7 +281,7 @@ export type BrokeredAccount = {
   disconnectAccount: (accountId: string) => void;
   /** Which account a press is in flight for, so only its buttons wait. */
   changingAccount: string | null;
-  /** A sign-in through Composio held for OpenBot's step before it, or null. */
+  /** A sign-in through Composio held for Mangaba Bot's step before it, or null. */
   handoff: ConsentHandoff | null;
   /** Go on to the sign-in the step is holding. */
   continueHandoff: () => void;
@@ -489,7 +489,7 @@ export function useBrokeredAccount(input: {
        *
        * The route this pressed serves both kinds of brokered app and answers a field list to the
        * kind whose key somebody types — so a 200 with nothing to leave for means this press went to
-       * a key app that `kindOf` above read as consent, which is what happens when OpenBot couldn't
+       * a key app that `kindOf` above read as consent, which is what happens when Mangaba Bot couldn't
        * read how the app connects (`unreadable`) and it turns out to take a key. Assigning that nothing
        * navigated: the browser resolved the string `undefined` against the current document and
        * followed it, putting the person on a page of that name on this deployment's own origin,
@@ -861,7 +861,7 @@ function accountSentence(input: {
   provider: PluginsProvider;
   /** Which edition draws this screen (`managePaths().edition`). */
   edition: Edition;
-  /** A hosted OpenBot (`managePaths().hosted`): its admin is never told to set a variable. */
+  /** A hosted Mangaba Bot (`managePaths().hosted`): its admin is never told to set a variable. */
   hosted: boolean;
   /** Who reads the row: see {@link brokeredKeyMissing}. */
   reader: "admin" | "person";
@@ -1014,7 +1014,7 @@ function KeyGuideNote({
   return (
     <div className="mb-3 flex flex-col gap-1.5 text-sm" data-testid="key-guide">
       <p>
-        OpenBot connects to {title} with a key from your {title} account, not a
+        Mangaba Bot connects to {title} with a key from your {title} account, not a
         sign-in.
       </p>
       {guide ? <p className="text-muted-foreground">{guide.steps}</p> : null}
@@ -1131,7 +1131,7 @@ export function BrokeredAccountRow({
    */
   title: string;
 }) {
-  // A hosted OpenBot's admin holds no environment: a missing key names who sets it up instead.
+  // A hosted Mangaba Bot's admin holds no environment: a missing key names who sets it up instead.
   const { hosted } = useManagePaths();
   /*
    * Whether the form is on screen, which is the whole of what this row holds.
@@ -1290,7 +1290,7 @@ export function BrokeredAccountRow({
             ) : (
               <>
                 <NotConnected />
-                {/* The arrow says this leaves OpenBot for the vendor's consent page. It does, for
+                {/* The arrow says this leaves Mangaba Bot for the vendor's consent page. It does, for
                  every app but a key app. */}
                 <Button
                   disabled={account.connecting}
@@ -1367,7 +1367,7 @@ export function BrokeredAccountRow({
              * RECONNECT OVER THE ACCOUNT THAT STANDS, where the broker adds a consent to it.
              * This is where a Bot's card sends somebody whose call the vendor refused, and on
              * Arcade one press asks for everything the app needs. The arrow says it leaves
-             * OpenBot for the vendor's consent page, as Connect's does.
+             * Mangaba Bot for the vendor's consent page, as Connect's does.
              */}
             {account.reconnectsInPlace && account.kind === "consent" ? (
               <Button

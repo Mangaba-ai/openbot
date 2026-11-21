@@ -116,7 +116,7 @@ export function inAppPath(
 
 /**
  * A link to a page of the app, opened in place the way the app's own links open. Sent to a new tab
- * it opened a second window inside OpenBot Desktop, and lost the conversation the person was in.
+ * it opened a second window inside Mangaba Bot Desktop, and lost the conversation the person was in.
  * A modified click still does what the browser does with it.
  */
 function AppLink({
@@ -241,7 +241,7 @@ type Highlighted = Parameters<
   NonNullable<Parameters<CodeHighlighterPlugin["highlight"]>[1]>
 >[0];
 
-/** [light, dark]: Streamdown colours each token with both and OpenBot's `.dark` class picks one. */
+/** [light, dark]: Streamdown colours each token with both and Mangaba Bot's `.dark` class picks one. */
 const CODE_THEMES: ["github-light", "github-dark"] = [
   "github-light",
   "github-dark",

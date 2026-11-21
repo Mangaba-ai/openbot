@@ -88,7 +88,7 @@ function RailTip({
   );
 }
 
-/** Who is signed in, and the way out, at the foot of the rail as OpenBot keeps it in its sidebar. */
+/** Who is signed in, and the way out, at the foot of the rail as Mangaba Bot keeps it in its sidebar. */
 function RailUserMenu() {
   const user = useQuery(currentUserQueryOptions());
   const navigate = useNavigate();
@@ -139,7 +139,7 @@ function RailUserMenu() {
 }
 
 /** The 48px strip at the far left: the brand, the sidebar toggle, and the few places used most. */
-/** One of OpenBot's destinations as a rail button, with the Bots badge on Bots. */
+/** One of Mangaba Bot's destinations as a rail button, with the Bots badge on Bots. */
 function RailDestination({
   item,
   showBadge,
@@ -157,7 +157,7 @@ function RailDestination({
       >
         <Icon />
         {item.id === "bots" && showBadge ? (
-          // What waits on you across every Bot. OpenBot's own badge, which also sends the
+          // What waits on you across every Bot. Mangaba Bot's own badge, which also sends the
           // browser notification, so exactly one is ever mounted.
           // Ringed in the rail's colour, so a count wide enough to cover the 18px icon reads as
           // cut out of it.
@@ -194,7 +194,7 @@ function Rail({
   );
   return (
     /*
-     * In OpenBot Desktop on macOS the window's buttons sit over the rail's top, about 21–37px down
+     * In Mangaba Bot Desktop on macOS the window's buttons sit over the rail's top, about 21–37px down
      * (`data-desktop-titlebar`, macOS only), so the rail then starts 32px lower, below them, and
      * the sidebar beside it moves down with it. A press on the rail itself, outside its buttons,
      * moves the window there (`data-desktop-drag`, read by the desktop on macOS only).
@@ -209,7 +209,7 @@ function Rail({
       data-opendots-chrome
       className="flex w-12 shrink-0 flex-col items-center gap-3 overflow-y-auto border-r border-(--opendots-line) bg-(--opendots-rail) px-[5px] py-4 [scrollbar-width:none] max-md:hidden in-data-[desktop-titlebar=overlay]:pt-12"
     >
-      {/* OpenBot's own mark where OpenDots puts its monogram; the deployment owns the identity. */}
+      {/* Mangaba Bot's own mark where OpenDots puts its monogram; the deployment owns the identity. */}
       <Link
         aria-label={`${appConfig.brand.productName} home`}
         className="mb-3 grid size-9 shrink-0 place-items-center rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -255,7 +255,7 @@ function Rail({
           <IconClockHour3 />
         </Link>
       </RailTip>
-      {/* OpenBot's own destinations, from the one list every frame reads. */}
+      {/* Mangaba Bot's own destinations, from the one list every frame reads. */}
       {navigation
         .filter((item) => item.section === "primary")
         .map((item) => (
@@ -274,7 +274,7 @@ function Rail({
 }
 
 /**
- * Pause and resume for the one Bot the page is about. OpenDots pauses every Dot at once; OpenBot
+ * Pause and resume for the one Bot the page is about. OpenDots pauses every Dot at once; Mangaba Bot
  * pauses each Bot on its own, so this is that Bot's switch and only appears where there is one.
  */
 function PauseControl({ botId, name }: { botId: string; name: string }) {
@@ -318,7 +318,7 @@ function Topbar({
   const name = botName(agents.data, place.botId);
   return (
     /*
-     * The bar is the window's title bar in OpenBot Desktop on macOS: a press anywhere on it but a
+     * The bar is the window's title bar in Mangaba Bot Desktop on macOS: a press anywhere on it but a
      * button moves the window (`data-desktop-drag`, read by the desktop on macOS only).
      */
     <header
@@ -327,7 +327,7 @@ function Topbar({
       className={cn(
         "flex h-16 shrink-0 items-center gap-4 border-b border-(--opendots-line) bg-(--opendots-topbar) px-[22px] max-md:pr-[15px] max-md:pl-12",
         /*
-         * In OpenBot Desktop on macOS the window's buttons sit over the page's top-left corner,
+         * In Mangaba Bot Desktop on macOS the window's buttons sit over the page's top-left corner,
          * ending 81px in (`data-desktop-titlebar`, macOS only). With the sidebar hidden the bar
          * starts beside the 48px rail, so its first control moves to 88px in; on a narrow window
          * the menu button moves there, and the bar starts after it.
@@ -392,12 +392,12 @@ function Topbar({
 }
 
 /**
- * OpenDots' frame around every OpenBot page: the icon rail, the Dots sidebar, a top bar with
+ * OpenDots' frame around every Mangaba Bot page: the icon rail, the Dots sidebar, a top bar with
  * breadcrumbs and the computer toggle, and the computer pane on the right. The page itself, chat
- * included, is OpenBot's own and renders as `children`.
+ * included, is Mangaba Bot's own and renders as `children`.
  */
 export function OpenDotsFrame({ children }: { children: ReactNode }) {
-  // One socket for the app, opened where the roster is kept live, as OpenBot's own sidebar does.
+  // One socket for the app, opened where the roster is kept live, as Mangaba Bot's own sidebar does.
   useChannelEvents();
   const place = usePlace();
   const navigate = useNavigate();
@@ -408,7 +408,7 @@ export function OpenDotsFrame({ children }: { children: ReactNode }) {
   const [paneOpen, setPaneOpen] = useState(false);
   const href = useRouterState({ select: (state) => state.location.href });
 
-  // OpenBot's own breakpoint, so the drawer and OpenBot's pages agree about what a phone is.
+  // Mangaba Bot's own breakpoint, so the drawer and Mangaba Bot's pages agree about what a phone is.
   const isMobile = useIsMobile();
 
   // A page chosen from the drawer replaces it, as tapping a row in OpenDots' drawer does.
@@ -424,7 +424,7 @@ export function OpenDotsFrame({ children }: { children: ReactNode }) {
       : { to: "/channel/new" };
 
   /*
-   * A conversation draws OpenBot's own Computer pane, opened by its `?watch` flag, and opens it by
+   * A conversation draws Mangaba Bot's own Computer pane, opened by its `?watch` flag, and opens it by
    * itself when the Bot starts using the browser. The toggle drives that pane there rather than
    * opening a second screen beside it; everywhere else it opens the frame's own.
    */
@@ -476,7 +476,7 @@ export function OpenDotsFrame({ children }: { children: ReactNode }) {
               <BotsNavBadge onIcon />
             </span>
           </button>
-          {/* OpenBot's own sheet: it traps focus, closes on Escape and on the scrim. */}
+          {/* Mangaba Bot's own sheet: it traps focus, closes on Escape and on the scrim. */}
           <Sheet onOpenChange={setMobileOpen} open={mobileOpen}>
             <SheetContent
               className="w-[252px] max-w-[85vw] gap-0 border-(--opendots-line) bg-(--opendots-sidebar) p-0 text-foreground"

@@ -30,7 +30,7 @@ const ME = "me";
 
 /**
  * One fact the person's Bots remember about them, as the API answers it. `formedBy` says who formed
- * it; `intelligence` is one held by CopilotKit Intelligence for this person, formed outside OpenBot.
+ * it; `intelligence` is one held by CopilotKit Intelligence for this person, formed outside Mangaba Bot.
  */
 export type MemoryRecord = Memory;
 /** One app action a Bot reads facts in from: the API's `MemorySource`, with the Bot as `botId`. */

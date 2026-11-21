@@ -5,7 +5,7 @@ import * as zod from "zod";
 
 /**
  * Return one page of the updates Bots sent a person by push notification, Slack, Microsoft Teams or text message, the newest first, each with where it got to and why it failed if it did. Only the person themselves may list them; there is no administrator view. A missing cursor starts at the first page and nextCursor null ends the list.
- * @summary List what was sent to a person outside OpenBot
+ * @summary List what was sent to a person outside Mangaba Bot
  */
 
 export const listDeliveriesPathPersonIdMax = 200;
@@ -69,7 +69,7 @@ export const ListDeliveriesResponse = zod.object({
           transport: zod
             .enum(["push", "slack", "teams", "sms"])
             .describe(
-              "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+              "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
             ),
           kind: zod
             .enum(["reply", "question", "approval", "attention"])
@@ -95,7 +95,7 @@ export const ListDeliveriesResponse = zod.object({
             .datetime({ offset: true })
             .describe("When it was sent."),
         })
-        .describe("One update a Bot sent a person outside OpenBot."),
+        .describe("One update a Bot sent a person outside Mangaba Bot."),
     )
     .describe("The newest first, then by id."),
   nextCursor: zod

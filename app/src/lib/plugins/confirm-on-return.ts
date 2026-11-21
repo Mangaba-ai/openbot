@@ -10,7 +10,7 @@ const pending = new Map<string, () => Promise<unknown>>();
 let client: QueryClient | null = null;
 
 /**
- * Confirm an app's consent once OpenBot Desktop's window is back in front, whatever screen it is on.
+ * Confirm an app's consent once Mangaba Bot Desktop's window is back in front, whatever screen it is on.
  *
  * The window sends the consent to the person's default browser, and that browser comes back to
  * `/desktop-return`, which is not signed in and asks the API nothing. So the window, which is signed

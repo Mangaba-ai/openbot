@@ -3,7 +3,7 @@
  */
 
 /**
- * The app's consent page, which sends the person back to OpenBot once they agree.
+ * The app's consent page, which sends the person back to Mangaba Bot once they agree.
  */
 export interface AuthorizationStart {
   /** The address to open. Works once, for this person only. */

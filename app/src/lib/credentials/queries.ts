@@ -13,11 +13,11 @@ import { ClientError } from "@/lib/client";
  */
 export type CredentialStatus = Credential;
 
-/** The AI providers a model key can be for: the ones OpenBot's own Bots run on. */
+/** The AI providers a model key can be for: the ones Mangaba Bot's own Bots run on. */
 export type ModelProvider = "openai" | "anthropic";
 
 /**
- * The one model key OpenBot's own Bots read: the provider they run on, and the name the key is
+ * The one model key Mangaba Bot's own Bots read: the provider they run on, and the name the key is
  * filed under. A model key saved for that provider is filed under that name by the server.
  */
 export type ModelKeyName = {
@@ -55,7 +55,7 @@ export function credentialListQueryOptions() {
 }
 
 /**
- * Which model key the Bots read, or null where this OpenBot's Bots read none from the vault (the
+ * Which model key the Bots read, or null where this Mangaba Bot's Bots read none from the vault (the
  * API's not found).
  */
 export function modelKeyQueryOptions() {

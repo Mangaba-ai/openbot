@@ -37,20 +37,20 @@ afterEach(() => {
 });
 afterAll(() => GlobalRegistrator.unregister());
 
-/** What the shell says when the OpenBot on this computer needs a newer app (`client_version.rs`). */
+/** What the shell says when the Mangaba Bot on this computer needs a newer app (`client_version.rs`). */
 const LOCAL_APP_TOO_OLD = {
-  said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+  said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
   detail:
     "the deployment's minimumClients.desktop is 1.2.0; this app is desktop/1.1.0 and speaks v2",
   kind: "app-too-old",
 };
 
 /*
- * An OpenBot that needs a newer version of this app is not a failure. Wherever setup shows a
- * problem, it says "Update OpenBot" with the shell's sentence, and Update and restart reads the
+ * An Mangaba Bot that needs a newer version of this app is not a failure. Wherever setup shows a
+ * problem, it says "Update Mangaba Bot" with the shell's sentence, and Update and restart reads the
  * update feed and installs what it finds: no failure heading, no technical details, no logs.
  */
-test("an OpenBot that needs a newer app says Update OpenBot and Update and restart installs the update", async () => {
+test("an Mangaba Bot that needs a newer app says Update Mangaba Bot and Update and restart installs the update", async () => {
   answers = {
     app_update_offer: {
       version: null,
@@ -68,7 +68,7 @@ test("an OpenBot that needs a newer app says Update OpenBot and Update and resta
   };
   const view = render(<Failure problem={LOCAL_APP_TOO_OLD} />);
   const card = view.getByRole("alert");
-  expect(view.getByRole("heading", { name: "Update OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Update Mangaba Bot" })).toBeTruthy();
   expect(card.textContent).toContain(LOCAL_APP_TOO_OLD.said);
   expect(view.queryByText("That didn’t finish")).toBeNull();
   expect(view.queryByText("Technical details")).toBeNull();
@@ -88,17 +88,17 @@ test("an OpenBot that needs a newer app says Update OpenBot and Update and resta
   await waitFor(() => expect(update.textContent).toBe("Downloading…"));
 });
 
-/** The same, for a minimum the OpenBot on this computer raised because of a security problem. */
+/** The same, for a minimum the Mangaba Bot on this computer raised because of a security problem. */
 const LOCAL_APP_TOO_OLD_SECURITY = {
-  said: "This version of OpenBot has a security problem. Update to keep using it.",
+  said: "This version of Mangaba Bot has a security problem. Update to keep using it.",
   detail:
     "the deployment's minimumClients.desktop is 1.2.0, raised for a security problem (securityMinimumClients); this app is desktop/1.1.0 and speaks v2",
   kind: "app-too-old-security",
 };
 
-// For a security problem, the security sentence is the heading, in place of Update OpenBot, with the
+// For a security problem, the security sentence is the heading, in place of Update Mangaba Bot, with the
 // same update and nothing repeating it below.
-test("an OpenBot that raised this app's minimum for a security problem says so in place of Update OpenBot, with the same update", async () => {
+test("an Mangaba Bot that raised this app's minimum for a security problem says so in place of Update Mangaba Bot, with the same update", async () => {
   answers = {
     app_update_offer: {
       version: null,
@@ -111,7 +111,7 @@ test("an OpenBot that raised this app's minimum for a security problem says so i
   expect(
     view.getByRole("heading", { name: LOCAL_APP_TOO_OLD_SECURITY.said }),
   ).toBeTruthy();
-  expect(view.queryByRole("heading", { name: "Update OpenBot" })).toBeNull();
+  expect(view.queryByRole("heading", { name: "Update Mangaba Bot" })).toBeNull();
   expect(view.getAllByText(LOCAL_APP_TOO_OLD_SECURITY.said)).toHaveLength(1);
   expect(view.queryByText("That didn’t finish")).toBeNull();
   const update = view.getByRole("button", { name: "Update and restart" });
@@ -119,7 +119,7 @@ test("an OpenBot that raised this app's minimum for a security problem says so i
 });
 
 // A build that never updates itself has nothing to press: it says how to get one that does.
-test("an OpenBot that needs a newer app, on a build that doesn't update itself, says how to get one", async () => {
+test("an Mangaba Bot that needs a newer app, on a build that doesn't update itself, says how to get one", async () => {
   answers = {
     app_update_offer: {
       version: null,
@@ -131,7 +131,7 @@ test("an OpenBot that needs a newer app, on a build that doesn't update itself, 
   const view = render(<Failure problem={LOCAL_APP_TOO_OLD} />);
   await waitFor(() =>
     expect(view.getByRole("alert").textContent).toContain(
-      "This version of OpenBot doesn't update itself. Install a released version of OpenBot to get updates.",
+      "This version of Mangaba Bot doesn't update itself. Install a released version of Mangaba Bot to get updates.",
     ),
   );
   expect(view.queryByRole("button", { name: "Update and restart" })).toBeNull();
@@ -146,7 +146,7 @@ test("a full disk is said in a plain line above the raw output", () => {
   const view = render(
     <Failure
       problem={{
-        said: "OpenBot couldn't update or put the version it had back. Choose Retry to try putting it back again.",
+        said: "Mangaba Bot couldn't update or put the version it had back. Choose Retry to try putting it back again.",
         detail:
           "write /var/lib/desktop-containerd/daemon/io.containerd.metadata.v1.bolt/meta.db: input/output error",
         cause:
@@ -156,7 +156,7 @@ test("a full disk is said in a plain line above the raw output", () => {
   );
   const text = view.getByRole("alert").textContent ?? "";
   const cause = text.indexOf("Your Mac's disk is full.");
-  expect(cause).toBeGreaterThan(text.indexOf("OpenBot couldn't update"));
+  expect(cause).toBeGreaterThan(text.indexOf("Mangaba Bot couldn't update"));
   expect(cause).toBeLessThan(text.indexOf("Technical details"));
 });
 
@@ -181,7 +181,7 @@ test("an update with no room is said with its figures", () => {
     />,
   );
   expect(view.getByRole("alert").textContent).toContain(
-    "This Mac has 7.5 GB of free space, and OpenBot needs about 13 GB to update. Free up some space, then Retry.",
+    "This Mac has 7.5 GB of free space, and Mangaba Bot needs about 13 GB to update. Free up some space, then Retry.",
   );
 });
 
@@ -212,7 +212,7 @@ test("a failure offers its troubleshooting logs, with what failed", async () => 
     value: { writeText: async (text: string) => void copied.push(text) },
   });
   const view = render(
-    <Failure problem={{ said: "OpenBot couldn't start.", detail: "exit 1" }} />,
+    <Failure problem={{ said: "Mangaba Bot couldn't start.", detail: "exit 1" }} />,
   );
   expect(view.getByRole("alert").textContent).toContain(
     "Paste these logs into the AI assistant you use",
@@ -222,7 +222,7 @@ test("a failure offers its troubleshooting logs, with what failed", async () => 
   await view.findByRole("button", { name: "Copied" });
   expect(invokeCalls[0]).toEqual({
     command: "troubleshooting_logs",
-    args: { failure: "OpenBot couldn't start.\nexit 1" },
+    args: { failure: "Mangaba Bot couldn't start.\nexit 1" },
   });
   // The stub answers null; what reaches the clipboard is whatever the native side returned.
   expect(copied).toEqual([null as unknown as string]);
@@ -230,7 +230,7 @@ test("a failure offers its troubleshooting logs, with what failed", async () => 
   fireEvent.click(view.getByRole("button", { name: "Save to a file" }));
   expect(invokeCalls[1]).toEqual({
     command: "save_troubleshooting_logs",
-    args: { failure: "OpenBot couldn't start.\nexit 1" },
+    args: { failure: "Mangaba Bot couldn't start.\nexit 1" },
   });
   await view.findByText("Saved in the log folder.");
 });
@@ -238,7 +238,7 @@ test("a failure offers its troubleshooting logs, with what failed", async () => 
 test("the logs say what is taken out before they are pasted anywhere", () => {
   const view = render(<TroubleshootingLogs />);
   expect(view.container.textContent).toContain(
-    "OpenBot takes out keys, passwords and your email address first.",
+    "Mangaba Bot takes out keys, passwords and your email address first.",
   );
 });
 

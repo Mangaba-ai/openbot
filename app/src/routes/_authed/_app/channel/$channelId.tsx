@@ -59,7 +59,7 @@ function RouteComponent() {
   const channel = useQuery(channelQueryOptions(channelId));
   /*
    * While the conversation's own read is on its way, it is named from the sidebar's list when the
-   * list has it: for as long as OpenBot can't be reached that read waits, and the header stayed bare.
+   * list has it: for as long as Mangaba Bot can't be reached that read waits, and the header stayed bare.
    */
   const listed = listedChannel(useQueryClient(), channelId);
   const named = channel.data ?? listed;
@@ -264,17 +264,17 @@ function ChannelBody({
 }: {
   channel: AgentChannel | undefined;
   isPending: boolean;
-  /** The connection line shows: the read waits for OpenBot, however long that takes. */
+  /** The connection line shows: the read waits for Mangaba Bot, however long that takes. */
   waitingForOpenBot: boolean;
   /** What to say when there is no conversation to draw (`conversationLoadFailure`). */
   failure: string | null;
 }) {
   if (isPending) {
     // Nothing while the channel loads: a placeholder inside a local round-trip is a flicker. While
-    // OpenBot can't be reached the wait has no end in sight, and the line above already says why.
+    // Mangaba Bot can't be reached the wait has no end in sight, and the line above already says why.
     return waitingForOpenBot ? (
       <p className="p-8 text-sm text-muted-foreground">
-        This conversation will show here when OpenBot answers.
+        This conversation will show here when Mangaba Bot answers.
       </p>
     ) : null;
   }

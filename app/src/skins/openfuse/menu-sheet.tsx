@@ -57,8 +57,8 @@ import {
 } from "./ui";
 
 /**
- * OpenFuse's menu: the main chat, a new chat, every conversation OpenBot keeps, and a way to every
- * other OpenBot surface. Nothing here is OpenFuse's own data; each row opens an OpenBot route.
+ * OpenFuse's menu: the main chat, a new chat, every conversation Mangaba Bot keeps, and a way to every
+ * other Mangaba Bot surface. Nothing here is OpenFuse's own data; each row opens an Mangaba Bot route.
  */
 export function MenuSheet({ onClose }: { onClose: () => void }) {
   const { bot } = useFuse();
@@ -170,7 +170,7 @@ export function MenuSheet({ onClose }: { onClose: () => void }) {
             render={<Link onClick={onClose} to="/" />}
             title="Home"
           />
-          {/* OpenBot's own destinations, from the one list its sidebar draws. */}
+          {/* Mangaba Bot's own destinations, from the one list its sidebar draws. */}
           {navigation.map((item) => (
             <LinkRow
               icon={item.icon}
@@ -206,7 +206,7 @@ export function MenuSheet({ onClose }: { onClose: () => void }) {
 
 /**
  * One conversation, laid out as this look lists a side chat: its Bots' faces and title, then its actions as pills.
- * Pin and delete are the same two OpenBot offers on its sidebar row.
+ * Pin and delete are the same two Mangaba Bot offers on its sidebar row.
  */
 function ConversationRow({
   channel,
@@ -251,7 +251,7 @@ function ConversationRow({
           />
         }
       >
-        {/* The same faces OpenBot's own conversation list draws: the Bot, or the group's Bots. */}
+        {/* The same faces Mangaba Bot's own conversation list draws: the Bot, or the group's Bots. */}
         <span className="mt-0.5 shrink-0">
           <ChannelAvatar
             participantIds={channel.agentIds}

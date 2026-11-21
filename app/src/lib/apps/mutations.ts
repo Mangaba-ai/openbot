@@ -14,7 +14,7 @@ import { invalidatePlugins } from "@/lib/plugins/mutations";
 import type { SharedUseApproval } from "@/lib/plugins/shared-use";
 
 /**
- * Writes to the apps this OpenBot has added, through the API's generated client: adding one (from
+ * Writes to the apps this Mangaba Bot has added, through the API's generated client: adding one (from
  * the catalogue, from the wider directory, or by a server's address), removing it, asking it what it
  * offers, choosing whose account it acts in and who may give it to a Bot, and its OAuth client.
  *
@@ -33,7 +33,7 @@ export type CuratedServerInput = {
   credentialId?: string;
 };
 
-/** Add an entry of OpenBot's own catalogue (createApp, from a directory entry). An admin's. */
+/** Add an entry of Mangaba Bot's own catalogue (createApp, from a directory entry). An admin's. */
 export function addCuratedServerMutationOptions(queryClient: QueryClient) {
   return mutationOptions({
     mutationFn: async (input: CuratedServerInput): Promise<App> =>
@@ -182,7 +182,7 @@ export type OAuthClientInput = {
 };
 
 /**
- * Set this OpenBot's OAuth client for a catalogue app reached as the person asking
+ * Set this Mangaba Bot's OAuth client for a catalogue app reached as the person asking
  * (setAppOAuthClient).
  *
  * Its own write rather than a field on adding the app, because it has its own lifetime: a client is

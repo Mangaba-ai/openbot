@@ -71,7 +71,7 @@ export const ListPeopleResponse = zod.object({
             .string()
             .nullable()
             .describe(
-              "What OpenBot calls them. Null when nothing has named them.",
+              "What Mangaba Bot calls them. Null when nothing has named them.",
             ),
           image: zod
             .string()
@@ -87,7 +87,7 @@ export const ListPeopleResponse = zod.object({
           needsName: zod
             .boolean()
             .describe(
-              "Whether they have still to choose what OpenBot calls them, because their name is missing or is only their address.",
+              "Whether they have still to choose what Mangaba Bot calls them, because their name is missing or is only their address.",
             ),
           onboarding: zod
             .union([
@@ -149,7 +149,7 @@ export const ListPeopleResponse = zod.object({
 });
 
 /**
- * Return one person: the caller, as me or by their own id, or for an administrator anybody in the organization. Somebody who is not an administrator asking about anybody else is refused, whether or not that person exists. The answer also carries the OpenBot release the server runs, which the apps show under the person's name.
+ * Return one person: the caller, as me or by their own id, or for an administrator anybody in the organization. Somebody who is not an administrator asking about anybody else is refused, whether or not that person exists. The answer also carries the Mangaba Bot release the server runs, which the apps show under the person's name.
  * @summary Get a person
  */
 
@@ -185,7 +185,7 @@ export const GetPersonResponse = zod.object({
       name: zod
         .string()
         .nullable()
-        .describe("What OpenBot calls them. Null when nothing has named them."),
+        .describe("What Mangaba Bot calls them. Null when nothing has named them."),
       image: zod
         .string()
         .nullable()
@@ -200,7 +200,7 @@ export const GetPersonResponse = zod.object({
       needsName: zod
         .boolean()
         .describe(
-          "Whether they have still to choose what OpenBot calls them, because their name is missing or is only their address.",
+          "Whether they have still to choose what Mangaba Bot calls them, because their name is missing or is only their address.",
         ),
       onboarding: zod
         .union([
@@ -253,7 +253,7 @@ export const GetPersonResponse = zod.object({
     .string()
     .nullable()
     .describe(
-      "The OpenBot release the server runs, such as v1.0.3, which the apps show under the person's name. Null when the server was built without one. Only ever given to somebody signed in.",
+      "The Mangaba Bot release the server runs, such as v1.0.3, which the apps show under the person's name. Null when the server was built without one. Only ever given to somebody signed in.",
     ),
 });
 
@@ -308,7 +308,7 @@ export const UpdatePersonBody = zod
       .regex(updatePersonBodyNameRegExp)
       .optional()
       .describe(
-        "What OpenBot calls the person, 1 to 100 characters once trimmed. Only the person themselves may change it.",
+        "What Mangaba Bot calls the person, 1 to 100 characters once trimmed. Only the person themselves may change it.",
       ),
     role: zod
       .enum(["admin", "member"])
@@ -330,7 +330,7 @@ export const UpdatePersonResponse = zod.object({
       name: zod
         .string()
         .nullable()
-        .describe("What OpenBot calls them. Null when nothing has named them."),
+        .describe("What Mangaba Bot calls them. Null when nothing has named them."),
       image: zod
         .string()
         .nullable()
@@ -345,7 +345,7 @@ export const UpdatePersonResponse = zod.object({
       needsName: zod
         .boolean()
         .describe(
-          "Whether they have still to choose what OpenBot calls them, because their name is missing or is only their address.",
+          "Whether they have still to choose what Mangaba Bot calls them, because their name is missing or is only their address.",
         ),
       onboarding: zod
         .union([
@@ -397,7 +397,7 @@ export const UpdatePersonResponse = zod.object({
 });
 
 /**
- * Remove a person from the organization. Where everybody has an organization of their own (an OpenBot whose list of organizations answers canCreate true), this ends their membership of this organization alone: they lose its Bots and conversations from their next request, and their account, sessions, API keys, their own organization and any other they belong to are unchanged. Restoring them puts the membership back with its role and teams. Where OpenBot keeps one organization, it stops the person using OpenBot: their address can't sign in again, and the sessions, API keys and app sign-ins they hold end at once; restoring their access lets them sign in again. Either way they keep their record and their history, and the credentials they connected here are retired. Only an administrator may do this, never to themselves, never to somebody the deployment's configuration names as an administrator, and never to the organization's owner. Removing somebody already removed retires anything left and records nothing new.
+ * Remove a person from the organization. Where everybody has an organization of their own (an Mangaba Bot whose list of organizations answers canCreate true), this ends their membership of this organization alone: they lose its Bots and conversations from their next request, and their account, sessions, API keys, their own organization and any other they belong to are unchanged. Restoring them puts the membership back with its role and teams. Where Mangaba Bot keeps one organization, it stops the person using Mangaba Bot: their address can't sign in again, and the sessions, API keys and app sign-ins they hold end at once; restoring their access lets them sign in again. Either way they keep their record and their history, and the credentials they connected here are retired. Only an administrator may do this, never to themselves, never to somebody the deployment's configuration names as an administrator, and never to the organization's owner. Removing somebody already removed retires anything left and records nothing new.
  * @summary Remove a person's access
  */
 
@@ -445,7 +445,7 @@ export const RevokePersonAccessResponse = zod.object({
       name: zod
         .string()
         .nullable()
-        .describe("What OpenBot calls them. Null when nothing has named them."),
+        .describe("What Mangaba Bot calls them. Null when nothing has named them."),
       image: zod
         .string()
         .nullable()
@@ -460,7 +460,7 @@ export const RevokePersonAccessResponse = zod.object({
       needsName: zod
         .boolean()
         .describe(
-          "Whether they have still to choose what OpenBot calls them, because their name is missing or is only their address.",
+          "Whether they have still to choose what Mangaba Bot calls them, because their name is missing or is only their address.",
         ),
       onboarding: zod
         .union([
@@ -512,7 +512,7 @@ export const RevokePersonAccessResponse = zod.object({
 });
 
 /**
- * Give a removed person their access back. Where everybody has an organization of their own, this puts back their membership of this organization with the role and teams it had; their sessions and API keys, which were never ended, work here again from their next request. Where OpenBot keeps one organization, it lets them sign in again, and what ended when they were removed stays ended: they sign in afresh and make new API keys. Only an administrator may do this. Restoring somebody who was never removed changes nothing and records nothing.
+ * Give a removed person their access back. Where everybody has an organization of their own, this puts back their membership of this organization with the role and teams it had; their sessions and API keys, which were never ended, work here again from their next request. Where Mangaba Bot keeps one organization, it lets them sign in again, and what ended when they were removed stays ended: they sign in afresh and make new API keys. Only an administrator may do this. Restoring somebody who was never removed changes nothing and records nothing.
  * @summary Give a person their access back
  */
 
@@ -560,7 +560,7 @@ export const RestorePersonAccessResponse = zod.object({
       name: zod
         .string()
         .nullable()
-        .describe("What OpenBot calls them. Null when nothing has named them."),
+        .describe("What Mangaba Bot calls them. Null when nothing has named them."),
       image: zod
         .string()
         .nullable()
@@ -575,7 +575,7 @@ export const RestorePersonAccessResponse = zod.object({
       needsName: zod
         .boolean()
         .describe(
-          "Whether they have still to choose what OpenBot calls them, because their name is missing or is only their address.",
+          "Whether they have still to choose what Mangaba Bot calls them, because their name is missing or is only their address.",
         ),
       onboarding: zod
         .union([
@@ -878,7 +878,7 @@ export const UpdateStandingInstructionsResponse = zod
   );
 
 /**
- * Return how a person set OpenBot up for themselves, on every device they sign in from, with the default for anything they never chose. Only the person themselves may read them.
+ * Return how a person set Mangaba Bot up for themselves, on every device they sign in from, with the default for anything they never chose. Only the person themselves may read them.
  * @summary Read a person's preferences
  */
 
@@ -927,7 +927,7 @@ export const GetPreferencesResponse = zod
     selfHostBannerDismissed: zod
       .boolean()
       .describe(
-        "Whether they closed the banner offering help self-hosting OpenBot.",
+        "Whether they closed the banner offering help self-hosting Mangaba Bot.",
       ),
     dismissedNotices: zod
       .array(
@@ -937,7 +937,7 @@ export const GetPreferencesResponse = zod
           .max(getPreferencesResponseDismissedNoticesItemMax)
           .regex(getPreferencesResponseDismissedNoticesItemRegExp)
           .describe(
-            "A notice OpenBot shows a person once, such as a nudge, by its id: star-on-github is the ask to star OpenBot on GitHub.",
+            "A notice Mangaba Bot shows a person once, such as a nudge, by its id: star-on-github is the ask to star Mangaba Bot on GitHub.",
           ),
       )
       .max(getPreferencesResponseDismissedNoticesMax)
@@ -952,23 +952,23 @@ export const GetPreferencesResponse = zod
           .max(getPreferencesResponseNoticesDueItemMax)
           .regex(getPreferencesResponseNoticesDueItemRegExp)
           .describe(
-            "A notice OpenBot shows a person once, such as a nudge, by its id: star-on-github is the ask to star OpenBot on GitHub.",
+            "A notice Mangaba Bot shows a person once, such as a nudge, by its id: star-on-github is the ask to star Mangaba Bot on GitHub.",
           ),
       )
       .max(getPreferencesResponseNoticesDueMax)
       .optional()
       .describe(
-        "The notices OpenBot would show them now, by id, worked out by the server from the edition and how they have used OpenBot. A notice they dismissed is never here. Absent from a server that works out none.",
+        "The notices Mangaba Bot would show them now, by id, worked out by the server from the edition and how they have used Mangaba Bot. A notice they dismissed is never here. Absent from a server that works out none.",
       ),
     narration: zod
       .union([zod.enum(["on", "off"]), zod.null()])
       .describe(
-        "Whether they narrate their recordings in OpenBot's browser, which opens the microphone only when on. Null until they choose, which the browser asks before their first recording.",
+        "Whether they narrate their recordings in Mangaba Bot's browser, which opens the microphone only when on. Null until they choose, which the browser asks before their first recording.",
       ),
     skin: zod
       .enum(["openbot", "openduet", "opendots", "openfuse"])
       .describe(
-        "How OpenBot looks. openbot is OpenBot as it is without a skin.",
+        "How Mangaba Bot looks. openbot is Mangaba Bot as it is without a skin.",
       ),
     proactive: zod
       .enum(["on", "off"])
@@ -983,7 +983,7 @@ export const GetPreferencesResponse = zod
       ),
   })
   .describe(
-    "How a person set OpenBot up for themselves, on every device they sign in from.",
+    "How a person set Mangaba Bot up for themselves, on every device they sign in from.",
   );
 
 /**
@@ -1048,7 +1048,7 @@ export const UpdatePreferencesBody = zod
           .max(updatePreferencesBodyDismissedNoticesItemMax)
           .regex(updatePreferencesBodyDismissedNoticesItemRegExp)
           .describe(
-            "A notice OpenBot shows a person once, such as a nudge, by its id: star-on-github is the ask to star OpenBot on GitHub.",
+            "A notice Mangaba Bot shows a person once, such as a nudge, by its id: star-on-github is the ask to star Mangaba Bot on GitHub.",
           ),
       )
       .max(updatePreferencesBodyDismissedNoticesMax)
@@ -1061,7 +1061,7 @@ export const UpdatePreferencesBody = zod
       .enum(["openbot", "openduet", "opendots", "openfuse"])
       .optional()
       .describe(
-        "How OpenBot looks. openbot is OpenBot as it is without a skin.",
+        "How Mangaba Bot looks. openbot is Mangaba Bot as it is without a skin.",
       ),
     proactive: zod.enum(["on", "off"]).optional(),
   })
@@ -1093,7 +1093,7 @@ export const UpdatePreferencesResponse = zod
     selfHostBannerDismissed: zod
       .boolean()
       .describe(
-        "Whether they closed the banner offering help self-hosting OpenBot.",
+        "Whether they closed the banner offering help self-hosting Mangaba Bot.",
       ),
     dismissedNotices: zod
       .array(
@@ -1103,7 +1103,7 @@ export const UpdatePreferencesResponse = zod
           .max(updatePreferencesResponseDismissedNoticesItemMax)
           .regex(updatePreferencesResponseDismissedNoticesItemRegExp)
           .describe(
-            "A notice OpenBot shows a person once, such as a nudge, by its id: star-on-github is the ask to star OpenBot on GitHub.",
+            "A notice Mangaba Bot shows a person once, such as a nudge, by its id: star-on-github is the ask to star Mangaba Bot on GitHub.",
           ),
       )
       .max(updatePreferencesResponseDismissedNoticesMax)
@@ -1118,23 +1118,23 @@ export const UpdatePreferencesResponse = zod
           .max(updatePreferencesResponseNoticesDueItemMax)
           .regex(updatePreferencesResponseNoticesDueItemRegExp)
           .describe(
-            "A notice OpenBot shows a person once, such as a nudge, by its id: star-on-github is the ask to star OpenBot on GitHub.",
+            "A notice Mangaba Bot shows a person once, such as a nudge, by its id: star-on-github is the ask to star Mangaba Bot on GitHub.",
           ),
       )
       .max(updatePreferencesResponseNoticesDueMax)
       .optional()
       .describe(
-        "The notices OpenBot would show them now, by id, worked out by the server from the edition and how they have used OpenBot. A notice they dismissed is never here. Absent from a server that works out none.",
+        "The notices Mangaba Bot would show them now, by id, worked out by the server from the edition and how they have used Mangaba Bot. A notice they dismissed is never here. Absent from a server that works out none.",
       ),
     narration: zod
       .union([zod.enum(["on", "off"]), zod.null()])
       .describe(
-        "Whether they narrate their recordings in OpenBot's browser, which opens the microphone only when on. Null until they choose, which the browser asks before their first recording.",
+        "Whether they narrate their recordings in Mangaba Bot's browser, which opens the microphone only when on. Null until they choose, which the browser asks before their first recording.",
       ),
     skin: zod
       .enum(["openbot", "openduet", "opendots", "openfuse"])
       .describe(
-        "How OpenBot looks. openbot is OpenBot as it is without a skin.",
+        "How Mangaba Bot looks. openbot is Mangaba Bot as it is without a skin.",
       ),
     proactive: zod
       .enum(["on", "off"])
@@ -1149,11 +1149,11 @@ export const UpdatePreferencesResponse = zod
       ),
   })
   .describe(
-    "How a person set OpenBot up for themselves, on every device they sign in from.",
+    "How a person set Mangaba Bot up for themselves, on every device they sign in from.",
   );
 
 /**
- * Return whether this organization requires its members to sign in through their company's identity provider, whether the person has, and the providers they can use for it. Any member may read their own, as me or by their own id. It answers even while the organization holds them out for not having signed in that way, when every other request they make in it is refused with SSO_REQUIRED. To use a provider, they sign in through it by its id (POST /api/auth/sign-in/sso with providerId) in a browser where they are signed in, or from an app through createCompanySignInTicket. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), no organization requires it: required is false and no providers are listed.
+ * Return whether this organization requires its members to sign in through their company's identity provider, whether the person has, and the providers they can use for it. Any member may read their own, as me or by their own id. It answers even while the organization holds them out for not having signed in that way, when every other request they make in it is refused with SSO_REQUIRED. To use a provider, they sign in through it by its id (POST /api/auth/sign-in/sso with providerId) in a browser where they are signed in, or from an app through createCompanySignInTicket. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), no organization requires it: required is false and no providers are listed.
  * @summary Read whether a person must use their company sign-in here
  */
 
@@ -1188,7 +1188,7 @@ export const GetCompanySignInResponse = zod
     met: zod
       .boolean()
       .describe(
-        "Whether the person has: they signed in through one of providers, or with the same identity at the same issuer another way, or they are the admin who runs this OpenBot. While required is true and met is false, the organization holds them out.",
+        "Whether the person has: they signed in through one of providers, or with the same identity at the same issuer another way, or they are the admin who runs this Mangaba Bot. While required is true and met is false, the organization holds them out.",
       ),
     providers: zod
       .array(
@@ -1200,7 +1200,7 @@ export const GetCompanySignInResponse = zod
         }),
       )
       .describe(
-        "The identity providers that count for this organization: its own, or, where it has none and this OpenBot may keep more than one organization, those registered for the whole OpenBot. Empty when there are none.",
+        "The identity providers that count for this organization: its own, or, where it has none and this Mangaba Bot may keep more than one organization, those registered for the whole Mangaba Bot. Empty when there are none.",
       ),
   })
   .describe(
@@ -1208,7 +1208,7 @@ export const GetCompanySignInResponse = zod
   );
 
 /**
- * Return an address for a browser to link the person's company account at one of the organization's identity providers, for an app that has no browser session to carry, such as the phone. The app opens it in the system browser, and the person signs in through the provider there. Sent with returnTo app, the browser goes back to the phone app once the account is linked. The address carries a ticket, never the app's own sign-in. The ticket is the person's, for this organization and this provider, lasts two minutes, and opens once. Signing in through the provider then links the company account as a signed-in browser's sign-in does: the provider must give the person's own email address. Only the person themselves may ask, as me or by their own id, signed in to OpenBot or its app, never with an API key. It answers while the organization holds them out for not having signed in that way. providerId is one of the providers getCompanySignIn lists. Because the answer is a credential shown once, it is not kept: a retry with the same Idempotency-Key is refused as a conflict, so ask again with a new key. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), there is no company account to link: this answers 409 with the code HOSTED_SIGN_IN_ONLY.
+ * Return an address for a browser to link the person's company account at one of the organization's identity providers, for an app that has no browser session to carry, such as the phone. The app opens it in the system browser, and the person signs in through the provider there. Sent with returnTo app, the browser goes back to the phone app once the account is linked. The address carries a ticket, never the app's own sign-in. The ticket is the person's, for this organization and this provider, lasts two minutes, and opens once. Signing in through the provider then links the company account as a signed-in browser's sign-in does: the provider must give the person's own email address. Only the person themselves may ask, as me or by their own id, signed in to Mangaba Bot or its app, never with an API key. It answers while the organization holds them out for not having signed in that way. providerId is one of the providers getCompanySignIn lists. Because the answer is a credential shown once, it is not kept: a retry with the same Idempotency-Key is refused as a conflict, so ask again with a new key. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), there is no company account to link: this answers 409 with the code HOSTED_SIGN_IN_ONLY.
  * @summary Get a ticket to link a company account from an app
  */
 

@@ -1,10 +1,10 @@
-//! What OpenBot's own Settings page ("This computer") may ask this desktop app.
+//! What Mangaba Bot's own Settings page ("This computer") may ask this desktop app.
 //!
 //! The same facts and actions as the Status window, reached from the app instead: what is running,
-//! how much memory each part takes, Restart and Stop for OpenBot, and Start, Stop and status for
+//! how much memory each part takes, Restart and Stop for Mangaba Bot, and Start, Stop and status for
 //! the local Intelligence stack. Also the update banner's offer, close and install, and Check for
 //! updates. An inline plugin, so each command carries a permission of its own,
-//! granted at runtime to the exact origin of the OpenBot this app started and to nothing else.
+//! granted at runtime to the exact origin of the Mangaba Bot this app started and to nothing else.
 //!
 //! And narration's speech recognition, on this computer (`speech`): the window's web view has none
 //! that stays on the device, so the page's narration listens through these instead.
@@ -13,7 +13,7 @@
 //! manager. The page never names a path; the shell opens its own log folder and nothing else.
 //!
 //! And Settings' AI model row (`ai_connection`, `change_ai_connection`): which provider and sign-in
-//! OpenBot starts with, never a key, and Change, which stops OpenBot and opens the setup window at
+//! Mangaba Bot starts with, never a key, and Change, which stops Mangaba Bot and opens the setup window at
 //! its AI screen. Kept for a page on an older server, which cannot change the connection itself.
 //!
 //! And the AI connection changed in the app with no stop (`ai_providers`, `begin_plan_sign_in`,
@@ -33,9 +33,9 @@
 //! (`zoom`), for the zoom keys no menu carries (`zoom::SHORTCUT_PAGE`). The setup and Status pages
 //! are granted both too (`capabilities/default.json`).
 //!
-//! And where OpenBot runs (`connection`, `sign_out`, `change_connection`, `set_organization`): on
+//! And where Mangaba Bot runs (`connection`, `sign_out`, `change_connection`, `set_organization`): on
 //! this computer, or at an address the app is connected to (`desktop_connected`). While it is
-//! connected, `status` answers the app's own facts only, and what is about an OpenBot on this
+//! connected, `status` answers the app's own facts only, and what is about an Mangaba Bot on this
 //! computer (`restart`, `stop`, `intelligence`, `ai_connection`, `change_ai_connection`) is refused.
 
 use openbot_desktop_lib::{app_update, local_eval, local_eval_state, speech, stack};
@@ -89,7 +89,7 @@ The page's own light or dark, for the window: macOS draws a window's outline fro
 appearance, and a dark one is a black line around a light page.
 
 `system` says the page is following the system, and then the window follows it too and is not
-pinned (`window_theme`). An OpenBot from before it followed the system sends none, and is pinned.
+pinned (`window_theme`). An Mangaba Bot from before it followed the system sends none, and is pinned.
 
 Its own command rather than the window plugin's `set_theme`: granted to this origin, that call was
 refused (the window stayed dark), and this one is ours to see.
@@ -128,7 +128,7 @@ pub async fn restart<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), 
 }
 
 /// Stops everything, as the menu's Stop did. The page asking goes with it; the window shows setup.
-/// Refused while the app is connected to an OpenBot that runs elsewhere: there is none here.
+/// Refused while the app is connected to an Mangaba Bot that runs elsewhere: there is none here.
 #[tauri::command]
 pub async fn stop<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), String> {
     crate::desktop_connected::nothing_here(&app)?;
@@ -136,14 +136,14 @@ pub async fn stop<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), Str
     Ok(())
 }
 
-/// Where OpenBot runs: on this computer, or at an address this app is connected to, with the
+/// Where Mangaba Bot runs: on this computer, or at an address this app is connected to, with the
 /// organisation picked there. Never a token.
 #[tauri::command]
 async fn connection(app: tauri::AppHandle) -> crate::desktop_connected::Connection {
     crate::desktop_connected::connection_now(&app, false)
 }
 
-/// Settings' Sign out, while connected: signed out of that OpenBot, and the setup window. The
+/// Settings' Sign out, while connected: signed out of that Mangaba Bot, and the setup window. The
 /// page asking goes with it.
 #[tauri::command]
 async fn sign_out(app: tauri::AppHandle) -> Result<(), String> {
@@ -155,8 +155,8 @@ async fn sign_out(app: tauri::AppHandle) -> Result<(), String> {
     .map_err(|error| error.to_string())?
 }
 
-/// Settings' Change on where OpenBot runs: the setup window at that choice, after signing out of
-/// the OpenBot the app is connected to, or after stopping the one on this computer.
+/// Settings' Change on where Mangaba Bot runs: the setup window at that choice, after signing out of
+/// the Mangaba Bot the app is connected to, or after stopping the one on this computer.
 #[tauri::command]
 async fn change_connection(app: tauri::AppHandle) -> Result<(), String> {
     tauri::async_runtime::spawn_blocking(move || {
@@ -182,7 +182,7 @@ async fn intelligence(
     app: tauri::AppHandle,
     action: local_eval::Action,
 ) -> Result<local_eval::Report, local_eval::Failure> {
-    // Connected to an OpenBot that runs elsewhere: there is no backend on this computer to ask.
+    // Connected to an Mangaba Bot that runs elsewhere: there is no backend on this computer to ask.
     if crate::desktop_connected::is_connected(&app) {
         return Err(local_eval::Failure::Unavailable);
     }
@@ -201,7 +201,7 @@ async fn intelligence(
     crate::run_local_eval(app, attempt, action, stack.as_str().to_owned()).await
 }
 
-/// The update banner: a newer OpenBot Desktop, as the shell last read its update feed, unless
+/// The update banner: a newer Mangaba Bot Desktop, as the shell last read its update feed, unless
 /// this person closed it. Answered from memory; the page never reaches the feed itself.
 #[tauri::command]
 async fn update_offer(app: tauri::AppHandle) -> app_update::Status {
@@ -274,7 +274,7 @@ async fn open_logs(app: tauri::AppHandle) -> Result<(), String> {
     crate::open_log_folder_now(&app)
 }
 
-/// A Bot's notification: shown by the system, and opening OpenBot at `path` when it is clicked,
+/// A Bot's notification: shown by the system, and opening Mangaba Bot at `path` when it is clicked,
 /// from the notification centre too. See `notice.rs`.
 #[tauri::command]
 async fn notify(
@@ -293,7 +293,7 @@ async fn notify(
     )
 }
 
-/// Settings' AI model row: the provider and sign-in OpenBot starts with, the model when one was
+/// Settings' AI model row: the provider and sign-in Mangaba Bot starts with, the model when one was
 /// named, and a custom address's host. Never a key or a token.
 #[tauri::command]
 async fn ai_connection(
@@ -304,7 +304,7 @@ async fn ai_connection(
 }
 
 /// The AI model row's Change: Stop, then the setup window at its AI screen, the one its Change AI
-/// connection opens. The page asking goes with OpenBot, as with Stop.
+/// connection opens. The page asking goes with Mangaba Bot, as with Stop.
 #[tauri::command]
 async fn change_ai_connection(app: tauri::AppHandle) -> Result<(), String> {
     crate::desktop_connected::nothing_here(&app)?;
@@ -324,7 +324,7 @@ struct SignInAddress {
     url: String,
 }
 
-/// Start a Claude or ChatGPT plan's sign-in in the browser, while OpenBot keeps running.
+/// Start a Claude or ChatGPT plan's sign-in in the browser, while Mangaba Bot keeps running.
 #[tauri::command]
 async fn begin_plan_sign_in(
     app: tauri::AppHandle,
@@ -440,7 +440,7 @@ async fn usage_data() -> crate::desktop_telemetry::UsageData {
 
 /// Settings' Share usage data, switched. Off is the same opt-out as `COPILOTKIT_TELEMETRY_DISABLED`,
 /// kept for the next launch. The desktop's own events and the CLI follow at once; the server, the
-/// next time OpenBot starts. Refused when the environment turned sharing off.
+/// next time Mangaba Bot starts. Refused when the environment turned sharing off.
 #[tauri::command]
 async fn set_usage_data(
     app: tauri::AppHandle,
@@ -537,7 +537,7 @@ mod tests {
     /// sync one runs on the main thread: a window change made there (the theme, a size, focus) is
     /// delivered on Windows as a window event before the call returns, and dispatching that event
     /// takes the plugin store again. `appearance` was sync, and the window stopped responding the
-    /// first time OpenBot's page reported its theme. An async command runs on a worker, so the
+    /// first time Mangaba Bot's page reported its theme. An async command runs on a worker, so the
     /// window change is queued for the main thread instead.
     #[test]
     fn every_command_runs_off_the_main_thread() {

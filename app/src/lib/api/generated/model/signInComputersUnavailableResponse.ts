@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot has no computers for Bots, so there is nowhere to sign a Bot in. Nothing was opened.
+ * This Mangaba Bot has no computers for Bots, so there is nowhere to sign a Bot in. Nothing was opened.
  */
 export type SignInComputersUnavailableResponse = Problem;

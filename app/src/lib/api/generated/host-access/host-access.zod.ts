@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Return the folders on a person's own computer that they gave their Bots, what is waiting for an answer in OpenBot Desktop, whether Desktop is connected, and whether this OpenBot runs in Desktop at all. A folder is named as the person sees it, never by its path. Only the person themselves may read it.
+ * Return the folders on a person's own computer that they gave their Bots, what is waiting for an answer in Mangaba Bot Desktop, whether Desktop is connected, and whether this Mangaba Bot runs in Desktop at all. A folder is named as the person sees it, never by its path. Only the person themselves may read it.
  * @summary Read a person's folder access
  */
 
@@ -33,11 +33,11 @@ export const GetHostAccessResponse = zod
   .object({
     connected: zod
       .boolean()
-      .describe("Whether OpenBot Desktop is connected now."),
+      .describe("Whether Mangaba Bot Desktop is connected now."),
     desktop: zod
       .boolean()
       .describe(
-        "Whether this OpenBot runs in OpenBot Desktop, the only thing that can open folders on the person's computer.",
+        "Whether this Mangaba Bot runs in Mangaba Bot Desktop, the only thing that can open folders on the person's computer.",
       ),
     grants: zod
       .array(
@@ -56,7 +56,7 @@ export const GetHostAccessResponse = zod
               ),
           })
           .describe(
-            "One folder on a person's own computer that they gave a Bot. The folder's path stays in OpenBot Desktop and is never part of a grant.",
+            "One folder on a person's own computer that they gave a Bot. The folder's path stays in Mangaba Bot Desktop and is never part of a grant.",
           ),
       )
       .describe(
@@ -82,7 +82,7 @@ export const GetHostAccessResponse = zod
                 "stop",
               ])
               .describe(
-                "What OpenBot Desktop is asked to do on the person's computer.",
+                "What Mangaba Bot Desktop is asked to do on the person's computer.",
               ),
             botId: zod
               .string()
@@ -131,17 +131,17 @@ export const GetHostAccessResponse = zod
               ),
           })
           .describe(
-            "Something OpenBot Desktop has been asked to do for a Bot and has not answered yet.",
+            "Something Mangaba Bot Desktop has been asked to do for a Bot and has not answered yet.",
           ),
       )
       .describe(
-        "What OpenBot Desktop has been asked to do for the person and has not answered.",
+        "What Mangaba Bot Desktop has been asked to do for the person and has not answered.",
       ),
   })
   .describe("A person's folder access on their own computer.");
 
 /**
- * Ask OpenBot Desktop to open its folder chooser, and wait for the person to pick a folder there for the Bot. The answer arrives when they choose, turn it down, or the chooser runs out of time, which can take up to two minutes. Recorded on the audit trail with the folder's name, never its path. Only the person themselves may ask, for a Bot they can use, where an administrator lets them use this computer, and only where this OpenBot runs in Desktop and Desktop is connected.
+ * Ask Mangaba Bot Desktop to open its folder chooser, and wait for the person to pick a folder there for the Bot. The answer arrives when they choose, turn it down, or the chooser runs out of time, which can take up to two minutes. Recorded on the audit trail with the folder's name, never its path. Only the person themselves may ask, for a Bot they can use, where an administrator lets them use this computer, and only where this Mangaba Bot runs in Desktop and Desktop is connected.
  * @summary Give a Bot a folder on this computer
  */
 
@@ -206,7 +206,7 @@ export const CreateHostAccessGrantResponse = zod
       ),
   })
   .describe(
-    "One folder on a person's own computer that they gave a Bot. The folder's path stays in OpenBot Desktop and is never part of a grant.",
+    "One folder on a person's own computer that they gave a Bot. The folder's path stays in Mangaba Bot Desktop and is never part of a grant.",
   );
 
 /**
@@ -261,7 +261,7 @@ export const DeleteHostAccessGrantHeader = zod.object({
 export const DeleteHostAccessGrantResponse = zod.void();
 
 /**
- * End every folder a person gave their Bots, stop anything the Bots were doing in them, and tell OpenBot Desktop to stop too. Recorded on the audit trail with the folders it ended. Only the person themselves may stop it. Stopping when nothing is open is still a stop.
+ * End every folder a person gave their Bots, stop anything the Bots were doing in them, and tell Mangaba Bot Desktop to stop too. Recorded on the audit trail with the folders it ended. Only the person themselves may stop it. Stopping when nothing is open is still a stop.
  * @summary Stop a person's folder access
  */
 

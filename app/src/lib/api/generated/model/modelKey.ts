@@ -4,7 +4,7 @@
 import type { ModelKeyProvider } from "./modelKeyProvider";
 
 /**
- * Where OpenBot's own Bots find their model key in the vault, and whether one is kept there. Never the key.
+ * Where Mangaba Bot's own Bots find their model key in the vault, and whether one is kept there. Never the key.
  */
 export interface ModelKey {
   /** The provider the Bots run on. */

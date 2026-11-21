@@ -73,7 +73,7 @@ export const getListDeliveriesUrl = (
 
 /**
  * Return one page of the updates Bots sent a person by push notification, Slack, Microsoft Teams or text message, the newest first, each with where it got to and why it failed if it did. Only the person themselves may list them; there is no administrator view. A missing cursor starts at the first page and nextCursor null ends the list.
- * @summary List what was sent to a person outside OpenBot
+ * @summary List what was sent to a person outside Mangaba Bot
  */
 export const listDeliveries = async (
   organizationId: string,
@@ -248,7 +248,7 @@ export function useListDeliveries<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 /**
- * @summary List what was sent to a person outside OpenBot
+ * @summary List what was sent to a person outside Mangaba Bot
  */
 
 export function useListDeliveries<

@@ -35,7 +35,7 @@ function UserAvatar() {
   );
 }
 
-/** The person's name, and the organization they are working in where OpenBot lists them. */
+/** The person's name, and the organization they are working in where Mangaba Bot lists them. */
 function useAccountNames() {
   const { data: currentUser } = useQuery(currentUserQueryOptions());
   const choices = useOrganizationChoices();
@@ -54,7 +54,7 @@ function useAccountNames() {
  * `internal-<commit>` reads whole, as a release's `v1.0.2` always did, and the name is what gets
  * cut short when the sidebar is narrow. account-version-layout.test.tsx measures it in a browser.
  *
- * Where OpenBot lists the person's organizations, they read the one they are working in under their
+ * Where Mangaba Bot lists the person's organizations, they read the one they are working in under their
  * name, since the menu this opens is where they change it. Nobody else has that line. It runs the
  * row's whole width, under the version as well as the name: the version sits on the name's line
  * only, so a build's long one never cuts the organization short.
@@ -104,7 +104,7 @@ export const accountMenuItemClassName = "gap-2 px-2 py-1.5";
 /**
  * The account, as the strip draws it: the person's avatar at the strip's foot, a button that opens
  * the account menu (`children`, the menu's content). Their name, and their organization where
- * OpenBot lists them, read in a tooltip on hover and keyboard focus, never while the menu is open.
+ * Mangaba Bot lists them, read in a tooltip on hover and keyboard focus, never while the menu is open.
  * The menu itself starts with the whole account row (`AccountLabel`), version included.
  */
 export function AccountMenu({ children }: { children: ReactNode }) {

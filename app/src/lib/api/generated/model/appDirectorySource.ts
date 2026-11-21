@@ -3,7 +3,7 @@
  */
 
 /**
- * OpenBot's own catalogue, or the wider app directory.
+ * Mangaba Bot's own catalogue, or the wider app directory.
  */
 export type AppDirectorySource =
   (typeof AppDirectorySource)[keyof typeof AppDirectorySource];

@@ -14,7 +14,7 @@ import type {
 import { organizationId } from "@/lib/api/request";
 
 /**
- * The apps this OpenBot has added, the directory it adds them from, and how apps are set up here,
+ * The apps this Mangaba Bot has added, the directory it adds them from, and how apps are set up here,
  * read through the API's generated client.
  *
  * Every key sits under `["plugins"]`, so `invalidatePlugins` (lib/plugins/mutations.ts) refreshes
@@ -33,7 +33,7 @@ export const appKeys = {
 const PAGE = 100;
 
 /**
- * How apps are set up on this OpenBot: whether the directory is available and which service it
+ * How apps are set up on this Mangaba Bot: whether the directory is available and which service it
  * comes from (the screens pick their own directory page by it), the address an admin registers with
  * an app's vendor, and whether a Bot can use an app's actions without a key of its own.
  */
@@ -72,7 +72,7 @@ export function appsQueryOptions() {
   });
 }
 
-/** One entry of OpenBot's own catalogue, as the screens draw it. */
+/** One entry of Mangaba Bot's own catalogue, as the screens draw it. */
 export type CatalogueItem = Omit<
   CatalogueAppEntry,
   "id" | "source" | "appId"
@@ -87,7 +87,7 @@ export function catalogueKey(entryId: string): string {
 }
 
 /**
- * OpenBot's own catalogue: every entry this edition offers, and any already added whatever the
+ * Mangaba Bot's own catalogue: every entry this edition offers, and any already added whatever the
  * edition, in the catalogue's order. Anybody signed in may read it.
  */
 export function catalogueQueryOptions() {

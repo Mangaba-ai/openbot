@@ -4,7 +4,7 @@ export type HarnessChoice = {
   agentUrl?: string;
 };
 
-/** What OpenBot sets up. David's call. */
+/** What Mangaba Bot sets up. David's call. */
 export const DEFAULT_HARNESS = "langgraph-ts";
 
 /**

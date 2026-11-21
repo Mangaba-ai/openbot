@@ -32,10 +32,10 @@ import { queryClient } from "@/query-client";
 type Refusal = Extract<AddServerByUrlOutcome, { added: false }>;
 
 /**
- * Connections, Add server: an MCP server OpenBot doesn't list, added by its address.
+ * Connections, Add server: an MCP server Mangaba Bot doesn't list, added by its address.
  *
  * Its own screen rather than a dialog over the tiles, because it takes a name, an address and, for
- * some servers, a key (the layout skill's Procedure 5). The server decides the rest. OpenBot asks it
+ * some servers, a key (the layout skill's Procedure 5). The server decides the rest. Mangaba Bot asks it
  * how it is reached: one that signs people in sends this person straight to its sign-in page, and
  * one that needs nothing opens on its tools. A refusal it can offer a step for (a key, an admin's
  * approval) is drawn under the form with that step beside it.
@@ -73,7 +73,7 @@ export function AddServerPage() {
       return;
     }
     /*
-     * OpenBot Desktop opens the sign-in in the person's own browser and stays where it is, so it
+     * Mangaba Bot Desktop opens the sign-in in the person's own browser and stays where it is, so it
      * waits on the server's page; the sign-in hands the person back to it when they are done.
      */
     if (desktopShell()) {
@@ -134,7 +134,7 @@ export function AddServerPage() {
   return (
     <PageShell
       backButton={back}
-      description="Give your Bots the tools of an MCP server OpenBot doesn't list, from its address. If it asks you to sign in, you'll go to its sign-in page next."
+      description="Give your Bots the tools of an MCP server Mangaba Bot doesn't list, from its address. If it asks you to sign in, you'll go to its sign-in page next."
       title="Add server"
     >
       <form

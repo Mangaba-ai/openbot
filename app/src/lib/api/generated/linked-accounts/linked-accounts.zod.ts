@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Return one page of a person's accounts at other services that OpenBot knows are theirs, such as their Slack or GitHub account, so a Bot answering there knows who it is talking to. Only the person themselves may list them; there is no administrator view. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of a person's accounts at other services that Mangaba Bot knows are theirs, such as their Slack or GitHub account, so a Bot answering there knows who it is talking to. Only the person themselves may list them; there is no administrator view. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List a person's linked accounts
  */
 
@@ -88,7 +88,7 @@ export const ListLinkedAccountsResponse = zod.object({
           createdAt: zod.iso.datetime({ offset: true }),
         })
         .describe(
-          "A person's account at another service, which OpenBot knows is theirs. Never the credential it holds.",
+          "A person's account at another service, which Mangaba Bot knows is theirs. Never the credential it holds.",
         ),
     )
     .describe("The oldest link first, then by id."),
@@ -103,7 +103,7 @@ export const ListLinkedAccountsResponse = zod.object({
 });
 
 /**
- * Start linking one of the person's accounts at another service. Slack answers a one-time code the person sends the OpenBot app in Slack, which links the account they send it from. GitHub answers the address of GitHub's own consent page, which sends the person back to OpenBot once they agree. Either way the link is made when the person proves the account is theirs, never here. Only the person themselves may link their accounts, and only a service this deployment can link (listLinkedAccountProviders).
+ * Start linking one of the person's accounts at another service. Slack answers a one-time code the person sends the Mangaba Bot app in Slack, which links the account they send it from. GitHub answers the address of GitHub's own consent page, which sends the person back to Mangaba Bot once they agree. Either way the link is made when the person proves the account is theirs, never here. Only the person themselves may link their accounts, and only a service this deployment can link (listLinkedAccountProviders).
  * @summary Start linking an account
  */
 
@@ -163,7 +163,7 @@ export const LinkAccountResponse = zod
           .string()
           .describe("What to send, and where, as a person reads it."),
       })
-      .describe("A one-time code the person sends the OpenBot app in Slack."),
+      .describe("A one-time code the person sends the Mangaba Bot app in Slack."),
     zod
       .object({
         provider: zod.enum(["github"]),
@@ -174,7 +174,7 @@ export const LinkAccountResponse = zod
           ),
       })
       .describe(
-        "GitHub's consent page, which sends the person back to OpenBot once they agree.",
+        "GitHub's consent page, which sends the person back to Mangaba Bot once they agree.",
       ),
   ])
   .describe("What the person does next, by service.");
@@ -229,7 +229,7 @@ export const DeleteLinkedAccountHeader = zod.object({
 export const DeleteLinkedAccountResponse = zod.void();
 
 /**
- * Return the services this deployment can link a person's account at. A service appears only when its way back to OpenBot is set up: Slack needs the OpenBot app installed there, and GitHub needs OpenBot's GitHub App. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return the services this deployment can link a person's account at. A service appears only when its way back to Mangaba Bot is set up: Slack needs the Mangaba Bot app installed there, and GitHub needs Mangaba Bot's GitHub App. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List the services a person can link
  */
 

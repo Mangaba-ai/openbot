@@ -4,7 +4,7 @@
 
 export interface BotCallbackToken {
   /**
-   * The Bot's credential for calling OpenBot's tools back. Returned this once and never again.
+   * The Bot's credential for calling Mangaba Bot's tools back. Returned this once and never again.
    * @minLength 1
    */
   token: string;

@@ -18,13 +18,13 @@ import {
 import { primitive } from "@/lib/primitives";
 
 /**
- * Where a person can go in OpenBot, in one list.
+ * Where a person can go in Mangaba Bot, in one list.
  *
- * OpenBot's own sidebar draws it, and so does every skin that replaces the sidebar, so a destination
+ * Mangaba Bot's own sidebar draws it, and so does every skin that replaces the sidebar, so a destination
  * added here reaches every frame at once. One left out of a frame's own copy would simply be
  * missing from that skin, with nothing failing to say so.
  *
- * `section` says where OpenBot's sidebar puts each entry: `primary` destinations sit in its footer,
+ * `section` says where Mangaba Bot's sidebar puts each entry: `primary` destinations sit in its footer,
  * `account` ones in the menu under the person's name. A skin may group them its own way.
  *
  * The primary entries are what a person makes and comes back to: their Bots and the agents they
@@ -64,7 +64,7 @@ export type NavigationItem =
       adminOnly?: boolean;
       /** Shown only in the team edition: the personal edition has one person and no teams. */
       teamOnly?: boolean;
-      /** Shown only where OpenBot offers memory (see `offersMemory`). */
+      /** Shown only where Mangaba Bot offers memory (see `offersMemory`). */
       memoryOnly?: boolean;
       /** Kept in the list but shown to nobody, for now. Its page sends people home. */
       hidden?: boolean;
@@ -91,7 +91,7 @@ export function isNavigationLink(item: NavigationItem): item is NavigationLink {
 const TEAM_FEATURES_ITEM: NavigationItem = {
   kind: "dialog",
   id: "team-features",
-  label: "OpenBot for Business",
+  label: "Mangaba Bot for Business",
   icon: OpenBotLogo,
   section: "account",
 };

@@ -10,7 +10,7 @@ export interface RecorderConnection {
   id: string;
   /** The browser's name, as its Recorder gave it. */
   label: string;
-  /** How it was connected: from OpenBot in a browser, by OpenBot Desktop, by OpenBot for the person's own OpenBot browser, or by OpenBot for one recording in a Bot's browser. */
+  /** How it was connected: from Mangaba Bot in a browser, by Mangaba Bot Desktop, by Mangaba Bot for the person's own Mangaba Bot browser, or by Mangaba Bot for one recording in a Bot's browser. */
   via: RecorderConnectionVia;
   /** The Recorder extension's id. */
   extensionId: string;

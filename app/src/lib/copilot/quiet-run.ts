@@ -44,7 +44,7 @@ export const RUN_ENDED_UNHEARD =
  * run that never started goes quiet the same way, and nothing here can tell the two apart.
  */
 export const RUN_UNREACHABLE =
-  "OpenBot lost touch with the Bot before it finished. Carry on once OpenBot is back.";
+  "Mangaba Bot lost touch with the Bot before it finished. Carry on once Mangaba Bot is back.";
 
 /** What a join token says about the conversation it is for: the run in progress, or none. */
 type Joined = { runId: string | null };

@@ -6,13 +6,13 @@ import { computerModeQueryOptions } from "@/lib/enterprise/queries";
 import { cn } from "@/lib/utils";
 
 /**
- * Said to an admin wherever Admin talks about computers: this OpenBot runs every person's Bots on
+ * Said to an admin wherever Admin talks about computers: this Mangaba Bot runs every person's Bots on
  * one computer, which is a proof-of-concept setup, and how to give each person their own.
  *
- * The server decides (the settings' `computerMode`): an OpenBot only one person uses answers
+ * The server decides (the settings' `computerMode`): an Mangaba Bot only one person uses answers
  * `per-person`, because that one computer is the person's own. Asked only where the settings exist:
  * by an admin, so nobody else asks for settings they can't read, and in the team edition, because
- * the personal edition (OpenBot Desktop) keeps no organization settings and answers them 404.
+ * the personal edition (Mangaba Bot Desktop) keeps no organization settings and answers them 404.
  * Nothing while loading, on a failed read, or from a server that does not say.
  */
 export function SharedComputersNotice({ className }: { className?: string }) {

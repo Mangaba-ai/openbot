@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The choice is malformed, empty, or sets automatic approval outside a single-person OpenBot.
+ * The choice is malformed, empty, or sets automatic approval outside a single-person Mangaba Bot.
  */
 export type InvalidLearningChoiceResponse = Problem;

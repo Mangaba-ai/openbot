@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot's Bots don't read a model key from the vault. Or the organization does not exist.
+ * This Mangaba Bot's Bots don't read a model key from the vault. Or the organization does not exist.
  */
 export type ModelKeyNotFoundResponse = Problem;

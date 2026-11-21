@@ -3,7 +3,7 @@ import { DesktopReturn } from "@/components/desktop/desktop-return";
 import { searchTextEntry } from "@/lib/search-text";
 
 /**
- * Where an app's sign-in started in OpenBot Desktop comes back to, in the person's own browser. Not
+ * Where an app's sign-in started in Mangaba Bot Desktop comes back to, in the person's own browser. Not
  * behind sign-in: that browser is not the window, and the personal edition only admits requests
  * carrying its install's token, which only the window has. See `DesktopReturn`.
  */

@@ -22,7 +22,7 @@ param(
 )
 $ErrorActionPreference = 'Continue'
 
-$BundleId = 'ai.copilotkit.openbot.desktop'
+$BundleId = 'ai.mangaba.bot.desktop'
 $Root = if ($env:OPENBOT_ROOT) { $env:OPENBOT_ROOT } else { Join-Path $HOME 'OpenBot' }
 $AppDir = Join-Path $env:LOCALAPPDATA 'OpenBot'        # the per-user NSIS install, beside the Recorder's files
 $Projects = @('openbot', 'openbot-desktop')            # Compose projects: earlier apps used the folder's name, newer ones 'openbot-desktop'

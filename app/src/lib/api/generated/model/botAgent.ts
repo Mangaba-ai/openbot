@@ -18,23 +18,23 @@ export interface BotAgent {
   kind: BotAgentKind;
   visibility: BotAgentVisibility;
   /**
-   * The AG-UI address it runs at, as it was stored. Null for an agent that runs inside OpenBot.
+   * The AG-UI address it runs at, as it was stored. Null for an agent that runs inside Mangaba Bot.
    * @nullable
    */
   endpoint: string | null;
-  /** What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn't know. */
+  /** What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn't know. */
   framework?: string;
   /**
-   * The model it runs on, for an agent whose model is OpenBot's to choose. Null for the organization's default, or for an agent that picks its own.
+   * The model it runs on, for an agent whose model is Mangaba Bot's to choose. Null for the organization's default, or for an agent that picks its own.
    * @nullable
    */
   model: string | null;
   skills: BotAgentSkill[];
   /** Whether a key is set for its address. Never the key. */
   hasAuth: boolean;
-  /** Whether it holds a credential for calling OpenBot's tools back. Never the credential. */
+  /** Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential. */
   hasCallbackToken: boolean;
-  /** Whether OpenBot runs it, inside OpenBot or at an address OpenBot started, so it needs no callback token of its own. */
+  /** Whether Mangaba Bot runs it, inside Mangaba Bot or at an address Mangaba Bot started, so it needs no callback token of its own. */
   builtIn: boolean;
   /** Whether the caller may change and delete it. */
   canManage: boolean;

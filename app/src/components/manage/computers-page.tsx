@@ -68,7 +68,7 @@ function rowId(computer: ComputerProfile): string {
 }
 
 /**
- * A person's own OpenBot browser, the one Teach a Bot records in. It is listed beside the Bots' browsers, under an id
+ * A person's own Mangaba Bot browser, the one Teach a Bot records in. It is listed beside the Bots' browsers, under an id
  * that is no Bot's, so it read "A Bot no longer here" until it was named for what it is.
  */
 function isOwnBrowser(computer: ComputerProfile): boolean {
@@ -135,7 +135,7 @@ export function ComputersPage({
   const queryClient = useQueryClient();
   const nameFor = useBotNames();
   /*
-   * The person's own OpenBot browser is cleared the way Teach a Bot clears it: a recording in it ends first, and its
+   * The person's own Mangaba Bot browser is cleared the way Teach a Bot clears it: a recording in it ends first, and its
    * Recorder connection ends with the profile. A Bot's Reset does neither.
    */
   const clearOwnBrowser = useMutation(clearBrowserMutationOptions(queryClient));
@@ -146,7 +146,7 @@ export function ComputersPage({
     useQuery(currentUserQueryOptions()).data?.role,
   );
   /*
-   * An OpenBot with no computers for Bots has no list to read: the server refuses it, and "Couldn't
+   * An Mangaba Bot with no computers for Bots has no list to read: the server refuses it, and "Couldn't
    * load the computers. Reload the page." sent a person to retry what can never work. So the list
    * waits until the deployment has said whether there are computers, and is not asked for where
    * there are none.
@@ -219,11 +219,11 @@ export function ComputersPage({
    */
   const titleOf = (computer: ComputerProfile): string => {
     if (isOwnBrowser(computer)) {
-      if (personal) return "Your OpenBot browser";
+      if (personal) return "Your Mangaba Bot browser";
       const owner = computer.person?.name ?? computer.person?.email;
       return owner
-        ? `${owner}'s OpenBot browser`
-        : "A person's OpenBot browser";
+        ? `${owner}'s Mangaba Bot browser`
+        : "A person's Mangaba Bot browser";
     }
     // One person, so a row is one of their Bots.
     if (personal) return computer.botId ? nameFor(computer.botId) : "Computer";
@@ -291,9 +291,9 @@ export function ComputersPage({
       ) : null}
 
       {/*
-        On one Bot's page, folders only where they exist: inside OpenBot Desktop. On a hosted OpenBot never: only the
-        OpenBot that OpenBot Desktop runs on the person's own computer can be given a folder there, so a hosted one
-        never can, and "Needs OpenBot Desktop" would send them to something that can't help.
+        On one Bot's page, folders only where they exist: inside Mangaba Bot Desktop. On a hosted Mangaba Bot never: only the
+        Mangaba Bot that Mangaba Bot Desktop runs on the person's own computer can be given a folder there, so a hosted one
+        never can, and "Needs Mangaba Bot Desktop" would send them to something that can't help.
       */}
       {(agentId || hosted) && hostAccess.data?.desktop === false ? null : (
         <HostFoldersSection
@@ -350,7 +350,7 @@ export function ComputersPage({
               icon={IconDeviceDesktopOff}
               title="No computers for Bots"
             >
-              Bots can't browse or run commands on this OpenBot. Set up
+              Bots can't browse or run commands on this Mangaba Bot. Set up
               computers for Bots, and they show up here.
             </PageEmpty>
           ) : computers === null && problem ? (
@@ -550,7 +550,7 @@ export function ComputersPage({
           deletes a Bot's browser profile and signs it out of everything.{" "}
           {computers?.some(isOwnBrowser) ? (
             <>
-              <strong>Clear browser data</strong> does the same for your OpenBot
+              <strong>Clear browser data</strong> does the same for your Mangaba Bot
               browser.{" "}
             </>
           ) : null}
@@ -595,7 +595,7 @@ export function ComputersPage({
 type HostFoldersSectionProps = {
   botIds: string[];
   connected: boolean;
-  /** This OpenBot runs in OpenBot Desktop. Without it no folder can ever be chosen here. */
+  /** This Mangaba Bot runs in Mangaba Bot Desktop. Without it no folder can ever be chosen here. */
   desktop: boolean;
   grants: HostFolderGrant[];
   loading: boolean;
@@ -605,7 +605,7 @@ type HostFoldersSectionProps = {
   onStop: () => void;
   pending: HostAccessPendingOperation[];
   /**
-   * The personal edition, where the person reading is the one OpenBot Desktop asks. In the team
+   * The personal edition, where the person reading is the one Mangaba Bot Desktop asks. In the team
    * edition the desktop's owner may be somebody else, so a waiting request names them instead.
    */
   personal: boolean;
@@ -644,7 +644,7 @@ function HostFoldersSection({
 
   return (
     <PageSection
-      description="Choose folders a Bot can read on this computer. The desktop app asks before each edit or command. Access ends when you stop OpenBot."
+      description="Choose folders a Bot can read on this computer. The desktop app asks before each edit or command. Access ends when you stop Mangaba Bot."
       title="Folders on this computer"
     >
       {problem ? (
@@ -664,8 +664,8 @@ function HostFoldersSection({
       ) : null}
 
       {loading ? null : !desktop ? (
-        <PageEmpty icon={IconDeviceDesktop} title="Needs OpenBot Desktop">
-          This OpenBot isn't running in the desktop app. Use OpenBot Desktop to
+        <PageEmpty icon={IconDeviceDesktop} title="Needs Mangaba Bot Desktop">
+          This Mangaba Bot isn't running in the desktop app. Use Mangaba Bot Desktop to
           let Bots read folders on this computer.
         </PageEmpty>
       ) : botIds.length === 0 ? (
@@ -821,7 +821,7 @@ function ownerLabel(grant: { ownerName?: string; ownerEmail?: string }) {
  *
  * Reading and listing need nobody's answer, so they say only what is happening. A folder, a file
  * change or a command waits for the person at the computer: in the personal edition that is the
- * person reading, so it says OpenBot Desktop is asking them, in a window. It used to say "waiting for
+ * person reading, so it says Mangaba Bot Desktop is asking them, in a window. It used to say "waiting for
  * approval from the desktop owner" to the desktop's owner, and "Listing files from the desktop owner".
  */
 function pendingSentence(
@@ -840,11 +840,11 @@ function pendingSentence(
   if (personal) {
     switch (request.kind) {
       case "write_file":
-        return "A file change is waiting for you. OpenBot Desktop is asking you in a window.";
+        return "A file change is waiting for you. Mangaba Bot Desktop is asking you in a window.";
       case "run_command":
-        return "A command is waiting for you or still running. OpenBot Desktop asks you in a window.";
+        return "A command is waiting for you or still running. Mangaba Bot Desktop asks you in a window.";
       default:
-        return "Folder access is waiting for you. OpenBot Desktop is asking you in a window.";
+        return "Folder access is waiting for you. Mangaba Bot Desktop is asking you in a window.";
     }
   }
   const owner = ownerLabel(request);

@@ -165,7 +165,7 @@ export function AppAccessAction({
    */
   const tab = useConnectInNewTab();
   /*
-   * OpenBot's step before a sign-in, in OpenBot Desktop's window. Drawn whichever button is: the
+   * Mangaba Bot's step before a sign-in, in Mangaba Bot Desktop's window. Drawn whichever button is: the
    * one that pressed Connect can be swapped for another while the step is on screen.
    */
   return (
@@ -280,7 +280,7 @@ function AdminAction({
     );
   }
 
-  // The directory's own page: Composio's unless this OpenBot's directory is Arcade's.
+  // The directory's own page: Composio's unless this Mangaba Bot's directory is Arcade's.
   const page =
     access.state === "disabled" &&
     access.unavailable === "directory_unavailable"

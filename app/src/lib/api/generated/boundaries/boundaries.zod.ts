@@ -51,7 +51,7 @@ export const GetBoundariesResponse = zod
   );
 
 /**
- * Replace the boundaries whole: the mode and both lists of rules, in the order given. Every rule added must be one OpenBot can evaluate, so a rule with a mistake in it is refused and nothing is saved. The new boundaries apply to every Bot's next action. The audit trail records who changed them, the rules added and removed, and the sentence a rule was written from when it was described in English. Only an administrator may set them.
+ * Replace the boundaries whole: the mode and both lists of rules, in the order given. Every rule added must be one Mangaba Bot can evaluate, so a rule with a mistake in it is refused and nothing is saved. The new boundaries apply to every Bot's next action. The audit trail records who changed them, the rules added and removed, and the sentence a rule was written from when it was described in English. Only an administrator may set them.
  * @summary Set the boundaries
  */
 
@@ -104,7 +104,7 @@ export const ReplaceBoundariesBody = zod.object({
     .array(zod.string())
     .default(replaceBoundariesBodyDenyDefault)
     .describe(
-      "The deny rules, each a CEL expression. One added here must be one OpenBot can evaluate.",
+      "The deny rules, each a CEL expression. One added here must be one Mangaba Bot can evaluate.",
     ),
   allow: zod
     .array(zod.string())

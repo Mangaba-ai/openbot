@@ -78,7 +78,7 @@ export const ListConnectionsResponse = zod.object({
             .string()
             .nullable()
             .describe(
-              "What the app granted, in its own words, where OpenBot keeps the sign-in itself. Null where the app keeps it.",
+              "What the app granted, in its own words, where Mangaba Bot keeps the sign-in itself. Null where the app keeps it.",
             ),
           check: zod
             .union([
@@ -113,7 +113,7 @@ export const ListConnectionsResponse = zod.object({
               zod.null(),
             ])
             .describe(
-              "The last check of the connection with the app. Null where OpenBot keeps the sign-in itself, which leaves nothing to check.",
+              "The last check of the connection with the app. Null where Mangaba Bot keeps the sign-in itself, which leaves nothing to check.",
             ),
           canAddAccount: zod
             .boolean()
@@ -188,7 +188,7 @@ export const GetConnectionResponse = zod
       .string()
       .nullable()
       .describe(
-        "What the app granted, in its own words, where OpenBot keeps the sign-in itself. Null where the app keeps it.",
+        "What the app granted, in its own words, where Mangaba Bot keeps the sign-in itself. Null where the app keeps it.",
       ),
     check: zod
       .union([
@@ -223,7 +223,7 @@ export const GetConnectionResponse = zod
         zod.null(),
       ])
       .describe(
-        "The last check of the connection with the app. Null where OpenBot keeps the sign-in itself, which leaves nothing to check.",
+        "The last check of the connection with the app. Null where Mangaba Bot keeps the sign-in itself, which leaves nothing to check.",
       ),
     canAddAccount: zod
       .boolean()
@@ -293,7 +293,7 @@ export const ConnectAppBody = zod.object({
     .enum(["connections", "apps", "desktop"])
     .default(connectAppBodyReturnToDefault)
     .describe(
-      "Which of OpenBot's own pages the app sends the person back to: connections, the person's own page for the app; apps, the app's page for administrators; desktop, back to OpenBot Desktop. Never an address.",
+      "Which of Mangaba Bot's own pages the app sends the person back to: connections, the person's own page for the app; apps, the app's page for administrators; desktop, back to Mangaba Bot Desktop. Never an address.",
     ),
   anotherAccount: zod
     .boolean()
@@ -319,7 +319,7 @@ export const ConnectAppResponse = zod
           .describe("The address to open. Works once, for this person only."),
       })
       .describe(
-        "The app's own sign-in page, which sends the person back to OpenBot once they agree.",
+        "The app's own sign-in page, which sends the person back to Mangaba Bot once they agree.",
       ),
     zod
       .object({
@@ -369,7 +369,7 @@ export const ConnectAppResponse = zod
             zod.null(),
           ])
           .describe(
-            "Where the person gets the key. Null where OpenBot has no guide for this app.",
+            "Where the person gets the key. Null where Mangaba Bot has no guide for this app.",
           ),
       })
       .describe(
@@ -398,7 +398,7 @@ export const ConnectAppResponse = zod
   .describe("What happens next, after starting to connect an app.");
 
 /**
- * Ask the app whether the person's account is really connected, and record its answer: kept when it says yes, forgotten here when it says no. Call it when the person comes back from the app's sign-in page, and whenever a page shows the connection, because a connection can be ended at the app itself. Asking again records nothing new. When the app can't be asked, the last answer stands. An app whose sign-in OpenBot keeps itself has nothing to confirm. Only the person themselves may confirm their connections.
+ * Ask the app whether the person's account is really connected, and record its answer: kept when it says yes, forgotten here when it says no. Call it when the person comes back from the app's sign-in page, and whenever a page shows the connection, because a connection can be ended at the app itself. Asking again records nothing new. When the app can't be asked, the last answer stands. An app whose sign-in Mangaba Bot keeps itself has nothing to confirm. Only the person themselves may confirm their connections.
  * @summary Check with the app that a person's account is connected
  */
 
@@ -518,7 +518,7 @@ export const RecheckConnectionResponse = zod
   .describe("What one check of a connection found.");
 
 /**
- * End a person's connection to an app, with every account they connected there. The app is asked to end the access first, then OpenBot forgets the connection. Other apps that share the same sign-in at the app end with it, as getConnectionDisconnectPreview names them. Safe to repeat. revocationRequested is false where the app had nothing to end. Only the person themselves may disconnect their apps.
+ * End a person's connection to an app, with every account they connected there. The app is asked to end the access first, then Mangaba Bot forgets the connection. Other apps that share the same sign-in at the app end with it, as getConnectionDisconnectPreview names them. Safe to repeat. revocationRequested is false where the app had nothing to end. Only the person themselves may disconnect their apps.
  * @summary Disconnect a person's account from an app
  */
 
@@ -798,7 +798,7 @@ export const AuthorizeConnectionActionBody = zod.object({
     .enum(["connections", "apps", "desktop"])
     .default(authorizeConnectionActionBodyReturnToDefault)
     .describe(
-      "Which of OpenBot's own pages the app sends the person back to: connections, the person's own page for the app; apps, the app's page for administrators; desktop, back to OpenBot Desktop. Never an address.",
+      "Which of Mangaba Bot's own pages the app sends the person back to: connections, the person's own page for the app; apps, the app's page for administrators; desktop, back to Mangaba Bot Desktop. Never an address.",
     ),
 });
 
@@ -809,7 +809,7 @@ export const AuthorizeConnectionActionResponse = zod
       .describe("The address to open. Works once, for this person only."),
   })
   .describe(
-    "The app's consent page, which sends the person back to OpenBot once they agree.",
+    "The app's consent page, which sends the person back to Mangaba Bot once they agree.",
   );
 
 /**
@@ -1197,7 +1197,7 @@ export const ConnectSharedAppBody = zod.object({
     .enum(["apps", "desktop"])
     .default(connectSharedAppBodyReturnToDefault)
     .describe(
-      "Which of OpenBot's own pages the app sends the administrator back to: apps, the app's page for administrators; desktop, back to OpenBot Desktop. Never an address.",
+      "Which of Mangaba Bot's own pages the app sends the administrator back to: apps, the app's page for administrators; desktop, back to Mangaba Bot Desktop. Never an address.",
     ),
   values: zod
     .record(zod.string(), zod.string().max(connectSharedAppBodyValuesMaxOne))
@@ -1217,7 +1217,7 @@ export const ConnectSharedAppResponse = zod
           .describe("The address to open. Works once, for this person only."),
       })
       .describe(
-        "The app's own sign-in page, which sends the person back to OpenBot once they agree.",
+        "The app's own sign-in page, which sends the person back to Mangaba Bot once they agree.",
       ),
     zod
       .object({
@@ -1267,7 +1267,7 @@ export const ConnectSharedAppResponse = zod
             zod.null(),
           ])
           .describe(
-            "Where the person gets the key. Null where OpenBot has no guide for this app.",
+            "Where the person gets the key. Null where Mangaba Bot has no guide for this app.",
           ),
       })
       .describe(
@@ -1394,7 +1394,7 @@ export const RecheckSharedConnectionResponse = zod
   .describe("What one check of a connection found.");
 
 /**
- * End an app's shared account: the app is asked to end the access first, then OpenBot forgets it. Every Bot using the app loses it until an administrator connects an account again. Other apps that share the same sign-in at the app end with it. Safe to repeat. Only an administrator may disconnect it.
+ * End an app's shared account: the app is asked to end the access first, then Mangaba Bot forgets it. Every Bot using the app loses it until an administrator connects an account again. Other apps that share the same sign-in at the app end with it. Safe to repeat. Only an administrator may disconnect it.
  * @summary Disconnect an app's shared account
  */
 
@@ -1592,7 +1592,7 @@ export const AuthorizeSharedConnectionActionBody = zod.object({
     .enum(["connections", "apps", "desktop"])
     .default(authorizeSharedConnectionActionBodyReturnToDefault)
     .describe(
-      "Which of OpenBot's own pages the app sends the person back to: connections, the person's own page for the app; apps, the app's page for administrators; desktop, back to OpenBot Desktop. Never an address.",
+      "Which of Mangaba Bot's own pages the app sends the person back to: connections, the person's own page for the app; apps, the app's page for administrators; desktop, back to Mangaba Bot Desktop. Never an address.",
     ),
 });
 
@@ -1603,5 +1603,5 @@ export const AuthorizeSharedConnectionActionResponse = zod
       .describe("The address to open. Works once, for this person only."),
   })
   .describe(
-    "The app's consent page, which sends the person back to OpenBot once they agree.",
+    "The app's consent page, which sends the person back to Mangaba Bot once they agree.",
   );

@@ -44,7 +44,7 @@ pub struct Problem {
     /// Only a Windows restart fixes this, so the window offers one instead of Try again.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub restart_windows: bool,
-    /// Which failure this is, for the commands that connect to an OpenBot that runs elsewhere, so
+    /// Which failure this is, for the commands that connect to an Mangaba Bot that runs elsewhere, so
     /// the window can choose what to offer next. See `connected::Kind`.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub kind: Option<&'static str>,
@@ -137,7 +137,7 @@ impl Problem {
     }
 
     /// With the plain line for a disk that ran out (`disk_full`) above its raw output, when its
-    /// sentence or its output shows one, on `os` and the engine OpenBot runs on.
+    /// sentence or its output shows one, on `os` and the engine Mangaba Bot runs on.
     pub fn explained(mut self, os: &str, podman: bool) -> Self {
         if self.cause().is_none() {
             let all = format!(
@@ -180,7 +180,7 @@ fn disk_ran_out(lower: &str) -> bool {
 The plain line a failure gets above its raw output when that output shows the disk ran out
 (`disk_ran_out`), or nothing. What to do on this computer: free space, then start the engine's
 machine again, since its disk stops writing until it is restarted. Docker Desktop is quit and opened
-again; OpenBot's own Podman machine restarts with the computer.
+again; Mangaba Bot's own Podman machine restarts with the computer.
 */
 pub fn disk_full(output: &str, os: &str, podman: bool) -> Option<&'static str> {
     if !disk_ran_out(&output.to_lowercase()) {
@@ -239,17 +239,17 @@ pub fn said_about(output: &str) -> String {
         || lower.contains("manifest unknown")
         || lower.contains("not found: manifest")
     {
-        return "OpenBot could not download one of the parts it needs. That version may not have \
-                been published yet. Check for an OpenBot update, and try again."
+        return "Mangaba Bot could not download one of the parts it needs. That version may not have \
+                been published yet. Check for an Mangaba Bot update, and try again."
             .into();
     }
     if lower.contains("port is already allocated") || lower.contains("address already in use") {
-        return "Something else on this computer is using a port OpenBot needs. Close it, or \
+        return "Something else on this computer is using a port Mangaba Bot needs. Close it, or \
                 restart the computer, and try again."
             .into();
     }
     if disk_ran_out(&lower) {
-        return "This computer has run out of disk space, so OpenBot could not finish. Free some \
+        return "This computer has run out of disk space, so Mangaba Bot could not finish. Free some \
                 space and try again."
             .into();
     }
@@ -274,7 +274,7 @@ pub fn said_about(output: &str) -> String {
             .iter()
             .any(|cause| lower.contains(cause)))
     {
-        return "OpenBot couldn't download the software it needs. Check your internet connection, \
+        return "Mangaba Bot couldn't download the software it needs. Check your internet connection, \
                 proxy or firewall, and try again."
             .into();
     }
@@ -282,7 +282,7 @@ pub fn said_about(output: &str) -> String {
         || lower.contains("is the docker daemon running")
         || lower.contains("connection refused")
     {
-        return "OpenBot can't reach the software it runs on. If you use Docker Desktop, open it and \
+        return "Mangaba Bot can't reach the software it runs on. If you use Docker Desktop, open it and \
                 wait for it to start. Then try again."
             .into();
     }
@@ -292,12 +292,12 @@ pub fn said_about(output: &str) -> String {
             .into();
     }
     if lower.contains("unauthorized") || lower.contains("permission denied") {
-        return "OpenBot was refused permission for something it needed. The details below say \
+        return "Mangaba Bot was refused permission for something it needed. The details below say \
                 what, and are worth sending to whoever set this up."
             .into();
     }
 
-    "Something went wrong while setting OpenBot up. The details below are worth sending to \
+    "Something went wrong while setting Mangaba Bot up. The details below are worth sending to \
      whoever set this up."
         .into()
 }
@@ -344,7 +344,7 @@ mod tests {
     #[test]
     fn a_taken_port_says_so_in_words_somebody_can_act_on() {
         let said = said_about("Bind for 0.0.0.0:4202 failed: port is already allocated");
-        assert!(said.contains("port OpenBot needs"), "{said}");
+        assert!(said.contains("port Mangaba Bot needs"), "{said}");
     }
 
     #[test]
@@ -361,7 +361,7 @@ mod tests {
     /// disk had stopped writing, and nothing on it said the disk was full.
     const FULL_MAC_CARD: &str = "Image ghcr.io/copilotkit/openbot@sha256:479cccd42fc8942c98c7f326b065ca53cfd58f91d78fd1d5a2680b684e1a5f70: write /var/lib/desktop-containerd/daemon/io.containerd.metadata.v1.bolt/meta.db: input/output error
 Error response from daemon: write /var/lib/desktop-containerd/daemon/io.containerd.metadata.v1.bolt/meta.db: input/output error
-putting back: OpenBot could not put its database back.
+putting back: Mangaba Bot could not put its database back.
 Postgres did not start on its own: time=\"2026-11-17T13:46:50-08:00\" level=warning msg=\"The \\\"OPENAI_API_KEY\\\" variable is not set. Defaulting to a blank string.\"
 unable to get image 'pgvector/pgvector:pg17': Error response from daemon: rpc error: code = Unknown desc = blob sha256:cf134a767f474095eeba57e0117be8e568e011a63f33fbf252f14c9b760f8e6f expected at /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/cf134a767f474095eeba57e0117be8e568e011a63f33fbf252f14c9b760f8e6f: open /var/lib/desktop-containerd/daemon/io.containerd.content.v1.content/blobs/sha256/cf134a767f474095eeba57e0117be8e568e011a63f33fbf252f14c9b760f8e6f: input/output error";
 
@@ -382,7 +382,7 @@ unable to get image 'pgvector/pgvector:pg17': Error response from daemon: rpc er
 
         // The card itself: its sentence, and above the raw output, the line that says what to do.
         let card = Problem::with(
-            "OpenBot couldn't update or put the version it had back. Choose Retry to try putting it \
+            "Mangaba Bot couldn't update or put the version it had back. Choose Retry to try putting it \
              back again.",
             FULL_MAC_CARD,
         );
@@ -411,7 +411,7 @@ unable to get image 'pgvector/pgvector:pg17': Error response from daemon: rpc er
         );
         assert_eq!(disk_full("dial tcp: i/o timeout", "macos", false), None);
         assert_eq!(
-            Problem::with("OpenBot couldn't start.", "exit 1")
+            Problem::with("Mangaba Bot couldn't start.", "exit 1")
                 .explained("macos", false)
                 .cause(),
             None

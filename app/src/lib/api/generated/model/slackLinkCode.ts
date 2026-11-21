@@ -4,7 +4,7 @@
 import type { SlackLinkCodeProvider } from "./slackLinkCodeProvider";
 
 /**
- * A one-time code the person sends the OpenBot app in Slack.
+ * A one-time code the person sends the Mangaba Bot app in Slack.
  */
 export interface SlackLinkCode {
   provider: SlackLinkCodeProvider;

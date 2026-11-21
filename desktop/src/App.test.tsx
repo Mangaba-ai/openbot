@@ -100,14 +100,14 @@ mock.module("./Mark", () => ({
   // vendored file, which needs Vite's glob.
   ButtonMark: ({ id }: { id: string | null }) =>
     id ? <img alt="" data-mark={id} /> : null,
-  // A cloud's mark, named, as OpenBot for Business's Self-Hosted row lists them.
+  // A cloud's mark, named, as Mangaba Bot for Business's Self-Hosted row lists them.
   MarkImage: ({ id, name }: { id: string; name: string }) => (
     <img alt={name} data-mark={id} />
   ),
 }));
 
 const { App } = await import("./App");
-// No page replaces this one here, so the running screen comes once the window was sent to OpenBot.
+// No page replaces this one here, so the running screen comes once the window was sent to Mangaba Bot.
 // The test of the handover itself holds it as the app does.
 const { handover } = await import("./handover");
 const HANDOVER_HOLD_MS = handover.holdMs;
@@ -198,7 +198,7 @@ async function beginPendingInstallation() {
   });
   const view = await renderApp();
   await installLocal(view);
-  await view.findByRole("heading", { name: "Installing OpenBot" });
+  await view.findByRole("heading", { name: "Installing Mangaba Bot" });
   return {
     view,
     preparation,
@@ -259,7 +259,7 @@ function expectBehind(
   { waiting = false }: { waiting?: boolean } = {},
 ) {
   const row = view.getByRole("listitem", {
-    name: "Installing OpenBot in the background",
+    name: "Installing Mangaba Bot in the background",
   });
   expect(row.querySelector(".detail")?.textContent).toBe(said);
   expect(row.querySelector(".step-status")?.textContent).toContain(
@@ -315,7 +315,7 @@ test("installation shows its active stage immediately, with its time so far", as
     view.getByRole("listitem", { name: "Preparing this computer" }),
   );
   expect(
-    preparing.getByText("Checking the software OpenBot needs."),
+    preparing.getByText("Checking the software Mangaba Bot needs."),
   ).toBeTruthy();
   // Running, it says how far along the install is: the first of its four parts.
   expect(preparing.getByText("Step 1 of 4")).toBeTruthy();
@@ -323,25 +323,25 @@ test("installation shows its active stage immediately, with its time so far", as
   expect(preparing.getByText(/· \d+s elapsed/)).toBeTruthy();
   await act(async () => preparation.resolve());
   // Installed: on to the AI provider screen. The install's rows are done; what is left, setting
-  // up the rest of OpenBot, is said on one row under the choice.
+  // up the rest of Mangaba Bot, is said on one row under the choice.
   await view.findByRole("heading", { name: "Connect your AI" });
   expect(
     view.queryByRole("listitem", { name: "Preparing this computer" }),
   ).toBeNull();
   expect(
-    view.queryByRole("listitem", { name: "Downloading OpenBot" }),
+    view.queryByRole("listitem", { name: "Downloading Mangaba Bot" }),
   ).toBeNull();
   expectBehind(
     view,
     3,
-    "Setting up OpenBot on this computer. This takes a few minutes the first time.",
+    "Setting up Mangaba Bot on this computer. This takes a few minutes the first time.",
   );
 });
 
 /*
- * The rest of OpenBot downloads alongside OpenBot's own download, once the software OpenBot runs on
- * answers. On a live Windows run the Install step showed both at once, "Downloading OpenBot ·
- * Step 2 of 4" and "Downloading the rest of OpenBot · Step 3 of 4", each with its spinner, which
+ * The rest of Mangaba Bot downloads alongside Mangaba Bot's own download, once the software Mangaba Bot runs on
+ * answers. On a live Windows run the Install step showed both at once, "Downloading Mangaba Bot ·
+ * Step 2 of 4" and "Downloading the rest of Mangaba Bot · Step 3 of 4", each with its spinner, which
  * read as two steps at the same time. The step says one step at a time: the third once the
  * second is done, with as much of its download as has come in meanwhile.
  */
@@ -355,12 +355,12 @@ test("the Install step shows one step in progress at a time while both downloads
   });
   const view = await renderApp();
   await installLocal(view);
-  await view.findByRole("heading", { name: "Installing OpenBot" });
+  await view.findByRole("heading", { name: "Installing Mangaba Bot" });
   await emitProgress({
     step: "engine",
     ok: true,
     running: false,
-    detail: "The software OpenBot runs on is ready.",
+    detail: "The software Mangaba Bot runs on is ready.",
   });
   await emitProgress({
     step: "images",
@@ -375,7 +375,7 @@ test("the Install step shows one step in progress at a time while both downloads
       bytesPerSecond: 9_000_000,
     },
   });
-  // The rest of OpenBot is downloading too, and the window has heard how far it has got.
+  // The rest of Mangaba Bot is downloading too, and the window has heard how far it has got.
   await waitFor(() =>
     expect(
       invokeCalls.some((call) => call.command === "local_eval_download"),
@@ -389,13 +389,13 @@ test("the Install step shows one step in progress at a time while both downloads
         (row) =>
           `${row.getAttribute("aria-label")} | ${row.querySelector(".step-status")?.textContent?.replace(/ · [\dms ]+ elapsed$/, "")}`,
       );
-  expect(inProgress()).toEqual(["Downloading OpenBot | Step 2 of 4"]);
+  expect(inProgress()).toEqual(["Downloading Mangaba Bot | Step 2 of 4"]);
   expect(view.container.textContent).not.toContain("Step 3 of 4");
   // Step 2 done: the third step is the one in progress, its download as far as it has got.
   await act(async () => preparation.resolve());
   await view.findByRole("heading", { name: "Connect your AI" });
   expect(inProgress()).toEqual([
-    "Installing OpenBot in the background | Step 3 of 4",
+    "Installing Mangaba Bot in the background | Step 3 of 4",
   ]);
   expect(view.container.textContent).toContain("400.0 MB of 1.6 GB");
 });
@@ -404,7 +404,7 @@ test("a setup failure only a Windows restart fixes offers the restart, not Try a
   const { view, preparation } = await beginPendingInstallation();
   await act(async () =>
     preparation.reject({
-      said: "Windows needs to restart to finish setting up the software OpenBot runs on. Restart Windows, then open OpenBot again.",
+      said: "Windows needs to restart to finish setting up the software Mangaba Bot runs on. Restart Windows, then open Mangaba Bot again.",
       detail:
         "user-mode networking is not working in the openbot VM: host.containers.internal did not resolve in the openbot VM within 30s: podman machine ssh openbot timeout 3 getent ahostsv4 host.containers.internal exited with status 124",
       restart_windows: true,
@@ -414,7 +414,7 @@ test("a setup failure only a Windows restart fixes offers the restart, not Try a
     await view.findByRole("heading", { name: "Restart Windows to finish" }),
   ).toBeTruthy();
   expect(view.container.textContent).toContain(
-    "Windows needs to restart to finish setting up the software OpenBot runs on.",
+    "Windows needs to restart to finish setting up the software Mangaba Bot runs on.",
   );
   expect(view.container.textContent).not.toContain(
     "Windows Subsystem for Linux is set up.",
@@ -444,7 +444,7 @@ test("installation failure stops active indicators and retry begins fresh", asyn
     preparation.reject({ said: "The download was interrupted." }),
   );
   const installing = within(
-    view.getByRole("listitem", { name: "Downloading OpenBot" }),
+    view.getByRole("listitem", { name: "Downloading Mangaba Bot" }),
   );
   expect(installing.getByText("Failed")).toBeTruthy();
   expect(installing.getByText("✗")).toBeTruthy();
@@ -587,7 +587,7 @@ function localCliCalls() {
   );
 }
 
-/** A first run hands over the moment Start succeeds: OpenBot opens, and nothing is asked first. */
+/** A first run hands over the moment Start succeeds: Mangaba Bot opens, and nothing is asked first. */
 async function expectHandover(timeout?: number) {
   await waitFor(
     () =>
@@ -601,7 +601,7 @@ async function expectHandover(timeout?: number) {
   );
 }
 
-/** The first screen's Install, which with a CLI installs OpenBot and local Intelligence. */
+/** The first screen's Install, which with a CLI installs Mangaba Bot and local Intelligence. */
 async function installLocal(view: Awaited<ReturnType<typeof renderApp>>) {
   await userEvent.click(view.getByRole("button", { name: "Install" }));
   // Install first looks at what this computer needs, where nothing has yet: let that answer.
@@ -611,7 +611,7 @@ async function installLocal(view: Awaited<ReturnType<typeof renderApp>>) {
 /** Words about the software underneath, which no local screen says. */
 // Docker is not here: Docker Desktop is an app a person may already have, and its prompts and
 // agreements show windows of its own, so a screen names it when it waits on one. See
-// `plainInstallSteps`. Podman is: OpenBot installs it, and a person reads "the software OpenBot
+// `plainInstallSteps`. Podman is: Mangaba Bot installs it, and a person reads "the software Mangaba Bot
 // runs on" instead. The log names it.
 const JARGON = [
   /\bCLI\b/,
@@ -650,21 +650,21 @@ async function chooseOpenAi(view: Awaited<ReturnType<typeof renderApp>>) {
 }
 
 /*
- * The ways to run OpenBot, as they are sold: OpenBot (Self-Contained) on this computer, and OpenBot
+ * The ways to run Mangaba Bot, as they are sold: Mangaba Bot (Self-Contained) on this computer, and Mangaba Bot
  * for Business, whose two ways to run (Cloud, and Self-Hosted on a company's own cloud or on-prem)
- * both book a call. Before, Self-hosted meant this computer and OpenBot Cloud was a greyed tile of
- * its own beside OpenBot for Business.
+ * both book a call. Before, Self-hosted meant this computer and Mangaba Bot Cloud was a greyed tile of
+ * its own beside Mangaba Bot for Business.
  */
-test("the first screen offers OpenBot (Self-Contained), then OpenBot for Business with Cloud and Self-Hosted, and says what this computer needs and why", async () => {
+test("the first screen offers Mangaba Bot (Self-Contained), then Mangaba Bot for Business with Cloud and Self-Hosted, and says what this computer needs and why", async () => {
   setupRootConfiguration("/tmp/local-eval-welcome", async () =>
     emptyConfiguration(),
   );
   withLocalCli({ "plugin:opener|open_url": null });
   const view = await renderApp();
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
   const radios = view.getAllByRole("radio") as HTMLInputElement[];
   expect(radios.map((radio) => radio.closest("label")?.textContent)).toEqual([
-    "OpenBot (Self-Contained)Everything runs on this computer, for trying it or personal use.",
+    "Mangaba Bot (Self-Contained)Everything runs on this computer, for trying it or personal use.",
     "CloudWe run it for you.",
     "Self-HostedYour own cloud or on-prem.",
   ]);
@@ -673,8 +673,8 @@ test("the first screen offers OpenBot (Self-Contained), then OpenBot for Busines
     [false, false],
     [false, false],
   ]);
-  // Cloud and Self-Hosted are OpenBot for Business's, in one group that says it books a call.
-  const business = view.getByRole("group", { name: "OpenBot for Business" });
+  // Cloud and Self-Hosted are Mangaba Bot for Business's, in one group that says it books a call.
+  const business = view.getByRole("group", { name: "Mangaba Bot for Business" });
   expect(business.textContent).toContain(
     "For your whole team. Book a call to see it.",
   );
@@ -695,21 +695,21 @@ test("the first screen offers OpenBot (Self-Contained), then OpenBot for Busines
     ["google-cloud", "Google Cloud"],
     ["kubernetes", "Kubernetes"],
   ]);
-  // No OpenBot Cloud of its own: it is part of OpenBot for Business.
-  expect(view.queryByText("OpenBot Cloud")).toBeNull();
+  // No Mangaba Bot Cloud of its own: it is part of Mangaba Bot for Business.
+  expect(view.queryByText("Mangaba Bot Cloud")).toBeNull();
   expect(view.queryByText("Coming soon.")).toBeNull();
-  // "Self-hosted" is OpenBot for Business's word for a company's own cloud, and nothing else's.
+  // "Self-hosted" is Mangaba Bot for Business's word for a company's own cloud, and nothing else's.
   expect(view.container.textContent?.match(/self-hosted/gi)).toEqual([
     "Self-Hosted",
   ]);
-  // What Self-Contained asks of this computer, and why: every part of OpenBot runs on it.
+  // What Self-Contained asks of this computer, and why: every part of Mangaba Bot runs on it.
   expect(
     view.getByRole("heading", { name: "What this computer needs" }),
   ).toBeTruthy();
   expect(
     [...view.container.querySelectorAll(".lede")].map((p) => p.textContent),
   ).toEqual([
-    "Every part of OpenBot runs on this computer: the app, its server and database, your Bots' memory, and a computer for each Bot to work on.",
+    "Every part of Mangaba Bot runs on this computer: the app, its server and database, your Bots' memory, and a computer for each Bot to work on.",
     "Setup takes 1 to 10 minutes, depending on your internet speed.",
   ]);
   expect(
@@ -722,26 +722,26 @@ test("the first screen offers OpenBot (Self-Contained), then OpenBot for Busines
     "4 CPU cores or more",
     "40 GB of free disk space",
   ]);
-  // Connecting to a company's own OpenBot is a link under the rows, not one of them. No booking
-  // link of its own: OpenBot for Business is the booking.
+  // Connecting to a company's own Mangaba Bot is a link under the rows, not one of them. No booking
+  // link of its own: Mangaba Bot for Business is the booking.
   const connect = view.getByRole("button", { name: "Connect to it" });
   expect(connect.parentElement?.textContent).toBe(
-    "Already have OpenBot at work? Connect to it.",
+    "Already have Mangaba Bot at work? Connect to it.",
   );
   expect(connect.closest("label")).toBeNull();
   expect(view.queryByRole("link", { name: "Book a demo" })).toBeNull();
-  expect(view.queryByText(/No OpenBot at your company yet/)).toBeNull();
+  expect(view.queryByText(/No Mangaba Bot at your company yet/)).toBeNull();
   expect(buttons(view)).toEqual(["Connect to it", "Install"]);
   expectPlain(view);
   expect(localCliCalls()).toEqual([]);
 });
 
 /*
- * OpenBot for Business books a call: picked, it shows what the app's OpenBot for Business view
+ * Mangaba Bot for Business books a call: picked, it shows what the app's Mangaba Bot for Business view
  * shows, what it adds and the booking calendar, and never an address to type. Before, it replaced
  * Install with an address field and Connect.
  */
-test("picking OpenBot for Business shows what it adds and the booking calendar, and no address field", async () => {
+test("picking Mangaba Bot for Business shows what it adds and the booking calendar, and no address field", async () => {
   setupRootConfiguration("/tmp/business-booker", async () =>
     emptyConfiguration(),
   );
@@ -757,10 +757,10 @@ test("picking OpenBot for Business shows what it adds and the booking calendar, 
   await userEvent.click(business);
   expect(business.checked).toBe(true);
   expect(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   ).toHaveProperty("checked", false);
   // No address and no Connect: that is the link under the rows.
-  expect(view.queryByLabelText("OpenBot address")).toBeNull();
+  expect(view.queryByLabelText("Mangaba Bot address")).toBeNull();
   expect(view.queryByRole("button", { name: "Connect" })).toBeNull();
   expect(view.queryByRole("button", { name: "Install" })).toBeNull();
   expect(
@@ -769,7 +769,7 @@ test("picking OpenBot for Business shows what it adds and the booking calendar, 
   // What it adds, in the app's words.
   expect(
     view.getByText(
-      "Deploy in your own VPC on AWS, Azure or GCP, on-prem, or on OpenBot Cloud.",
+      "Deploy in your own VPC on AWS, Azure or GCP, on-prem, or on Mangaba Bot Cloud.",
     ),
   ).toBeTruthy();
   expect(
@@ -781,7 +781,7 @@ test("picking OpenBot for Business shows what it adds and the booking calendar, 
   ]);
   expect(view.getByText("A computer for each Bot")).toBeTruthy();
   expect(view.getByText("A full audit trail, with export")).toBeTruthy();
-  // The calendar: OpenBot for Business's Calendly event, as an inline embed, while it loads.
+  // The calendar: Mangaba Bot for Business's Calendly event, as an inline embed, while it loads.
   expect(view.getByRole("heading", { name: "Book a demo" })).toBeTruthy();
   const calendar = view.getByTitle("Booking calendar") as HTMLIFrameElement;
   const src = new URL(calendar.getAttribute("src") ?? "");
@@ -811,17 +811,17 @@ test("picking OpenBot for Business shows what it adds and the booking calendar, 
   await userEvent.click(ownCloud);
   expect([business.checked, ownCloud.checked]).toEqual([false, true]);
   expect(view.getByTitle("Booking calendar")).toBe(calendar);
-  expect(view.queryByLabelText("OpenBot address")).toBeNull();
+  expect(view.queryByLabelText("Mangaba Bot address")).toBeNull();
   // Self-Contained again: its needs and Install, as before.
   await userEvent.click(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   );
   expect(buttons(view)).toEqual(["Connect to it", "Install"]);
   expect(view.queryByTitle("Booking calendar")).toBeNull();
   expect(localCliCalls()).toEqual([]);
 });
 
-test("a calendar that can't load gives way to Book a demo, which opens the OpenBot for Business page in the browser", async () => {
+test("a calendar that can't load gives way to Book a demo, which opens the Mangaba Bot for Business page in the browser", async () => {
   setupRootConfiguration("/tmp/business-booker-blocked", async () =>
     emptyConfiguration(),
   );
@@ -857,7 +857,7 @@ test("a calendar that can't load gives way to Book a demo, which opens the OpenB
   expect(localCliCalls()).toEqual([]);
 });
 
-test("offline, OpenBot for Business offers Book a demo in the browser straight away", async () => {
+test("offline, Mangaba Bot for Business offers Book a demo in the browser straight away", async () => {
   setupRootConfiguration("/tmp/business-booker-offline", async () =>
     emptyConfiguration(),
   );
@@ -884,7 +884,7 @@ test("offline, OpenBot for Business offers Book a demo in the browser straight a
 });
 
 /*
- * An OpenBot that runs elsewhere. The shell's commands, what they answer and the sentence for each
+ * An Mangaba Bot that runs elsewhere. The shell's commands, what they answer and the sentence for each
  * thing that can go wrong are faked here exactly as the shell gives them: the window shows the
  * sentence as given, and reads only its `kind` to choose what to offer.
  */
@@ -906,43 +906,43 @@ const CONNECT_PROBLEMS: Array<{
     kind: "address-invalid",
     at: "check",
     offer: "field",
-    said: "That isn't an address OpenBot can connect to. Use one that starts with https://, such as https://openbot.example.com.",
+    said: "That isn't an address Mangaba Bot can connect to. Use one that starts with https://, such as https://openbot.example.com.",
   },
   {
     kind: "unreachable",
     at: "check",
     offer: "Try again",
-    said: "OpenBot couldn't reach openbot.example.com. Check the address and your network, then try again.",
+    said: "Mangaba Bot couldn't reach openbot.example.com. Check the address and your network, then try again.",
   },
   {
     kind: "not-openbot",
     at: "check",
     offer: "field",
-    said: "There's no OpenBot at openbot.example.com. Check the address with whoever runs your OpenBot.",
+    said: "There's no Mangaba Bot at openbot.example.com. Check the address with whoever runs your Mangaba Bot.",
   },
   {
     kind: "single-person",
     at: "check",
     offer: "field",
-    said: "The OpenBot at openbot.example.com is set up for one person on its own computer, so the app can't connect to it.",
+    said: "The Mangaba Bot at openbot.example.com is set up for one person on its own computer, so the app can't connect to it.",
   },
   {
     kind: "too-old",
     at: "check",
     offer: "Open in browser",
-    said: "The OpenBot at openbot.example.com is on a release this app can't connect to yet. Ask whoever runs it to update OpenBot, or open it in your browser.",
+    said: "The Mangaba Bot at openbot.example.com is on a release this app can't connect to yet. Ask whoever runs it to update Mangaba Bot, or open it in your browser.",
   },
   {
     kind: "app-too-old",
     at: "check",
     offer: "Update and restart",
-    said: "The OpenBot at openbot.example.com needs a newer version of this app. Update OpenBot, then connect again.",
+    said: "The Mangaba Bot at openbot.example.com needs a newer version of this app. Update Mangaba Bot, then connect again.",
   },
   {
     kind: "app-too-old-security",
     at: "check",
     offer: "Update and restart",
-    said: "This version of OpenBot has a security problem. Update to keep using it.",
+    said: "This version of Mangaba Bot has a security problem. Update to keep using it.",
   },
   {
     kind: "sign-in-cancelled",
@@ -954,13 +954,13 @@ const CONNECT_PROBLEMS: Array<{
     kind: "sign-in-failed",
     at: "connect",
     offer: "Sign in again",
-    said: "OpenBot couldn't sign you in at openbot.example.com. Try again, or ask whoever runs your OpenBot.",
+    said: "Mangaba Bot couldn't sign you in at openbot.example.com. Try again, or ask whoever runs your Mangaba Bot.",
   },
   {
     kind: "access-refused",
     at: "connect",
     offer: "Sign in again",
-    said: "You signed in, but the OpenBot at openbot.example.com didn't let this app in. Ask whoever runs it to give you access, then sign in again.",
+    said: "You signed in, but the Mangaba Bot at openbot.example.com didn't let this app in. Ask whoever runs it to give you access, then sign in again.",
   },
   {
     kind: "session-ended",
@@ -972,11 +972,11 @@ const CONNECT_PROBLEMS: Array<{
     kind: "credential-store",
     at: "connect",
     offer: "Try again",
-    said: "OpenBot couldn't save your sign-in on this computer. Unlock your keychain, then try again.",
+    said: "Mangaba Bot couldn't save your sign-in on this computer. Unlock your keychain, then try again.",
   },
 ];
 
-/** A first run on which the person connects to their company's OpenBot: the connect screen. */
+/** A first run on which the person connects to their company's Mangaba Bot: the connect screen. */
 async function chooseConnect(shell: Record<string, unknown> = {}) {
   setupRootConfiguration("/tmp/connect-elsewhere", async () =>
     emptyConfiguration(),
@@ -1000,7 +1000,7 @@ function asked(from = 0) {
 }
 
 /**
- * The shell of an app whose saved choice is an OpenBot that runs elsewhere. It answers `answers`,
+ * The shell of an app whose saved choice is an Mangaba Bot that runs elsewhere. It answers `answers`,
  * and anything else the window asks for, which is every command of an install on this computer, is
  * a stray: the test fails on one.
  */
@@ -1024,16 +1024,16 @@ test("Connect to it asks for an address in place of Install, and going back brin
     name: /^Cloud/,
   }) as HTMLInputElement;
   const self = view.getByRole("radio", {
-    name: /^OpenBot \(Self-Contained\)/,
+    name: /^Mangaba Bot \(Self-Contained\)/,
   }) as HTMLInputElement;
-  // None of the choices: this app connects to an OpenBot that already runs.
+  // None of the choices: this app connects to an Mangaba Bot that already runs.
   expect(
     (view.getAllByRole("radio") as HTMLInputElement[]).map(
       (radio) => radio.checked,
     ),
   ).toEqual([false, false, false]);
   expect(self.checked).toBe(false);
-  const field = view.getByLabelText("OpenBot address") as HTMLInputElement;
+  const field = view.getByLabelText("Mangaba Bot address") as HTMLInputElement;
   // The link brought the person to the field.
   expect(document.activeElement).toBe(field);
   expect(field.placeholder).toBe("https://openbot.example.com");
@@ -1046,7 +1046,7 @@ test("Connect to it asks for an address in place of Install, and going back brin
   // What Self-Contained asks of this computer, and its Install, are not this choice's.
   expect(buttons(view)).toEqual([
     "Connect",
-    "Use OpenBot on this computer instead",
+    "Use Mangaba Bot on this computer instead",
   ]);
   expect(
     view.queryByRole("heading", { name: "What this computer needs" }),
@@ -1058,29 +1058,29 @@ test("Connect to it asks for an address in place of Install, and going back brin
     true,
   );
   // The link that led here is gone while its form shows.
-  expect(view.queryByText(/Already have OpenBot at work/)).toBeNull();
+  expect(view.queryByText(/Already have Mangaba Bot at work/)).toBeNull();
   expectPlain(view);
   // Back, by the control that says so, and by the rows themselves.
   await userEvent.type(field, "openbot.example.com");
   await userEvent.click(
-    view.getByRole("button", { name: "Use OpenBot on this computer instead" }),
+    view.getByRole("button", { name: "Use Mangaba Bot on this computer instead" }),
   );
   expect(buttons(view)).toEqual(["Connect to it", "Install"]);
   await userEvent.click(view.getByRole("button", { name: "Connect to it" }));
   // What was typed is still there.
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe("openbot.example.com");
-  // OpenBot for Business from here is its booker, and Connect to it goes back to the address.
+  // Mangaba Bot for Business from here is its booker, and Connect to it goes back to the address.
   await userEvent.click(business);
   expect(view.getByTitle("Booking calendar")).toBeTruthy();
-  expect(view.queryByLabelText("OpenBot address")).toBeNull();
+  expect(view.queryByLabelText("Mangaba Bot address")).toBeNull();
   await userEvent.click(view.getByRole("button", { name: "Connect to it" }));
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe("openbot.example.com");
   await userEvent.click(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   );
   expect(buttons(view)).toEqual(["Connect to it", "Install"]);
   expect(
@@ -1099,7 +1099,7 @@ test("a good address signs in through the browser, and nothing on this computer 
     connect_to_openbot: () => signIn.promise,
   });
   const from = invokeCalls.length;
-  const field = view.getByLabelText("OpenBot address") as HTMLInputElement;
+  const field = view.getByLabelText("Mangaba Bot address") as HTMLInputElement;
   // No scheme: the shell takes it as https, and the window does not refuse it first.
   await userEvent.type(field, "openbot.example.com{Enter}");
   expect(
@@ -1109,7 +1109,7 @@ test("a good address signs in through the browser, and nothing on this computer 
   expect(field.value).toBe(ELSEWHERE);
   expect(buttons(view)).toEqual(["Cancel"]);
   await act(async () => signIn.resolve(null));
-  expect(view.getByText("Opening OpenBot…")).toBeTruthy();
+  expect(view.getByText("Opening Mangaba Bot…")).toBeTruthy();
   expect(view.queryAllByRole("button")).toEqual([]);
   expect(view.queryByRole("alert")).toBeNull();
   expect(asked(from)).toEqual([
@@ -1155,7 +1155,7 @@ for (const { kind, said, at, offer } of CONNECT_PROBLEMS) {
       },
       install_app_update: () => new Promise(() => {}),
     });
-    const field = view.getByLabelText("OpenBot address") as HTMLInputElement;
+    const field = view.getByLabelText("Mangaba Bot address") as HTMLInputElement;
     await userEvent.type(field, `${ELSEWHERE}{Enter}`);
     const alert = await view.findByRole("alert");
     expect(alert.textContent).toContain(said);
@@ -1167,7 +1167,7 @@ for (const { kind, said, at, offer } of CONNECT_PROBLEMS) {
       expect(field.getAttribute("aria-invalid")).toBe("true");
       expect(buttons(view)).toEqual([
         "Connect",
-        "Use OpenBot on this computer instead",
+        "Use Mangaba Bot on this computer instead",
       ]);
       // A sentence about the address goes once the address changes.
       await userEvent.type(field, "x");
@@ -1203,7 +1203,7 @@ for (const { kind, said, at, offer } of CONNECT_PROBLEMS) {
         ),
       );
       expect(checks).toBe(1);
-      // Another address is another OpenBot: Connect is back once it changes.
+      // Another address is another Mangaba Bot: Connect is back once it changes.
       await userEvent.type(field, "x");
       expect(view.getByRole("button", { name: "Connect" })).toBeTruthy();
     } else {
@@ -1218,12 +1218,12 @@ for (const { kind, said, at, offer } of CONNECT_PROBLEMS) {
 
 /*
  * On a build that never updates itself, the line that says so is part of the notice, as on the
- * screen for the OpenBot on this computer. Seen on a Mac: it sat under the notice in body type, a
+ * screen for the Mangaba Bot on this computer. Seen on a Mac: it sat under the notice in body type, a
  * second message about the same thing.
  */
-test("an OpenBot this build is too old for says in its notice that this build doesn't update itself", async () => {
+test("an Mangaba Bot this build is too old for says in its notice that this build doesn't update itself", async () => {
   const said =
-    "The OpenBot at openbot.example.com needs a newer version of this app. Update OpenBot, then connect again.";
+    "The Mangaba Bot at openbot.example.com needs a newer version of this app. Update Mangaba Bot, then connect again.";
   const view = await chooseConnect({
     check_openbot_address: () => {
       throw { said, kind: "app-too-old" };
@@ -1235,7 +1235,7 @@ test("an OpenBot this build is too old for says in its notice that this build do
       updatesItself: false,
     },
   });
-  const field = view.getByLabelText("OpenBot address") as HTMLInputElement;
+  const field = view.getByLabelText("Mangaba Bot address") as HTMLInputElement;
   await userEvent.type(field, `${ELSEWHERE}{Enter}`);
   const line = await view.findByText(DOESNT_UPDATE_ITSELF);
   const notice = view.getByRole("alert");
@@ -1252,7 +1252,7 @@ test("Cancel while the browser is waited on stops the sign-in and gives the form
     connect_to_openbot: () => signIn.promise,
     cancel_connect: null,
   });
-  const field = view.getByLabelText("OpenBot address") as HTMLInputElement;
+  const field = view.getByLabelText("Mangaba Bot address") as HTMLInputElement;
   await userEvent.type(field, `${ELSEWHERE}{Enter}`);
   await view.findByText("Finish signing in in your browser.");
   await userEvent.click(view.getByRole("button", { name: "Cancel" }));
@@ -1277,18 +1277,18 @@ test("Cancel while the browser is waited on stops the sign-in and gives the form
   expect(document.activeElement).toBe(field);
 });
 
-test("a launch that is connected and signed in opens OpenBot and asks nothing of this computer", async () => {
+test("a launch that is connected and signed in opens Mangaba Bot and asks nothing of this computer", async () => {
   const strays = connectedShell({
     connection: { mode: "connected", address: ELSEWHERE, signedIn: true },
     show_connected: null,
   });
-  // The development double mount included: OpenBot is opened once.
+  // The development double mount included: Mangaba Bot is opened once.
   const view = await renderApp(true);
   expect(invokeCalls.map((call) => call.command)).toEqual([
     "connection",
     "show_connected",
   ]);
-  expect(view.getByRole("status").textContent).toBe("Opening OpenBot…");
+  expect(view.getByRole("status").textContent).toBe("Opening Mangaba Bot…");
   expect(view.queryAllByRole("button")).toEqual([]);
   expect(strays).toEqual([]);
 });
@@ -1308,17 +1308,17 @@ test("a launch after the sign-in ended says so once, with the address filled in 
     connect_to_openbot: () => new Promise(() => {}),
   });
   const view = await renderApp(true);
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
-  // The connect form, which is none of the three rows: OpenBot for Business books a call.
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
+  // The connect form, which is none of the three rows: Mangaba Bot for Business books a call.
   expect(view.getByRole("radio", { name: /^Cloud/ })).toHaveProperty(
     "checked",
     false,
   );
   expect(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   ).toHaveProperty("checked", false);
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe(ELSEWHERE);
   expect(view.getByRole("alert").textContent).toBe(said);
   expect(notices).toBe(1);
@@ -1340,15 +1340,15 @@ test("a launch after the sign-in ended says so once, with the address filled in 
 });
 
 /*
- * OpenBot Cloud is on only in a build that sets VITE_OPENBOT_CLOUD_ENABLED=true. Off, which is every
- * build until Cloud is open to everybody, the first screen is the one above: OpenBot
- * (Self-Contained), OpenBot for Business with Cloud and Self-Hosted that book a call, and connecting
+ * Mangaba Bot Cloud is on only in a build that sets VITE_OPENBOT_CLOUD_ENABLED=true. Off, which is every
+ * build until Cloud is open to everybody, the first screen is the one above: Mangaba Bot
+ * (Self-Contained), Mangaba Bot for Business with Cloud and Self-Hosted that book a call, and connecting
  * to an address. A connection saved to Cloud's own address is then any connection: the address
- * form, filled in. Before the switch, every build offered Sign in to OpenBot Cloud.
+ * form, filled in. Before the switch, every build offered Sign in to Mangaba Bot Cloud.
  */
 const CLOUD = "https://my.open.bot";
 
-test("with OpenBot Cloud off, a launch whose sign-in to Cloud's address ended opens on the address form, not on Cloud", async () => {
+test("with Mangaba Bot Cloud off, a launch whose sign-in to Cloud's address ended opens on the address form, not on Cloud", async () => {
   expect(process.env.VITE_OPENBOT_CLOUD_ENABLED).toBeUndefined();
   const said =
     "Your sign-in to my.open.bot has ended. Sign in again to keep going.";
@@ -1361,19 +1361,19 @@ test("with OpenBot Cloud off, a launch whose sign-in to Cloud's address ended op
     },
   });
   const view = await renderApp(true);
-  expect(view.queryByRole("radio", { name: /^OpenBot Cloud/ })).toBeNull();
+  expect(view.queryByRole("radio", { name: /^Mangaba Bot Cloud/ })).toBeNull();
   expect(
-    view.queryByRole("button", { name: "Sign in to OpenBot Cloud" }),
+    view.queryByRole("button", { name: "Sign in to Mangaba Bot Cloud" }),
   ).toBeNull();
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe(CLOUD);
   expect(view.getByRole("alert").textContent).toBe(said);
   expect(view.getByRole("button", { name: "Sign in again" })).toBeTruthy();
   expect(strays).toEqual([]);
 });
 
-describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)", () => {
+describe("with Mangaba Bot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)", () => {
   let before: string | undefined;
   beforeEach(() => {
     before = process.env.VITE_OPENBOT_CLOUD_ENABLED;
@@ -1385,11 +1385,11 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
   });
 
   /*
-   * The ways to run OpenBot, as they are sold with Cloud on: OpenBot (Self-Contained) on this
-   * computer, OpenBot Cloud, which this app signs in to, and OpenBot for Business, Self-Hosted on a
+   * The ways to run Mangaba Bot, as they are sold with Cloud on: Mangaba Bot (Self-Contained) on this
+   * computer, Mangaba Bot Cloud, which this app signs in to, and Mangaba Bot for Business, Self-Hosted on a
    * company's own cloud or on-prem, which books a call.
    */
-  test("the first screen offers OpenBot (Self-Contained), OpenBot Cloud and OpenBot for Business", async () => {
+  test("the first screen offers Mangaba Bot (Self-Contained), Mangaba Bot Cloud and Mangaba Bot for Business", async () => {
     setupRootConfiguration("/tmp/local-eval-welcome-cloud", async () =>
       emptyConfiguration(),
     );
@@ -1401,18 +1401,18 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
     const view = await renderApp();
     const radios = view.getAllByRole("radio") as HTMLInputElement[];
     expect(radios.map((radio) => radio.closest("label")?.textContent)).toEqual([
-      "OpenBot (Self-Contained)Everything runs on this computer, for trying it or personal use.",
-      "OpenBot CloudWe run it for you. Sign in and start right away.",
-      "OpenBot for BusinessYour own cloud or on-prem. Book a call.",
+      "Mangaba Bot (Self-Contained)Everything runs on this computer, for trying it or personal use.",
+      "Mangaba Bot CloudWe run it for you. Sign in and start right away.",
+      "Mangaba Bot for BusinessYour own cloud or on-prem. Book a call.",
     ]);
     expect(radios.map((radio) => radio.value)).toEqual([
       "this-computer",
       "cloud",
       "business",
     ]);
-    // OpenBot for Business is one row, not a group of two, and names its clouds by their marks.
+    // Mangaba Bot for Business is one row, not a group of two, and names its clouds by their marks.
     expect(
-      view.queryByRole("group", { name: "OpenBot for Business" }),
+      view.queryByRole("group", { name: "Mangaba Bot for Business" }),
     ).toBeNull();
     expect(
       [
@@ -1420,26 +1420,26 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
           []),
       ].map((mark) => mark.getAttribute("data-mark")),
     ).toEqual(["aws", "azure", "google-cloud", "kubernetes"]);
-    // Nothing about OpenBot Cloud's sign-in until it is picked.
+    // Nothing about Mangaba Bot Cloud's sign-in until it is picked.
     expect(
-      view.queryByRole("button", { name: "Sign in to OpenBot Cloud" }),
+      view.queryByRole("button", { name: "Sign in to Mangaba Bot Cloud" }),
     ).toBeNull();
     expect(buttons(view)).toEqual(["Connect to it", "Install"]);
-    // OpenBot for Business books a call.
+    // Mangaba Bot for Business books a call.
     await userEvent.click(radios[2] as HTMLInputElement);
     expect(radios[2]?.checked).toBe(true);
     expect(view.getByTitle("Booking calendar")).toBeTruthy();
-    expect(view.queryByLabelText("OpenBot address")).toBeNull();
+    expect(view.queryByLabelText("Mangaba Bot address")).toBeNull();
     expectPlain(view);
     expect(localCliCalls()).toEqual([]);
   });
 
   /*
-   * OpenBot Cloud: the OpenBot we run, at an address built into the app. Picked, it offers Sign in
-   * to OpenBot Cloud and nothing to type. The sign-in is the shell's, as for any OpenBot that runs
-   * elsewhere: the address checked, then the browser, then OpenBot Cloud in this window.
+   * Mangaba Bot Cloud: the Mangaba Bot we run, at an address built into the app. Picked, it offers Sign in
+   * to Mangaba Bot Cloud and nothing to type. The sign-in is the shell's, as for any Mangaba Bot that runs
+   * elsewhere: the address checked, then the browser, then Mangaba Bot Cloud in this window.
    */
-  test("OpenBot Cloud signs in at its built-in address with nothing to type, and Cancel stops the sign-in", async () => {
+  test("Mangaba Bot Cloud signs in at its built-in address with nothing to type, and Cancel stops the sign-in", async () => {
     setupRootConfiguration("/tmp/cloud-sign-in", async () =>
       emptyConfiguration(),
     );
@@ -1455,19 +1455,19 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
     });
     const view = await renderApp();
     const cloud = view.getByRole("radio", {
-      name: /^OpenBot Cloud/,
+      name: /^Mangaba Bot Cloud/,
     }) as HTMLInputElement;
     await userEvent.click(cloud);
     expect(cloud.checked).toBe(true);
     // Nothing to type, nothing to install, no calendar: its sign-in.
-    expect(view.queryByLabelText("OpenBot address")).toBeNull();
+    expect(view.queryByLabelText("Mangaba Bot address")).toBeNull();
     expect(view.queryByTitle("Booking calendar")).toBeNull();
     expect(
       view.queryByRole("heading", { name: "What this computer needs" }),
     ).toBeNull();
     expect(
       view.getByText(
-        "Sign in with your OpenBot account, or create one. Your Bots and conversations are the same here and at my.open.bot.",
+        "Sign in with your Mangaba Bot account, or create one. Your Bots and conversations are the same here and at my.open.bot.",
       ),
     ).toBeTruthy();
     expect(
@@ -1476,13 +1476,13 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
       ),
     ).toBeTruthy();
     const signIn = view.getByRole("button", {
-      name: "Sign in to OpenBot Cloud",
+      name: "Sign in to Mangaba Bot Cloud",
     });
     // Picked just now: Enter signs in.
     expect(document.activeElement).toBe(signIn);
     expect(buttons(view)).toEqual([
       "Connect to it",
-      "Sign in to OpenBot Cloud",
+      "Sign in to Mangaba Bot Cloud",
     ]);
     expectPlain(view);
 
@@ -1507,18 +1507,18 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
       "cancel_connect",
     ]);
     expect(
-      view.getByRole("button", { name: "Sign in to OpenBot Cloud" }),
+      view.getByRole("button", { name: "Sign in to Mangaba Bot Cloud" }),
     ).toBeTruthy();
     // Nothing about this computer was set up or downloaded.
     expect(localCliCalls()).toEqual([]);
   });
 
-  test("OpenBot Cloud that can't be reached says so, and Try again signs in again", async () => {
+  test("Mangaba Bot Cloud that can't be reached says so, and Try again signs in again", async () => {
     setupRootConfiguration("/tmp/cloud-unreachable", async () =>
       emptyConfiguration(),
     );
     const said =
-      "OpenBot couldn't reach my.open.bot. Check the address and your network, then try again.";
+      "Mangaba Bot couldn't reach my.open.bot. Check the address and your network, then try again.";
     let checks = 0;
     withLocalCli({
       connection: THIS_COMPUTER,
@@ -1531,21 +1531,21 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
       connect_to_openbot: null,
     });
     const view = await renderApp();
-    await userEvent.click(view.getByRole("radio", { name: /^OpenBot Cloud/ }));
+    await userEvent.click(view.getByRole("radio", { name: /^Mangaba Bot Cloud/ }));
     await userEvent.click(
-      view.getByRole("button", { name: "Sign in to OpenBot Cloud" }),
+      view.getByRole("button", { name: "Sign in to Mangaba Bot Cloud" }),
     );
     expect((await view.findByRole("alert")).textContent).toBe(said);
     const again = view.getByRole("button", { name: "Try again" });
     expect(document.activeElement).toBe(again);
     await userEvent.click(again);
-    // Signed in: the shell is showing OpenBot Cloud in this window.
-    await view.findByText("Opening OpenBot…");
+    // Signed in: the shell is showing Mangaba Bot Cloud in this window.
+    await view.findByText("Opening Mangaba Bot…");
     expect(view.queryByRole("alert")).toBeNull();
     expect(checks).toBe(2);
   });
 
-  test("a build pointed at another OpenBot Cloud signs in there", async () => {
+  test("a build pointed at another Mangaba Bot Cloud signs in there", async () => {
     const url = process.env.VITE_OPENBOT_CLOUD_URL;
     process.env.VITE_OPENBOT_CLOUD_URL = " https://cloud-test.example.com/ ";
     try {
@@ -1562,14 +1562,14 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
       });
       const view = await renderApp();
       await userEvent.click(
-        view.getByRole("radio", { name: /^OpenBot Cloud/ }),
+        view.getByRole("radio", { name: /^Mangaba Bot Cloud/ }),
       );
       expect(
         view.getByText(/the same here and at cloud-test\.example\.com\./),
       ).toBeTruthy();
       const from = invokeCalls.length;
       await userEvent.click(
-        view.getByRole("button", { name: "Sign in to OpenBot Cloud" }),
+        view.getByRole("button", { name: "Sign in to Mangaba Bot Cloud" }),
       );
       await view.findByText("Finish signing in in your browser.");
       expect(asked(from)[0]).toEqual({
@@ -1582,7 +1582,7 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
     }
   });
 
-  test("a launch whose OpenBot Cloud sign-in ended opens on OpenBot Cloud, with Sign in again", async () => {
+  test("a launch whose Mangaba Bot Cloud sign-in ended opens on Mangaba Bot Cloud, with Sign in again", async () => {
     const said =
       "Your sign-in to my.open.bot has ended. Sign in again to keep going.";
     let notices = 0;
@@ -1596,12 +1596,12 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
       connect_to_openbot: () => new Promise(() => {}),
     });
     const view = await renderApp(true);
-    expect(view.getByRole("radio", { name: /^OpenBot Cloud/ })).toHaveProperty(
+    expect(view.getByRole("radio", { name: /^Mangaba Bot Cloud/ })).toHaveProperty(
       "checked",
       true,
     );
     // Nothing to type: the address is Cloud's.
-    expect(view.queryByLabelText("OpenBot address")).toBeNull();
+    expect(view.queryByLabelText("Mangaba Bot address")).toBeNull();
     expect(view.getByRole("alert").textContent).toBe(said);
     await userEvent.click(view.getByRole("button", { name: "Sign in again" }));
     await view.findByText("Finish signing in in your browser.");
@@ -1616,7 +1616,7 @@ describe("with OpenBot Cloud on in this build (VITE_OPENBOT_CLOUD_ENABLED=true)"
   });
 });
 
-test("asked from Settings to choose where OpenBot runs, the first screen opens on the connect choice with the address and no failure", async () => {
+test("asked from Settings to choose where Mangaba Bot runs, the first screen opens on the connect choice with the address and no failure", async () => {
   setupRootConfiguration("/tmp/choose-again", async () => emptyConfiguration());
   withLocalCli({
     connection: { mode: "connected", address: ELSEWHERE, signedIn: false },
@@ -1625,18 +1625,18 @@ test("asked from Settings to choose where OpenBot runs, the first screen opens o
     record_setup_event: null,
   });
   const view = await renderApp();
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
   expect(view.getByRole("radio", { name: /^Cloud/ })).toHaveProperty(
     "checked",
     false,
   );
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe(ELSEWHERE);
   expect(view.queryByRole("alert")).toBeNull();
   expect(buttons(view)).toEqual([
     "Connect",
-    "Use OpenBot on this computer instead",
+    "Use Mangaba Bot on this computer instead",
   ]);
   // Nothing of an install on this computer has been asked for yet.
   expect(asked().map((call) => call.command)).toEqual([
@@ -1645,7 +1645,7 @@ test("asked from Settings to choose where OpenBot runs, the first screen opens o
   ]);
   // Picking Self-Contained switches the saved choice, then setup carries on as it does today.
   await userEvent.click(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   );
   await view.findByRole("button", { name: "Install" });
   const commands = asked().map((call) => call.command);
@@ -1654,8 +1654,8 @@ test("asked from Settings to choose where OpenBot runs, the first screen opens o
 });
 
 /*
- * Settings' choice of where OpenBot runs, for a person who already runs it on this computer: the
- * shell stops OpenBot, puts setup back and says `choose` once. The first screen shows in place of
+ * Settings' choice of where Mangaba Bot runs, for a person who already runs it on this computer: the
+ * shell stops Mangaba Bot, puts setup back and says `choose` once. The first screen shows in place of
  * the start that a relaunch does by itself, and nothing starts until the person continues.
  */
 test("asked from Settings on an install on this computer, the first screen shows the choice and starts nothing until Continue, which starts it as a relaunch does", async () => {
@@ -1674,12 +1674,12 @@ test("asked from Settings on an install on this computer, the first screen shows
   });
   const view = await renderApp();
   expect(
-    await view.findByRole("heading", { name: "Set up OpenBot" }),
+    await view.findByRole("heading", { name: "Set up Mangaba Bot" }),
   ).toBeTruthy();
   expect(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   ).toHaveProperty("checked", true);
-  // OpenBot is already installed here: the way on is Continue, not Install.
+  // Mangaba Bot is already installed here: the way on is Continue, not Install.
   expect(buttons(view)).toEqual(["Connect to it", "Continue"]);
   expect(view.queryByText(/Setup takes/)).toBeNull();
   await new Promise((resolve) => setTimeout(resolve, 30));
@@ -1702,15 +1702,15 @@ test("asked from Settings on an install on this computer, the first screen shows
   // The other choice, with the address connected to before, and back.
   await userEvent.click(view.getByRole("button", { name: "Connect to it" }));
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe(ELSEWHERE);
   await userEvent.click(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   );
   expect(started()).toEqual([]);
-  // Continue: today's relaunch, which starts the saved installation and opens OpenBot.
+  // Continue: today's relaunch, which starts the saved installation and opens Mangaba Bot.
   await userEvent.click(view.getByRole("button", { name: "Continue" }));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   expect(started()).toEqual(["run_local_eval", "start_stack", "show_openbot"]);
   expect(getStartStackPayload()).toMatchObject({
     root: "/tmp/choose-on-this-computer",
@@ -1718,9 +1718,9 @@ test("asked from Settings on an install on this computer, the first screen shows
   });
 });
 
-test("a saved sign-in that can't open OpenBot says why on the connect screen, and Try again opens it without signing in again", async () => {
+test("a saved sign-in that can't open Mangaba Bot says why on the connect screen, and Try again opens it without signing in again", async () => {
   const said =
-    "OpenBot couldn't reach openbot.example.com. Check the address and your network, then try again.";
+    "Mangaba Bot couldn't reach openbot.example.com. Check the address and your network, then try again.";
   let shows = 0;
   const strays = connectedShell({
     connection: { mode: "connected", address: ELSEWHERE, signedIn: true },
@@ -1733,10 +1733,10 @@ test("a saved sign-in that can't open OpenBot says why on the connect screen, an
   const view = await renderApp();
   expect((await view.findByRole("alert")).textContent).toContain(said);
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe(ELSEWHERE);
   await userEvent.click(view.getByRole("button", { name: "Try again" }));
-  await view.findByText("Opening OpenBot…");
+  await view.findByText("Opening Mangaba Bot…");
   expect(asked().map((call) => call.command)).toEqual([
     "connection",
     "show_connected",
@@ -1745,7 +1745,7 @@ test("a saved sign-in that can't open OpenBot says why on the connect screen, an
   expect(strays).toEqual([]);
 });
 
-test("Use OpenBot on this computer instead switches a saved connection back, and setup carries on as a first run", async () => {
+test("Use Mangaba Bot on this computer instead switches a saved connection back, and setup carries on as a first run", async () => {
   setupRootConfiguration("/tmp/back-to-this-computer", async () =>
     emptyConfiguration(),
   );
@@ -1762,14 +1762,14 @@ test("Use OpenBot on this computer instead switches a saved connection back, and
     "take_connection_notice",
   ]);
   await userEvent.click(
-    view.getByRole("button", { name: "Use OpenBot on this computer instead" }),
+    view.getByRole("button", { name: "Use Mangaba Bot on this computer instead" }),
   );
   await view.findByRole("button", { name: "Install" });
   const commands = asked().map((call) => call.command);
   expect(commands.indexOf("use_this_computer")).toBe(2);
   expect(commands.indexOf("default_root")).toBeGreaterThan(2);
   expect(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   ).toHaveProperty("checked", true);
   expect(
     view.getByRole("heading", { name: "What this computer needs" }),
@@ -1777,7 +1777,7 @@ test("Use OpenBot on this computer instead switches a saved connection back, and
   // The address is still there for somebody who changes their mind.
   await userEvent.click(view.getByRole("button", { name: "Connect to it" }));
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe(ELSEWHERE);
 });
 
@@ -1786,7 +1786,7 @@ test("a person who went back to this computer finds the address they connected t
     connection: { mode: "local", address: ELSEWHERE, signedIn: false },
   });
   expect(
-    (view.getByLabelText("OpenBot address") as HTMLInputElement).value,
+    (view.getByLabelText("Mangaba Bot address") as HTMLInputElement).value,
   ).toBe(ELSEWHERE);
 });
 
@@ -1796,10 +1796,10 @@ test("the first screen says nothing about usage data: that is the last screen's 
   );
   withLocalCli({});
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   expect(view.queryByText(/usage/i)).toBeNull();
   expect(view.queryByRole("checkbox")).toBeNull();
-  expect(view.queryByRole("link", { name: "What OpenBot sends" })).toBeNull();
+  expect(view.queryByRole("link", { name: "What Mangaba Bot sends" })).toBeNull();
 });
 
 test("Install prepares the default Bot in the default folder, with no Bot or folder screen", async () => {
@@ -1820,16 +1820,16 @@ test("Install prepares the default Bot in the default folder, with no Bot or fol
     },
   ]);
   expect(
-    view.getByRole("heading", { name: "Installing OpenBot" }),
+    view.getByRole("heading", { name: "Installing Mangaba Bot" }),
   ).toBeTruthy();
   expect(stepLabel(view)).toBe("Install");
   // Names every part it installs, so a large download is expected.
   expect(
     view.getByText(
-      /installs OpenBot on this computer: the app, its database, your Bots/,
+      /installs Mangaba Bot on this computer: the app, its database, your Bots/,
     ),
   ).toBeTruthy();
-  expect(view.queryByLabelText("Where OpenBot lives")).toBeNull();
+  expect(view.queryByLabelText("Where Mangaba Bot lives")).toBeNull();
   expect(view.queryByText(/Pick a Bot|Which Bot/i)).toBeNull();
   expect(invokeCalls.some((call) => call.command === "harnesses")).toBe(false);
   // Nothing to press, and no way out while it installs.
@@ -1868,7 +1868,7 @@ test("Install prepares the default Bot in the default folder, with no Bot or fol
   await emitProgress({
     step: "engine",
     ok: true,
-    detail: "The software OpenBot runs on is ready.",
+    detail: "The software Mangaba Bot runs on is ready.",
   });
   await emitProgress({
     step: "create-machine",
@@ -1881,7 +1881,7 @@ test("Install prepares the default Bot in the default folder, with no Bot or fol
     running: true,
     detail: "Checking which local software to download.",
   });
-  const checking = rowStatus(view, "Downloading OpenBot");
+  const checking = rowStatus(view, "Downloading Mangaba Bot");
   expect(
     checking.getByText("Checking which local software to download."),
   ).toBeTruthy();
@@ -1899,7 +1899,7 @@ test("Install prepares the default Bot in the default folder, with no Bot or fol
     ).getByText("Complete"),
   ).toBeTruthy();
   const installing = within(
-    view.getByRole("listitem", { name: "Downloading OpenBot" }),
+    view.getByRole("listitem", { name: "Downloading Mangaba Bot" }),
   );
   expect(installing.getByText("Step 2 of 4")).toBeTruthy();
   expect(installing.queryByText(/Downloading local software/)).toBeNull();
@@ -1976,10 +1976,10 @@ test("a signed-out first run signs in and accepts the agreement as its own step,
   });
   const view = await renderApp();
   await installLocal(view);
-  // The first step. OpenBot needs no account, so it installs behind it, exactly once; nothing
+  // The first step. Mangaba Bot needs no account, so it installs behind it, exactly once; nothing
   // of Intelligence's runs before the agreement. The browser sign-in starts without a click.
   await view.findByRole("heading", { name: "Get your free license key" });
-  await view.findByText("Finish signing in to OpenBot in your browser…");
+  await view.findByText("Finish signing in to Mangaba Bot in your browser…");
   expect(
     view.getByText(
       /OpenBot keeps your conversations and files on this computer/,
@@ -1996,7 +1996,7 @@ test("a signed-out first run signs in and accepts the agreement as its own step,
   await view.findByRole("heading", { name: "Accept the license agreement" });
   expect(
     view.getByText(
-      "To run OpenBot on this computer, accept the OpenBot by CopilotKit license agreement.",
+      "To run Mangaba Bot on this computer, accept the Mangaba Bot by CopilotKit license agreement.",
     ),
   ).toBeTruthy();
   expect(
@@ -2033,7 +2033,7 @@ test("a signed-out first run signs in and accepts the agreement as its own step,
 });
 
 /**
- * A new Mac sat on "Checking your OpenBot account…" for the whole of Podman's install, and no
+ * A new Mac sat on "Checking your Mangaba Bot account…" for the whole of Podman's install, and no
  * browser opened: the check ran the CLI's `onboard local-terms`, which checks the engine first. The
  * CLI's `login` needs no engine. So the sign-in starts the moment the step opens, and the engine is
  * waited for only after it, for the agreement.
@@ -2064,7 +2064,7 @@ test("the account step opens the CopilotKit sign-in at once, without waiting for
 
   // The browser sign-in, first, with nothing asked of the engine before it. Under it, what is
   // installing meanwhile.
-  await view.findByText("Finish signing in to OpenBot in your browser…");
+  await view.findByText("Finish signing in to Mangaba Bot in your browser…");
   expect(view.getByText("WXYZ-2345")).toBeTruthy();
   expectBehind(view, 1, DOWNLOADING_SOFTWARE);
   const accountCalls = () =>
@@ -2080,7 +2080,7 @@ test("the account step opens the CopilotKit sign-in at once, without waiting for
   await view.findByRole("heading", { name: "Setting up this computer" });
   expect(
     view.getByText(
-      "You're signed in. OpenBot is setting up the software it runs on. The license agreement comes next.",
+      "You're signed in. Mangaba Bot is setting up the software it runs on. The license agreement comes next.",
     ),
   ).toBeTruthy();
   expectBehind(view, 1, DOWNLOADING_SOFTWARE);
@@ -2088,14 +2088,14 @@ test("the account step opens the CopilotKit sign-in at once, without waiting for
   expect(accountCalls()).toContain("local_eval_terms");
 });
 
-// What Install says as it downloads the software OpenBot runs on, before macOS asks for the
+// What Install says as it downloads the software Mangaba Bot runs on, before macOS asks for the
 // password, and after a prompt the person closed (`install::podman_downloading`,
 // `podman_install_said`, `podman_declined`).
-const DOWNLOADING_SOFTWARE = "Downloading the software OpenBot runs on.";
+const DOWNLOADING_SOFTWARE = "Downloading the software Mangaba Bot runs on.";
 const PODMAN_PROMPTING =
-  "Your Mac will ask for your password so OpenBot can install what it needs to run.";
+  "Your Mac will ask for your password so Mangaba Bot can install what it needs to run.";
 const PODMAN_DECLINED =
-  "OpenBot needs your password to install what it needs to run. It asks again in a moment, or choose Try again.";
+  "Mangaba Bot needs your password to install what it needs to run. It asks again in a moment, or choose Try again.";
 
 /**
  * David's direction for 1.0.1: no Continue before macOS asks for the password. #1385 put one
@@ -2117,7 +2117,7 @@ test("macOS's password prompt is explained and comes without a click, and a clos
   });
   const view = await renderApp();
   await installLocal(view);
-  await view.findByText("Checking your OpenBot account…");
+  await view.findByText("Checking your Mangaba Bot account…");
 
   // Downloaded while the person signs in, then said before the prompt, with nothing to click.
   await emitProgress({
@@ -2174,17 +2174,17 @@ test("macOS's password prompt is explained and comes without a click, and a clos
   expectBehind(view, 1, PODMAN_PROMPTING);
 });
 
-// What Install says on a Mac whose own Podman OpenBot can't use (`own_machine::PAUSE_OFFER`).
+// What Install says on a Mac whose own Podman Mangaba Bot can't use (`own_machine::PAUSE_OFFER`).
 const PAUSE_OFFER =
-  "Your Podman is set up in a way OpenBot can't use. OpenBot will use its own, and pause yours while OpenBot is running. Yours starts again when you quit OpenBot.";
+  "Your Podman is set up in a way Mangaba Bot can't use. Mangaba Bot will use its own, and pause yours while Mangaba Bot is running. Yours starts again when you quit Mangaba Bot.";
 
 /**
- * David's decision for 1.0.2: on a Mac, where Podman runs one machine at a time, OpenBot says it
+ * David's decision for 1.0.2: on a Mac, where Podman runs one machine at a time, Mangaba Bot says it
  * needs its own and offers to pause the person's while it runs. Pausing theirs is their choice:
  * the card says so with one button, and nothing is paused until it is pressed. The password card is
  * not shown for it, and the background row says what it waits for.
  */
-test("a Mac whose own Podman OpenBot can't use is offered a pause, and nothing is paused until the person says yes", async () => {
+test("a Mac whose own Podman Mangaba Bot can't use is offered a pause, and nothing is paused until the person says yes", async () => {
   setupRootConfiguration("/tmp/local-eval-pause-podman", async () =>
     emptyConfiguration(),
   );
@@ -2198,7 +2198,7 @@ test("a Mac whose own Podman OpenBot can't use is offered a pause, and nothing i
   });
   const view = await renderApp();
   await installLocal(view);
-  await view.findByText("Checking your OpenBot account…");
+  await view.findByText("Checking your Mangaba Bot account…");
   await emitProgress({
     step: "pause-podman",
     ok: true,
@@ -2208,7 +2208,7 @@ test("a Mac whose own Podman OpenBot can't use is offered a pause, and nothing i
   });
   // Said before and after signing in, on whichever part of the step the person is on.
   const offered = () =>
-    view.findByRole("region", { name: "OpenBot needs its own Podman" });
+    view.findByRole("region", { name: "Mangaba Bot needs its own Podman" });
   expect((await offered()).textContent).toContain(PAUSE_OFFER);
   expectBehind(view, 1, "Waiting for you to pause your Podman.", {
     waiting: true,
@@ -2233,10 +2233,10 @@ test("a Mac whose own Podman OpenBot can't use is offered a pause, and nothing i
     step: "pause-podman",
     ok: true,
     running: false,
-    detail: "Your Podman is paused while OpenBot runs.",
+    detail: "Your Podman is paused while Mangaba Bot runs.",
   });
   expect(
-    view.queryByRole("region", { name: "OpenBot needs its own Podman" }),
+    view.queryByRole("region", { name: "Mangaba Bot needs its own Podman" }),
   ).toBeNull();
 });
 
@@ -2264,7 +2264,7 @@ test("the account step waits for a container engine Install is still setting up,
     { timeout: 6000 },
   );
   expect(asked).toBe(2);
-  expect(view.queryByText(/Couldn.t check your OpenBot account/)).toBeNull();
+  expect(view.queryByText(/Couldn.t check your Mangaba Bot account/)).toBeNull();
 }, 15000);
 
 /*
@@ -2290,7 +2290,7 @@ test("an install that failed behind the account step offers Try again, which run
 
   await act(async () =>
     preparation.reject({
-      said: "OpenBot updated Podman, but Podman isn't answering. Try again.",
+      said: "Mangaba Bot updated Podman, but Podman isn't answering. Try again.",
       detail:
         "npipe:////./pipe/podman-machine-default: The system cannot find the file specified. (os error 2)",
     }),
@@ -2338,7 +2338,7 @@ const OLD_DOCKER_DESKTOP_REFUSED = {
   switchEngine: true,
 };
 const DOCKER_UPDATING =
-  "The Docker Desktop on this computer is too old for OpenBot, so OpenBot is updating it. About 9 minutes left.";
+  "The Docker Desktop on this computer is too old for Mangaba Bot, so Mangaba Bot is updating it. About 9 minutes left.";
 
 /*
  * The same tester: the account's licence check ran while Install was updating that Docker Desktop,
@@ -2389,7 +2389,7 @@ test("an old engine refused while Install updates it shows the update, and one T
   // The update stops: one card, one Try again, which runs the install and the check again.
   await act(async () =>
     preparation.reject({
-      said: "The Docker update OpenBot downloaded could not be checked, so it has not been run. Try again.",
+      said: "The Docker update Mangaba Bot downloaded could not be checked, so it has not been run. Try again.",
     }),
   );
   await view.findByRole("alert");
@@ -2411,7 +2411,7 @@ test("an old engine refused while Install updates it shows the update, and one T
     step: "engine",
     ok: true,
     running: false,
-    detail: "OpenBot updated Docker.",
+    detail: "Mangaba Bot updated Docker.",
   });
   await act(async () => preparation.resolve());
   await view.findByRole(
@@ -2423,15 +2423,15 @@ test("an old engine refused while Install updates it shows the update, and one T
 
 // What the native side says as it opens Docker Desktop: `docker_desktop::HAND_OFF`.
 const DOCKER_HAND_OFF =
-  "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. OpenBot comes back when Docker is ready.";
+  "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. Mangaba Bot comes back when Docker is ready.";
 
 function broughtToFront() {
   return invokeCalls.filter((call) => call.command === "bring_setup_to_front");
 }
 
 test("the account step says Docker Desktop is starting while Install waits on it, until Docker answers", async () => {
-  // Dogfooding 0.3.3: Install opened Docker Desktop, whose window came to the front. OpenBot's,
-  // behind it on the account step, said only "Checking your OpenBot account…" for minutes.
+  // Dogfooding 0.3.3: Install opened Docker Desktop, whose window came to the front. Mangaba Bot's,
+  // behind it on the account step, said only "Checking your Mangaba Bot account…" for minutes.
   setupRootConfiguration("/tmp/hand-off-docker", async () =>
     emptyConfiguration(),
   );
@@ -2453,7 +2453,7 @@ test("the account step says Docker Desktop is starting while Install waits on it
   });
   expectBehind(view, 1, DOCKER_HAND_OFF);
   // One line, saying what the wait is for.
-  expect(view.queryByText("Checking your OpenBot account…")).toBeNull();
+  expect(view.queryByText("Checking your Mangaba Bot account…")).toBeNull();
   expect(view.getAllByText(DOCKER_HAND_OFF)).toHaveLength(1);
 
   // Docker answers: the line goes. Until the account check hears the engine, the step says what
@@ -2465,12 +2465,12 @@ test("the account step says Docker Desktop is starting while Install waits on it
     detail: "Docker Desktop is running.",
   });
   expect(view.queryByText(DOCKER_HAND_OFF)).toBeNull();
-  expectBehind(view, 1, "Checking the software OpenBot needs.");
+  expectBehind(view, 1, "Checking the software Mangaba Bot needs.");
 });
 
 /**
  * The line about the install behind the account step stays whatever the step shows: signing in,
- * waiting for the engine, the agreement. A person on any of them knows OpenBot is still installing.
+ * waiting for the engine, the agreement. A person on any of them knows Mangaba Bot is still installing.
  */
 test("the install behind the account step is said on every part of it, signing in included", async () => {
   setupRootConfiguration("/tmp/hand-off-none", async () =>
@@ -2489,11 +2489,11 @@ test("the install behind the account step is said on every part of it, signing i
     step: "install-engine",
     ok: true,
     running: true,
-    detail: "Installing the software OpenBot runs on.",
+    detail: "Installing the software Mangaba Bot runs on.",
   });
   // What the account check waits on, in Install's own words, said once.
-  expectBehind(view, 1, "Installing the software OpenBot runs on.");
-  expect(view.queryByText("Checking your OpenBot account…")).toBeNull();
+  expectBehind(view, 1, "Installing the software Mangaba Bot runs on.");
+  expect(view.queryByText("Checking your Mangaba Bot account…")).toBeNull();
   expect(view.queryAllByRole("status")).toHaveLength(0);
 
   // Signed out, the step is about signing in, and the install behind it is still said.
@@ -2503,14 +2503,14 @@ test("the install behind the account step is said on every part of it, signing i
     { name: "Sign in for a free local license key" },
     { timeout: 5000 },
   );
-  expectBehind(view, 1, "Installing the software OpenBot runs on.");
+  expectBehind(view, 1, "Installing the software Mangaba Bot runs on.");
 }, 15000);
 
 /*
  * A tester waited minutes on the first setup step and could not tell whether it was stuck: the
  * screen read "Preparing the engine machine", "Installing Podman", "Waiting for the back end",
  * "Updating the back end to 0.16.0-rc.10". The product's rule: the log keeps the technical parts,
- * and the screen says what OpenBot is doing in plain words.
+ * and the screen says what Mangaba Bot is doing in plain words.
  *
  * These walk setup as a person meets it, with the native side's lines word for word as it sends
  * them, and read every screen. The log side is `install::tests::every_line_shown_while_preparing_
@@ -2518,7 +2518,7 @@ test("the install behind the account step is said on every part of it, signing i
  * technical words beside it, and the back end's releases by `log_update_due`.
  */
 
-/** Words a person setting OpenBot up doesn't know, the back end's versions, and CopilotKit alone. */
+/** Words a person setting Mangaba Bot up doesn't know, the back end's versions, and CopilotKit alone. */
 const TECHNICAL = [
   /Podman/i,
   /\bWSL\b/,
@@ -2533,30 +2533,30 @@ const TECHNICAL = [
   /\bCLI\b/,
   /\bCompose\b/,
   /0\.16\.0/,
-  // The company alone. It is named only as OpenBot by CopilotKit, which the Account step's header
-  // reads as "OpenBot™by CopilotKit" here: two spans, set apart by the stylesheet, the first with
+  // The company alone. It is named only as Mangaba Bot by CopilotKit, which the Account step's header
+  // reads as "Mangaba Bot™by CopilotKit" here: two spans, set apart by the stylesheet, the first with
   // its trademark sign.
-  /(?<!OpenBot™?\s*by\s+)CopilotKit/,
+  /(?<!Mangaba Bot™?\s*by\s+)CopilotKit/,
 ];
 
 /** The native side's lines while it prepares this computer (`engine.rs`, `install.rs`). */
 const NATIVE = {
-  checking: "Checking the software OpenBot needs.",
-  looking: "Looking for the software OpenBot runs on.",
+  checking: "Checking the software Mangaba Bot needs.",
+  looking: "Looking for the software Mangaba Bot runs on.",
   downloading: DOWNLOADING_SOFTWARE,
   declined: PODMAN_DECLINED,
   prompting: PODMAN_PROMPTING,
-  installingWindows: "Installing the software OpenBot runs on.",
+  installingWindows: "Installing the software Mangaba Bot runs on.",
   // The row of a finished install keeps Install's own words: never shown, and checked here.
   installed: "Podman 5.6.2 and Compose 2.40.3 installed.",
   preparingMac:
-    "Preparing this computer to run OpenBot. This takes a few minutes the first time.",
+    "Preparing this computer to run Mangaba Bot. This takes a few minutes the first time.",
   preparingWindows:
-    "Preparing this computer to run OpenBot. If a window asks to install a Windows feature OpenBot needs, allow it. Windows then asks for your approval and a restart.",
-  starting: "Starting the software OpenBot runs on.",
-  answering: "Checking that the software OpenBot runs on is ready.",
-  ready: "The software OpenBot runs on is ready.",
-  version: "Checking which version of OpenBot to download.",
+    "Preparing this computer to run Mangaba Bot. If a window asks to install a Windows feature Mangaba Bot needs, allow it. Windows then asks for your approval and a restart.",
+  starting: "Starting the software Mangaba Bot runs on.",
+  answering: "Checking that the software Mangaba Bot runs on is ready.",
+  ready: "The software Mangaba Bot runs on is ready.",
+  version: "Checking which version of Mangaba Bot to download.",
   images: "Checking which local software to download.",
 };
 
@@ -2565,7 +2565,7 @@ type Beat = { beat: string; text: string; behind: string | null };
 /** The background install's row as a person reads it, less its ticking time: status | line. */
 function behindNow(view: ReturnType<typeof render>): string | null {
   const row = view.queryByRole("listitem", {
-    name: "Installing OpenBot in the background",
+    name: "Installing Mangaba Bot in the background",
   });
   if (!row) return null;
   const status = row
@@ -2582,7 +2582,7 @@ function technicalOn(beats: Beat[]) {
   );
 }
 
-/** What each part of a first run said, from the first screen to OpenBot opening. */
+/** What each part of a first run said, from the first screen to Mangaba Bot opening. */
 async function walkFirstRun(platform: "macOS" | "Windows"): Promise<Beat[]> {
   setupRootConfiguration(`/tmp/plain-walk-${platform}`, async () =>
     emptyConfiguration(),
@@ -2623,7 +2623,7 @@ async function walkFirstRun(platform: "macOS" | "Windows"): Promise<Beat[]> {
   seen("welcome");
 
   await installLocal(view);
-  await view.findByText("Finish signing in to OpenBot in your browser…");
+  await view.findByText("Finish signing in to Mangaba Bot in your browser…");
   seen("signing in");
   await running("install-engine", NATIVE.looking);
   seen("signing in, looking");
@@ -2688,7 +2688,7 @@ async function walkFirstRun(platform: "macOS" | "Windows"): Promise<Beat[]> {
   await view.findByRole("button", { name: "Accept" }, { timeout: 5000 });
   seen("agreement");
   await userEvent.click(view.getByRole("button", { name: "Accept" }));
-  await view.findByRole("heading", { name: "Installing OpenBot" });
+  await view.findByRole("heading", { name: "Installing Mangaba Bot" });
   const installing: ProgressEvent = {
     step: "images",
     ok: true,
@@ -2760,22 +2760,22 @@ for (const platform of ["macOS", "Windows"] as const) {
       "checking the software": `Step 1 of 4 | ${NATIVE.answering}`,
       "checking the version": `Step 2 of 4 | ${NATIVE.version}`,
       "checking what to download": `Step 2 of 4 | ${NATIVE.images}`,
-      downloading: "Step 2 of 4 | Downloading OpenBot. About 4 minutes left.",
-      agreement: "Step 2 of 4 | Downloading OpenBot. About 4 minutes left.",
+      downloading: "Step 2 of 4 | Downloading Mangaba Bot. About 4 minutes left.",
+      agreement: "Step 2 of 4 | Downloading Mangaba Bot. About 4 minutes left.",
       // The install is the screen itself here: its own rows say it.
       install: null,
       "AI, downloading the rest":
-        "Step 3 of 4 | Downloading the rest of OpenBot.",
+        "Step 3 of 4 | Downloading the rest of Mangaba Bot.",
       "AI, installed": null,
       start: null,
     });
     // Once everything is installed, the AI step says so, and what comes next.
     const installed = beats.find(({ beat }) => beat === "AI, installed");
     expect(installed?.text).toContain(
-      "OpenBot is installedCompleteOpenBot starts as soon as you connect your AI.",
+      "Mangaba Bot is installedCompleteOpenBot starts as soon as you connect your AI.",
     );
     // The Install step's own rows say how far along, the time so far and the time left. Its row
-    // is not named as the heading above it is: on Windows F both said "Installing OpenBot".
+    // is not named as the heading above it is: on Windows F both said "Installing Mangaba Bot".
     const install = beats.find(({ beat }) => beat === "install");
     expect(install?.text).toMatch(
       /Downloading OpenBotStep 2 of 4 · \d+s elapsedLess than a minute left\./,
@@ -2785,11 +2785,11 @@ for (const platform of ["macOS", "Windows"] as const) {
 }
 
 /**
- * Every day: a start after a restart wakes the software OpenBot runs on, and a start after an app
- * update updates what runs behind OpenBot. "Waiting for the back end" and "Updating the back end to
- * 0.16.0-rc.9" are now "Getting OpenBot ready" and "Updating OpenBot", with how far along.
+ * Every day: a start after a restart wakes the software Mangaba Bot runs on, and a start after an app
+ * update updates what runs behind Mangaba Bot. "Waiting for the back end" and "Updating the back end to
+ * 0.16.0-rc.9" are now "Getting Mangaba Bot ready" and "Updating Mangaba Bot", with how far along.
  */
-test("a start that wakes the computer's software and updates OpenBot says it in plain words", async () => {
+test("a start that wakes the computer's software and updates Mangaba Bot says it in plain words", async () => {
   const after = pinnedCli.updateDidNotFinish;
   const before = {
     ...after,
@@ -2825,7 +2825,7 @@ test("a start that wakes the computer's software and updates OpenBot says it in 
       text: view.container.textContent ?? "",
       behind: behindNow(view),
     });
-  await view.findByRole("heading", { name: "Starting OpenBot" });
+  await view.findByRole("heading", { name: "Starting Mangaba Bot" });
   await emitProgress({
     step: "start-machine",
     ok: true,
@@ -2849,26 +2849,26 @@ test("a start that wakes the computer's software and updates OpenBot says it in 
   );
   seen("downloading the update");
   await act(async () => update.resolve(updateFailed));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   seen("running on the version it had");
 
-  // No technical word, and no version of what runs behind OpenBot, at any point.
+  // No technical word, and no version of what runs behind Mangaba Bot, at any point.
   expect(technicalOn(beats)).toEqual([]);
 
   // What each part said instead: the row that waits says how far along, and what it is doing.
   const said = Object.fromEntries(beats.map(({ beat, text }) => [beat, text]));
   // One journey over the whole Start: what is happening now, the time left, then the rows.
   expect(said["waking the software"]).toContain(
-    "Starting the software OpenBot runs onAbout a minute left · 0s so far",
+    "Starting the software Mangaba Bot runs onAbout a minute left · 0s so far",
   );
   expect(said["waking the software"]).toContain(
-    "Getting OpenBot readyStep 3 of 4",
+    "Getting Mangaba Bot readyStep 3 of 4",
   );
   expect(said.updating).toContain(
     "Getting the update readyAbout 2 minutes left",
   );
   expect(said.updating).toContain(
-    "Getting OpenBot readyStep 3 of 4Updating OpenBot. Your Bots and data stay as they are.",
+    "Getting Mangaba Bot readyStep 3 of 4Updating Mangaba Bot. Your Bots and data stay as they are.",
   );
   // The download is the journey's: what is happening, and its measure beside the time left. The row
   // keeps what this part is, and has no measure of its own.
@@ -2877,7 +2877,7 @@ test("a start that wakes the computer's software and updates OpenBot says it in 
   );
   expect(said["downloading the update"].match(/MB of/g)).toHaveLength(1);
   expect(said["downloading the update"]).toContain(
-    "Getting OpenBot readyStep 3 of 4Updating OpenBot. Your Bots and data stay as they are.",
+    "Getting Mangaba Bot readyStep 3 of 4Updating Mangaba Bot. Your Bots and data stay as they are.",
   );
   expect(said["running on the version it had"]).toContain(KEPT_RELEASE);
 });
@@ -2891,11 +2891,11 @@ test("a start that wakes the computer's software and updates OpenBot says it in 
 
 /** A failure's headline as the native side now sends it (`acquire.rs`, `problem.rs`). */
 const NATIVE_FAILURE = {
-  machine: "OpenBot couldn't prepare this computer to run it. Try again.",
+  machine: "Mangaba Bot couldn't prepare this computer to run it. Try again.",
   unreachable:
-    "OpenBot can't reach the software it runs on. If you use Docker Desktop, open it and wait for it to start. Then try again.",
+    "Mangaba Bot can't reach the software it runs on. If you use Docker Desktop, open it and wait for it to start. Then try again.",
   lastQuit:
-    "When OpenBot last quit, some of its services didn't stop. They may still be running. Stopping OpenBot again asks them to stop.",
+    "When Mangaba Bot last quit, some of its services didn't stop. They may still be running. Stopping Mangaba Bot again asks them to stop.",
 };
 
 /** What a person reads on a failure screen: not the technical details or the logs' own controls. */
@@ -3063,7 +3063,7 @@ test("every failure screen says what happened and what to do, in plain words", a
       if (command === "last_local_eval_stop_failure")
         return {
           said: NATIVE_FAILURE.lastQuit,
-          detail: "the backend stack did not stop when OpenBot last quit",
+          detail: "the backend stack did not stop when Mangaba Bot last quit",
         };
       return previous(command, args);
     };
@@ -3081,7 +3081,7 @@ test("every failure screen says what happened and what to do, in plain words", a
   for (const { beat, text } of beats)
     expect({
       beat,
-      next: /Retry|Try again|try again|Repair|Start OpenBot|Free up|Quit|Open Docker Desktop|Stop your Podman machine|Wait|update|copy the logs|Copy the logs/.test(
+      next: /Retry|Try again|try again|Repair|Start Mangaba Bot|Free up|Quit|Open Docker Desktop|Stop your Podman machine|Wait|update|copy the logs|Copy the logs/.test(
         text,
       ),
     }).toEqual({ beat, next: true });
@@ -3107,7 +3107,7 @@ test("a failed install brings the window to the front with its failure", async (
 });
 
 const APPS_UNAVAILABLE = {
-  said: "OpenBot couldn't connect your apps. Check your connection, then choose Connect apps. If it keeps happening, ask an admin.",
+  said: "Mangaba Bot couldn't connect your apps. Check your connection, then choose Connect apps. If it keeps happening, ask an admin.",
 };
 
 test("apps that could not be connected at sign-in say so, and Connect apps tries again", async () => {
@@ -3132,7 +3132,7 @@ test("apps that could not be connected at sign-in say so, and Connect apps tries
   expect(view.getByRole("heading", { name: "Connect your apps" })).toBeTruthy();
   expect(
     view.getByText(
-      "You can continue without them. OpenBot tries again each time it starts.",
+      "You can continue without them. Mangaba Bot tries again each time it starts.",
     ),
   ).toBeTruthy();
   // Intelligence waits for the account step, and nothing of the key reaches the window.
@@ -3216,10 +3216,10 @@ test("the local sequence starts when installation completes and survives the pro
   expectBehind(
     view,
     3,
-    "Setting up OpenBot on this computer. This takes a few minutes the first time.",
+    "Setting up Mangaba Bot on this computer. This takes a few minutes the first time.",
   );
   expect(
-    view.queryByRole("listitem", { name: "Setting up OpenBot" }),
+    view.queryByRole("listitem", { name: "Setting up Mangaba Bot" }),
   ).toBeNull();
   expect(view.queryByRole("alert", { name: "Setup" })).toBeNull();
   // A local first run has nothing behind this screen to go back to.
@@ -3236,7 +3236,7 @@ test("the local sequence starts when installation completes and survives the pro
   expectBehind(
     view,
     3,
-    "Setting up OpenBot on this computer. This takes a few minutes the first time.",
+    "Setting up Mangaba Bot on this computer. This takes a few minutes the first time.",
   );
   expect(invokeCalls.some((call) => call.command === "cancel_local_eval")).toBe(
     false,
@@ -3244,7 +3244,7 @@ test("the local sequence starts when installation completes and survives the pro
   expectPlain(view);
 });
 
-test("Continue during setup shows Finishing setup, which starts and opens OpenBot by itself", async () => {
+test("Continue during setup shows Finishing setup, which starts and opens Mangaba Bot by itself", async () => {
   setupRootConfiguration("/tmp/local-eval-auto", async () =>
     emptyConfiguration(),
   );
@@ -3259,7 +3259,7 @@ test("Continue during setup shows Finishing setup, which starts and opens OpenBo
   await chooseOpenAi(view);
   await view.findByRole("heading", { name: "Finishing setup" });
   expect(stepLabel(view)).toBe("Start");
-  const row = view.getByRole("listitem", { name: "Setting up OpenBot" });
+  const row = view.getByRole("listitem", { name: "Setting up Mangaba Bot" });
   expect(row.textContent).toContain("Step 1 of 4");
   expectPlain(view);
   await act(async () => setUp.resolve(localStatus("starting", "valid")));
@@ -3317,14 +3317,14 @@ test("Finishing setup has a usage-data checkbox, checked by default, that turns 
   await chooseOpenAi(view);
   await view.findByRole("heading", { name: "Finishing setup" });
   const box = (await view.findByRole("checkbox", {
-    name: /^Help make OpenBot better by sharing diagnostics/,
+    name: /^Help make Mangaba Bot better by sharing diagnostics/,
   })) as HTMLInputElement;
   expect(box.checked).toBe(true);
   expect(box.labels?.[0]?.textContent).toBe(
-    "Help make OpenBot better by sharing diagnostics like errors, hangs, updates and available memory, never any content. OpenBot is built to respect your privacy.",
+    "Help make Mangaba Bot better by sharing diagnostics like errors, hangs, updates and available memory, never any content. Mangaba Bot is built to respect your privacy.",
   );
   expect(
-    view.getByRole("link", { name: "What OpenBot sends" }).getAttribute("href"),
+    view.getByRole("link", { name: "What Mangaba Bot sends" }).getAttribute("href"),
   ).toBe(
     "https://github.com/CopilotKit/OpenBot/blob/main/desktop/TELEMETRY.md",
   );
@@ -3354,7 +3354,7 @@ function intelligenceCalls() {
   );
 }
 
-test("a first local run offers the backend dashboard to the app page and opens OpenBot", async () => {
+test("a first local run offers the backend dashboard to the app page and opens Mangaba Bot", async () => {
   setupRootConfiguration("/tmp/local-eval-view", async () =>
     emptyConfiguration(),
   );
@@ -3377,7 +3377,7 @@ test("a first local run offers the backend dashboard to the app page and opens O
   ]);
 });
 
-test("Continue after Intelligence is already ready starts OpenBot with the AI just chosen", async () => {
+test("Continue after Intelligence is already ready starts Mangaba Bot with the AI just chosen", async () => {
   setupRootConfiguration("/tmp/local-eval-ready-first", async () =>
     emptyConfiguration(),
   );
@@ -3462,7 +3462,7 @@ test("a Claude plan signed in on the provider screen reaches Start with its toke
   });
 });
 
-test("a development double mount runs each local step and opens OpenBot once", async () => {
+test("a development double mount runs each local step and opens Mangaba Bot once", async () => {
   setupRootConfiguration("/tmp/local-eval-strict", async () =>
     emptyConfiguration(),
   );
@@ -3484,7 +3484,7 @@ test("a development double mount runs each local step and opens OpenBot once", a
   ]);
 });
 
-test("Continue after Intelligence is ready starts OpenBot with the chosen model", async () => {
+test("Continue after Intelligence is ready starts Mangaba Bot with the chosen model", async () => {
   setupRootConfiguration("/tmp/local-eval-ready-first", async () =>
     emptyConfiguration(),
   );
@@ -3533,7 +3533,7 @@ test("while a CLI step runs only Cancel is offered, and Cancel stops the call an
   ).toEqual({
     attempt: (setup?.args as { attempt: string } | undefined)?.attempt,
   });
-  const row = view.getByRole("listitem", { name: "Setting up OpenBot" });
+  const row = view.getByRole("listitem", { name: "Setting up Mangaba Bot" });
   await waitFor(() =>
     expect(row.textContent).toContain(
       "Stopped at your request before it finished.",
@@ -3573,15 +3573,15 @@ test("a blocked setup stops at its row in plain words and Retry resumes there", 
   const alert = await view.findByRole("alert", { name: "Setup" });
   expect(alert.textContent).toContain("Setup stopped");
   expect(alert.textContent).toContain(
-    "OpenBot can't reach the software it runs on. Retry to start it again.",
+    "Mangaba Bot can't reach the software it runs on. Retry to start it again.",
   );
   await chooseOpenAi(view);
   await view.findByRole("heading", { name: "Finishing setup" });
   // Continue does not retry a blocked step: Retry does.
   expect(setups).toBe(1);
-  const row = view.getByRole("listitem", { name: "Setting up OpenBot" });
+  const row = view.getByRole("listitem", { name: "Setting up Mangaba Bot" });
   expect(row.textContent).toContain(
-    "OpenBot can't reach the software it runs on. Retry to start it again.",
+    "Mangaba Bot can't reach the software it runs on. Retry to start it again.",
   );
   expectPlain(view);
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
@@ -3592,7 +3592,7 @@ test("a blocked setup stops at its row in plain words and Retry resumes there", 
   expect(setups).toBe(2);
 });
 
-test("a recorded, connected stack that never launched starts by itself and opens OpenBot", async () => {
+test("a recorded, connected stack that never launched starts by itself and opens Mangaba Bot", async () => {
   setupRootConfiguration("/tmp/local-eval-recorded", async () => ({
     ...savedOpenAiConfiguration(),
     saved: { ...savedOpenAiConfiguration().saved, model: "open-ai-api-key" },
@@ -3627,16 +3627,16 @@ test("relaunch says it is starting while it starts, and never offers a CopilotKi
   invokeHandler = async (command, args) =>
     command === "run_local_eval" ? status.promise : previous(command, args);
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Starting OpenBot" });
+  await view.findByRole("heading", { name: "Starting Mangaba Bot" });
   expect(
-    view.queryByRole("heading", { name: "OpenBot is stopped" }),
+    view.queryByRole("heading", { name: "Mangaba Bot is stopped" }),
   ).toBeNull();
   expect(buttons(view)).toEqual(["Cancel"]);
   expectPlain(view);
   await act(async () => status.resolve(localStatus("ready", "valid")));
-  await view.findByRole("heading", { name: "OpenBot is running" });
-  await userEvent.click(view.getByRole("button", { name: "Stop OpenBot" }));
-  await view.findByRole("heading", { name: "OpenBot is stopped" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
+  await userEvent.click(view.getByRole("button", { name: "Stop Mangaba Bot" }));
+  await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
   expect(
     view.queryByRole("button", { name: "Change CopilotKit connection" }),
   ).toBeNull();
@@ -3679,15 +3679,15 @@ test("the stopped window's update check asks the update feed and says this versi
     return previous(command, args);
   };
   const view = await renderApp();
-  await view.findByRole("heading", { name: "OpenBot is running" });
-  await userEvent.click(view.getByRole("button", { name: "Stop OpenBot" }));
-  await view.findByRole("heading", { name: "OpenBot is stopped" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
+  await userEvent.click(view.getByRole("button", { name: "Stop Mangaba Bot" }));
+  await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
   await userEvent.click(view.getByRole("button", { name: /^Check/ }));
   await waitFor(() =>
-    expect(view.getByText("OpenBot 0.3.2 is up to date.")).toBeTruthy(),
+    expect(view.getByText("Mangaba Bot 0.3.2 is up to date.")).toBeTruthy(),
   );
   expect(view.queryByText(/not configured/)).toBeNull();
-  expect(view.getByText(/^OpenBot updates itself/)).toBeTruthy();
+  expect(view.getByText(/^Mangaba Bot updates itself/)).toBeTruthy();
   expect(
     invokeCalls.filter(
       (call) =>
@@ -3698,8 +3698,8 @@ test("the stopped window's update check asks the update feed and says this versi
 
 /*
  * The bug, on an internal build on Windows: the stopped window's Updates section opened with
- * "OpenBot updates itself with signed updates from its publisher", and Check for updates then said
- * "This version of OpenBot doesn't update itself" in the same box. A build that never updates
+ * "Mangaba Bot updates itself with signed updates from its publisher", and Check for updates then said
+ * "This version of Mangaba Bot doesn't update itself" in the same box. A build that never updates
  * itself now says so up front, with no promise and nothing to check.
  */
 test("the stopped window on a build that never updates itself says so and promises no updates", async () => {
@@ -3721,11 +3721,11 @@ test("the stopped window on a build that never updates itself says so and promis
     return previous(command, args);
   };
   const view = await renderApp();
-  await view.findByRole("heading", { name: "OpenBot is running" });
-  await userEvent.click(view.getByRole("button", { name: "Stop OpenBot" }));
-  await view.findByRole("heading", { name: "OpenBot is stopped" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
+  await userEvent.click(view.getByRole("button", { name: "Stop Mangaba Bot" }));
+  await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
   await view.findByText(
-    "This version of OpenBot doesn't update itself. Install a released version of OpenBot to get updates.",
+    "This version of Mangaba Bot doesn't update itself. Install a released version of Mangaba Bot to get updates.",
   );
   expect(view.queryByText(/updates itself with|signed updates/)).toBeNull();
   expect(view.queryByRole("button", { name: /^Check/ })).toBeNull();
@@ -3740,17 +3740,17 @@ test("Quit shows Shutting down with each part's row as it starts and ends", asyn
     localStatus("ready", "valid"),
   );
   const view = await renderApp();
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   const callsBefore = invokeCalls.length;
 
   await emitQuit({ seq: 2, steps: [running("stop-openbot")] });
-  const heading = view.getByRole("heading", { name: "Shutting down OpenBot" });
+  const heading = view.getByRole("heading", { name: "Shutting down Mangaba Bot" });
   expectStandardSheet(heading);
   expect(
-    rowStatus(view, "Stopping OpenBot").getByText("In progress"),
+    rowStatus(view, "Stopping Mangaba Bot").getByText("In progress"),
   ).toBeTruthy();
   expect(
-    view.queryByRole("listitem", { name: "Stopping OpenBot's services" }),
+    view.queryByRole("listitem", { name: "Stopping Mangaba Bot's services" }),
   ).toBeNull();
   // Nothing to press: the app exits by itself.
   expect(view.queryAllByRole("button")).toHaveLength(0);
@@ -3760,15 +3760,15 @@ test("Quit shows Shutting down with each part's row as it starts and ends", asyn
     steps: [complete("stop-openbot"), running("stop-intelligence")],
   });
   expect(
-    rowStatus(view, "Stopping OpenBot").getByText("Complete"),
+    rowStatus(view, "Stopping Mangaba Bot").getByText("Complete"),
   ).toBeTruthy();
   expect(
-    rowStatus(view, "Stopping OpenBot's services").getByText("In progress"),
+    rowStatus(view, "Stopping Mangaba Bot's services").getByText("In progress"),
   ).toBeTruthy();
   // An older copy arriving late never undoes a newer one.
   await emitQuit({ seq: 3, steps: [complete("stop-openbot")] });
   expect(
-    rowStatus(view, "Stopping OpenBot's services").getByText("In progress"),
+    rowStatus(view, "Stopping Mangaba Bot's services").getByText("In progress"),
   ).toBeTruthy();
 
   await emitQuit({
@@ -3776,10 +3776,10 @@ test("Quit shows Shutting down with each part's row as it starts and ends", asyn
     steps: [complete("stop-openbot"), failed("stop-intelligence")],
   });
   expect(
-    rowStatus(view, "Stopping OpenBot's services").getByText("Failed"),
+    rowStatus(view, "Stopping Mangaba Bot's services").getByText("Failed"),
   ).toBeTruthy();
   expect(view.getByRole("status").textContent).toBe(
-    "Part of it could not be stopped. OpenBot says what happened the next time it opens.",
+    "Part of it could not be stopped. Mangaba Bot says what happened the next time it opens.",
   );
   // The window only shows; it never asks anything of the native side while it quits.
   expect(invokeCalls.slice(callsBefore)).toEqual([]);
@@ -3801,29 +3801,29 @@ test("a window sent to the Shutting down page catches up, then follows the rows"
     view = render(<ShuttingDownWindow />);
   });
   const heading = await view.findByRole("heading", {
-    name: "Shutting down OpenBot",
+    name: "Shutting down Mangaba Bot",
   });
   expectStandardSheet(heading);
   await waitFor(() =>
     expect(
-      rowStatus(view, "Stopping OpenBot").getByText("Complete"),
+      rowStatus(view, "Stopping Mangaba Bot").getByText("Complete"),
     ).toBeTruthy(),
   );
   expect(view.getByRole("status").textContent).toBe(
-    "OpenBot is stopping what it started on this computer, then it closes.",
+    "Mangaba Bot is stopping what it started on this computer, then it closes.",
   );
   await emitQuit({
     seq: 4,
     steps: [complete("stop-openbot"), complete("stop-intelligence")],
   });
   expect(
-    rowStatus(view, "Stopping OpenBot's services").getByText("Complete"),
+    rowStatus(view, "Stopping Mangaba Bot's services").getByText("Complete"),
   ).toBeTruthy();
   // Only the catch-up call; nothing that starts or stops anything.
   expect(invokeCalls.map((call) => call.command)).toEqual(["quit_status"]);
 });
 
-test("Stop OpenBot and Show OpenBot say what they are doing at once", async () => {
+test("Stop Mangaba Bot and Show Mangaba Bot say what they are doing at once", async () => {
   setupConnectedLocalStack(
     "/tmp/local-eval-stop-status",
     localStatus("ready", "valid"),
@@ -3839,22 +3839,22 @@ test("Stop OpenBot and Show OpenBot say what they are doing at once", async () =
     return previous(command, args);
   };
   const view = await renderApp();
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
 
-  await userEvent.click(view.getByRole("button", { name: "Show OpenBot" }));
-  expectWorking(view, "Loading OpenBot…");
+  await userEvent.click(view.getByRole("button", { name: "Show Mangaba Bot" }));
+  expectWorking(view, "Loading Mangaba Bot…");
   await act(async () => showing.resolve(null));
-  expect(view.queryByText("Loading OpenBot…")).toBeNull();
+  expect(view.queryByText("Loading Mangaba Bot…")).toBeNull();
 
-  await userEvent.click(view.getByRole("button", { name: "Stop OpenBot" }));
-  expectWorking(view, "Stopping OpenBot…");
-  expect(view.getByRole("button", { name: "Stop OpenBot" })).toHaveProperty(
+  await userEvent.click(view.getByRole("button", { name: "Stop Mangaba Bot" }));
+  expectWorking(view, "Stopping Mangaba Bot…");
+  expect(view.getByRole("button", { name: "Stop Mangaba Bot" })).toHaveProperty(
     "disabled",
     true,
   );
   await act(async () => stopping.resolve(null));
-  await view.findByRole("heading", { name: "OpenBot is stopped" });
-  expect(view.queryByText("Stopping OpenBot…")).toBeNull();
+  await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
+  expect(view.queryByText("Stopping Mangaba Bot…")).toBeNull();
 });
 
 test("relaunch's Starting and Opening screens use the standard setup column", async () => {
@@ -3868,7 +3868,7 @@ test("relaunch's Starting and Opening screens use the standard setup column", as
     command === "run_local_eval" ? status.promise : previous(command, args);
   const view = await renderApp();
   const starting = await view.findByRole("heading", {
-    name: "Starting OpenBot",
+    name: "Starting Mangaba Bot",
   });
   expectStandardSheet(starting);
   const sheet = starting.closest(".sheet") as HTMLElement;
@@ -3877,10 +3877,10 @@ test("relaunch's Starting and Opening screens use the standard setup column", as
   ).toBeTruthy();
   expect(within(sheet).getByRole("button", { name: "Cancel" })).toBeTruthy();
   await act(async () => status.resolve(localStatus("ready", "valid")));
-  await view.findByRole("heading", { name: "OpenBot is running" });
-  await userEvent.click(view.getByRole("button", { name: "Stop OpenBot" }));
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
+  await userEvent.click(view.getByRole("button", { name: "Stop Mangaba Bot" }));
   expectStandardSheet(
-    await view.findByRole("heading", { name: "OpenBot is stopped" }),
+    await view.findByRole("heading", { name: "Mangaba Bot is stopped" }),
   );
   cleanup();
 
@@ -3892,7 +3892,7 @@ test("relaunch's Starting and Opening screens use the standard setup column", as
     command === "selected_root" ? reopened : reopening(command, args);
   const opening = await renderApp();
   expectStandardSheet(
-    opening.getByRole("heading", { name: "Getting OpenBot ready" }),
+    opening.getByRole("heading", { name: "Getting Mangaba Bot ready" }),
   );
   await act(async () => configuration.resolve(savedOpenAiConfiguration()));
 });
@@ -3928,7 +3928,7 @@ test("relaunch starts a connected local stack that reports ready and valid", asy
     localStatus("ready", "valid"),
   );
   const view = await renderApp();
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   // A recorded, connected stack goes straight to waiting.
   expect(localSequence()).toEqual([
     "run_local_eval",
@@ -3941,13 +3941,13 @@ test("relaunch starts a connected local stack that reports ready and valid", asy
   });
   expect(getStartStackPayload()).not.toHaveProperty("apiKey");
   // Stopped by choice: nothing starts again on its own in this session.
-  await userEvent.click(view.getByRole("button", { name: "Stop OpenBot" }));
-  await view.findByRole("heading", { name: "OpenBot is stopped" });
+  await userEvent.click(view.getByRole("button", { name: "Stop Mangaba Bot" }));
+  await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
   await new Promise((resolve) => setTimeout(resolve, 20));
   expect(
     invokeCalls.filter((call) => call.command === "start_stack"),
   ).toHaveLength(1);
-  expect(view.getByRole("button", { name: "Start OpenBot" })).toBeTruthy();
+  expect(view.getByRole("button", { name: "Start Mangaba Bot" })).toBeTruthy();
 });
 
 const DOCKER_DID_NOT_START = {
@@ -4004,16 +4004,16 @@ test("relaunch with Docker Desktop quit opens it, says so, and starts once it an
   const view = await renderApp();
   // Docker is opened first, before any CLI call, and the screen says what to do.
   await waitFor(() => expect(docker.wakes).toBe(1));
-  await view.findByRole("heading", { name: "Starting OpenBot" });
+  await view.findByRole("heading", { name: "Starting Mangaba Bot" });
   await emitDockerHandOff();
   expectJourney(view, DOCKER_HAND_OFF);
-  const row = view.getByRole("listitem", { name: "Getting OpenBot ready" });
+  const row = view.getByRole("listitem", { name: "Getting Mangaba Bot ready" });
   expect(row.textContent).toContain("Step 3 of 4");
   expect(localSequence()).toEqual([]);
-  // Docker answers: the hand-off goes, and the back end and OpenBot start.
+  // Docker answers: the hand-off goes, and the back end and Mangaba Bot start.
   await emitDockerSettled(true, "Docker Desktop is running.");
   await act(async () => docker.wake.resolve(null));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   expect(view.queryByText(DOCKER_HAND_OFF)).toBeNull();
   expect(localSequence()).toEqual([
     "run_local_eval",
@@ -4022,7 +4022,7 @@ test("relaunch with Docker Desktop quit opens it, says so, and starts once it an
   ]);
   expect(
     view.queryByText(
-      "OpenBot can't reach the software it runs on. Retry to start it again.",
+      "Mangaba Bot can't reach the software it runs on. Retry to start it again.",
     ),
   ).toBeNull();
 });
@@ -4040,30 +4040,30 @@ test("relaunch with the engine machine stopped says it is starting it, in plain 
   invokeHandler = async (command, args) =>
     command === "wake_engine" ? machine.promise : previous(command, args);
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Starting OpenBot" });
+  await view.findByRole("heading", { name: "Starting Mangaba Bot" });
   // As `wake_installation_engine` reports it, before the machine answers.
   await emitProgress({
     step: "start-machine",
     ok: true,
     running: true,
-    detail: "Starting the software OpenBot runs on.",
+    detail: "Starting the software Mangaba Bot runs on.",
   });
   // Said as the journey's other lines are: a phrase, with no full stop.
-  expectJourney(view, "Starting the software OpenBot runs on");
+  expectJourney(view, "Starting the software Mangaba Bot runs on");
   await emitProgress({
     step: "start-machine",
     ok: true,
     running: false,
     detail: "The engine machine is running.",
   });
-  expect(view.queryByText("Starting the software OpenBot runs on.")).toBeNull();
+  expect(view.queryByText("Starting the software Mangaba Bot runs on.")).toBeNull();
   await act(async () => machine.resolve(null));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
 });
 
-test("relaunch while OpenBot sets its machine's network up again says so, before the backend starts", async () => {
-  // A live Windows run: for two minutes the screen said only "Checking OpenBot's settings" while
-  // OpenBot set its machine's network up again, and it did that after the backend had started.
+test("relaunch while Mangaba Bot sets its machine's network up again says so, before the backend starts", async () => {
+  // A live Windows run: for two minutes the screen said only "Checking Mangaba Bot's settings" while
+  // Mangaba Bot set its machine's network up again, and it did that after the backend had started.
   // The wake does it now, before any CLI call, and says so on the journey.
   setupConnectedLocalStack(
     "/tmp/local-eval-machine-network",
@@ -4074,28 +4074,28 @@ test("relaunch while OpenBot sets its machine's network up again says so, before
   invokeHandler = async (command, args) =>
     command === "wake_engine" ? machine.promise : previous(command, args);
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Starting OpenBot" });
+  await view.findByRole("heading", { name: "Starting Mangaba Bot" });
   // As `machine_before_back_end` reports it, once the network has not answered at once.
   await emitProgress({
     step: "start-machine",
     ok: true,
     running: true,
     detail:
-      "Reconnecting OpenBot to the internet. This can take a minute or two.",
+      "Reconnecting Mangaba Bot to the internet. This can take a minute or two.",
   });
   expectJourney(
     view,
-    "Reconnecting OpenBot to the internet. This can take a minute or two.",
+    "Reconnecting Mangaba Bot to the internet. This can take a minute or two.",
   );
   expect(localSequence()).toEqual([]);
   await emitProgress({
     step: "start-machine",
     ok: true,
     running: false,
-    detail: "The software OpenBot runs on is ready.",
+    detail: "The software Mangaba Bot runs on is ready.",
   });
   await act(async () => machine.resolve(null));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   expect(localSequence()[0]).toBe("run_local_eval");
 });
 
@@ -4108,7 +4108,7 @@ test("relaunch whose machine's network only a Windows restart fixes offers the r
   invokeHandler = async (command, args) => {
     if (command === "wake_engine") {
       throw {
-        said: "Windows needs to restart to finish setting up the software OpenBot runs on. Restart Windows, then open OpenBot again.",
+        said: "Windows needs to restart to finish setting up the software Mangaba Bot runs on. Restart Windows, then open Mangaba Bot again.",
         detail:
           "user-mode networking is not working in the openbot VM: host.containers.internal did not resolve in the openbot VM within 30s: podman machine ssh openbot timeout 3 getent ahostsv4 host.containers.internal exited with status 124",
         restart_windows: true,
@@ -4121,14 +4121,14 @@ test("relaunch whose machine's network only a Windows restart fixes offers the r
     await view.findByRole("heading", { name: "Restart Windows to finish" }),
   ).toBeTruthy();
   expect(view.container.textContent).toContain(
-    "Windows needs to restart to finish setting up the software OpenBot runs on.",
+    "Windows needs to restart to finish setting up the software Mangaba Bot runs on.",
   );
   expect(localSequence()).toEqual([]);
 });
 
 test("the running screen shows none of Start's own steps, and names the system tray on Windows", async () => {
-  // Seen on Windows: "OpenBot is running" flashed "settings written, credentials stored" and
-  // "containers up" for the moment before OpenBot opened, and sent the person to "the menu bar",
+  // Seen on Windows: "Mangaba Bot is running" flashed "settings written, credentials stored" and
+  // "containers up" for the moment before Mangaba Bot opened, and sent the person to "the menu bar",
   // which Windows does not have.
   Object.defineProperty(navigator, "userAgent", {
     configurable: true,
@@ -4148,21 +4148,21 @@ test("the running screen shows none of Start's own steps, and names the system t
         : previous(command, args);
     const view = await renderApp();
     await waitFor(() => expect(localSequence()).toContain("start_stack"));
-    // What the native side reports as it starts OpenBot.
+    // What the native side reports as it starts Mangaba Bot.
     for (const progress of [
       { step: "env", ok: true, detail: "Your settings are saved." },
       {
         step: "services",
         ok: true,
         running: true,
-        detail: "Starting OpenBot's services.",
+        detail: "Starting Mangaba Bot's services.",
       },
-      { step: "services", ok: true, detail: "OpenBot's services are running." },
-      { step: "answering", ok: true, detail: "OpenBot is ready." },
+      { step: "services", ok: true, detail: "Mangaba Bot's services are running." },
+      { step: "answering", ok: true, detail: "Mangaba Bot is ready." },
     ])
       await emitProgress(progress);
     await act(async () => started.resolve(null));
-    await view.findByRole("heading", { name: "OpenBot is running" });
+    await view.findByRole("heading", { name: "Mangaba Bot is running" });
     const screen = document.body.textContent ?? "";
     expect(view.queryByRole("list", { name: "Setup progress" })).toBeNull();
     for (const internal of [
@@ -4174,7 +4174,7 @@ test("the running screen shows none of Start's own steps, and names the system t
       expect(screen).not.toContain(internal);
     expect(
       view.getByText(
-        "OpenBot is open in this window. You can also show it or stop it from its icon in the system tray.",
+        "Mangaba Bot is open in this window. You can also show it or stop it from its icon in the system tray.",
       ),
     ).toBeTruthy();
   } finally {
@@ -4184,7 +4184,7 @@ test("the running screen shows none of Start's own steps, and names the system t
 
 /*
  * Seen on Windows: with Start's rows gone from the running screen, the card opened on a divider
- * and "Updates", with nothing above the line, and "OpenBot is running" under them. The heading
+ * and "Updates", with nothing above the line, and "Mangaba Bot is running" under them. The heading
  * comes first; Updates sits under the buttons, as on the stopped screen.
  */
 test("the running screen opens on its heading, with Updates under the buttons, with and without a failure", async () => {
@@ -4196,7 +4196,7 @@ test("the running screen opens on its heading, with Updates under the buttons, w
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
     if (command === "show_openbot" && showFails)
-      throw "OpenBot is not answering on port 3010 yet, so there is nothing to show.";
+      throw "Mangaba Bot is not answering on port 3010 yet, so there is nothing to show.";
     return previous(command, args);
   };
   const view = await renderApp();
@@ -4206,7 +4206,7 @@ test("the running screen opens on its heading, with Updates under the buttons, w
     step: "services",
     ok: true,
     running: true,
-    detail: "Starting OpenBot's services.",
+    detail: "Starting Mangaba Bot's services.",
   });
 
   /** The card's own children in order, by what each one is. */
@@ -4224,7 +4224,7 @@ test("the running screen opens on its heading, with Updates under the buttons, w
     );
 
   const heading = await view.findByRole("heading", {
-    name: "OpenBot is running",
+    name: "Mangaba Bot is running",
   });
   const sheet = heading.closest(".sheet") as HTMLElement;
   expect(order(sheet)).toEqual(["heading", "p", "buttons", "details:Updates"]);
@@ -4232,8 +4232,8 @@ test("the running screen opens on its heading, with Updates under the buttons, w
   expect(view.queryByRole("list", { name: "Setup progress" })).toBeNull();
 
   showFails = true;
-  await userEvent.click(view.getByRole("button", { name: "Show OpenBot" }));
-  const stopped = await view.findByRole("heading", { name: "OpenBot stopped" });
+  await userEvent.click(view.getByRole("button", { name: "Show Mangaba Bot" }));
+  const stopped = await view.findByRole("heading", { name: "Mangaba Bot stopped" });
   const failedSheet = stopped.closest(".sheet") as HTMLElement;
   // The rows still show where it stopped, between the heading and the buttons.
   const rows = view.getByRole("list", { name: "Setup progress" });
@@ -4247,22 +4247,22 @@ test("the running screen opens on its heading, with Updates under the buttons, w
   ]);
   expect(failedSheet.firstElementChild === stopped).toBe(true);
   expect(view.getByRole("alert").textContent).toContain(
-    "OpenBot is not answering on port 3010 yet",
+    "Mangaba Bot is not answering on port 3010 yet",
   );
 });
 
 /*
- * The OpenBot on this computer started, and needs a newer version of this app (its admin's minimum,
+ * The Mangaba Bot on this computer started, and needs a newer version of this app (its admin's minimum,
  * or only a newer API). The window does not open it, and does not say it stopped or failed: it says
- * "Update OpenBot" with the shell's sentence and Update and restart. Stop is still there.
+ * "Update Mangaba Bot" with the shell's sentence and Update and restart. Stop is still there.
  */
-test("an OpenBot on this computer that needs a newer app says Update OpenBot, not that it stopped", async () => {
+test("an Mangaba Bot on this computer that needs a newer app says Update Mangaba Bot, not that it stopped", async () => {
   setupConnectedLocalStack(
     "/tmp/local-eval-app-too-old",
     localStatus("ready", "valid"),
   );
   const said =
-    "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.";
+    "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.";
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
     if (command === "show_openbot")
@@ -4285,9 +4285,9 @@ test("an OpenBot on this computer that needs a newer app says Update OpenBot, no
   await waitFor(() => expect(localSequence()).toContain("start_stack"));
   const heading = await view.findByRole("heading", {
     level: 1,
-    name: "Update OpenBot",
+    name: "Update Mangaba Bot",
   });
-  expect(view.queryByRole("heading", { name: "OpenBot stopped" })).toBeNull();
+  expect(view.queryByRole("heading", { name: "Mangaba Bot stopped" })).toBeNull();
   expect(view.queryByText("That didn’t finish")).toBeNull();
   expect(view.queryByRole("list", { name: "Setup progress" })).toBeNull();
   const card = view.getByRole("alert");
@@ -4296,18 +4296,18 @@ test("an OpenBot on this computer that needs a newer app says Update OpenBot, no
   expect(within(card).queryByRole("heading")).toBeNull();
   expect(heading.closest(".sheet")?.contains(card)).toBe(true);
   expect(view.getByRole("button", { name: "Update and restart" })).toBeTruthy();
-  expect(view.getByRole("button", { name: "Stop OpenBot" })).toBeTruthy();
+  expect(view.getByRole("button", { name: "Stop Mangaba Bot" })).toBeTruthy();
 });
 
 // The same, for a minimum raised because of a security problem: the security sentence is the heading,
-// in place of Update OpenBot, and the card under it offers the update without saying it again.
-test("an OpenBot on this computer that raised this app's minimum for a security problem says so as the heading", async () => {
+// in place of Update Mangaba Bot, and the card under it offers the update without saying it again.
+test("an Mangaba Bot on this computer that raised this app's minimum for a security problem says so as the heading", async () => {
   setupConnectedLocalStack(
     "/tmp/local-eval-app-too-old-security",
     localStatus("ready", "valid"),
   );
   const said =
-    "This version of OpenBot has a security problem. Update to keep using it.";
+    "This version of Mangaba Bot has a security problem. Update to keep using it.";
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
     if (command === "show_openbot")
@@ -4329,34 +4329,34 @@ test("an OpenBot on this computer that raised this app's minimum for a security 
   const view = await renderApp();
   await waitFor(() => expect(localSequence()).toContain("start_stack"));
   await view.findByRole("heading", { level: 1, name: said });
-  expect(view.queryByRole("heading", { name: "Update OpenBot" })).toBeNull();
-  expect(view.queryByRole("heading", { name: "OpenBot stopped" })).toBeNull();
+  expect(view.queryByRole("heading", { name: "Update Mangaba Bot" })).toBeNull();
+  expect(view.queryByRole("heading", { name: "Mangaba Bot stopped" })).toBeNull();
   expect(view.getAllByText(said)).toHaveLength(1);
   expect(view.getByRole("button", { name: "Update and restart" })).toBeTruthy();
-  expect(view.getByRole("button", { name: "Stop OpenBot" })).toBeTruthy();
+  expect(view.getByRole("button", { name: "Stop Mangaba Bot" })).toBeTruthy();
 });
 
 /*
  * The release laid out on this computer needs a launcher contract newer than this app speaks (a
  * newer app laid it out, and this one is older): Start does not start it
- * (`deployment_release::start_problem`). The window says "Update OpenBot" with the same sentence and
- * Update and restart, not that OpenBot stopped or that setup failed, and Update and restart installs
+ * (`deployment_release::start_problem`). The window says "Update Mangaba Bot" with the same sentence and
+ * Update and restart, not that Mangaba Bot stopped or that setup failed, and Update and restart installs
  * this app's update.
  */
-test("a release that needs a newer app is not started, and the window says Update OpenBot with its update", async () => {
+test("a release that needs a newer app is not started, and the window says Update Mangaba Bot with its update", async () => {
   setupConnectedLocalStack(
     "/tmp/local-eval-launcher-ahead",
     localStatus("ready", "valid"),
   );
   const said =
-    "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.";
+    "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.";
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
     if (command === "start_stack")
       throw {
         said,
         detail:
-          "OpenBot v1.3.0 needs launcherApi 2; this app is v1.1.1 and speaks launcherApi 1",
+          "Mangaba Bot v1.3.0 needs launcherApi 2; this app is v1.1.1 and speaks launcherApi 1",
         kind: "app-too-old",
       };
     if (command === "app_update_offer")
@@ -4375,9 +4375,9 @@ test("a release that needs a newer app is not started, and the window says Updat
   await waitFor(() => expect(localSequence()).toContain("start_stack"));
   const heading = await view.findByRole("heading", {
     level: 1,
-    name: "Update OpenBot",
+    name: "Update Mangaba Bot",
   });
-  expect(view.queryByRole("heading", { name: "OpenBot stopped" })).toBeNull();
+  expect(view.queryByRole("heading", { name: "Mangaba Bot stopped" })).toBeNull();
   expect(view.queryByText("That didn’t finish")).toBeNull();
   expect(view.queryByRole("list", { name: "Setup progress" })).toBeNull();
   const card = view.getByRole("alert");
@@ -4397,19 +4397,19 @@ test("a release that needs a newer app is not started, and the window says Updat
 });
 
 /*
- * The same OpenBot, found already running by a launch that did not start it: the app was quit or
- * killed and opened again while OpenBot kept running. Seen on a Mac and on Windows: the window said
- * "OpenBot is stopped" with Start OpenBot, the Update OpenBot card under it, while the server was up
- * and answering. It is the screen Start shows when it finds the same: Update OpenBot, running, with
- * Show OpenBot and Stop OpenBot, and nothing starts.
+ * The same Mangaba Bot, found already running by a launch that did not start it: the app was quit or
+ * killed and opened again while Mangaba Bot kept running. Seen on a Mac and on Windows: the window said
+ * "Mangaba Bot is stopped" with Start Mangaba Bot, the Update Mangaba Bot card under it, while the server was up
+ * and answering. It is the screen Start shows when it finds the same: Update Mangaba Bot, running, with
+ * Show Mangaba Bot and Stop Mangaba Bot, and nothing starts.
  */
-test("a launch that finds this computer's OpenBot running and needing a newer app says Update OpenBot, never that it stopped", async () => {
+test("a launch that finds this computer's Mangaba Bot running and needing a newer app says Update Mangaba Bot, never that it stopped", async () => {
   setupConnectedLocalStack(
     "/tmp/local-eval-app-too-old-found-running",
     localStatus("ready", "valid"),
   );
   const said =
-    "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.";
+    "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.";
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
     if (command === "already_running") return true;
@@ -4430,15 +4430,15 @@ test("a launch that finds this computer's OpenBot running and needing a newer ap
     return previous(command, args);
   };
   const view = await renderApp();
-  await view.findByRole("heading", { level: 1, name: "Update OpenBot" });
+  await view.findByRole("heading", { level: 1, name: "Update Mangaba Bot" });
   const card = view.getByRole("alert");
   expect(card.textContent).toContain(said);
   expect(within(card).queryByRole("heading")).toBeNull();
-  expect(view.queryByText("OpenBot is stopped")).toBeNull();
-  expect(view.queryByRole("button", { name: "Start OpenBot" })).toBeNull();
+  expect(view.queryByText("Mangaba Bot is stopped")).toBeNull();
+  expect(view.queryByRole("button", { name: "Start Mangaba Bot" })).toBeNull();
   expect(view.getByRole("button", { name: "Update and restart" })).toBeTruthy();
-  expect(view.getByRole("button", { name: "Show OpenBot" })).toBeTruthy();
-  expect(view.getByRole("button", { name: "Stop OpenBot" })).toBeTruthy();
+  expect(view.getByRole("button", { name: "Show Mangaba Bot" })).toBeTruthy();
+  expect(view.getByRole("button", { name: "Stop Mangaba Bot" })).toBeTruthy();
   // Running already: nothing is started again.
   expect(localSequence()).toEqual(["show_openbot"]);
 });
@@ -4462,7 +4462,7 @@ test("relaunch says when Docker Desktop did not start, and Retry opens it again"
   await userEvent.click(view.getByRole("button", { name: "Retry" }));
   await waitFor(() => expect(docker.wakes).toBe(2));
   await act(async () => docker.wake.resolve(null));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
 });
 
 /** What `docker_desktop::start` says as it opens Docker Desktop. */
@@ -4492,7 +4492,7 @@ function withOlderDeployment(outcome: unknown) {
   };
 }
 
-test("relaunch upgrades an older installation to this app's release as part of Start, then opens OpenBot", async () => {
+test("relaunch upgrades an older installation to this app's release as part of Start, then opens Mangaba Bot", async () => {
   setupConnectedLocalStack(
     "/tmp/local-eval-older-release",
     localStatus("ready", "valid"),
@@ -4507,23 +4507,23 @@ test("relaunch upgrades an older installation to this app's release as part of S
   );
   // Said while the upgrade runs, which can take minutes.
   const said =
-    "Updating OpenBot. Your Bots, sign-ins and data stay as they are.";
+    "Updating Mangaba Bot. Your Bots, sign-ins and data stay as they are.";
   await emitProgress({
     step: "release",
     ok: true,
     running: true,
     detail: said,
   });
-  // Headed as the update it is: "Starting OpenBot" read as if nothing were being updated.
+  // Headed as the update it is: "Starting Mangaba Bot" read as if nothing were being updated.
   expect(
-    view.getByRole("heading", { name: "Updating OpenBot (Self-Contained)" }),
+    view.getByRole("heading", { name: "Updating Mangaba Bot (Self-Contained)" }),
   ).toBeTruthy();
-  expect(view.queryByRole("heading", { name: "Starting OpenBot" })).toBeNull();
+  expect(view.queryByRole("heading", { name: "Starting Mangaba Bot" })).toBeNull();
   expect(view.getByText(said)).toBeTruthy();
   await act(async () =>
     moving.resolve({ from: "v0.3.0", to: "v0.3.1", moved: true }),
   );
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   await expectHandover();
   const sequence = invokeCalls
     .map((call) => call.command)
@@ -4553,11 +4553,11 @@ test("relaunch upgrades an older installation to this app's release as part of S
 
 /*
  * A dogfooding report: an app that shows a screen while it updates is unusual, and the screen said
- * nothing of why. It is headed as the self-contained OpenBot's update now, and under the progress
- * says that everything runs on this computer, then offers OpenBot for Business, whose Book a demo
+ * nothing of why. It is headed as the self-contained Mangaba Bot's update now, and under the progress
+ * says that everything runs on this computer, then offers Mangaba Bot for Business, whose Book a demo
  * opens its page in the person's browser. Nothing in it is a step: the update goes on by itself.
  */
-test("updating OpenBot says it runs on this computer, and Book a demo opens OpenBot for Business", async () => {
+test("updating Mangaba Bot says it runs on this computer, and Book a demo opens Mangaba Bot for Business", async () => {
   setupConnectedLocalStack(
     "/tmp/local-eval-self-contained",
     localStatus("ready", "valid"),
@@ -4579,17 +4579,17 @@ test("updating OpenBot says it runs on this computer, and Book a demo opens Open
   expect(
     view.getByRole("heading", {
       level: 1,
-      name: "Updating OpenBot (Self-Contained)",
+      name: "Updating Mangaba Bot (Self-Contained)",
     }),
   ).toBeTruthy();
   const note = view.getByRole("region", {
     name: "Everything runs on this computer",
   });
   expect(note.textContent).toContain(
-    "This OpenBot is self-contained. Its services run here, so they update here too.",
+    "This Mangaba Bot is self-contained. Its services run here, so they update here too.",
   );
   expect(note.textContent).toContain(
-    "For teams and production, OpenBot for Business runs in OpenBot Cloud, your own cloud or on-prem.",
+    "For teams and production, Mangaba Bot for Business runs in Mangaba Bot Cloud, your own cloud or on-prem.",
   );
   // Under the progress, and nothing in it to press to go on.
   const journey = view.getByRole("region", { name: "How far along" });
@@ -4608,24 +4608,24 @@ test("updating OpenBot says it runs on this computer, and Book a demo opens Open
         .map((call) => call.args),
     ).toEqual([{ url: "https://open.bot/business" }]),
   );
-  // The update carries on, on the same screen, and opens OpenBot when it is done.
+  // The update carries on, on the same screen, and opens Mangaba Bot when it is done.
   expect(
-    view.getByRole("heading", { name: "Updating OpenBot (Self-Contained)" }),
+    view.getByRole("heading", { name: "Updating Mangaba Bot (Self-Contained)" }),
   ).toBeTruthy();
   await act(async () =>
     moving.resolve({ from: "v0.3.0", to: "v0.3.1", moved: true }),
   );
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
 });
 
 /*
- * Found on Windows I: after an update, "OpenBot is running" with Show OpenBot and Stop OpenBot
- * showed for about five seconds before OpenBot's home came up. The window had said running before
- * it asked to show OpenBot, and the setup page stays on screen until OpenBot's own page replaces it.
- * Start now goes straight from Starting to OpenBot, after an update as after any Start: the running
- * screen never renders while the window becomes OpenBot.
+ * Found on Windows I: after an update, "Mangaba Bot is running" with Show Mangaba Bot and Stop Mangaba Bot
+ * showed for about five seconds before Mangaba Bot's home came up. The window had said running before
+ * it asked to show Mangaba Bot, and the setup page stays on screen until Mangaba Bot's own page replaces it.
+ * Start now goes straight from Starting to Mangaba Bot, after an update as after any Start: the running
+ * screen never renders while the window becomes Mangaba Bot.
  */
-test("Start goes straight from Starting to OpenBot, after an update as after any Start, with no running screen between", async () => {
+test("Start goes straight from Starting to Mangaba Bot, after an update as after any Start, with no running screen between", async () => {
   handover.holdMs = HANDOVER_HOLD_MS;
   try {
     await handsOverWithoutRunning();
@@ -4670,13 +4670,13 @@ async function handsOverWithoutRunning() {
       );
     }
     await expectHandover();
-    // While the window is asked to show OpenBot, and after it answered and OpenBot's page loads.
+    // While the window is asked to show Mangaba Bot, and after it answered and Mangaba Bot's page loads.
     await act(async () => new Promise((resolve) => setTimeout(resolve, 200)));
     const heading = updates
-      ? "Updating OpenBot (Self-Contained)"
-      : "Starting OpenBot";
+      ? "Updating Mangaba Bot (Self-Contained)"
+      : "Starting Mangaba Bot";
     expect(view.getByRole("heading", { name: heading })).toBeTruthy();
-    // Why the screen is there is said while it updates OpenBot, and not on a plain Start.
+    // Why the screen is there is said while it updates Mangaba Bot, and not on a plain Start.
     expect(
       view.queryByRole("region", {
         name: "Everything runs on this computer",
@@ -4685,13 +4685,13 @@ async function handsOverWithoutRunning() {
     await act(async () => showing.resolve(null));
     await act(async () => new Promise((resolve) => setTimeout(resolve, 200)));
     expect(view.getByRole("heading", { name: heading })).toBeTruthy();
-    expect(view.queryByRole("button", { name: "Stop OpenBot" })).toBeNull();
+    expect(view.queryByRole("button", { name: "Stop Mangaba Bot" })).toBeNull();
     expect(
       view.queryByRole("button", { name: "Change AI connection" }),
     ).toBeNull();
     seen.disconnect();
-    expect(headings).not.toContain("OpenBot is running");
-    expect(headings).not.toContain("OpenBot is stopped");
+    expect(headings).not.toContain("Mangaba Bot is running");
+    expect(headings).not.toContain("Mangaba Bot is stopped");
     expect(
       invokeCalls.filter((call) => call.command === "show_openbot"),
     ).toHaveLength(1);
@@ -4701,10 +4701,10 @@ async function handsOverWithoutRunning() {
 }
 
 /*
- * Start updating OpenBot itself, in the Start journey: what the update is doing now, said from the
+ * Start updating Mangaba Bot itself, in the Start journey: what the update is doing now, said from the
  * step running now (`upgrade::now_said`), on the one bar that covers every row. The install and the
  * start report rows of their own as well, and those never take the line over. On Windows the line
- * said "Stopping OpenBot." through a whole start, under a list where every step but the last was
+ * said "Stopping Mangaba Bot." through a whole start, under a list where every step but the last was
  * complete; later a second row under the journey carried a bar of its own and said the same thing.
  */
 test("the journey says the update step running now, never one that finished, on its one bar", async () => {
@@ -4734,12 +4734,12 @@ test("the journey says the update step running now, never one that finished, on 
     [
       [
         release(
-          "Updating OpenBot. Your Bots, sign-ins and data stay as they are.",
+          "Updating Mangaba Bot. Your Bots, sign-ins and data stay as they are.",
         ),
       ],
       "Getting the update ready",
     ],
-    [[release("Stopping OpenBot.")], "Getting the update ready"],
+    [[release("Stopping Mangaba Bot.")], "Getting the update ready"],
     [[release("Backing up your data.")], "Getting the update ready"],
     [[release("Downloading the update.")], "Downloading the update"],
     [
@@ -4749,7 +4749,7 @@ test("the journey says the update step running now, never one that finished, on 
           step: "engine",
           ok: true,
           running: true,
-          detail: "Checking the software OpenBot needs.",
+          detail: "Checking the software Mangaba Bot needs.",
         },
         {
           step: "engine",
@@ -4787,7 +4787,7 @@ test("the journey says the update step running now, never one that finished, on 
     ],
     [
       [
-        release("Starting OpenBot."),
+        release("Starting Mangaba Bot."),
         {
           step: "services",
           ok: true,
@@ -4799,17 +4799,17 @@ test("the journey says the update step running now, never one that finished, on 
           step: "answering",
           ok: true,
           running: true,
-          detail: "Waiting for OpenBot to answer.",
+          detail: "Waiting for Mangaba Bot to answer.",
         },
       ],
-      "Starting the updated OpenBot",
+      "Starting the updated Mangaba Bot",
     ],
   ];
   let fraction = 0;
   for (const [events, said, bytes] of upgrade) {
     for (const event of events) await emitProgress(event);
     expect(
-      view.getByRole("heading", { name: "Updating OpenBot (Self-Contained)" }),
+      view.getByRole("heading", { name: "Updating Mangaba Bot (Self-Contained)" }),
     ).toBeTruthy();
     // A download's measure is said with the download it counts, never as the bar's own caption: on
     // Windows K the time line read "About 2 minutes left · 304.0 MB of 317.0 MB" beside a bar a
@@ -4833,14 +4833,14 @@ test("the journey says the update step running now, never one that finished, on 
     // No row of its own for the update: the start's row says what this part is.
     expect(view.queryByRole("list", { name: "Update progress" })).toBeNull();
     expect(
-      view.getByRole("listitem", { name: "Opening OpenBot" }).textContent,
+      view.getByRole("listitem", { name: "Opening Mangaba Bot" }).textContent,
     ).toContain(
-      "Updating OpenBot. Your Bots, sign-ins and data stay as they are.",
+      "Updating Mangaba Bot. Your Bots, sign-ins and data stay as they are.",
     );
   }
   // Nothing an earlier step said is left on the screen.
   for (const finished of [
-    "Stopping OpenBot.",
+    "Stopping Mangaba Bot.",
     "Backing up your data.",
     "Downloading the update.",
     "Installing the update.",
@@ -4849,8 +4849,8 @@ test("the journey says the update step running now, never one that finished, on 
   await act(async () =>
     moving.resolve({ from: "v0.3.0", to: "v0.3.1", moved: true }),
   );
-  await view.findByRole("heading", { name: "OpenBot is running" });
-  expect(view.queryByText("Starting OpenBot.")).toBeNull();
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
+  expect(view.queryByText("Starting Mangaba Bot.")).toBeNull();
 });
 
 test("an upgrade that could not put the previous version back is retried from the Retry its sentence names", async () => {
@@ -4859,7 +4859,7 @@ test("an upgrade that could not put the previous version back is retried from th
     localStatus("ready", "valid"),
   );
   const said =
-    "OpenBot couldn't update to v0.3.1 or put v0.3.0 back. Choose Retry to try putting it back again.";
+    "Mangaba Bot couldn't update to v0.3.1 or put v0.3.0 back. Choose Retry to try putting it back again.";
   let attempts = 0;
   withOlderDeployment(() => {
     attempts += 1;
@@ -4874,7 +4874,7 @@ test("an upgrade that could not put the previous version back is retried from th
       to: "v0.3.1",
       moved: false,
       notice: {
-        said: "OpenBot couldn't update to v0.3.1, so it's still on v0.3.0, with your data as it was.",
+        said: "Mangaba Bot couldn't update to v0.3.1, so it's still on v0.3.0, with your data as it was.",
       },
     };
   });
@@ -4884,7 +4884,7 @@ test("an upgrade that could not put the previous version back is retried from th
   expect(view.queryByRole("button", { name: /^Start/ })).toBeNull();
   await userEvent.click(view.getByRole("button", { name: "Retry" }));
   await view.findByText(
-    "OpenBot couldn't update to v0.3.1, so it's still on v0.3.0, with your data as it was.",
+    "Mangaba Bot couldn't update to v0.3.1, so it's still on v0.3.0, with your data as it was.",
   );
   expect(
     invokeCalls.filter((call) => call.command === "upgrade_and_start"),
@@ -4901,7 +4901,7 @@ test("an upgrade that did not finish says so on the running screen before handin
     localStatus("ready", "valid"),
   );
   const said =
-    "OpenBot couldn't update to v0.3.1, so it's still on v0.3.0, with your data as it was.";
+    "Mangaba Bot couldn't update to v0.3.1, so it's still on v0.3.0, with your data as it was.";
   withOlderDeployment({
     from: "v0.3.0",
     to: "v0.3.1",
@@ -4911,7 +4911,7 @@ test("an upgrade that did not finish says so on the running screen before handin
   const view = await renderApp();
   await view.findByText(said);
   expect(
-    view.getByRole("heading", { name: "OpenBot is running" }),
+    view.getByRole("heading", { name: "Mangaba Bot is running" }),
   ).toBeTruthy();
   expect(view.getByText("Technical details")).toBeTruthy();
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
@@ -4921,7 +4921,7 @@ test("an upgrade that did not finish says so on the running screen before handin
   expect(invokeCalls.some((call) => call.command === "show_openbot")).toBe(
     false,
   );
-  await userEvent.click(view.getByRole("button", { name: "Show OpenBot" }));
+  await userEvent.click(view.getByRole("button", { name: "Show Mangaba Bot" }));
   await waitFor(() =>
     expect(invokeCalls.some((call) => call.command === "show_openbot")).toBe(
       true,
@@ -4931,13 +4931,13 @@ test("an upgrade that did not finish says so on the running screen before handin
 
 test("Retry after a refused start shows no refusal while the new start runs", async () => {
   // Windows under Podman: Retry after the setting was put right kept "That didn't finish" and the
-  // old sentence under Starting OpenBot for the 20 seconds the new start took, until OpenBot opened.
+  // old sentence under Starting Mangaba Bot for the 20 seconds the new start took, until Mangaba Bot opened.
   setupConnectedLocalStack(
     "/tmp/retry-clears-refusal",
     localStatus("ready", "valid"),
   );
   const said =
-    "SMTP_HOST is set but MAIL_FROM is not. Set MAIL_FROM to the address OpenBot sends email from, such as OpenBot <openbot@example.com>.";
+    "SMTP_HOST is set but MAIL_FROM is not. Set MAIL_FROM to the address Mangaba Bot sends email from, such as Mangaba Bot <openbot@example.com>.";
   let starts = 0;
   let answer: () => void = () => {};
   const previous = invokeHandler;
@@ -4972,13 +4972,13 @@ test("relaunch never starts a local stack that is not exactly ready and valid", 
     [
       "unknown",
       "unknown",
-      "OpenBot started, and hasn't said yet whether it's ready.",
+      "Mangaba Bot started, and hasn't said yet whether it's ready.",
     ],
     ["ready", "expired", "The evaluation licence has expired."],
     [
       "degraded",
       "valid",
-      "OpenBot is running but not working properly. Retry to start it again.",
+      "Mangaba Bot is running but not working properly. Retry to start it again.",
     ],
   ]) {
     setupConnectedLocalStack(
@@ -5012,7 +5012,7 @@ const pinnedCli = JSON.parse(
   ),
 );
 const KEPT_RELEASE =
-  "The OpenBot update didn't finish downloading, so OpenBot is running the version it had. It tries again the next time it starts.";
+  "The Mangaba Bot update didn't finish downloading, so Mangaba Bot is running the version it had. It tries again the next time it starts.";
 
 /** `local update` as the CLI answers when it stops at the image download again. */
 const updateFailed = {
@@ -5043,7 +5043,7 @@ function localActions() {
     .map((call) => (call.args as { action: string }).action);
 }
 
-/** OpenBot started on the back end's own addresses, said why on the running screen, and waits. */
+/** Mangaba Bot started on the back end's own addresses, said why on the running screen, and waits. */
 async function startedOnKeptRelease(
   view: Awaited<ReturnType<typeof renderApp>>,
 ) {
@@ -5052,25 +5052,25 @@ async function startedOnKeptRelease(
   expect(view.queryByRole("alert")).toBeNull();
   expect(view.queryByRole("link", { name: "Get setup help" })).toBeNull();
   expect(
-    view.getByRole("heading", { name: "OpenBot is running" }),
+    view.getByRole("heading", { name: "Mangaba Bot is running" }),
   ).toBeTruthy();
   expect(
     view.queryByText(
-      "OpenBot is running but not working properly. Retry to start it again.",
+      "Mangaba Bot is running but not working properly. Retry to start it again.",
     ),
   ).toBeNull();
   expect(
-    view.queryByRole("heading", { name: "OpenBot is stopped" }),
+    view.queryByRole("heading", { name: "Mangaba Bot is stopped" }),
   ).toBeNull();
   expect(getStartStackPayload()).toMatchObject({
     apiUrl: "http://localhost:18082",
     gatewayWsUrl: "ws://localhost:14401",
   });
-  // The person reads the notice, then opens OpenBot on the release it has.
+  // The person reads the notice, then opens Mangaba Bot on the release it has.
   expect(invokeCalls.some((call) => call.command === "show_openbot")).toBe(
     false,
   );
-  await userEvent.click(view.getByRole("button", { name: "Show OpenBot" }));
+  await userEvent.click(view.getByRole("button", { name: "Show Mangaba Bot" }));
   await waitFor(() =>
     expect(invokeCalls.some((call) => call.command === "show_openbot")).toBe(
       true,
@@ -5082,9 +5082,9 @@ async function startedOnKeptRelease(
  * Found on 0.3.3 on a slow connection. Start began updating the back end from 0.16.0-rc.5 to
  * 0.16.0-rc.9; the CLI stopped downloading one image at its own limit and kept the update on
  * record. Nothing in the cluster had changed and every check passed, but the CLI said `degraded`,
- * and the window said "OpenBot is running but not working properly. Retry to start it again." and stopped OpenBot.
+ * and the window said "Mangaba Bot is running but not working properly. Retry to start it again." and stopped Mangaba Bot.
  */
-test("an update that did not finish opens OpenBot on the release the backend runs, and says so", async () => {
+test("an update that did not finish opens Mangaba Bot on the release the backend runs, and says so", async () => {
   const after = pinnedCli.updateDidNotFinish;
   // The same stack before the update: ready on rc.5, with rc.9 to install.
   const before = {
@@ -5140,10 +5140,10 @@ test("a backend whose check fails is still not healthy, with an update on record
   ]);
   const view = await renderApp();
   await view.findByText(
-    "OpenBot is running but not working properly. Retry to start it again.",
+    "Mangaba Bot is running but not working properly. Retry to start it again.",
   );
   expect(
-    view.getByRole("heading", { name: "OpenBot is stopped" }),
+    view.getByRole("heading", { name: "Mangaba Bot is stopped" }),
   ).toBeTruthy();
   expect(view.getByRole("button", { name: "Retry" })).toBeTruthy();
   expect(view.queryByText(KEPT_RELEASE)).toBeNull();
@@ -5167,7 +5167,7 @@ test("relaunch waits for Start when auto-start is off, interrupted, or the stack
       },
       null,
     ],
-    ["interrupted", {}, { said: "OpenBot stopped unexpectedly." }],
+    ["interrupted", {}, { said: "Mangaba Bot stopped unexpectedly." }],
   ] as const) {
     setupConnectedLocalStack(
       `/tmp/local-eval-${name}`,
@@ -5180,10 +5180,10 @@ test("relaunch waits for Start when auto-start is off, interrupted, or the stack
         command === "last_failure" ? failure : previous(command, args);
     }
     const view = await renderApp();
-    await view.findByRole("heading", { name: "OpenBot is stopped" });
+    await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
     await new Promise((resolve) => setTimeout(resolve, 20));
     expect(localSequence()).toEqual([]);
-    await userEvent.click(view.getByRole("button", { name: "Start OpenBot" }));
+    await userEvent.click(view.getByRole("button", { name: "Start Mangaba Bot" }));
     await waitFor(() => expect(localSequence()).toContain("start_stack"));
     cleanup();
     invokeCalls = [];
@@ -5255,7 +5255,7 @@ test("a provider sign-in can be tried again on the AI step without installing ag
   await userEvent.click(
     view.getByRole("button", { name: "Sign in with OpenAI" }),
   );
-  // Signed in, so on by itself after a second showing the tick, and OpenBot opens once started.
+  // Signed in, so on by itself after a second showing the tick, and Mangaba Bot opens once started.
   await expectHandover(4000);
   expect(signIns).toBe(2);
   expect(installationCalls()).toHaveLength(1);
@@ -5292,7 +5292,7 @@ test("a failed automatic reopen offers recovery without retrying or installing",
   await userEvent.click(
     view.getByRole("button", { name: "Change installation" }),
   );
-  expect(view.getByRole("button", { name: "Install OpenBot" })).toBeTruthy();
+  expect(view.getByRole("button", { name: "Install Mangaba Bot" })).toBeTruthy();
 });
 
 test("menu Stop retains the installed root for explicit Start without the wizard", async () => {
@@ -5301,11 +5301,11 @@ test("menu Stop retains the installed root for explicit Start without the wizard
     autoStart: false,
   });
   const view = await renderApp();
-  await view.findByRole("heading", { name: "OpenBot is stopped" });
+  await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
     false,
   );
-  await userEvent.click(view.getByRole("button", { name: "Start OpenBot" }));
+  await userEvent.click(view.getByRole("button", { name: "Start Mangaba Bot" }));
   await waitFor(() =>
     expect(invokeCalls).toContainEqual({ command: "show_openbot" }),
   );
@@ -5317,13 +5317,13 @@ test("menu Stop retains the installed root for explicit Start without the wizard
 });
 
 /**
- * Start in the Status window, after Stop: this window's own Start OpenBot, run here. Before, the
+ * Start in the Status window, after Stop: this window's own Start Mangaba Bot, run here. Before, the
  * Status window offered no Start for the app, and its services' Start brought up the services only,
- * leaving OpenBot stopped until Start OpenBot here. Asked while this page loads (Stop sends the
+ * leaving Mangaba Bot stopped until Start Mangaba Bot here. Asked while this page loads (Stop sends the
  * window back to setup), the page takes it once the saved setup is read; asked once the stopped
  * screen shows, the native side says so (`setup:start`). Either way, once.
  */
-test("Start from the Status window after Stop starts OpenBot as Start OpenBot does", async () => {
+test("Start from the Status window after Stop starts Mangaba Bot as Start Mangaba Bot does", async () => {
   for (const asked of ["while loading", "on the stopped screen"] as const) {
     const root = "/tmp/status-window-start";
     setupConnectedLocalStack(root, localStatus("ready", "valid"), {
@@ -5341,7 +5341,7 @@ test("Start from the Status window after Stop starts OpenBot as Start OpenBot do
     };
     const view = await renderApp();
     if (asked === "on the stopped screen") {
-      await view.findByRole("heading", { name: "OpenBot is stopped" });
+      await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
       await new Promise((resolve) => setTimeout(resolve, 20));
       expect(localSequence()).toEqual([]);
       pending = true;
@@ -5352,7 +5352,7 @@ test("Start from the Status window after Stop starts OpenBot as Start OpenBot do
     await waitFor(() =>
       expect(invokeCalls).toContainEqual({ command: "show_openbot" }),
     );
-    // The same Start as the button's: the services checked, then OpenBot started and shown.
+    // The same Start as the button's: the services checked, then Mangaba Bot started and shown.
     expect(localSequence()).toEqual([
       "run_local_eval",
       "start_stack",
@@ -5414,7 +5414,7 @@ test("an installation an earlier app connected to hosted Intelligence starts at 
   );
   withLocalCli(readyLocal());
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   expect(buttons(view)).toEqual(["Connect to it", "Install"]);
   await new Promise((resolve) => setTimeout(resolve, 20));
   // Nothing hosted is started, and nothing local either, until Install.
@@ -5429,7 +5429,7 @@ test("an installation an earlier app connected to hosted Intelligence starts at 
   await view.findByRole("heading", { name: "Connect your AI" });
   // Install still runs: the native side keeps the finished install of the same Bot, but only after
   // it has the engine answering. On Windows a recorded install whose Podman was gone was skipped
-  // here, and the account step waited forever for OpenBot's own machine that nobody made.
+  // here, and the account step waited forever for Mangaba Bot's own machine that nobody made.
   expect(installationCalls()).toEqual([
     {
       command: "prepare_installation",
@@ -5471,7 +5471,7 @@ test("Start asks for the Bot the install put in when the folder's release lacked
     prepare_installation: async () => ({ id: "langgraph" }),
   });
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   await installLocal(view);
   await view.findByRole("heading", { name: "Connect your AI" });
   expect(installationCalls()).toEqual([
@@ -5498,7 +5498,7 @@ test("a previously hosted installation of another Bot installs the default Bot",
   );
   withLocalCli(readyLocal());
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
     false,
   );
@@ -5557,7 +5557,7 @@ test.each(["model", "intelligence"])(
           said:
             connection === "model"
               ? "That saved OpenAI API key is no longer available."
-              : "OpenBot's connection to its backend on this computer is no longer available. Set up the backend again.",
+              : "Mangaba Bot's connection to its backend on this computer is no longer available. Set up the backend again.",
           connection,
         };
       return previous(command, args);
@@ -5604,7 +5604,7 @@ test.each(["model", "intelligence"])(
 );
 
 const INSTALL_AGAIN = {
-  said: "Finish installing OpenBot's local software before signing in or starting. Return to Install and try again.",
+  said: "Finish installing Mangaba Bot's local software before signing in or starting. Return to Install and try again.",
   connection: "installation",
 };
 
@@ -5613,9 +5613,9 @@ const INSTALL_AGAIN = {
  * its deployment is one this app cannot start, so Start is refused until Install lays out the new
  * one, and the window installs again by itself.
  *
- * Seen on a Mac replacing OpenBot 0.3.1: Starting OpenBot, then Installing OpenBot under an alert
- * "OpenBot did not start", then "Refresh your AI connection", though nothing about the sign-in had
- * changed and Continue with it started OpenBot at once. The Start was only waiting on the install,
+ * Seen on a Mac replacing Mangaba Bot 0.3.1: Starting Mangaba Bot, then Installing Mangaba Bot under an alert
+ * "Mangaba Bot did not start", then "Refresh your AI connection", though nothing about the sign-in had
+ * changed and Continue with it started Mangaba Bot at once. The Start was only waiting on the install,
  * and after the install it carries on with the saved sign-in.
  */
 async function reopenAfterUpdate(
@@ -5639,7 +5639,7 @@ async function reopenAfterUpdate(
     return previous(command, args);
   };
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Installing OpenBot" });
+  await view.findByRole("heading", { name: "Installing Mangaba Bot" });
   return { view, installed };
 }
 
@@ -5661,7 +5661,7 @@ test("a Start that waits for the install it asked for carries on with the saved 
   ).toMatchObject({ root });
 
   await act(async () => installed.resolve(null));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   // Never asked to pick the AI it already had.
   expect(
     view.queryByRole("heading", { name: /AI connection|Connect your AI/ }),
@@ -5701,14 +5701,14 @@ test("a saved sign-in refused after the install sends the person to refresh it",
 });
 
 /**
- * Box I, step E: OpenBot's machine was made again, and the backend went with the old one. Start
+ * Box I, step E: Mangaba Bot's machine was made again, and the backend went with the old one. Start
  * fresh set the backend up again, then Start was refused, because the new machine had none of
- * OpenBot's own software: "Finish installing OpenBot's local software…", an ERROR in the log, and
- * the window went back from Starting OpenBot to Installing OpenBot before it carried on by itself.
+ * Mangaba Bot's own software: "Finish installing Mangaba Bot's local software…", an ERROR in the log, and
+ * the window went back from Starting Mangaba Bot to Installing Mangaba Bot before it carried on by itself.
  * Start fresh now installs first, then sets up and starts: one journey forward, Install's rows and
  * then Starting's, with nothing refused and no going back.
  */
-test("Start fresh after a lost backend installs OpenBot's software first, then sets up and starts, never going back", async () => {
+test("Start fresh after a lost backend installs Mangaba Bot's software first, then sets up and starts, never going back", async () => {
   const root = "/tmp/lost-backend";
   setupConnectedLocalStack(root, localStatus("ready", "valid"));
   const lost = {
@@ -5729,7 +5729,7 @@ test("Start fresh after a lost backend installs OpenBot's software first, then s
       installedNow = true;
       return null;
     }
-    // As the native side does: the new machine has none of OpenBot's software until Install.
+    // As the native side does: the new machine has none of Mangaba Bot's software until Install.
     if (command === "start_stack" && !installedNow) throw INSTALL_AGAIN;
     return previous(command, args);
   };
@@ -5749,13 +5749,13 @@ test("Start fresh after a lost backend installs OpenBot's software first, then s
   );
   // Install's rows first, on the screen the person was on.
   await view.findByText("Preparing this computer");
-  expect(view.getByRole("heading", { name: "Starting OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Starting Mangaba Bot" })).toBeTruthy();
   expect(localCliCalls().map((call) => call.command)).toEqual([
     "run_local_eval",
   ]);
 
   await act(async () => installed.resolve(null));
-  await view.findByRole("heading", { name: "OpenBot is running" });
+  await view.findByRole("heading", { name: "Mangaba Bot is running" });
   watch.disconnect();
   expect(
     invokeCalls
@@ -5779,7 +5779,7 @@ test("Start fresh after a lost backend installs OpenBot's software first, then s
     "start_stack",
     "show_openbot",
   ]);
-  expect([...headings]).not.toContain("Installing OpenBot");
+  expect([...headings]).not.toContain("Installing Mangaba Bot");
   expect(view.queryByRole("alert")).toBeNull();
 });
 
@@ -5791,7 +5791,7 @@ test("a Start refused again straight after its install says so, and does not ins
     },
   );
   await act(async () => installed.resolve(null));
-  await view.findByRole("alert", { name: "OpenBot" });
+  await view.findByRole("alert", { name: "Mangaba Bot" });
   // The second install the refusal asks for goes to the AI screen, from which Start runs again.
   await view.findByRole("heading", { name: /AI connection|Connect your AI/ });
   await new Promise((resolve) => setTimeout(resolve, 20));
@@ -5859,7 +5859,7 @@ test("reopening a retained root waits for its saved setup without flashing the w
   };
   const view = await renderApp();
   expect(
-    view.getByRole("heading", { name: "Getting OpenBot ready" }),
+    view.getByRole("heading", { name: "Getting Mangaba Bot ready" }),
   ).toBeTruthy();
   expect(view.queryByRole("button", { name: "Install" })).toBeNull();
   await act(async () => configuration.resolve(savedOpenAiConfiguration()));
@@ -5872,7 +5872,7 @@ test("reopening a retained root waits for its saved setup without flashing the w
 
 function useInterruptedShutdownSetup() {
   const root = "/tmp/interrupted-shutdown-root";
-  const notice = "OpenBot had trouble shutting down last time.";
+  const notice = "Mangaba Bot had trouble shutting down last time.";
   setupConnectedLocalStack("/tmp/default-root", localStatus("ready", "valid"));
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
@@ -5886,7 +5886,7 @@ function useInterruptedShutdownSetup() {
 test("a local Intelligence stack left running at Quit does not hold auto-start, which drops its notice", async () => {
   useInterruptedShutdownSetup();
   const notice = {
-    said: "When OpenBot last quit, some of its services didn't stop. They may still be running. Stopping OpenBot again asks them to stop.",
+    said: "When Mangaba Bot last quit, some of its services didn't stop. They may still be running. Stopping Mangaba Bot again asks them to stop.",
     detail: "Backend stop failed: the CLI timed out",
   };
   const previous = invokeHandler;
@@ -5905,7 +5905,7 @@ test("a local Intelligence stack left running at Quit does not hold auto-start, 
   expect(view.queryByText(notice.said)).toBeNull();
 });
 
-test("Stop that fails only for the local Intelligence stack still stops OpenBot", async () => {
+test("Stop that fails only for the local Intelligence stack still stops Mangaba Bot", async () => {
   useInterruptedShutdownSetup();
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
@@ -5916,17 +5916,17 @@ test("Stop that fails only for the local Intelligence stack still stops OpenBot"
   };
   const view = await renderApp();
   await userEvent.click(
-    await view.findByRole("button", { name: "Stop OpenBot" }),
+    await view.findByRole("button", { name: "Stop Mangaba Bot" }),
   );
   await waitFor(() =>
-    expect(view.queryByRole("button", { name: "Stop OpenBot" })).toBeNull(),
+    expect(view.queryByRole("button", { name: "Stop Mangaba Bot" })).toBeNull(),
   );
   expect(view.getByRole("alert").textContent).toContain(
-    "OpenBot stopped, but some of its services didn't. They may still be running.",
+    "Mangaba Bot stopped, but some of its services didn't. They may still be running.",
   );
 });
 
-test("Stop that fails for OpenBot itself keeps OpenBot running", async () => {
+test("Stop that fails for Mangaba Bot itself keeps Mangaba Bot running", async () => {
   useInterruptedShutdownSetup();
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
@@ -5937,14 +5937,14 @@ test("Stop that fails for OpenBot itself keeps OpenBot running", async () => {
   };
   const view = await renderApp();
   await userEvent.click(
-    await view.findByRole("button", { name: "Stop OpenBot" }),
+    await view.findByRole("button", { name: "Stop Mangaba Bot" }),
   );
   await waitFor(() =>
     expect(view.getByRole("alert").textContent).toContain(
       "Compose down failed: busy",
     ),
   );
-  expect(view.getByRole("button", { name: "Stop OpenBot" })).toBeTruthy();
+  expect(view.getByRole("button", { name: "Stop Mangaba Bot" })).toBeTruthy();
 });
 
 test("an interrupted shutdown restores saved setup for explicit recovery", async () => {
@@ -5953,9 +5953,9 @@ test("an interrupted shutdown restores saved setup for explicit recovery", async
   expect(view.getByRole("alert").textContent).toContain(notice);
   expect(view.queryByRole("button", { name: "Install" })).toBeNull();
   expect(
-    view.getByRole("heading", { name: "OpenBot is stopped" }),
+    view.getByRole("heading", { name: "Mangaba Bot is stopped" }),
   ).toBeTruthy();
-  const start = view.getByRole("button", { name: "Start OpenBot" });
+  const start = view.getByRole("button", { name: "Start Mangaba Bot" });
   expect(start).toHaveProperty("disabled", false);
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
     false,
@@ -5985,15 +5985,15 @@ test("an interrupted shutdown restores saved setup for explicit recovery", async
 });
 
 test("the last quit's notices go once Start runs, and a Start that stops says only why", async () => {
-  // EC2 Mac: OpenBot quit while its engine machine was stopped. The next launch said "That didn't
-  // finish: OpenBot had trouble shutting down last time." over the stopped card, and the card
-  // stayed through Start, which stopped at "Getting OpenBot ready" with the engine down, and
+  // EC2 Mac: Mangaba Bot quit while its engine machine was stopped. The next launch said "That didn't
+  // finish: Mangaba Bot had trouble shutting down last time." over the stopped card, and the card
+  // stayed through Start, which stopped at "Getting Mangaba Bot ready" with the engine down, and
   // through Retry: a notice about the last run read as the reason this one stopped. With that
   // one gone, the same card then said the same quit's other notice, about the services it left
-  // running, through Start and Retry until OpenBot opened.
+  // running, through Start and Retry until Mangaba Bot opened.
   const { notice } = useInterruptedShutdownSetup();
   const leftover =
-    "When OpenBot last quit, some of its services didn't stop. They may still be running. Stopping OpenBot again asks them to stop.";
+    "When Mangaba Bot last quit, some of its services didn't stop. They may still be running. Stopping Mangaba Bot again asks them to stop.";
   const engine = { running: false };
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
@@ -6001,7 +6001,7 @@ test("the last quit's notices go once Start runs, and a Start that stops says on
     if (command === "last_local_eval_stop_failure")
       return {
         said: leftover,
-        detail: "the backend stack did not stop when OpenBot last quit",
+        detail: "the backend stack did not stop when Mangaba Bot last quit",
       };
     if (command === "run_local_eval" && !engine.running) {
       return {
@@ -6016,13 +6016,13 @@ test("the last quit's notices go once Start runs, and a Start that stops says on
   const view = await renderApp();
   expect(view.getByRole("alert").textContent).toContain(notice);
 
-  await userEvent.click(view.getByRole("button", { name: "Start OpenBot" }));
+  await userEvent.click(view.getByRole("button", { name: "Start Mangaba Bot" }));
   const row = await view.findByRole("listitem", {
-    name: "Getting OpenBot ready",
+    name: "Getting Mangaba Bot ready",
   });
   await waitFor(() =>
     expect(row.textContent).toContain(
-      "OpenBot can't reach the software it runs on. Retry to start it again.",
+      "Mangaba Bot can't reach the software it runs on. Retry to start it again.",
     ),
   );
   expect(view.queryByText(notice)).toBeNull();
@@ -6040,8 +6040,8 @@ test("the last quit's notices go once Start runs, and a Start that stops says on
 
 /*
  * The report: somebody on 1.0.0 could not find which AI they had signed in with, or change it.
- * Settings' AI model row has a Change, which stops OpenBot and brings this window back. It opens at
- * the AI screen, the one Change AI connection opens, and the new choice is what starts OpenBot.
+ * Settings' AI model row has a Change, which stops Mangaba Bot and brings this window back. It opens at
+ * the AI screen, the one Change AI connection opens, and the new choice is what starts Mangaba Bot.
  */
 test("Settings' Change AI connection opens setup at the AI screen and starts with the new choice", async () => {
   setupConnectedLocalStack(
@@ -6063,7 +6063,7 @@ test("Settings' Change AI connection opens setup at the AI screen and starts wit
   const view = await renderApp();
   await view.findByLabelText("OpenAI API key");
   expect(
-    view.queryByRole("heading", { name: "OpenBot is stopped" }),
+    view.queryByRole("heading", { name: "Mangaba Bot is stopped" }),
   ).toBeNull();
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
     false,
@@ -6076,7 +6076,7 @@ test("Settings' Change AI connection opens setup at the AI screen and starts wit
   expect(getStartStackPayload()).toMatchObject({
     model: { apiKey: "new-model-key" },
   });
-  // Chosen here, so OpenBot's server takes it over a connection changed in the app since.
+  // Chosen here, so Mangaba Bot's server takes it over a connection changed in the app since.
   expect(
     invokeCalls.filter(
       (call) => call.command === "record_ai_connection_chosen",
@@ -6120,13 +6120,13 @@ test("Back from Settings' Change AI connection shows the stopped screen with Sta
   const view = await renderApp();
   await view.findByLabelText("OpenAI API key");
   await userEvent.click(view.getByRole("button", { name: "Back" }));
-  await view.findByRole("heading", { name: "OpenBot is stopped" });
+  await view.findByRole("heading", { name: "Mangaba Bot is stopped" });
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
     false,
   );
 });
 
-test("changing the saved model during recovery still opens OpenBot after Start", async () => {
+test("changing the saved model during recovery still opens Mangaba Bot after Start", async () => {
   useInterruptedShutdownSetup();
   const view = await renderApp();
   await userEvent.click(
@@ -6221,7 +6221,7 @@ test("setup records telemetry without a consent gate and deduplicates viewed ste
   expect(new Set(viewed).size).toBe(viewed.length);
 });
 
-test("setup records only model categories and opens OpenBot when telemetry is unavailable", async () => {
+test("setup records only model categories and opens Mangaba Bot when telemetry is unavailable", async () => {
   useCompatibleEndpointSetup({});
   const previous = invokeHandler;
   invokeHandler = async (command, args) => {
@@ -6240,7 +6240,7 @@ test("setup records only model categories and opens OpenBot when telemetry is un
       custom_base_url: true,
     },
   });
-  // Continue starts OpenBot, and it opens even though no event could be recorded.
+  // Continue starts Mangaba Bot, and it opens even though no event could be recorded.
   await expectHandover();
   const serialized = JSON.stringify(setupEvents());
   for (const privateValue of [
@@ -6327,7 +6327,7 @@ test("leftover database is offered as a fresh start that carries on into Start",
   invokeHandler = async (command, args) => {
     if (command === "start_stack" && ++starts === 1)
       throw {
-        said: "A previous OpenBot database remains without its encryption key.",
+        said: "A previous Mangaba Bot database remains without its encryption key.",
         database_reset: "fixture_postgres-data",
         leftover_reset: ["fixture_postgres-data"],
       };
@@ -6393,7 +6393,7 @@ test("starting fresh says in plain words what it deletes and removes only that l
   invokeHandler = async (command, args) => {
     if (command === "start_stack")
       throw {
-        said: "OpenBot found data from a previous installation.",
+        said: "Mangaba Bot found data from a previous installation.",
         leftover_reset: volumes,
         leftover_containers: containers,
       };
@@ -6442,7 +6442,7 @@ test("starting fresh says in plain words what it deletes and removes only that l
 
 /*
  * Windows F: the leftover data's notice sat above the card's own header, pushing "Finishing setup"
- * down 300 px, and the rows said "Opening OpenBot · Failed · OpenBot did not start" with Retry. It
+ * down 300 px, and the rows said "Opening Mangaba Bot · Failed · Mangaba Bot did not start" with Retry. It
  * is a choice for the person: the notice sits in the card under its rows, and the step waits on it.
  */
 test("leftover data is a choice the Start step waits on, in the card under its header", async () => {
@@ -6451,7 +6451,7 @@ test("leftover data is a choice the Start step waits on, in the card under its h
   invokeHandler = async (command, args) => {
     if (command === "start_stack")
       throw {
-        said: "OpenBot found data from a previous installation.",
+        said: "Mangaba Bot found data from a previous installation.",
         database_reset: "openbot-desktop_postgres-data",
         leftover_reset: [
           "openbot-desktop_agent-profiles",
@@ -6474,7 +6474,7 @@ test("leftover data is a choice the Start step waits on, in the card under its h
       ? "heading"
       : child.querySelector("#start-fresh-title")
         ? "notice"
-        : child.getAttribute("aria-label") === "OpenBot on this computer"
+        : child.getAttribute("aria-label") === "Mangaba Bot on this computer"
           ? "rows"
           : child.matches(".setup-header")
             ? "header"
@@ -6487,10 +6487,10 @@ test("leftover data is a choice the Start step waits on, in the card under its h
     "notice",
   ]);
   const opening = within(
-    view.getByRole("listitem", { name: "Opening OpenBot" }),
+    view.getByRole("listitem", { name: "Opening Mangaba Bot" }),
   );
   expect(opening.queryByText("Failed")).toBeNull();
-  expect(opening.queryByText("OpenBot did not start.")).toBeNull();
+  expect(opening.queryByText("Mangaba Bot did not start.")).toBeNull();
   expect(opening.getByText("Waiting for you")).toBeTruthy();
   expect(
     opening.getByText(
@@ -6525,7 +6525,7 @@ test("a fresh start that cannot delete the leftovers is shown without starting",
       };
     if (command === "reset_leftover_database")
       throw {
-        said: "The database is still in use. Close the other OpenBot installation first.",
+        said: "The database is still in use. Close the other Mangaba Bot installation first.",
       };
     return previous(command, args);
   };
@@ -6604,15 +6604,15 @@ function setupRootConfiguration(
 
 /*
  * Seen on a clean Windows machine: the first screen was "Turn on Windows Subsystem for Linux", and
- * OpenBot began turning it on, with a Windows restart to follow, before the person had chosen
- * anything. Somebody connecting to their company's OpenBot installs nothing on this computer, and
+ * Mangaba Bot began turning it on, with a Windows restart to follow, before the person had chosen
+ * anything. Somebody connecting to their company's Mangaba Bot installs nothing on this computer, and
  * got WSL and a restart first. What this computer needs is looked at once the person has chosen
  * this computer, with Install, and never before the choice.
  */
 const WSL_INSTRUCTION =
-  "Run `wsl --install`, restart Windows, and start OpenBot again.";
+  "Run `wsl --install`, restart Windows, and start Mangaba Bot again.";
 
-/** A Windows machine with nothing of OpenBot on it, and WSL not turned on. */
+/** A Windows machine with nothing of Mangaba Bot on it, and WSL not turned on. */
 function cleanWindowsWithoutWsl(shell: Record<string, unknown> = {}) {
   setupRootConfiguration("/tmp/openbot-clean-windows", async () =>
     emptyConfiguration(),
@@ -6644,9 +6644,9 @@ function windowsCalls() {
 test("a clean Windows machine without WSL opens at the choice, and nothing about Windows is checked or changed", async () => {
   cleanWindowsWithoutWsl();
   const view = await renderApp();
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
   expect(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   ).toHaveProperty("checked", true);
   expect(view.getByRole("radio", { name: /^Cloud/ })).toHaveProperty(
     "disabled",
@@ -6654,7 +6654,7 @@ test("a clean Windows machine without WSL opens at the choice, and nothing about
   );
   expect(buttons(view)).toEqual(["Connect to it", "Install"]);
   await new Promise((resolve) => setTimeout(resolve, 30));
-  expect(view.queryByText("Before OpenBot can start")).toBeNull();
+  expect(view.queryByText("Before Mangaba Bot can start")).toBeNull();
   expect(windowsCalls()).toEqual([]);
   expect(installationCalls()).toEqual([]);
 });
@@ -6678,7 +6678,7 @@ test("on that machine, Install with Self-Contained chosen shows what Windows nee
   ]);
 });
 
-test("on that machine, connecting to an OpenBot that runs elsewhere never asks Windows anything", async () => {
+test("on that machine, connecting to an Mangaba Bot that runs elsewhere never asks Windows anything", async () => {
   const signIn = deferred<null>();
   cleanWindowsWithoutWsl({
     check_openbot_address: { address: ELSEWHERE },
@@ -6687,12 +6687,12 @@ test("on that machine, connecting to an OpenBot that runs elsewhere never asks W
   const view = await renderApp();
   await userEvent.click(view.getByRole("button", { name: "Connect to it" }));
   await userEvent.type(
-    view.getByLabelText("OpenBot address"),
+    view.getByLabelText("Mangaba Bot address"),
     `${ELSEWHERE}{Enter}`,
   );
   await view.findByText("Finish signing in in your browser.");
   await act(async () => signIn.resolve(null));
-  expect(view.getByText("Opening OpenBot…")).toBeTruthy();
+  expect(view.getByText("Opening Mangaba Bot…")).toBeTruthy();
   expect(windowsCalls()).toEqual([]);
   expect(installationCalls()).toEqual([]);
 });
@@ -6718,7 +6718,7 @@ test("after the restart a first install asked for, the next launch goes back to 
       name: "Finish installing Windows Subsystem for Linux",
     }),
   ).toBeTruthy();
-  expect(again.queryByRole("heading", { name: "Set up OpenBot" })).toBeNull();
+  expect(again.queryByRole("heading", { name: "Set up Mangaba Bot" })).toBeNull();
   again.unmount();
   invokeCalls = [];
   // Opened once more with Windows ready: the install the person asked for carries on.
@@ -6734,7 +6734,7 @@ test("after the restart a first install asked for, the next launch goes back to 
     ]),
   );
   expect(ready.queryByRole("button", { name: "Install" })).toBeNull();
-  expect(ready.queryByText("Before OpenBot can start")).toBeNull();
+  expect(ready.queryByText("Before Mangaba Bot can start")).toBeNull();
   ready.unmount();
   invokeCalls = [];
   // And that is over with: a later launch with nothing installed is the choice again.
@@ -6745,16 +6745,16 @@ test("after the restart a first install asked for, the next launch goes back to 
 });
 
 /*
- * Seen on a clean Windows machine: the first screen started OpenBot's big downloads (about 2 GB)
- * before the person had chosen anything, so somebody who only connects to their company's OpenBot
- * downloaded them for nothing. With nothing of OpenBot on the computer, they start once the person
+ * Seen on a clean Windows machine: the first screen started Mangaba Bot's big downloads (about 2 GB)
+ * before the person had chosen anything, so somebody who only connects to their company's Mangaba Bot
+ * downloaded them for nothing. With nothing of Mangaba Bot on the computer, they start once the person
  * chooses this computer, with Install, and Install still waits for their look at the disk.
  */
 function earlyDownloadCalls() {
   return invokeCalls.filter((call) => call.command === "start_early_downloads");
 }
 
-/** A computer with nothing of OpenBot on it, and nothing in the way of installing it. */
+/** A computer with nothing of Mangaba Bot on it, and nothing in the way of installing it. */
 function cleanComputer(shell: Record<string, unknown> = {}) {
   setupRootConfiguration("/tmp/openbot-clean-computer", async () =>
     emptyConfiguration(),
@@ -6768,35 +6768,35 @@ function cleanComputer(shell: Record<string, unknown> = {}) {
   });
 }
 
-test("a clean computer's first screen downloads nothing, and connecting to an OpenBot that runs elsewhere never does", async () => {
+test("a clean computer's first screen downloads nothing, and connecting to an Mangaba Bot that runs elsewhere never does", async () => {
   const signIn = deferred<null>();
   cleanComputer({
     check_openbot_address: { address: ELSEWHERE },
     connect_to_openbot: () => signIn.promise,
   });
   const view = await renderApp();
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
   // Self-Contained is picked to begin with: that alone is not a choice of this computer.
   expect(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   ).toHaveProperty("checked", true);
   await new Promise((resolve) => setTimeout(resolve, 30));
   expect(earlyDownloadCalls()).toEqual([]);
-  // Back and forth between the two, then the company's OpenBot and its address.
+  // Back and forth between the two, then the company's Mangaba Bot and its address.
   await userEvent.click(view.getByRole("radio", { name: /^Cloud/ }));
   await userEvent.click(
-    view.getByRole("radio", { name: /^OpenBot \(Self-Contained\)/ }),
+    view.getByRole("radio", { name: /^Mangaba Bot \(Self-Contained\)/ }),
   );
   await new Promise((resolve) => setTimeout(resolve, 30));
   expect(earlyDownloadCalls()).toEqual([]);
   await userEvent.click(view.getByRole("button", { name: "Connect to it" }));
   await userEvent.type(
-    view.getByLabelText("OpenBot address"),
+    view.getByLabelText("Mangaba Bot address"),
     `${ELSEWHERE}{Enter}`,
   );
   await view.findByText("Finish signing in in your browser.");
   await act(async () => signIn.resolve(null));
-  expect(view.getByText("Opening OpenBot…")).toBeTruthy();
+  expect(view.getByText("Opening Mangaba Bot…")).toBeTruthy();
   expect(earlyDownloadCalls()).toEqual([]);
   expect(installationCalls()).toEqual([]);
 });
@@ -6856,7 +6856,7 @@ test("on a clean computer, Install on a disk too full starts the downloads' look
   await new Promise((resolve) => setTimeout(resolve, 30));
   expect(earlyDownloadCalls()).toHaveLength(1);
   expect(installationCalls()).toEqual([]);
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
 });
 
 test("an installation already on this computer starts the downloads when the first screen shows, as it always has", async () => {
@@ -6865,7 +6865,7 @@ test("an installation already on this computer starts the downloads when the fir
   );
   withLocalCli({ ...readyLocal(), start_early_downloads: null });
   const view = await renderApp();
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   await waitFor(() =>
     expect(earlyDownloadCalls()).toEqual([
       {
@@ -6901,7 +6901,7 @@ test("Windows detection failure blocks setup and displays its diagnostic", async
   );
   const setupHandler = invokeHandler;
   const problem = {
-    said: "OpenBot could not check Windows virtualization support.",
+    said: "Mangaba Bot could not check Windows virtualization support.",
     detail: "powershell exited with 17: synthetic CIM access denied",
   };
   invokeHandler = async (command, args) => {
@@ -6917,7 +6917,7 @@ test("Windows detection failure blocks setup and displays its diagnostic", async
   await userEvent.click(view.getByText("Technical details"));
   expect(alert.textContent).toContain(problem.detail);
   expect(view.queryByRole("button", { name: "Install" })).toBeNull();
-  expect(view.queryByRole("button", { name: "Start OpenBot" })).toBeNull();
+  expect(view.queryByRole("button", { name: "Start Mangaba Bot" })).toBeNull();
   expect(
     view.queryByText(/firmware settings|wsl --install|wsl --update/),
   ).toBeNull();
@@ -6971,7 +6971,7 @@ test("a successfully detected missing WSL feature keeps its setup instruction", 
   );
   const setupHandler = invokeHandler;
   const instruction =
-    "Run `wsl --install`, restart Windows, and start OpenBot again.";
+    "Run `wsl --install`, restart Windows, and start Mangaba Bot again.";
   invokeHandler = async (command, args) => {
     if (command === "windows_blocker") return "wsl-absent";
     if (command === "windows_blocker_instruction") return instruction;
@@ -6994,7 +6994,7 @@ test("disabled Virtual Machine Platform displays its feature-specific fix and bl
   );
   const setupHandler = invokeHandler;
   const instruction =
-    "Virtual Machine Platform is switched off. Open Windows Terminal or PowerShell as an administrator, run `dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart`, restart Windows, and start OpenBot again.";
+    "Virtual Machine Platform is switched off. Open Windows Terminal or PowerShell as an administrator, run `dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart`, restart Windows, and start Mangaba Bot again.";
   invokeHandler = async (command, args) => {
     if (command === "windows_blocker")
       return "virtual-machine-platform-disabled";
@@ -7016,7 +7016,7 @@ test("disabled Virtual Machine Platform displays its feature-specific fix and bl
   ).toBeTruthy();
   expect(view.queryByRole("alert")).toBeNull();
   expect(view.queryByRole("button", { name: "Install" })).toBeNull();
-  expect(view.queryByRole("button", { name: "Start OpenBot" })).toBeNull();
+  expect(view.queryByRole("button", { name: "Start Mangaba Bot" })).toBeNull();
   expect(
     invokeCalls.some((call) =>
       ["prepare_installation", "prepare_engine", "start_stack"].includes(
@@ -7027,7 +7027,7 @@ test("disabled Virtual Machine Platform displays its feature-specific fix and bl
 });
 
 /*
- * Seen on Windows Server 2022 after OpenBot updated itself: the window sat on "Checking your saved
+ * Seen on Windows Server 2022 after Mangaba Bot updated itself: the window sat on "Checking your saved
  * setup…" for minutes while Windows's own servicing held the Windows check. It says why while it
  * waits, and carries on once the check answers.
  */
@@ -7048,7 +7048,7 @@ test("while Windows is busy updating, the saved-setup check says so and then car
     ),
   );
   expect(
-    view.getByRole("heading", { name: "Getting OpenBot ready" }),
+    view.getByRole("heading", { name: "Getting Mangaba Bot ready" }),
   ).toBeTruthy();
   expect(view.getByRole("status").textContent).toBe(
     "Checking your saved setup…",
@@ -7060,7 +7060,7 @@ test("while Windows is busy updating, the saved-setup check says so and then car
   await act(async () => check.resolve(null));
   await waitFor(() =>
     expect(
-      view.queryByRole("heading", { name: "Getting OpenBot ready" }),
+      view.queryByRole("heading", { name: "Getting Mangaba Bot ready" }),
     ).toBeNull(),
   );
   expect(view.queryByText(WINDOWS_BUSY)).toBeNull();
@@ -7170,7 +7170,7 @@ async function startWithCompatibleEndpoint(
     endpointKey,
     containerBaseUrl,
   );
-  // The go-ahead: OpenBot starts once local Intelligence reports ready.
+  // The go-ahead: Mangaba Bot starts once local Intelligence reports ready.
   await userEvent.click(view.getByRole("button", { name: "Continue" }));
   await waitForStart();
 }
@@ -7269,7 +7269,7 @@ test.each([
       true,
     );
     await userEvent.click(view.getByRole("button", { name: "Continue" }));
-    expect(view.queryByRole("button", { name: "Start OpenBot" })).toBeNull();
+    expect(view.queryByRole("button", { name: "Start Mangaba Bot" })).toBeNull();
     expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
       false,
     );
@@ -7289,13 +7289,13 @@ test("an unsupported saved model kind does not become a startable endpoint", asy
     "disabled",
     true,
   );
-  expect(view.queryByRole("button", { name: "Start OpenBot" })).toBeNull();
+  expect(view.queryByRole("button", { name: "Start Mangaba Bot" })).toBeNull();
   expect(invokeCalls.some((call) => call.command === "start_stack")).toBe(
     false,
   );
 });
 
-test("mount navigates to OpenBot only when the selected root is already owned and running", async () => {
+test("mount navigates to Mangaba Bot only when the selected root is already owned and running", async () => {
   const root = "/tmp/openbot-owned-running-root";
   setupRootConfiguration(root, async () => emptyConfiguration());
   const setupHandler = invokeHandler;
@@ -7332,7 +7332,7 @@ for (const staleProbe of [false, true]) {
     );
     const setupHandler = invokeHandler;
     const failure = {
-      said: "Part of OpenBot (worker) stopped and could not be started again. Try starting OpenBot once more.",
+      said: "Part of Mangaba Bot (worker) stopped and could not be started again. Try starting Mangaba Bot once more.",
     };
     invokeHandler = async (command, args) => {
       if (command === "already_running") return staleProbe;
@@ -7355,7 +7355,7 @@ for (const staleProbe of [false, true]) {
     }
     expect(view.getByRole("button", { name: "Install" })).toBeTruthy();
     expect(view.getByRole("alert").textContent).toContain(failure.said);
-    expect(view.queryByRole("button", { name: "Stop OpenBot" })).toBeNull();
+    expect(view.queryByRole("button", { name: "Stop Mangaba Bot" })).toBeNull();
   });
 }
 
@@ -7423,7 +7423,7 @@ test.each([
   expect(continueButton).toHaveProperty("disabled", true);
   await userEvent.click(continueButton);
   expect(view.getByRole("heading", { name: "Connect your AI" })).toBeTruthy();
-  expect(view.queryByRole("button", { name: "Start OpenBot" })).toBeNull();
+  expect(view.queryByRole("button", { name: "Start Mangaba Bot" })).toBeNull();
   expect(invokeCalls.filter((call) => call.command === "start_stack")).toEqual(
     [],
   );
@@ -7754,7 +7754,7 @@ test("Start credential failures do not expose a restore action", async () => {
           setting: "INTELLIGENCE_API_KEY",
           label: "Restore access to saved setup",
           explanation:
-            "This Mac is protecting a credential from your saved OpenBot setup. Restoring access may ask macOS to confirm this app. Your saved data stays in place.",
+            "This Mac is protecting a credential from your saved Mangaba Bot setup. Restoring access may ask macOS to confirm this app. Your saved data stays in place.",
         },
       };
     return previous(command, args);
@@ -7782,7 +7782,7 @@ test("Start credential failures do not expose a restore action", async () => {
 });
 
 const INSTALL_REQUIRED =
-  "Finish installing OpenBot's local software before signing in or starting. Return to Install and try again.";
+  "Finish installing Mangaba Bot's local software before signing in or starting. Return to Install and try again.";
 
 function withAnthropicPlan(begin: () => unknown) {
   withLocalCli({
@@ -7829,7 +7829,7 @@ test("a plan sign-in refused for a stale installation goes back to Install and r
   );
   expect(stepLabel(view)).toContain("Install");
   refused = false;
-  await userEvent.click(view.getByRole("button", { name: "Install OpenBot" }));
+  await userEvent.click(view.getByRole("button", { name: "Install Mangaba Bot" }));
   const radio = await view.findByRole("radio", { name: /Anthropic/ });
   expect((radio as HTMLInputElement).checked).toBe(true);
   expect(stepLabel(view)).toContain("AI");

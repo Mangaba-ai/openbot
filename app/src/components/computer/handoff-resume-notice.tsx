@@ -32,7 +32,7 @@ export function HandoffResumeNotice({
   const [problem, setProblem] = useState<string | null>(null);
   const controller = useRef<AbortController | null>(null);
   /*
-   * An OpenBot with no computers for Bots has no wheel to read, and the server refuses the read:
+   * An Mangaba Bot with no computers for Bots has no wheel to read, and the server refuses the read:
    * once a second, for as long as a conversation is open. A handoff this tab remembers is still
    * looked at, since that needs no computer. Until the deployment has answered, and when it can't
    * be read, the wheel is read as before.

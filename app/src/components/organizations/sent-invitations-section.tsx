@@ -118,8 +118,8 @@ export function SentInvitationsSection({
   const invitations = useQuery(sentInvitationsQueryOptions(organization.id));
   const [inviting, setInviting] = useState(false);
   /*
-   * A hosted OpenBot: an invitation is an email from OpenBot by CopilotKit, accepted from that email.
-   * No OpenBot link accepts it, so there is no link to copy.
+   * A hosted Mangaba Bot: an invitation is an email from Mangaba Bot by CopilotKit, accepted from that email.
+   * No Mangaba Bot link accepts it, so there is no link to copy.
    */
   const hosted =
     useQuery(deploymentCapabilitiesQueryOptions()).data?.hostedSignIn === true;
@@ -169,7 +169,7 @@ export function SentInvitationsSection({
 
 /**
  * One invitation with its own Cancel, so a refusal is drawn under the row it is about. Only one
- * still waiting has a link worth passing on, and none does on a hosted OpenBot.
+ * still waiting has a link worth passing on, and none does on a hosted Mangaba Bot.
  */
 function SentInvitationRow({
   hosted,
@@ -232,7 +232,7 @@ function SentInvitationRow({
 }
 
 /**
- * Invites an address with a role, then says what happened in the same dialog: OpenBot emailed the
+ * Invites an address with a role, then says what happened in the same dialog: Mangaba Bot emailed the
  * person, or the inviter copies the link and passes it on. A refusal stays in the dialog in the
  * server's own sentence, with the address still typed.
  */
@@ -289,8 +289,8 @@ function InviteDialog({
               <DialogTitle>Invite to {organization.name}</DialogTitle>
               <DialogDescription>
                 {hosted
-                  ? "OpenBot by CopilotKit emails them the invitation, and they accept it from that email. It lasts 7 days."
-                  : "They see the invitation in OpenBot when they sign in with this address. It lasts 7 days."}
+                  ? "Mangaba Bot by CopilotKit emails them the invitation, and they accept it from that email. It lasts 7 days."
+                  : "They see the invitation in Mangaba Bot when they sign in with this address. It lasts 7 days."}
               </DialogDescription>
             </DialogHeader>
             <DialogBody className="mt-4">

@@ -32,7 +32,7 @@ export type DesktopStatus = {
   build: string;
   /** Where this app writes its log file. */
   logFolder?: string | null;
-  /** OpenBot is updating itself: it stops and starts again on its own meanwhile. */
+  /** Mangaba Bot is updating itself: it stops and starts again on its own meanwhile. */
   updating?: boolean;
 };
 
@@ -84,10 +84,10 @@ export function diagnostics(
           )
           .join(", ");
   return [
-    `OpenBot Desktop ${status.version} (${status.build})`,
+    `Mangaba Bot Desktop ${status.version} (${status.build})`,
     `Installed in ${status.root}${status.appPort ? `, app on port ${status.appPort}` : ""}`,
     `Container engine: ${status.engine ?? "not answering"}`,
-    `OpenBot: ${status.updating ? "updating" : status.openbotRunning ? "running" : "stopped"}`,
+    `Mangaba Bot: ${status.updating ? "updating" : status.openbotRunning ? "running" : "stopped"}`,
     `  processes: ${parts(status.processes)}`,
     `  containers: ${parts(status.containers)}`,
     status.intelligenceStack
@@ -99,8 +99,8 @@ export function diagnostics(
   ].join("\n");
 }
 
-/** What OpenBot runs on, Docker or Podman, in the words setup uses for it. */
-const ENGINE = "Software OpenBot runs on";
+/** What Mangaba Bot runs on, Docker or Podman, in the words setup uses for it. */
+const ENGINE = "Software Mangaba Bot runs on";
 
 type Busy =
   | "openbot-start"
@@ -111,25 +111,25 @@ type Busy =
   | "intelligence-start";
 
 /**
- * The local Intelligence is "OpenBot's services" on this window, as on the Shutting down screen
- * ("Stopping OpenBot's services"). Its parts say what they do (`partNames.ts`).
+ * The local Intelligence is "Mangaba Bot's services" on this window, as on the Shutting down screen
+ * ("Stopping Mangaba Bot's services"). Its parts say what they do (`partNames.ts`).
  */
-const SERVICES = "OpenBot's services";
+const SERVICES = "Mangaba Bot's services";
 
 const BUSY_SAID: Record<Busy, string> = {
-  "openbot-start": "Starting OpenBot…",
-  "openbot-restart": "Restarting OpenBot…",
-  "openbot-stop": "Stopping OpenBot…",
+  "openbot-start": "Starting Mangaba Bot…",
+  "openbot-restart": "Restarting Mangaba Bot…",
+  "openbot-stop": "Stopping Mangaba Bot…",
   "intelligence-restart": `Restarting ${SERVICES}…`,
   "intelligence-stop": `Stopping ${SERVICES}…`,
   "intelligence-start": `Starting ${SERVICES}…`,
 };
 
 /**
- * What OpenBot is running, what each part costs, and Start, Restart and Stop for each.
+ * What Mangaba Bot is running, what each part costs, and Start, Restart and Stop for each.
  *
  * Memory is read every few seconds while the window shows; it is Docker's figure per container,
- * OpenBot's own server among them. Intelligence's readiness is the CLI's, asked only on
+ * Mangaba Bot's own server among them. Intelligence's readiness is the CLI's, asked only on
  * opening, on Refresh and after an action here: the main window's own Intelligence calls take the
  * same lock, and a status window polling it would make them fail as busy.
  */
@@ -151,7 +151,7 @@ export function StatusWindow({ readEveryMs = 5000 }: { readEveryMs?: number }) {
       setStatus(found);
       return found;
     } catch {
-      setSaid("OpenBot could not read its status. Try Refresh.");
+      setSaid("Mangaba Bot could not read its status. Try Refresh.");
       return null;
     }
   }, []);
@@ -268,12 +268,12 @@ export function StatusWindow({ readEveryMs = 5000 }: { readEveryMs?: number }) {
       <div className="sheet status-sheet">
         <h1>Status</h1>
         <p className="lede">
-          See what OpenBot is running on this computer and how much memory it
+          See what Mangaba Bot is running on this computer and how much memory it
           uses.
         </p>
 
         {!status ? (
-          <StatusLine>Reading OpenBot's status…</StatusLine>
+          <StatusLine>Reading Mangaba Bot's status…</StatusLine>
         ) : (
           <>
             <section className="status-part" aria-label="App">
@@ -295,16 +295,16 @@ export function StatusWindow({ readEveryMs = 5000 }: { readEveryMs?: number }) {
                 group="bots"
                 parts={[...status.processes, ...status.containers]}
               />
-              {/* Updating, OpenBot stops and starts again on its own, as the main window says: no
+              {/* Updating, Mangaba Bot stops and starts again on its own, as the main window says: no
                   Start, Restart or Stop here meanwhile. Seen on a Mac, opened mid-update, this row
                   said Stopped and offered Start. */}
               {updating && (
                 <p className="footnote">
-                  OpenBot is updating and opens by itself when it's done.
+                  Mangaba Bot is updating and opens by itself when it's done.
                 </p>
               )}
-              {/* Stopped, Start is the main window's own Start OpenBot, run there: the services
-                  first, then OpenBot. After Stop this row offered nothing, and the services' Start
+              {/* Stopped, Start is the main window's own Start Mangaba Bot, run there: the services
+                  first, then Mangaba Bot. After Stop this row offered nothing, and the services' Start
                   below brought up only the services. Below the floor nothing starts here. */}
               {!status.openbotRunning && !updating && !belowFloor && (
                 <div className="row">
@@ -376,7 +376,7 @@ export function StatusWindow({ readEveryMs = 5000 }: { readEveryMs?: number }) {
                   group="back-end"
                   parts={status.intelligenceContainers}
                 />
-                {/* Stopped during an update of OpenBot, nothing: the update starts what it needs,
+                {/* Stopped during an update of Mangaba Bot, nothing: the update starts what it needs,
                     as the App row says. Seen on a Mac, both rows offered Start mid-update. */}
                 {!(updating && !belowFloor && !intelligenceRunning) && (
                   <div className="row">
@@ -438,7 +438,7 @@ export function StatusWindow({ readEveryMs = 5000 }: { readEveryMs?: number }) {
                 ) : (
                   status.openbotRunning && (
                     <p className="footnote">
-                      OpenBot needs these services while it runs. Stopping them
+                      Mangaba Bot needs these services while it runs. Stopping them
                       frees memory until you start them again here.
                     </p>
                   )
@@ -456,7 +456,7 @@ export function StatusWindow({ readEveryMs = 5000 }: { readEveryMs?: number }) {
               </div>
               {!status.engine && (
                 <p className="footnote">
-                  OpenBot needs this to run. If you use Docker Desktop, open it
+                  Mangaba Bot needs this to run. If you use Docker Desktop, open it
                   and wait for it to start.
                 </p>
               )}

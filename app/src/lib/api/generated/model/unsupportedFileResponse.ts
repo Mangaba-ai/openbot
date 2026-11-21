@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The file is not a type OpenBot can read.
+ * The file is not a type Mangaba Bot can read.
  */
 export type UnsupportedFileResponse = Problem;

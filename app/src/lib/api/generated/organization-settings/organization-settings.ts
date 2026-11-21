@@ -101,8 +101,8 @@ export const getGetDeploymentUrl = (organizationId: string) => {
 };
 
 /**
- * Return what this OpenBot offers and how people sign in to it: the edition, the features the apps draw, how large an attached file may be, and the sign-in options. Anybody may read it, signed in or not, because the sign-in screen reads it first. Signed in, it is answered in an organization the caller is a member of, and an organization they are not in, the organization `default` included, answers exactly as one that does not exist. Nobody signed in reads it in the organization `default`. It names no identity provider and no build: only whether single sign-on is set up and required, and which API versions and which releases of each OpenBot app it serves. It is never refused for the app's version, so an app reads it first to learn whether it, or the OpenBot, needs an update.
- * @summary Read what this OpenBot offers
+ * Return what this Mangaba Bot offers and how people sign in to it: the edition, the features the apps draw, how large an attached file may be, and the sign-in options. Anybody may read it, signed in or not, because the sign-in screen reads it first. Signed in, it is answered in an organization the caller is a member of, and an organization they are not in, the organization `default` included, answers exactly as one that does not exist. Nobody signed in reads it in the organization `default`. It names no identity provider and no build: only whether single sign-on is set up and required, and which API versions and which releases of each Mangaba Bot app it serves. It is never refused for the app's version, so an app reads it first to learn whether it, or the Mangaba Bot, needs an update.
+ * @summary Read what this Mangaba Bot offers
  */
 export const getDeployment = async (
   organizationId: string,
@@ -233,7 +233,7 @@ export function useGetDeployment<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 /**
- * @summary Read what this OpenBot offers
+ * @summary Read what this Mangaba Bot offers
  */
 
 export function useGetDeployment<
@@ -269,7 +269,7 @@ export const getGetOrganizationSettingsUrl = (organizationId: string) => {
 };
 
 /**
- * Return the settings the organization's administrators set for its members: single sign-on, recording computer actions, stopping idle computers, the model and app allowlists, sharing learned skills, check-ins a day and choosing a model. Each organization has its own, and a new one starts with OpenBot's defaults. Beside them, read only, what an administrator needs to set them: the model OpenBot runs on, the directory groups of the organization's members, the apps an allowlist can name, the hosts every computer may reach, and whether SCIM and OpenTelemetry are set up. Only an administrator of the organization may read them.
+ * Return the settings the organization's administrators set for its members: single sign-on, recording computer actions, stopping idle computers, the model and app allowlists, sharing learned skills, check-ins a day and choosing a model. Each organization has its own, and a new one starts with Mangaba Bot's defaults. Beside them, read only, what an administrator needs to set them: the model Mangaba Bot runs on, the directory groups of the organization's members, the apps an allowlist can name, the hosts every computer may reach, and whether SCIM and OpenTelemetry are set up. Only an administrator of the organization may read them.
  * @summary Read the organization's settings
  */
 export const getOrganizationSettings = async (
@@ -477,7 +477,7 @@ export const getUpdateOrganizationSettingsUrl = (organizationId: string) => {
 };
 
 /**
- * Change the settings sent and keep the rest. Each change is recorded on the audit trail with what it was before. Requiring single sign-on needs an identity provider registered first, and signs out everybody who signed in another way, apart from the administrators the deployment's configuration names and the caller. Where this OpenBot may keep more than one organization, requiring single sign-on is each organization's own rule: its members sign in through an identity provider, and saving it signs out only this organization's members who signed in another way. Where it keeps only one organization, that organization's rule holds for everybody who signs in, and sending ssoRequired in any other organization answers 409. Only an administrator of the organization may change them. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), single sign-on can't be required: sending ssoRequired true answers 409 with the code HOSTED_SIGN_IN_ONLY.
+ * Change the settings sent and keep the rest. Each change is recorded on the audit trail with what it was before. Requiring single sign-on needs an identity provider registered first, and signs out everybody who signed in another way, apart from the administrators the deployment's configuration names and the caller. Where this Mangaba Bot may keep more than one organization, requiring single sign-on is each organization's own rule: its members sign in through an identity provider, and saving it signs out only this organization's members who signed in another way. Where it keeps only one organization, that organization's rule holds for everybody who signs in, and sending ssoRequired in any other organization answers 409. Only an administrator of the organization may change them. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), single sign-on can't be required: sending ssoRequired true answers 409 with the code HOSTED_SIGN_IN_ONLY.
  * @summary Change the organization's settings
  */
 export const updateOrganizationSettings = async (
@@ -1240,7 +1240,7 @@ export const getGetSetupChecklistUrl = (organizationId: string) => {
 };
 
 /**
- * Return what this OpenBot has set up and what it still needs, each row with its fix. An administrator, or somebody running OpenBot on their own, reads it as the one who sets it up; anybody else reads which parts work, and that an administrator sets the rest up.
+ * Return what this Mangaba Bot has set up and what it still needs, each row with its fix. An administrator, or somebody running Mangaba Bot on their own, reads it as the one who sets it up; anybody else reads which parts work, and that an administrator sets the rest up.
  * @summary Read the setup checklist
  */
 export const getSetupChecklist = async (

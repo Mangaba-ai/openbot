@@ -58,11 +58,11 @@ export type LocalReason =
   | "browser-open-failed"
   // The CLI's resource check failed: the report's `shortfall` says which resource is short.
   | "resources-short"
-  // Not the CLI's: OpenBot's own finding that the backend it set up here is gone, cluster and all
+  // Not the CLI's: Mangaba Bot's own finding that the backend it set up here is gone, cluster and all
   // (`local_eval::Reason::StackLost`). Start fresh sets it up again.
   | "stack-lost"
-  // OpenBot's own finding too: the backend's cluster is gone from the engine, as after
-  // `docker container prune` removed its stopped node, and OpenBot's own database is still there
+  // Mangaba Bot's own finding too: the backend's cluster is gone from the engine, as after
+  // `docker container prune` removed its stopped node, and Mangaba Bot's own database is still there
   // (`local_eval::Reason::BackendGone`). Set up again makes the backend again.
   | "backend-gone"
   | "unrecognized";
@@ -99,7 +99,7 @@ export type Shortfall = {
   memoryGb?: string;
   diskGb?: string;
   /**
-   * OpenBot's own check after a start that failed: the back end's disk is nearly full, and how
+   * Mangaba Bot's own check after a start that failed: the back end's disk is nearly full, and how
    * large it is beside `diskGb`.
    */
   nearlyFull?: boolean;
@@ -132,7 +132,7 @@ export type LocalReport = {
   outcome: LocalOutcome;
   /**
    * With the reason `resources-short`: which resources the CLI found short. With readiness
-   * `degraded`: a disk OpenBot found short, or recovering, behind a back end that does not answer.
+   * `degraded`: a disk Mangaba Bot found short, or recovering, behind a back end that does not answer.
    */
   shortfall?: Shortfall;
   stack: null | {
@@ -257,8 +257,8 @@ export function listLocalEval(): {
 }
 
 /**
- * `local setup` for this installation. A stack it completes is recorded as OpenBot's, so it
- * starts and stops with OpenBot. Blocked is an answer, not an error: the first is usually the
+ * `local setup` for this installation. A stack it completes is recorded as Mangaba Bot's, so it
+ * starts and stops with Mangaba Bot. Blocked is an answer, not an error: the first is usually the
  * evaluation terms. A stack that was set up but could not be recorded rejects with a `Problem`.
  */
 export function setUpLocalEval(
@@ -292,8 +292,8 @@ export function localEvalRoom(): Promise<Shortfall | null> {
 }
 
 /**
- * `machine_size::Plan`: how the Podman machine OpenBot runs on would be made big enough for what
- * setup found short. Memory in MiB, as Podman counts it. `forThem` when OpenBot can do it itself;
+ * `machine_size::Plan`: how the Podman machine Mangaba Bot runs on would be made big enough for what
+ * setup found short. Memory in MiB, as Podman counts it. `forThem` when Mangaba Bot can do it itself;
  * otherwise the window gives the person the commands.
  */
 export type PodmanPlan = {
@@ -333,7 +333,7 @@ export function resizePodmanMachine(plan: PodmanPlan): Promise<void> {
 
 /**
  * A setup the native side did not start, because the drive that holds the engine's disk is short
- * of what OpenBot needs (`local_eval::checked_call`). Not a failure: it waits for room.
+ * of what Mangaba Bot needs (`local_eval::checked_call`). Not a failure: it waits for room.
  */
 export function heldForRoom(report: LocalReport): Shortfall | null {
   return report.reason === "resources-short" &&
@@ -384,7 +384,7 @@ export type LocalDownload = { done: number; total: number };
 
 /**
  * How far the download before the setup or update `attempt` has got, while it downloads,
- * or null. OpenBot downloads the back end's images itself before the CLI pulls them, so a slow
+ * or null. Mangaba Bot downloads the back end's images itself before the CLI pulls them, so a slow
  * line can be told apart from a stuck one.
  */
 export async function localEvalDownload(
@@ -426,11 +426,11 @@ export async function localEvalSteps(
  * them (`local_update::UpdateStep`), in the CLI's own words for them.
  */
 const UPDATE_STEPS = {
-  "update-quiesce": "Pausing OpenBot's services",
-  "dependencies-install": "Updating where OpenBot keeps your data",
-  "dependencies-wait": "Waiting for where OpenBot keeps your data",
+  "update-quiesce": "Pausing Mangaba Bot's services",
+  "dependencies-install": "Updating where Mangaba Bot keeps your data",
+  "dependencies-wait": "Waiting for where Mangaba Bot keeps your data",
   jobs: "Updating your data",
-  "services-start": "Starting OpenBot's services",
+  "services-start": "Starting Mangaba Bot's services",
 } as const;
 
 export type LocalUpdateStep = {
@@ -497,16 +497,16 @@ export function updateStepSaid(step: string): string {
   if (/^(cluster-|kubeconfig|ownership-check|running-check)/.test(step))
     return "preparing this computer";
   if (step === "secrets-apply") return "applying your settings";
-  if (step.startsWith("update-")) return "pausing OpenBot's services";
+  if (step.startsWith("update-")) return "pausing Mangaba Bot's services";
   if (step === "dependencies-install")
-    return "updating where OpenBot keeps your data";
+    return "updating where Mangaba Bot keeps your data";
   if (step === "dependencies-wait")
-    return "waiting for where OpenBot keeps your data";
+    return "waiting for where Mangaba Bot keeps your data";
   if (step.startsWith("migration-")) return "updating your data";
   if (/^(hook-|bootstrap-)/.test(step))
     return "preparing your organization and project";
   if (/^(services-|stack-|service-status)/.test(step))
-    return "starting OpenBot's services";
+    return "starting Mangaba Bot's services";
   return "updating";
 }
 
@@ -536,7 +536,7 @@ export function connectCopilotKitApps(root: string): {
 
 /** What the native side says when apps could not be connected (`composio::setup_problem`). */
 export const APPS_UNAVAILABLE =
-  "OpenBot couldn't connect your apps. Check your connection, then choose Connect apps. If it keeps happening, ask an admin.";
+  "Mangaba Bot couldn't connect your apps. Check your connection, then choose Connect apps. If it keeps happening, ask an admin.";
 
 /** The evaluation agreement, as the CLI reports it: what the person reads before Accept. */
 export type LocalTerms =
@@ -561,7 +561,7 @@ export type LocalTerms =
       said?: string;
       switchEngine?: boolean;
     }
-  /** OpenBot's own check: the engine has fewer CPUs or less memory than local setup needs. */
+  /** Mangaba Bot's own check: the engine has fewer CPUs or less memory than local setup needs. */
   | ({ status: "engine-too-small" } & Shortfall);
 
 export function localEvalTerms(): {
@@ -578,8 +578,8 @@ export function localEvalTerms(): {
 }
 
 /**
- * `local connect` for this installation, after the person chose to connect OpenBot. The native
- * side keeps the key the CLI wrote as OpenBot's Intelligence key. A connection it would not take
+ * `local connect` for this installation, after the person chose to connect Mangaba Bot. The native
+ * side keeps the key the CLI wrote as Mangaba Bot's Intelligence key. A connection it would not take
  * up rejects with a `Problem`.
  */
 export function connectLocalEval(root: string): {
@@ -600,7 +600,7 @@ export function connectLocalEval(root: string): {
 }
 
 /**
- * The installation's engine answering before any CLI call: Docker Desktop opened, or OpenBot's
+ * The installation's engine answering before any CLI call: Docker Desktop opened, or Mangaba Bot's
  * Podman machine started, when either is stopped. What the native side says meanwhile, such as
  * Docker's hand-off, arrives as setup progress (see `handOffNow`). Rejects with a `Problem` when
  * the engine would not start.
@@ -618,7 +618,7 @@ export function backEndWaitEnded(why: string): void {
   invoke("back_end_wait_ended", { why }).catch(() => {});
 }
 
-/** Whether the OpenBot app's page may offer the back end dashboard for `root`. */
+/** Whether the Mangaba Bot app's page may offer the back end dashboard for `root`. */
 export function offerLocalIntelligence(
   root: string,
   offered: boolean,
@@ -713,8 +713,8 @@ export function licenceExpiresSoon(
 export const intelligenceStopFailed = "Backend stop failed: ";
 
 /**
- * Splits a Stop failure into OpenBot's own lines and the local Intelligence stack's. OpenBot has
- * stopped when only the second is present. Anything not in the native line format is OpenBot's.
+ * Splits a Stop failure into Mangaba Bot's own lines and the local Intelligence stack's. Mangaba Bot has
+ * stopped when only the second is present. Anything not in the native line format is Mangaba Bot's.
  */
 export function splitStopFailure(thrown: unknown): {
   openBot: string | null;
@@ -736,7 +736,7 @@ export function splitStopFailure(thrown: unknown): {
 
 export function intelligenceStopProblem(line: string): Problem {
   return {
-    said: "OpenBot stopped, but some of its services didn't. They may still be running.",
+    said: "Mangaba Bot stopped, but some of its services didn't. They may still be running.",
     detail: line,
   };
 }

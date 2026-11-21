@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The caller is not an administrator of the organization, or holds no role in it. Or the provider was registered for the whole OpenBot, so it can't be removed from this organization.
+ * The caller is not an administrator of the organization, or holds no role in it. Or the provider was registered for the whole Mangaba Bot, so it can't be removed from this organization.
  */
 export type IdentityProviderNotRemovableResponse = Problem;

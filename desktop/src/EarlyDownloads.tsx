@@ -12,8 +12,8 @@ import {
 
 /**
  * The big downloads that start once the person chooses this computer (`early_downloads.rs`): the
- * engine machine image, Podman and Compose, the deployment and OpenBot's images. With nothing of
- * OpenBot on the computer that is Install on the first screen; with an installation already on it,
+ * engine machine image, Podman and Compose, the deployment and Mangaba Bot's images. With nothing of
+ * Mangaba Bot on the computer that is Install on the first screen; with an installation already on it,
  * the first screen showing. One line says where they are, on every setup screen they run behind.
  */
 export type EarlyDownloads = {
@@ -24,7 +24,7 @@ export type EarlyDownloads = {
   size?: number;
   bytesPerSecond?: number;
   /**
-   * When the disk is short: free on this computer's disk, what OpenBot needs free to run (the 40
+   * When the disk is short: free on this computer's disk, what Mangaba Bot needs free to run (the 40
    * the account step's check asks for too), and what the downloads add on top of it.
    */
   free?: number;
@@ -95,7 +95,7 @@ function gigabytes(bytes: number, round = Math.round): string {
   return `${Math.max(1, round(bytes / GB))}\u00a0GB`;
 }
 
-/** The download's own part of what OpenBot needs, said apart, and rounded up so it is enough. */
+/** The download's own part of what Mangaba Bot needs, said apart, and rounded up so it is enough. */
 function downloadSaid(download: number | undefined): string {
   return download
     ? ` plus about ${gigabytes(download, Math.ceil)} for its download`
@@ -108,7 +108,7 @@ export const PAUSED_FOR_SPACE =
 
 /**
  * The line for `downloads`, or null when there is nothing to say. In the words of the background
- * install's row: "Downloading OpenBot. About 3 minutes left.", the time left as that row works it
+ * install's row: "Downloading Mangaba Bot. About 3 minutes left.", the time left as that row works it
  * out (`left`, in seconds; null while it is not known, `slow` when it is taking longer than usual).
  * The first screen also says when something will download at Install instead; later screens say only
  * what is still going on, since Install's own rows take over from there. Nobody says when
@@ -123,14 +123,14 @@ export function earlyDownloadsSaid(
   switch (state) {
     case "downloading": {
       if (downloads.paused) return PAUSED_FOR_SPACE;
-      if (time?.slow) return `Downloading OpenBot. ${leftSaid(null)}.`;
+      if (time?.slow) return `Downloading Mangaba Bot. ${leftSaid(null)}.`;
       return time?.left != null
-        ? `Downloading OpenBot. ${leftSaid(time.left)}.`
-        : "Downloading OpenBot.";
+        ? `Downloading Mangaba Bot. ${leftSaid(time.left)}.`
+        : "Downloading Mangaba Bot.";
     }
     case "short":
       return free != null && needed != null
-        ? `This computer has ${gigabytes(free)} of free space, and OpenBot needs ${gigabytes(needed)}${downloadSaid(download)}. Free up some space and the download starts by itself.`
+        ? `This computer has ${gigabytes(free)} of free space, and Mangaba Bot needs ${gigabytes(needed)}${downloadSaid(download)}. Free up some space and the download starts by itself.`
         : null;
     case "done":
       return null;
@@ -191,12 +191,12 @@ function MoveEngine({ to }: { to: string }) {
   const [move, setMove] = useState<"offered" | "moving" | "moved">("offered");
   const [problem, setProblem] = useState<Problem | null>(null);
   if (move === "moving") {
-    return <StatusLine>Moving OpenBot's storage to {to}…</StatusLine>;
+    return <StatusLine>Moving Mangaba Bot's storage to {to}…</StatusLine>;
   }
   if (move === "moved") {
     return (
       <p className="caution">
-        OpenBot's storage is on {to} now. OpenBot checks the free space again.
+        Mangaba Bot's storage is on {to} now. Mangaba Bot checks the free space again.
       </p>
     );
   }
@@ -218,7 +218,7 @@ function MoveEngine({ to }: { to: string }) {
             );
           }}
         >
-          Move OpenBot's storage to {to}
+          Move Mangaba Bot's storage to {to}
         </button>
       </div>
       <p className="caution">

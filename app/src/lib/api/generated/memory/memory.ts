@@ -99,7 +99,7 @@ export const getListMemoriesUrl = (
 };
 
 /**
- * Return one page of what a person's Bots remember about them in this organization, and in no other they belong to, most recently changed first: the ones they wrote, the ones their Bots formed and are waiting for their review, the ones read in from their sources, and the ones the backend holds for them that OpenBot formed no record of, after OpenBot's own. Paused memories are included; forgotten ones are not. Only the person themselves may list them: an administrator can't either. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of what a person's Bots remember about them in this organization, and in no other they belong to, most recently changed first: the ones they wrote, the ones their Bots formed and are waiting for their review, the ones read in from their sources, and the ones the backend holds for them that Mangaba Bot formed no record of, after Mangaba Bot's own. Paused memories are included; forgotten ones are not. Only the person themselves may list them: an administrator can't either. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List a person's memories
  */
 export const listMemories = async (
@@ -480,7 +480,7 @@ export const getUpdateMemoryUrl = (
 };
 
 /**
- * Edit a memory's words, pause or resume it, or accept one a Bot formed or read in. A memory the backend holds that OpenBot formed no record of can be edited, not paused or reviewed. Editing one replaces the copy the backend holds. Only the person themselves may change their memories.
+ * Edit a memory's words, pause or resume it, or accept one a Bot formed or read in. A memory the backend holds that Mangaba Bot formed no record of can be edited, not paused or reviewed. Editing one replaces the copy the backend holds. Only the person themselves may change their memories.
  * @summary Change a memory
  */
 export const updateMemory = async (
@@ -1389,7 +1389,7 @@ export const getDeleteMemorySourceUrl = (
 };
 
 /**
- * Remove a source and forget every fact it read in. Removing one turns that app down for that Bot: OpenBot never adds it back on its own. Only the person themselves may remove their sources.
+ * Remove a source and forget every fact it read in. Removing one turns that app down for that Bot: Mangaba Bot never adds it back on its own. Only the person themselves may remove their sources.
  * @summary Remove a memory source
  */
 export const deleteMemorySource = async (

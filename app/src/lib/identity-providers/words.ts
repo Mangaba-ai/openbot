@@ -1,9 +1,9 @@
 /**
  * Whose identity providers the Identity providers page is about. In `default` they are the deployment's, counted for
- * everybody who signs in to OpenBot. In any other organization they are that organization's own: its admins register
+ * everybody who signs in to Mangaba Bot. In any other organization they are that organization's own: its admins register
  * them, and they sign in its members (GitHub style).
  *
- * `hosted` is a hosted OpenBot (`hostedSignIn`), where the other way in is the person's OpenBot by CopilotKit account,
+ * `hosted` is a hosted Mangaba Bot (`hostedSignIn`), where the other way in is the person's Mangaba Bot by CopilotKit account,
  * not Google, Microsoft or Okta, and nothing about sign-in is set in an environment an admin holds.
  */
 export function identityProviderWords(
@@ -42,10 +42,10 @@ export function identityProviderWords(
   return {
     ...words,
     ssoOff: organizationOnly
-      ? "Members can also sign in with their OpenBot by CopilotKit account."
-      : "People can also sign in with their OpenBot by CopilotKit account.",
+      ? "Members can also sign in with their Mangaba Bot by CopilotKit account."
+      : "People can also sign in with their Mangaba Bot by CopilotKit account.",
     registeredDescription:
-      "Signing in with an OpenBot by CopilotKit account is built in, so it doesn't show here.",
+      "Signing in with an Mangaba Bot by CopilotKit account is built in, so it doesn't show here.",
     signInDescription:
       "While Require SSO is on, admins sign in through an identity provider too.",
     scimOff: "Off. Directory provisioning isn't available here.",

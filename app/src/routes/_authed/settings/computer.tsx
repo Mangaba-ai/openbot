@@ -22,7 +22,7 @@ import { useScrollToSection } from "@/lib/settings/computer-sections";
  * 1. The computer your Bots work on, with their browsers and Reset, and the folders on this
  *    computer they may read: the personal edition's. In the team edition those are an admin's,
  *    under Admin.
- * 2. This computer: what OpenBot runs here, with Restart and Stop. Only inside OpenBot Desktop.
+ * 2. This computer: what Mangaba Bot runs here, with Restart and Stop. Only inside Mangaba Bot Desktop.
  * 3. The browsers signed in to the Recorder as you.
  *
  * An address may name a section in its hash (`COMPUTER_SECTION`), and the page opens there.
@@ -42,7 +42,7 @@ function ComputerPage() {
     useQuery(deploymentCapabilitiesQueryOptions()).data?.edition === "personal";
   const desktop = desktopShell() !== null;
   /*
-   * Inside OpenBot Desktop: whether OpenBot runs on this computer or the app is connected to one that
+   * Inside Mangaba Bot Desktop: whether Mangaba Bot runs on this computer or the app is connected to one that
    * runs somewhere else. Until the app has said which, neither is drawn, so the wrong one never shows.
    */
   const connection = useQuery({
@@ -61,9 +61,9 @@ function ComputerPage() {
         personal
           ? "Your Bots share one computer, where each keeps its own browser signed in. A command one Bot runs can still read another Bot's files. Choose folders they can read here, and connect the browsers you teach them in."
           : connected
-            ? "Connect the browsers you teach your Bots in, and see which OpenBot this app is connected to."
+            ? "Connect the browsers you teach your Bots in, and see which Mangaba Bot this app is connected to."
             : desktop
-              ? "Connect the browsers you teach your Bots in, and see what OpenBot runs on this computer."
+              ? "Connect the browsers you teach your Bots in, and see what Mangaba Bot runs on this computer."
               : "Connect the browsers you teach your Bots in."
       }
       title="Computer"

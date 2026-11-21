@@ -330,7 +330,7 @@ function ComponentDetail({
                 <ItemContent>
                   <ItemTitle>Not in this build</ItemTitle>
                   <ItemDescription>
-                    OpenBot can't draw it. The settings below have no effect.
+                    Mangaba Bot can't draw it. The settings below have no effect.
                   </ItemDescription>
                 </ItemContent>
               </Item>

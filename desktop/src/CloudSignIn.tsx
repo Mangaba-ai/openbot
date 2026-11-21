@@ -4,13 +4,13 @@ import { ExternalLink } from "./ExternalLink";
 import { StatusLine } from "./SetupProgress";
 import { UpdateOpenBot } from "./UpdateOpenBot";
 
-/** OpenBot Cloud's address: the OpenBot CopilotKit runs, which the web app and this app share. */
+/** Mangaba Bot Cloud's address: the Mangaba Bot CopilotKit runs, which the web app and this app share. */
 export const OPENBOT_CLOUD_URL = "https://my.open.bot";
 
 /**
- * Whether this build offers OpenBot Cloud on the first screen. Off unless the build sets
+ * Whether this build offers Mangaba Bot Cloud on the first screen. Off unless the build sets
  * `VITE_OPENBOT_CLOUD_ENABLED=true`: until Cloud is open to everybody, a build shows the first
- * screen without it (OpenBot (Self-Contained), OpenBot for Business, and connecting to an address).
+ * screen without it (Mangaba Bot (Self-Contained), Mangaba Bot for Business, and connecting to an address).
  * Read when the screen draws, so a test can set it.
  */
 export function cloudEnabled(): boolean {
@@ -20,8 +20,8 @@ export function cloudEnabled(): boolean {
 }
 
 /**
- * Where this build signs in to OpenBot Cloud. `VITE_OPENBOT_CLOUD_URL` points a build at another
- * OpenBot, such as a test stack; unset, it is {@link OPENBOT_CLOUD_URL}.
+ * Where this build signs in to Mangaba Bot Cloud. `VITE_OPENBOT_CLOUD_URL` points a build at another
+ * Mangaba Bot, such as a test stack; unset, it is {@link OPENBOT_CLOUD_URL}.
  */
 export function cloudAddress(): string {
   return (
@@ -39,14 +39,14 @@ export function cloudHost(address = cloudAddress()): string {
 }
 
 /** The button that signs in. */
-export const SIGN_IN_TO_CLOUD = "Sign in to OpenBot Cloud";
+export const SIGN_IN_TO_CLOUD = "Sign in to Mangaba Bot Cloud";
 
 /**
- * The first screen's lower half when OpenBot Cloud is picked: what it is, and the sign-in. Cloud's
+ * The first screen's lower half when Mangaba Bot Cloud is picked: what it is, and the sign-in. Cloud's
  * address is built in, so there is nothing to type. Signing in is the same as connecting to any
- * OpenBot that runs elsewhere (`useConnectToOpenBot` with that address): the shell checks the
+ * Mangaba Bot that runs elsewhere (`useConnectToOpenBot` with that address): the shell checks the
  * address, opens the person's browser to sign in (OAuth with PKCE, the way an app signs in), and
- * shows OpenBot Cloud in this window. Nothing is installed or started on this computer.
+ * shows Mangaba Bot Cloud in this window. Nothing is installed or started on this computer.
  *
  * While the browser is waited on, Cancel is the only control. What went wrong is the shell's
  * sentence in the same calm notice the address screen draws, and the button says what pressing it
@@ -66,9 +66,9 @@ export function CloudSignIn({
     if (focus) connecting.action.current?.focus();
   }, [focus, connecting.action]);
   return (
-    <section className="cloud-sign-in" aria-label="OpenBot Cloud">
+    <section className="cloud-sign-in" aria-label="Mangaba Bot Cloud">
       <p className="lede">
-        Sign in with your OpenBot account, or create one. Your Bots and
+        Sign in with your Mangaba Bot account, or create one. Your Bots and
         conversations are the same here and at {host}.
       </p>
       {phase === "waiting" ? (
@@ -85,7 +85,7 @@ export function CloudSignIn({
           </div>
         </>
       ) : phase === "opening" ? (
-        <StatusLine>Opening OpenBot…</StatusLine>
+        <StatusLine>Opening Mangaba Bot…</StatusLine>
       ) : (
         <>
           {trouble && trouble.offer !== "update" && (
@@ -117,7 +117,7 @@ export function CloudSignIn({
             </div>
           )}
           {phase === "checking" ? (
-            <StatusLine>Reaching OpenBot Cloud…</StatusLine>
+            <StatusLine>Reaching Mangaba Bot Cloud…</StatusLine>
           ) : (
             <p className="footnote">
               You'll sign in in your browser. Nothing is installed on this

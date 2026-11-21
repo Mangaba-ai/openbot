@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot can't switch whose account an app acts in: shared accounts aren't available here, or the app directory isn't set up. Trying again won't help until an administrator changes something.
+ * This Mangaba Bot can't switch whose account an app acts in: shared accounts aren't available here, or the app directory isn't set up. Trying again won't help until an administrator changes something.
  */
 export type AppAccountModeUnavailableResponse = Problem;

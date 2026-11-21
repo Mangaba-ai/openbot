@@ -7,7 +7,7 @@ import type { NudgeEventPlace } from "./nudgeEventPlace";
 import type { NudgeEventSurface } from "./nudgeEventSurface";
 
 /**
- * What the caller did with a nudge, and where. Names nothing about the person, who is the caller. The moment that made the nudge due is added by OpenBot, not sent.
+ * What the caller did with a nudge, and where. Names nothing about the person, who is the caller. The moment that made the nudge due is added by Mangaba Bot, not sent.
  */
 export interface NudgeEvent {
   nudge: NoticeId;

@@ -3,7 +3,7 @@
  */
 
 /**
- * The AI provider OpenBot's Bots run on. openai: OpenAI. anthropic: Anthropic. google: Google Gemini. xai: xAI. unbiased: Unbiased AI. openai-compatible: any server that speaks OpenAI's API, at an address given.
+ * The AI provider Mangaba Bot's Bots run on. openai: OpenAI. anthropic: Anthropic. google: Google Gemini. xai: xAI. unbiased: Unbiased AI. openai-compatible: any server that speaks OpenAI's API, at an address given.
  */
 export type AiConnectionProvider =
   (typeof AiConnectionProvider)[keyof typeof AiConnectionProvider];

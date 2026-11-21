@@ -1,5 +1,5 @@
 /*!
-The app connected to an OpenBot that runs somewhere else: what the setup window and OpenBot's own
+The app connected to an Mangaba Bot that runs somewhere else: what the setup window and Mangaba Bot's own
 page may ask, and what the window, the menus and Quit do differently while it is.
 
 The work is in `openbot_desktop_lib::connected`. This is the wiring: the choice read from
@@ -17,17 +17,17 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use tauri::{Emitter, Manager};
 
-/// What a page that asks for something of this computer's own OpenBot is told while connected.
-pub const NOTHING_HERE: &str = "This app is connected to an OpenBot that runs somewhere else, so \
+/// What a page that asks for something of this computer's own Mangaba Bot is told while connected.
+pub const NOTHING_HERE: &str = "This app is connected to an Mangaba Bot that runs somewhere else, so \
                                 there's nothing to do here on this computer.";
 
-/// Told to the setup window while OpenBot shows in connected mode: `{ kind, message }`.
+/// Told to the setup window while Mangaba Bot shows in connected mode: `{ kind, message }`.
 pub const ENDED_EVENT: &str = "connection-ended";
 
 /// The connection this session holds, and what the setup window is to be told next.
 #[derive(Default)]
 pub struct State {
-    /// The relay the window shows OpenBot through, and its sign-in. None while not showing.
+    /// The relay the window shows Mangaba Bot through, and its sign-in. None while not showing.
     live: Mutex<Option<Live>>,
     /// A sign-in waiting for the browser, for Cancel.
     attempt: Mutex<Option<Arc<sign_in::Attempt>>>,
@@ -38,7 +38,7 @@ pub struct State {
     /// In place of the system's credential store, in a test.
     store: Mutex<Option<credentials::Store>>,
     /// The origin of a relay taken to be showing, in a test of the window's own rules: a real one
-    /// needs an OpenBot to sign in to, which the library's tests have and these do not.
+    /// needs an Mangaba Bot to sign in to, which the library's tests have and these do not.
     #[cfg(test)]
     relay_for_test: Mutex<Option<String>>,
 }
@@ -56,7 +56,7 @@ pub struct Notice {
     pub message: Option<String>,
 }
 
-/// The choice, as the setup window and OpenBot's page are told it.
+/// The choice, as the setup window and Mangaba Bot's page are told it.
 #[derive(Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Connection {
@@ -102,20 +102,20 @@ fn keep<R: tauri::Runtime>(
         .and_then(|dir| choice::write(&dir, chosen).map_err(|error| error.to_string()));
     written.map_err(|detail| {
         Problem::with(
-            "OpenBot couldn't save your choice on this computer. Try again.",
+            "Mangaba Bot couldn't save your choice on this computer. Try again.",
             detail,
         )
     })
 }
 
-/// Whether the app is connected to an OpenBot that runs elsewhere: it shows one now, or the choice
+/// Whether the app is connected to an Mangaba Bot that runs elsewhere: it shows one now, or the choice
 /// on record is to. Then nothing of this computer's own installation is touched.
 pub fn is_connected<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> bool {
     state(app).connected.live.lock().unwrap().is_some()
         || chosen(app).mode == choice::Mode::Connected
 }
 
-/// The relay's origin, `http://127.0.0.1:<port>`, while the window shows OpenBot through it.
+/// The relay's origin, `http://127.0.0.1:<port>`, while the window shows Mangaba Bot through it.
 pub fn relay_origin<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Option<String> {
     #[cfg(test)]
     if let Some(origin) = state(app).connected.relay_for_test.lock().unwrap().clone() {
@@ -130,7 +130,7 @@ pub fn relay_origin<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Option<Stri
         .map(|live| live.relay.origin())
 }
 
-/// The relay's entry address, while the window shows OpenBot through it: where the window goes
+/// The relay's entry address, while the window shows Mangaba Bot through it: where the window goes
 /// whenever it comes to the relay from a page of the shell's own. Going straight to the relay's
 /// origin from there, WebKit leaves the window's cookie off, and the relay refuses the page
 /// (`relay` says why). It holds the run's secret, so it is never logged.
@@ -144,7 +144,7 @@ fn relay_entry<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Option<String> {
         .map(|live| live.relay.entry())
 }
 
-/// The address of the OpenBot the window shows through the relay, while it does.
+/// The address of the Mangaba Bot the window shows through the relay, while it does.
 pub fn connected_address<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Option<String> {
     state(app)
         .connected
@@ -155,19 +155,19 @@ pub fn connected_address<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Option
         .map(|live| live.session.address().to_owned())
 }
 
-/// Whether `url` is a page the relay serves: OpenBot's own, from the OpenBot it is connected to.
+/// Whether `url` is a page the relay serves: Mangaba Bot's own, from the Mangaba Bot it is connected to.
 pub fn is_relay_page<R: tauri::Runtime>(app: &tauri::AppHandle<R>, url: &tauri::Url) -> bool {
     relay_origin(app).is_some_and(|origin| origin == url.origin().ascii_serialization())
 }
 
 /**
 Where a navigation or a new window asked for from the main window goes, while the window shows an
-OpenBot through the relay: true for the person's browser, false for the window itself. None while
-no relay is showing, and then the rule for an OpenBot on this computer decides, as it always has.
+Mangaba Bot through the relay: true for the person's browser, false for the window itself. None while
+no relay is showing, and then the rule for an Mangaba Bot on this computer decides, as it always has.
 
-The relay's own origin is OpenBot in the window, and stays. So do the setup page, the frames
-OpenBot's pages embed, and anything that is not `http` or `https`. Every other address is outside,
-whatever its host: the OpenBot the app is connected to has pages meant for the person's own browser,
+The relay's own origin is Mangaba Bot in the window, and stays. So do the setup page, the frames
+Mangaba Bot's pages embed, and anything that is not `http` or `https`. Every other address is outside,
+whatever its host: the Mangaba Bot the app is connected to has pages meant for the person's own browser,
 where they hold a session of their own, and its address can be on this computer (`127.0.0.1` behind
 a port forward). By its host alone that address looked like part of the window, and would have
 loaded there with no sign-in at all.
@@ -184,7 +184,7 @@ pub fn leaves_for_browser<R: tauri::Runtime>(
     Some(!stays)
 }
 
-/// Refuse something that is about this computer's own OpenBot, while connected to another.
+/// Refuse something that is about this computer's own Mangaba Bot, while connected to another.
 pub fn nothing_here<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Result<(), String> {
     if is_connected(app) {
         Err(NOTHING_HERE.into())
@@ -209,7 +209,7 @@ pub fn connection_now<R: tauri::Runtime>(app: &tauri::AppHandle<R>, for_setup: b
     });
     Connection {
         mode: chosen.mode,
-        // The setup window is given a remembered address to offer again; OpenBot's page is told
+        // The setup window is given a remembered address to offer again; Mangaba Bot's page is told
         // of one only while connected to it.
         address: chosen.address.filter(|_| connected || for_setup),
         organization_id: chosen.organization_id.filter(|_| connected),
@@ -235,7 +235,7 @@ pub struct Checked {
     address: String,
 }
 
-/// Whether there is an OpenBot this app can connect to at `address`, and the address as kept.
+/// Whether there is an Mangaba Bot this app can connect to at `address`, and the address as kept.
 #[tauri::command]
 pub async fn check_openbot_address(address: String) -> Result<Checked, Problem> {
     let asked = std::time::Instant::now();
@@ -245,7 +245,7 @@ pub async fn check_openbot_address(address: String) -> Result<Checked, Problem> 
     checked
 }
 
-/// Connect: check the address, sign in through the browser, start the relay and show OpenBot.
+/// Connect: check the address, sign in through the browser, start the relay and show Mangaba Bot.
 /// The choice is kept only once all of that has worked.
 #[tauri::command]
 pub async fn connect_to_openbot<R: tauri::Runtime>(
@@ -308,11 +308,11 @@ pub async fn cancel_connect<R: tauri::Runtime>(app: tauri::AppHandle<R>) {
 }
 
 /// At launch, connected and signed in: the saved sign-in made current, the relay started, and the
-/// window on OpenBot. `session-ended` when the saved sign-in no longer works.
+/// window on Mangaba Bot. `session-ended` when the saved sign-in no longer works.
 #[tauri::command]
 pub async fn show_connected<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), Problem> {
     let asked = std::time::Instant::now();
-    log::info!("[connect] asked to show the connected OpenBot");
+    log::info!("[connect] asked to show the connected Mangaba Bot");
     let shown = blocking(move || show_connected_now(&app)).await;
     openbot_desktop_lib::logging::outcome("connect show", asked, &shown);
     shown
@@ -330,7 +330,7 @@ pub async fn sign_out_of_openbot<R: tauri::Runtime>(
     .await
 }
 
-/// Back to OpenBot on this computer: signed out, the choice switched, and the setup window, which
+/// Back to Mangaba Bot on this computer: signed out, the choice switched, and the setup window, which
 /// carries on as it does for an installation here.
 #[tauri::command]
 pub async fn use_this_computer<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), Problem> {
@@ -340,7 +340,7 @@ pub async fn use_this_computer<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> R
         chosen.mode = choice::Mode::Local;
         chosen.organization_id = None;
         keep(&app, &chosen)?;
-        log::info!("[connect] the choice is OpenBot on this computer");
+        log::info!("[connect] the choice is Mangaba Bot on this computer");
         crate::refresh_menus(&app);
         crate::show_setup(app).map_err(Problem::from)
     })
@@ -353,7 +353,7 @@ pub async fn take_connection_notice<R: tauri::Runtime>(app: tauri::AppHandle<R>)
     state(&app).connected.notice.lock().unwrap().take()
 }
 
-/// The setup window's next `take_connection_notice` says to open at the choice of where OpenBot
+/// The setup window's next `take_connection_notice` says to open at the choice of where Mangaba Bot
 /// runs, showing no failure.
 pub fn ask_to_choose<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     *state(app).connected.notice.lock().unwrap() = Some(Notice {
@@ -362,9 +362,9 @@ pub fn ask_to_choose<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     });
 }
 
-/// Settings' Change on where OpenBot runs, and the setup window at that choice.
+/// Settings' Change on where Mangaba Bot runs, and the setup window at that choice.
 ///
-/// Connected: signed out, still connected to the address on record. On this computer: OpenBot
+/// Connected: signed out, still connected to the address on record. On this computer: Mangaba Bot
 /// stopped, exactly as Settings' Stop stops it, and the choice on record left as it is.
 pub fn change_connection_now<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Result<(), String> {
     if !is_connected(app) {
@@ -376,7 +376,7 @@ pub fn change_connection_now<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Re
     crate::show_setup(app.clone())
 }
 
-/// The organisation the person picked in OpenBot's switcher, kept beside the address and named by
+/// The organisation the person picked in Mangaba Bot's switcher, kept beside the address and named by
 /// the relay on every request from now on. None clears it.
 pub fn set_organization_now<R: tauri::Runtime>(
     app: &tauri::AppHandle<R>,
@@ -384,12 +384,12 @@ pub fn set_organization_now<R: tauri::Runtime>(
 ) -> Result<(), String> {
     if let Some(id) = &organization_id {
         if !choice::valid_organization(id) {
-            return Err("That isn't an organization OpenBot knows.".into());
+            return Err("That isn't an organization Mangaba Bot knows.".into());
         }
     }
     let mut chosen = chosen(app);
     if chosen.connected_to().is_none() {
-        return Err("OpenBot isn't connected to an address.".into());
+        return Err("Mangaba Bot isn't connected to an address.".into());
     }
     chosen.organization_id = organization_id;
     keep(app, &chosen).map_err(|problem| problem.said)?;
@@ -405,7 +405,7 @@ async fn blocking<T: Send + 'static>(
 ) -> Result<T, Problem> {
     tauri::async_runtime::spawn_blocking(work)
         .await
-        .map_err(|error| Problem::with("OpenBot couldn't do that. Try again.", error.to_string()))
+        .map_err(|error| Problem::with("Mangaba Bot couldn't do that. Try again.", error.to_string()))
         .and_then(|done| done)
 }
 
@@ -450,7 +450,7 @@ fn connect_now<R: tauri::Runtime>(
     }
     let session = Arc::new(signed_in?);
 
-    // An OpenBot running on this computer is stopped first, as Stop stops it.
+    // An Mangaba Bot running on this computer is stopped first, as Stop stops it.
     if let Err(problem) = stop_local_first(app) {
         let _ = session.sign_out();
         return Err(problem);
@@ -474,7 +474,7 @@ fn show_connected_now<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Result<()
     let chosen = chosen(app);
     let Some(address) = chosen.connected_to() else {
         return Err(Problem::plain(
-            "OpenBot isn't connected to an address. Choose where OpenBot runs.",
+            "Mangaba Bot isn't connected to an address. Choose where Mangaba Bot runs.",
         ));
     };
     let metadata = address::probe(address)?;
@@ -505,7 +505,7 @@ fn show<R: tauri::Runtime>(
     })
     .map_err(|detail| {
         Problem::with(
-            "OpenBot couldn't open its connection on this computer. Try again.",
+            "Mangaba Bot couldn't open its connection on this computer. Try again.",
             detail,
         )
     })?;
@@ -513,27 +513,27 @@ fn show<R: tauri::Runtime>(
     let entry = relay.entry();
     stop_relay(app);
     *state(app).connected.live.lock().unwrap() = Some(Live { relay, session });
-    // The relay's pages are OpenBot's own: the window's controls, theme, notifications and the
-    // rest, exactly as for an OpenBot this computer runs.
+    // The relay's pages are Mangaba Bot's own: the window's controls, theme, notifications and the
+    // rest, exactly as for an Mangaba Bot this computer runs.
     crate::trust_owned_app(app, &origin);
     crate::refresh_menus(app);
-    log::info!("[connect] showing the OpenBot at {host}");
+    log::info!("[connect] showing the Mangaba Bot at {host}");
     // First to the relay's entry, which gives the window this run's cookie and sends it on.
     navigate(app, &entry)?;
-    crate::bring_to_front(app, "OpenBot is showing");
+    crate::bring_to_front(app, "Mangaba Bot is showing");
     Ok(())
 }
 
 fn navigate<R: tauri::Runtime>(app: &tauri::AppHandle<R>, to: &str) -> Result<(), Problem> {
     let window = app
         .get_webview_window("main")
-        .ok_or("the OpenBot window is not there to show it in")?;
+        .ok_or("the Mangaba Bot window is not there to show it in")?;
     let destination: tauri::Url = to
         .parse()
-        .map_err(|_| Problem::plain("OpenBot could not navigate to its app."))?;
+        .map_err(|_| Problem::plain("Mangaba Bot could not navigate to its app."))?;
     window
         .navigate(destination)
-        .map_err(|_| Problem::plain("OpenBot could not navigate to its app."))
+        .map_err(|_| Problem::plain("Mangaba Bot could not navigate to its app."))
 }
 
 /// Stop the relay, if one runs. The sign-in is left as it is.
@@ -545,7 +545,7 @@ pub fn stop_relay<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     }
 }
 
-/// A relay that has stopped is no longer OpenBot's page: its port is anybody's again.
+/// A relay that has stopped is no longer Mangaba Bot's page: its port is anybody's again.
 fn forget_origin<R: tauri::Runtime>(app: &tauri::AppHandle<R>, origin: &str) {
     state(app)
         .owned_app_origins
@@ -554,7 +554,7 @@ fn forget_origin<R: tauri::Runtime>(app: &tauri::AppHandle<R>, origin: &str) {
         .retain(|trusted| trusted != origin);
 }
 
-/// Sign out of the OpenBot on record: revoked there as far as it answers, forgotten here, and the
+/// Sign out of the Mangaba Bot on record: revoked there as far as it answers, forgotten here, and the
 /// relay stopped. The address stays, and so does the organisation picked there: a token remembers
 /// nothing, so this is what lets the next sign-in at that address go on where the person left off.
 /// It goes only with a new address (`choice::signed_in_at`) and back on this computer.
@@ -607,7 +607,7 @@ pub(crate) fn session_ended<R: tauri::Runtime>(app: &tauri::AppHandle<R>, host: 
     let _ = app.emit(ENDED_EVENT, notice);
 }
 
-/// An OpenBot running on this computer when the person connects to another: stopped, the way Stop
+/// An Mangaba Bot running on this computer when the person connects to another: stopped, the way Stop
 /// stops it, before the app is connected. One that is not running is left exactly as it is.
 fn stop_local_first<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Result<(), Problem> {
     let shell = state(app);
@@ -619,19 +619,19 @@ fn stop_local_first<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Result<(), 
     if !running {
         return Ok(());
     }
-    log::info!("[connect] stopping OpenBot on this computer first");
+    log::info!("[connect] stopping Mangaba Bot on this computer first");
     crate::stop_everything(app, &root)
         .into_result()
         .map_err(|detail| {
             Problem::with(
-                "OpenBot on this computer couldn't finish stopping, so the app didn't connect. \
+                "Mangaba Bot on this computer couldn't finish stopping, so the app didn't connect. \
                  Try again.",
                 detail,
             )
         })
 }
 
-/// Show Window, from the tray or a second launch, while connected: OpenBot through the relay when
+/// Show Window, from the tray or a second launch, while connected: Mangaba Bot through the relay when
 /// it is showing, and the setup window otherwise, which signs in or shows why it can't.
 pub fn show_window<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     let Some(window) = app.get_webview_window("main") else {
@@ -654,11 +654,11 @@ pub fn show_window<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     }
     let _ = window.show();
     let _ = window.unminimize();
-    crate::focus(&window, "OpenBot is showing");
+    crate::focus(&window, "Mangaba Bot is showing");
 }
 
-/// What `status` answers OpenBot's page while connected: the app's own version, build and log
-/// folder, and nothing of this computer's own OpenBot, which is not asked.
+/// What `status` answers Mangaba Bot's page while connected: the app's own version, build and log
+/// folder, and nothing of this computer's own Mangaba Bot, which is not asked.
 pub fn status<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> crate::DesktopStatus {
     crate::DesktopStatus::of_the_app_alone(app)
 }
@@ -669,7 +669,7 @@ pub fn quit<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
         attempt.cancel();
     }
     stop_relay(app);
-    log::info!("[quit] connected to an OpenBot that runs elsewhere; nothing to stop here");
+    log::info!("[quit] connected to an Mangaba Bot that runs elsewhere; nothing to stop here");
 }
 
 /// Sign Out in the tray and the window menu.

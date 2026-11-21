@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Return whether Automatic learning is on, the Learning space every Bot learns into and each Bot's own, who reviews what people's recordings propose, and what OpenBot last found when it looked for the space it assigns by itself. Only an administrator may read them. A single-person OpenBot has no such settings: it answers not found.
+ * Return whether Automatic learning is on, the Learning space every Bot learns into and each Bot's own, who reviews what people's recordings propose, and what Mangaba Bot last found when it looked for the space it assigns by itself. Only an administrator may read them. A single-person Mangaba Bot has no such settings: it answers not found.
  * @summary Read the organization's Learning settings
  */
 
@@ -155,11 +155,11 @@ export const GetLearningSettingsResponse = zod.object({
             .describe("Why the last attempt to create it failed."),
         })
         .describe(
-          "What OpenBot last found when it looked for the space it assigns by itself. off: switched off, or the environment names a space. saved: an administrator's settings decide. assigned: OpenBot assigned it. absent: the project has no such space yet. not_entitled: the plan doesn't include Learning. learning_off: the backend has Learning switched off. unavailable: the backend couldn't be asked. pending: not asked yet.",
+          "What Mangaba Bot last found when it looked for the space it assigns by itself. off: switched off, or the environment names a space. saved: an administrator's settings decide. assigned: Mangaba Bot assigned it. absent: the project has no such space yet. not_entitled: the plan doesn't include Learning. learning_off: the backend has Learning switched off. unavailable: the backend couldn't be asked. pending: not asked yet.",
         ),
       zod.null(),
     ])
-    .describe("Null where OpenBot never assigns a space by itself."),
+    .describe("Null where Mangaba Bot never assigns a space by itself."),
   organizationSpaceId: zod
     .union([
       zod
@@ -172,7 +172,7 @@ export const GetLearningSettingsResponse = zod.object({
     ])
     .optional()
     .describe(
-      "The space OpenBot keeps for this organization alone, which its Bots learn into unless an administrator chooses another. Another space of the organization's is named after it: this id, a hyphen, then a name of the administrator's choosing. The id says nothing a person can read, so a screen names the space by the organization and never shows it. Null, or absent, where OpenBot keeps no space for the organization alone and its default is whichever space is assigned or chosen.",
+      "The space Mangaba Bot keeps for this organization alone, which its Bots learn into unless an administrator chooses another. Another space of the organization's is named after it: this id, a hyphen, then a name of the administrator's choosing. The id says nothing a person can read, so a screen names the space by the organization and never shows it. Null, or absent, where Mangaba Bot keeps no space for the organization alone and its default is whichever space is assigned or chosen.",
     ),
 });
 
@@ -414,11 +414,11 @@ export const UpdateLearningSettingsResponse = zod.object({
             .describe("Why the last attempt to create it failed."),
         })
         .describe(
-          "What OpenBot last found when it looked for the space it assigns by itself. off: switched off, or the environment names a space. saved: an administrator's settings decide. assigned: OpenBot assigned it. absent: the project has no such space yet. not_entitled: the plan doesn't include Learning. learning_off: the backend has Learning switched off. unavailable: the backend couldn't be asked. pending: not asked yet.",
+          "What Mangaba Bot last found when it looked for the space it assigns by itself. off: switched off, or the environment names a space. saved: an administrator's settings decide. assigned: Mangaba Bot assigned it. absent: the project has no such space yet. not_entitled: the plan doesn't include Learning. learning_off: the backend has Learning switched off. unavailable: the backend couldn't be asked. pending: not asked yet.",
         ),
       zod.null(),
     ])
-    .describe("Null where OpenBot never assigns a space by itself."),
+    .describe("Null where Mangaba Bot never assigns a space by itself."),
   organizationSpaceId: zod
     .union([
       zod
@@ -431,13 +431,13 @@ export const UpdateLearningSettingsResponse = zod.object({
     ])
     .optional()
     .describe(
-      "The space OpenBot keeps for this organization alone, which its Bots learn into unless an administrator chooses another. Another space of the organization's is named after it: this id, a hyphen, then a name of the administrator's choosing. The id says nothing a person can read, so a screen names the space by the organization and never shows it. Null, or absent, where OpenBot keeps no space for the organization alone and its default is whichever space is assigned or chosen.",
+      "The space Mangaba Bot keeps for this organization alone, which its Bots learn into unless an administrator chooses another. Another space of the organization's is named after it: this id, a hyphen, then a name of the administrator's choosing. The id says nothing a person can read, so a screen names the space by the organization and never shows it. Null, or absent, where Mangaba Bot keeps no space for the organization alone and its default is whichever space is assigned or chosen.",
     ),
 });
 
 /**
- * Create, in the organization's backend, the Learning space OpenBot assigns when nobody chose one, with the credential this deployment holds for it, then assign it. Offered only where the settings say canCreate. Only an administrator may. Recorded on the audit trail.
- * @summary Create the Learning space OpenBot assigns by itself
+ * Create, in the organization's backend, the Learning space Mangaba Bot assigns when nobody chose one, with the credential this deployment holds for it, then assign it. Offered only where the settings say canCreate. Only an administrator may. Recorded on the audit trail.
+ * @summary Create the Learning space Mangaba Bot assigns by itself
  */
 
 export const CreateAutomaticLearningSpaceParams = zod.object({
@@ -504,7 +504,7 @@ export const CreateAutomaticLearningSpaceResponse = zod.object({
         .describe("Why the last attempt to create it failed."),
     })
     .describe(
-      "What OpenBot last found when it looked for the space it assigns by itself. off: switched off, or the environment names a space. saved: an administrator's settings decide. assigned: OpenBot assigned it. absent: the project has no such space yet. not_entitled: the plan doesn't include Learning. learning_off: the backend has Learning switched off. unavailable: the backend couldn't be asked. pending: not asked yet.",
+      "What Mangaba Bot last found when it looked for the space it assigns by itself. off: switched off, or the environment names a space. saved: an administrator's settings decide. assigned: Mangaba Bot assigned it. absent: the project has no such space yet. not_entitled: the plan doesn't include Learning. learning_off: the backend has Learning switched off. unavailable: the backend couldn't be asked. pending: not asked yet.",
     ),
 });
 
@@ -587,7 +587,7 @@ export const GetLearningOverviewResponse = zod.object({
 });
 
 /**
- * Return one page of the skills Learning published to the space every Bot learns into, or to one Bot's own, by name, as OpenBot delivers them to Bots. containerId is null, and the list empty, where no space is assigned. Only an administrator may list them. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the skills Learning published to the space every Bot learns into, or to one Bot's own, by name, as Mangaba Bot delivers them to Bots. containerId is null, and the list empty, where no space is assigned. Only an administrator may list them. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List the skills published to a space
  */
 
@@ -698,7 +698,7 @@ export const GetPublishedSkillParams = zod.object({
     .max(getPublishedSkillPathSkillNameMax)
     .regex(getPublishedSkillPathSkillNameRegExp)
     .describe(
-      "A learned skill's name as OpenBot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
+      "A learned skill's name as Mangaba Bot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
     ),
 });
 
@@ -1108,7 +1108,7 @@ export const GetPersonLearningSettingsResponse = zod.object({
     .boolean()
     .nullable()
     .describe(
-      "In a single-person OpenBot, whether proposals are approved without a review. Null elsewhere.",
+      "In a single-person Mangaba Bot, whether proposals are approved without a review. Null elsewhere.",
     ),
   skills: zod
     .array(
@@ -1147,7 +1147,7 @@ export const GetPersonLearningSettingsResponse = zod.object({
 });
 
 /**
- * Change who else's Bots use the skills learned in the person's own space, and, in a single-person OpenBot, whether proposals are approved without a review. Opening skills to every Bot waits for an administrator to allow it; closing them never does. At least one is required. Only the person themselves may change them. Recorded on the audit trail.
+ * Change who else's Bots use the skills learned in the person's own space, and, in a single-person Mangaba Bot, whether proposals are approved without a review. Opening skills to every Bot waits for an administrator to allow it; closing them never does. At least one is required. Only the person themselves may change them. Recorded on the audit trail.
  * @summary Change a person's Learning choices
  */
 
@@ -1194,7 +1194,7 @@ export const UpdatePersonLearningSettingsBody = zod.object({
   autoApprove: zod
     .boolean()
     .optional()
-    .describe("Only in a single-person OpenBot."),
+    .describe("Only in a single-person Mangaba Bot."),
 });
 
 export const UpdatePersonLearningSettingsResponse = zod.object({
@@ -1207,7 +1207,7 @@ export const UpdatePersonLearningSettingsResponse = zod.object({
 });
 
 /**
- * Return each Learning space the person reviews (always their own, which their recordings join, and in a single-person OpenBot the spaces its Bots learn into), with the proposals in it that wait for review and its latest run, and whether the person may decide on them themselves. In a single-person OpenBot with automatic approval on, reading it first approves what waits. Only the person themselves may read it.
+ * Return each Learning space the person reviews (always their own, which their recordings join, and in a single-person Mangaba Bot the spaces its Bots learn into), with the proposals in it that wait for review and its latest run, and whether the person may decide on them themselves. In a single-person Mangaba Bot with automatic approval on, reading it first approves what waits. Only the person themselves may read it.
  * @summary Read what a person's Learning spaces proposed
  */
 
@@ -1250,7 +1250,7 @@ export const GetPersonLearningReviewResponse = zod.object({
     .boolean()
     .nullable()
     .describe(
-      "In a single-person OpenBot, whether proposals are approved without a review. Null elsewhere.",
+      "In a single-person Mangaba Bot, whether proposals are approved without a review. Null elsewhere.",
     ),
   approved: zod
     .int()
@@ -1549,7 +1549,7 @@ export const GetLearnedSkillParams = zod.object({
     .max(getLearnedSkillPathSkillNameMax)
     .regex(getLearnedSkillPathSkillNameRegExp)
     .describe(
-      "A learned skill's name as OpenBot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
+      "A learned skill's name as Mangaba Bot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
     ),
 });
 
@@ -1618,7 +1618,7 @@ export const UpdateLearnedSkillParams = zod.object({
     .max(updateLearnedSkillPathSkillNameMax)
     .regex(updateLearnedSkillPathSkillNameRegExp)
     .describe(
-      "A learned skill's name as OpenBot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
+      "A learned skill's name as Mangaba Bot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
     ),
 });
 
@@ -1644,7 +1644,7 @@ export const UpdateLearnedSkillResponse = zod.object({
 });
 
 /**
- * Ask an administrator to open a skill the person approved for themselves to every Bot. A request already made, or already approved, is answered as it stands. A skill an administrator approved needs no request: its Open switch shares it. Not in a single-person OpenBot, and not while an administrator hasn't allowed sharing. Only the person themselves may ask. Recorded on the audit trail.
+ * Ask an administrator to open a skill the person approved for themselves to every Bot. A request already made, or already approved, is answered as it stands. A skill an administrator approved needs no request: its Open switch shares it. Not in a single-person Mangaba Bot, and not while an administrator hasn't allowed sharing. Only the person themselves may ask. Recorded on the audit trail.
  * @summary Ask to share a learned skill with every Bot
  */
 
@@ -1678,7 +1678,7 @@ export const RequestSkillSharingParams = zod.object({
     .max(requestSkillSharingPathSkillNameMax)
     .regex(requestSkillSharingPathSkillNameRegExp)
     .describe(
-      "A learned skill's name as OpenBot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
+      "A learned skill's name as Mangaba Bot publishes it: 1 to 200 characters, no slash, backslash or control character, not . or .., and no space at either end.",
     ),
 });
 
@@ -2337,7 +2337,7 @@ export const GetPersonLearningProposalResponse = zod
   );
 
 /**
- * Approve a proposal in one of a person's own Learning spaces, which publishes it there. The person themselves may where they review their own (an administrator's choice, and always in a single-person OpenBot); an administrator may for anyone. A skill approved from a person's recordings is recorded as approved by whoever approved it, which decides who else's Bots may use it. Recorded on the audit trail.
+ * Approve a proposal in one of a person's own Learning spaces, which publishes it there. The person themselves may where they review their own (an administrator's choice, and always in a single-person Mangaba Bot); an administrator may for anyone. A skill approved from a person's recordings is recorded as approved by whoever approved it, which decides who else's Bots may use it. Recorded on the audit trail.
  * @summary Approve a proposal in a person's space
  */
 
@@ -2601,7 +2601,7 @@ export const GetPersonLearningEvidenceResponse = zod.object({
 });
 
 /**
- * Start Learning over one of the person's own spaces. Only the person themselves may, and only where they review their own (an administrator's choice, and always in a single-person OpenBot). A run already going is answered instead of starting another. Recorded on the audit trail.
+ * Start Learning over one of the person's own spaces. Only the person themselves may, and only where they review their own (an administrator's choice, and always in a single-person Mangaba Bot). A run already going is answered instead of starting another. Recorded on the audit trail.
  * @summary Learn now in a person's space
  */
 

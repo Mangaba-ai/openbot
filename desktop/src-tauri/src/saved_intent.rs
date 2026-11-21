@@ -145,12 +145,12 @@ impl SavedIntent {
 }
 
 /**
-Record a connection the person changed inside OpenBot, for Desktop's next Start: the connection it
+Record a connection the person changed inside Mangaba Bot, for Desktop's next Start: the connection it
 starts with, and the plan or sign-in kept on this computer for it. The keys of every other
 connection stay where they are, as the saved keys they still are.
 
-A key typed in the app is kept by OpenBot itself, never here, so an API key or address chosen there
-records no key category: Start then carries on with the connection OpenBot keeps
+A key typed in the app is kept by Mangaba Bot itself, never here, so an API key or address chosen there
+records no key category: Start then carries on with the connection Mangaba Bot keeps
 (`crate::ai_connection::Settled`).
 */
 pub fn record_settled(root: &Path, intent: ModelIntent) -> Result<(), Problem> {
@@ -173,7 +173,7 @@ pub fn record_settled(root: &Path, intent: ModelIntent) -> Result<(), Problem> {
     }
     record.write(root).map_err(|error| {
         Problem::with(
-            "OpenBot couldn't record the new AI connection for its next start.",
+            "Mangaba Bot couldn't record the new AI connection for its next start.",
             error.to_string(),
         )
     })
@@ -243,7 +243,7 @@ fn persist_configuration_with(
                 api_key: api_key.trim().to_string(),
             })
             .map_err(|_| {
-                Problem::plain("OpenBot could not prepare the endpoint key for saving.")
+                Problem::plain("Mangaba Bot could not prepare the endpoint key for saving.")
             })?,
         ),
         _ if SavedIntent::read(root)
@@ -260,18 +260,18 @@ fn persist_configuration_with(
     remember(root, &scoped_secrets)?;
     crate::env::write_plan_store(root, credential).map_err(|error| {
         Problem::with(
-            "OpenBot could not save the model sign-in. Try Start again.",
+            "Mangaba Bot could not save the model sign-in. Try Start again.",
             error.to_string(),
         )
     })?;
     let mut intent = SavedIntent::read(root);
     intent.record(secrets, credential);
     intent.write(root).map_err(|error| Problem::with(
-        "OpenBot could not record the saved connections. Your previous settings are kept; try Start again.",
+        "Mangaba Bot could not record the saved connections. Your previous settings are kept; try Start again.",
         error.to_string(),
     ))?;
     crate::env::write(&root.join(".env"), settings, purge)
-        .map_err(|error| Problem::with("OpenBot could not write its settings.", error.to_string()))
+        .map_err(|error| Problem::with("Mangaba Bot could not write its settings.", error.to_string()))
 }
 
 #[cfg(test)]
@@ -753,7 +753,7 @@ mod tests {
             },
         )
         .unwrap_err();
-        assert_eq!(problem.said, "OpenBot could not write its settings.");
+        assert_eq!(problem.said, "Mangaba Bot could not write its settings.");
         assert_eq!(
             SavedIntent::read(&root).model,
             Some(ModelIntent::ClaudePlan)

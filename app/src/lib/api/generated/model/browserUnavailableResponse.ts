@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot cannot run the browser: it has no way to run a person's browser, or its setup stops one opening.
+ * This Mangaba Bot cannot run the browser: it has no way to run a person's browser, or its setup stops one opening.
  */
 export type BrowserUnavailableResponse = Problem;

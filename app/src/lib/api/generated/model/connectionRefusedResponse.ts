@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * A parameter or the body is malformed, or the app can't be connected this way: it needs no account, OpenBot keeps its sign-in itself so there is nothing to confirm or check, the values don't match the form it asks for, the app refused the key, or it has no action by that name.
+ * A parameter or the body is malformed, or the app can't be connected this way: it needs no account, Mangaba Bot keeps its sign-in itself so there is nothing to confirm or check, the values don't match the form it asks for, the app refused the key, or it has no action by that name.
  */
 export type ConnectionRefusedResponse = Problem;

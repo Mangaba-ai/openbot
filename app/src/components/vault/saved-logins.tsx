@@ -39,7 +39,7 @@ export function SavedLogins() {
         </p>
       ) : !logins.data.passwordManager ? (
         /*
-         * Off for one of two reasons, and the list alone can't tell them apart: an OpenBot with no
+         * Off for one of two reasons, and the list alone can't tell them apart: an Mangaba Bot with no
          * computers for Bots answers an empty list with the password manager off too. Which one it
          * is waits for the deployment's answer, so the wrong reason is never on screen.
          */
@@ -48,7 +48,7 @@ export function SavedLogins() {
             icon={IconDeviceDesktopOff}
             title="Saved logins aren't available"
           >
-            Saved logins need a computer for Bots, and this OpenBot has none. An
+            Saved logins need a computer for Bots, and this Mangaba Bot has none. An
             admin can set computers up.
           </PageEmpty>
         ) : (

@@ -87,7 +87,7 @@ function describe(person: Person, organization: string | undefined): string {
  * Under an owner's row, where neither their Admin switch nor Remove can be used: why, and where
  * ownership changes when it can. A person's own organization keeps them as its one owner. In a
  * shared one an owner gives somebody the Owner role from the Members list on Organization settings
- * (organization-settings-page.tsx). Where OpenBot offers no organizations, there is no such page.
+ * (organization-settings-page.tsx). Where Mangaba Bot offers no organizations, there is no such page.
  */
 function ownerHint(
   person: Person,
@@ -103,7 +103,7 @@ function ownerHint(
   return "Owners are always admins.";
 }
 
-/** The organization the person is working in, where OpenBot offers organizations. */
+/** The organization the person is working in, where Mangaba Bot offers organizations. */
 function useCurrentOrganization() {
   const choices = useOrganizationChoices();
   return choices?.organizations.find((one) => one.id === choices.currentId);
@@ -115,11 +115,11 @@ function nameOf(person: Person): string {
 }
 
 /**
- * The organization a removal takes somebody out of, where that is all it does: an OpenBot where
+ * The organization a removal takes somebody out of, where that is all it does: an Mangaba Bot where
  * everybody has an organization of their own and may create others (`canCreate`, the server's
  * verdict). There, Remove ends the person's membership of this organization alone, and their
- * account, sessions, API keys and other organizations stay theirs. Undefined where OpenBot keeps one
- * organization, where removing somebody still takes them out of OpenBot.
+ * account, sessions, API keys and other organizations stay theirs. Undefined where Mangaba Bot keeps one
+ * organization, where removing somebody still takes them out of Mangaba Bot.
  */
 function useRemovalOrganization(): string | undefined {
   const choices = useOrganizationChoices();
@@ -342,7 +342,7 @@ function PeoplePage() {
 /**
  * Asks before removing somebody's access, naming them and saying what ends, and then removes it.
  * A refusal stays in the dialog. Where everybody has an organization of their own (`organization`
- * given), what ends is their membership of this one; where OpenBot keeps one, it is OpenBot.
+ * given), what ends is their membership of this one; where Mangaba Bot keeps one, it is Mangaba Bot.
  */
 function RemovePersonDialog({
   onOpenChange,
@@ -377,7 +377,7 @@ function RemovePersonDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            Remove {nameOf(person)} from {organization ?? "OpenBot"}?
+            Remove {nameOf(person)} from {organization ?? "Mangaba Bot"}?
           </DialogTitle>
           {organization ? (
             <DialogDescription>

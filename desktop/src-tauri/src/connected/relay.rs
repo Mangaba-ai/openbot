@@ -1,11 +1,11 @@
 /*!
-The relay between the window and an OpenBot that runs elsewhere.
+The relay between the window and an Mangaba Bot that runs elsewhere.
 
-The window's page cannot hold a token, and that OpenBot sends no CORS headers, so the window loads
+The window's page cannot hold a token, and that Mangaba Bot sends no CORS headers, so the window loads
 the app from `http://127.0.0.1:<port>/` and this server passes each request on to the one address
-the person typed. Requests for OpenBot's API (`/api`, `/api/...` and `/.well-known/...`) go with
+the person typed. Requests for Mangaba Bot's API (`/api`, `/api/...` and `/.well-known/...`) go with
 `Authorization: Bearer <access token>` added, and the organisation the person picked. The page
-never sees the token, and nothing but OpenBot's API is sent it: the app's pages and files, and
+never sees the token, and nothing but Mangaba Bot's API is sent it: the app's pages and files, and
 anything else the same host name serves (on a company's cluster, another service's socket), are
 passed on without either.
 
@@ -33,17 +33,17 @@ What keeps it to that:
   `Authorization` the page sent. On the way back it drops `Set-Cookie`.
 
 It adds this app to the `OpenBot-Client` header the page sent, or sends this app's alone, so the
-OpenBot knows which apps a request came through (`client_version`).
+Mangaba Bot knows which apps a request came through (`client_version`).
 
 Bodies are passed on as they arrive, both ways, so a chat answer streams. A WebSocket upgrade is
 passed on and the two connections are joined.
 
-Connections to OpenBot are kept open between requests for `KEPT_OPEN_FOR`, less than the idle
+Connections to Mangaba Bot are kept open between requests for `KEPT_OPEN_FOR`, less than the idle
 timeout of a load balancer or an ingress in front of it. When one still closes just as a request
 goes out on it, a request that is safe to send twice is sent once more on a new connection, and
 the page sees only the answer (`Forward::send`).
 
-The access token is replaced shortly before it ends, and when that OpenBot answers 401 to a request
+The access token is replaced shortly before it ends, and when that Mangaba Bot answers 401 to a request
 with no body the request is sent once more with a new one. When the refresh itself is refused the
 sign-in is over: the relay says so once (`Ended::SessionEnded`) and stops answering.
 */
@@ -77,7 +77,7 @@ const ENTRY_PAGE: &str = concat!(
     "<!doctype html><html><head><meta charset=\"utf-8\">",
     "<meta name=\"color-scheme\" content=\"light dark\">",
     "<meta http-equiv=\"refresh\" content=\"0;url=/\">",
-    "<title>OpenBot</title></head><body></body></html>"
+    "<title>Mangaba Bot</title></head><body></body></html>"
 );
 
 /// The request header that names the organisation the person is working in. A token carries no
@@ -96,15 +96,15 @@ fn organization_header(organization: Option<&str>) -> Option<HeaderValue> {
 pub enum Ended {
     /// The refresh was refused. The relay has stopped answering.
     SessionEnded,
-    /// The OpenBot did not answer. The relay keeps going; said at most once in a while.
+    /// The Mangaba Bot did not answer. The relay keeps going; said at most once in a while.
     Unreachable,
 }
 
-/// How often `Ended::Unreachable` is said while the OpenBot stays unreachable.
+/// How often `Ended::Unreachable` is said while the Mangaba Bot stays unreachable.
 const UNREACHABLE_SAID_EVERY: Duration = Duration::from_secs(30);
 
-/// How long a connection to OpenBot is kept open, idle, for the next request. A load balancer or
-/// an ingress in front of OpenBot closes an idle connection on a timer of its own (AWS's load
+/// How long a connection to Mangaba Bot is kept open, idle, for the next request. A load balancer or
+/// an ingress in front of Mangaba Bot closes an idle connection on a timer of its own (AWS's load
 /// balancer after 60 s, nginx after 75 s), and a request sent at the moment it does so is lost.
 /// Shorter than those, the relay lets the connection go first. Left alone, reqwest keeps one 90 s.
 const KEPT_OPEN_FOR: Duration = Duration::from_secs(30);
@@ -113,7 +113,7 @@ const KEPT_OPEN_FOR: Duration = Duration::from_secs(30);
 /// or one of no stated length, is passed on as it arrives and is sent once at most.
 const WHOLE_BODY_AT_MOST: usize = 1024 * 1024;
 
-/// The header the API's writes carry so that OpenBot does a write sent twice only once.
+/// The header the API's writes carry so that Mangaba Bot does a write sent twice only once.
 const IDEMPOTENCY_KEY: &str = "idempotency-key";
 
 type Body = BoxBody<Bytes, Box<dyn std::error::Error + Send + Sync>>;
@@ -342,10 +342,10 @@ fn dropped_on_the_way_out(name: &HeaderName) -> bool {
         || name.eq_ignore_ascii_case(crate::client_version::HEADER)
 }
 
-/// Whether a request for `path` is one of OpenBot's own that takes the person's sign-in: its API,
+/// Whether a request for `path` is one of Mangaba Bot's own that takes the person's sign-in: its API,
 /// and the well-known documents beside it. Everything else behind the same host name (the app's
 /// pages and files, another service's socket) is passed on without the token or the organisation:
-/// the sign-in is OpenBot's to see and nobody else's.
+/// the sign-in is Mangaba Bot's to see and nobody else's.
 fn carries_the_sign_in(path: &str) -> bool {
     path == "/api" || path.starts_with("/api/") || path.starts_with("/.well-known/")
 }
@@ -387,7 +387,7 @@ async fn answer(mut request: Request<Incoming>, shared: Arc<Shared>) -> Response
         {
             return plain(
                 StatusCode::FORBIDDEN,
-                "This relay is for the OpenBot window.",
+                "This relay is for the Mangaba Bot window.",
             );
         }
         // A page, not a redirect: see the module's documentation.
@@ -429,7 +429,7 @@ async fn answer(mut request: Request<Incoming>, shared: Arc<Shared>) -> Response
     if foreign_origin || from_another_site || !has_cookie(request.headers(), &shared.secret) {
         return plain(
             StatusCode::FORBIDDEN,
-            "This relay is for the OpenBot window.",
+            "This relay is for the Mangaba Bot window.",
         );
     }
     if request.uri().path().starts_with(OWN_PREFIX) {
@@ -466,14 +466,14 @@ async fn answer(mut request: Request<Incoming>, shared: Arc<Shared>) -> Response
         headers.append(name.clone(), value.clone());
     }
     // Which apps the request came through: the page's own name, then this app's. On everything it
-    // passes on, so OpenBot knows this app is asking whatever the page is.
+    // passes on, so Mangaba Bot knows this app is asking whatever the page is.
     if let (Ok(name), Some(named)) = (
         HeaderName::from_bytes(crate::client_version::HEADER.as_bytes()),
         crate::client_version::added_to(request.headers()),
     ) {
         headers.insert(name, named);
     }
-    // The person's sign-in and their organisation, for OpenBot's own API only.
+    // The person's sign-in and their organisation, for Mangaba Bot's own API only.
     let signed_in = carries_the_sign_in(request.uri().path());
     let organization = shared
         .organization
@@ -575,7 +575,7 @@ async fn answer(mut request: Request<Incoming>, shared: Arc<Shared>) -> Response
         let Some(on_upgrade) = on_upgrade else {
             return plain(
                 StatusCode::BAD_GATEWAY,
-                "OpenBot answered with a socket nobody asked for.",
+                "Mangaba Bot answered with a socket nobody asked for.",
             );
         };
         // The two connections joined, each way, until either closes.
@@ -591,7 +591,7 @@ async fn answer(mut request: Request<Incoming>, shared: Arc<Shared>) -> Response
             .unwrap_or_else(|_| {
                 plain(
                     StatusCode::BAD_GATEWAY,
-                    "OpenBot's answer could not be passed on.",
+                    "Mangaba Bot's answer could not be passed on.",
                 )
             });
     }
@@ -605,7 +605,7 @@ async fn answer(mut request: Request<Incoming>, shared: Arc<Shared>) -> Response
         .unwrap_or_else(|_| {
             plain(
                 StatusCode::BAD_GATEWAY,
-                "OpenBot's answer could not be passed on.",
+                "Mangaba Bot's answer could not be passed on.",
             )
         })
 }
@@ -619,7 +619,7 @@ enum Outgoing {
     Streamed(reqwest::Body),
 }
 
-/// The page's request as it goes to OpenBot.
+/// The page's request as it goes to Mangaba Bot.
 struct Forward {
     method: Method,
     destination: reqwest::Url,
@@ -648,7 +648,7 @@ impl Forward {
     }
 
     /// Sent, and sent once more on a new connection when the one it went on closed before
-    /// OpenBot's answer began and the request is safe to send twice: a read (GET, HEAD, OPTIONS)
+    /// Mangaba Bot's answer began and the request is safe to send twice: a read (GET, HEAD, OPTIONS)
     /// with no body, or a write with an Idempotency-Key whose body is empty or held whole. A body
     /// that streams, a write without the key and a socket upgrade are never sent again
     /// (RFC 9110 §9.2.2).
@@ -672,7 +672,7 @@ impl Forward {
             return Err(error);
         };
         log::info!(
-            "[relay] the connection to OpenBot closed before it answered {} {}; sending it once more",
+            "[relay] the connection to Mangaba Bot closed before it answered {} {}; sending it once more",
             self.method,
             self.destination.path()
         );
@@ -685,7 +685,7 @@ impl Forward {
 /// Whether the connection a request went on closed before any answer: what a load balancer or an
 /// ingress does to a kept-open connection it closes for being idle just as the request is sent
 /// ("connection closed before message completed", or a reset). Not a refused connection or a
-/// timeout, which say OpenBot itself is not there.
+/// timeout, which say Mangaba Bot itself is not there.
 fn closed_unanswered(error: &reqwest::Error) -> bool {
     if error.is_connect() || error.is_timeout() {
         return false;
@@ -733,7 +733,7 @@ async fn token(
         }
         Ok(Err(_)) | Err(_) => {
             say_unreachable(shared);
-            Err((StatusCode::BAD_GATEWAY, "OpenBot could not be reached."))
+            Err((StatusCode::BAD_GATEWAY, "Mangaba Bot could not be reached."))
         }
     }
 }
@@ -763,11 +763,11 @@ fn say_unreachable(shared: &Arc<Shared>) {
 
 fn unreachable(shared: &Arc<Shared>, error: reqwest::Error) -> Response<Body> {
     log::warn!(
-        "[relay] OpenBot did not answer: {}",
+        "[relay] Mangaba Bot did not answer: {}",
         super::transport(error)
     );
     say_unreachable(shared);
-    plain(StatusCode::BAD_GATEWAY, "OpenBot could not be reached.")
+    plain(StatusCode::BAD_GATEWAY, "Mangaba Bot could not be reached.")
 }
 
 /// A redirect's `Location`, kept on the relay when it points at the typed address, so the window
@@ -808,7 +808,7 @@ mod tests {
 
     const ECHO: &str = "/api/v2/echo";
 
-    /// An OpenBot, a sign-in to it, and a relay in front of it.
+    /// An Mangaba Bot, a sign-in to it, and a relay in front of it.
     struct Rig {
         openbot: FakeOpenBot,
         store: Store,
@@ -891,7 +891,7 @@ mod tests {
             self.request(reqwest::Method::GET, path)
         }
 
-        /// What `ECHO` says OpenBot received.
+        /// What `ECHO` says Mangaba Bot received.
         fn echo(&self, request: reqwest::blocking::RequestBuilder) -> serde_json::Value {
             let answered = request.send().unwrap();
             assert_eq!(answered.status(), 200);
@@ -997,7 +997,7 @@ mod tests {
         assert_eq!(seen.last().unwrap().path, "//elsewhere.example/page");
     }
 
-    /// OpenBot sees the app's token and none of what the browser adds: where the page is, its
+    /// Mangaba Bot sees the app's token and none of what the browser adds: where the page is, its
     /// cookies, or a header claiming to speak for another proxy. The rest goes through.
     #[test]
     fn openbot_sees_the_bearer_token_and_no_origin_cookie_or_forwarding_header() {
@@ -1030,7 +1030,7 @@ mod tests {
             "x-forwarded-host",
             "x-forwarded-proto",
         ] {
-            assert!(!headers.contains_key(gone), "{gone} reached OpenBot");
+            assert!(!headers.contains_key(gone), "{gone} reached Mangaba Bot");
         }
         assert_eq!(headers["x-request-id"], "kept-as-sent");
         assert_eq!(headers["content-type"], "application/json");
@@ -1045,8 +1045,8 @@ mod tests {
         assert!(!sent.to_string().contains(&window.cookie));
     }
 
-    /// OpenBot hears which apps a request came through: the name the window's page gave, then this
-    /// app's, on OpenBot's API and on its pages alike. A page that names none is this app alone.
+    /// Mangaba Bot hears which apps a request came through: the name the window's page gave, then this
+    /// app's, on Mangaba Bot's API and on its pages alike. A page that names none is this app alone.
     #[test]
     fn openbot_hears_the_pages_app_and_then_this_one() {
         let rig = rig();
@@ -1081,7 +1081,7 @@ mod tests {
         assert_eq!(rig.openbot.seen_at("/api/v2/cookie").len(), 1);
     }
 
-    /// A chat answer arrives as it is written. OpenBot sends three events 400 ms apart; the page
+    /// A chat answer arrives as it is written. Mangaba Bot sends three events 400 ms apart; the page
     /// has the first well before the last is sent.
     #[test]
     fn a_stream_arrives_in_pieces_as_it_is_sent() {
@@ -1142,7 +1142,7 @@ mod tests {
                 let stream = tokio::net::TcpStream::connect(&window.host).await.unwrap();
                 tokio_tungstenite::client_async(request, stream).await
             };
-            // Without the window's cookie there is no socket, and OpenBot is not asked.
+            // Without the window's cookie there is no socket, and Mangaba Bot is not asked.
             let refused = connect(socket_request(&window, "/api/v2/socket")).await;
             assert!(refused.is_err());
             assert_eq!(rig.openbot.seen_at("/api/v2/socket").len(), 0);
@@ -1172,8 +1172,8 @@ mod tests {
         assert_eq!(upgrade.header("cookie"), None);
     }
 
-    /// The person's OpenBot sign-in goes to OpenBot's API and nowhere else. On a company's cluster
-    /// the same host name also serves things that are not OpenBot's, a socket at
+    /// The person's Mangaba Bot sign-in goes to Mangaba Bot's API and nowhere else. On a company's cluster
+    /// the same host name also serves things that are not Mangaba Bot's, a socket at
     /// `/client/websocket` among them, and the app's own pages and files need no sign-in at all.
     /// Those go through the relay like everything else, with no token and no organisation named.
     #[test]
@@ -1185,7 +1185,7 @@ mod tests {
         let access = rig.session.access().unwrap();
         let bearer = format!("Bearer {access}");
 
-        // OpenBot's API, and an upgrade under it: both carried.
+        // Mangaba Bot's API, and an upgrade under it: both carried.
         let sent = window.echo(window.get(ECHO));
         assert_eq!(sent["headers"]["authorization"], bearer);
         assert_eq!(
@@ -1266,21 +1266,21 @@ mod tests {
         assert!(rig.ended.lock().unwrap().is_empty());
     }
 
-    /// A path that is not OpenBot's API answers 401 for reasons of its own. That is not the
+    /// A path that is not Mangaba Bot's API answers 401 for reasons of its own. That is not the
     /// person's sign-in being refused: no refresh is made, and the answer goes back as it is.
     #[test]
     fn a_401_from_outside_openbots_api_uses_no_refresh() {
         let rig = rig();
         let window = rig.window();
         let before = rig.openbot.token_requests().len();
-        // The stand-in's OpenBot socket path, asked for under a prefix that is not the API's.
+        // The stand-in's Mangaba Bot socket path, asked for under a prefix that is not the API's.
         let answered = window.get("/client/needs-its-own-token").send().unwrap();
         assert_eq!(answered.status(), 401);
         assert_eq!(rig.openbot.token_requests().len(), before);
         assert_eq!(rig.openbot.seen_at("/client/needs-its-own-token").len(), 1);
     }
 
-    /// The access token ran out. OpenBot answers 401, the relay refreshes once, and the same
+    /// The access token ran out. Mangaba Bot answers 401, the relay refreshes once, and the same
     /// request is sent again with the new token: the page sees only the answer.
     #[test]
     fn a_401_after_expiry_leads_to_one_refresh_and_the_request_again() {
@@ -1348,7 +1348,7 @@ mod tests {
         assert_eq!(
             rig.openbot.seen().len(),
             seen,
-            "nothing more reached OpenBot"
+            "nothing more reached Mangaba Bot"
         );
         assert_eq!(
             *rig.ended.lock().unwrap(),
@@ -1359,7 +1359,7 @@ mod tests {
 
     /// A page in the person's own browser, or another program on this computer, can send a
     /// request to `127.0.0.1:<port>` with the right `Host`. It does not have the run's secret,
-    /// so it is refused and OpenBot never hears of it.
+    /// so it is refused and Mangaba Bot never hears of it.
     #[test]
     fn a_request_without_the_windows_cookie_is_refused_and_never_reaches_openbot() {
         let rig = rig();
@@ -1534,17 +1534,17 @@ mod tests {
         let _ = std::fs::remove_dir_all(config);
     }
 
-    /// One request through the relay, so it keeps a connection to OpenBot open, and a moment for
+    /// One request through the relay, so it keeps a connection to Mangaba Bot open, and a moment for
     /// that connection to go back to be used again.
     fn keep_a_connection_open(window: &Window) {
         window.echo(window.get(ECHO));
         std::thread::sleep(Duration::from_millis(150));
     }
 
-    /// A load balancer or an ingress in front of OpenBot closes a kept-open connection once it has
+    /// A load balancer or an ingress in front of Mangaba Bot closes a kept-open connection once it has
     /// been idle for a while, and the relay may send on it at that very moment: the request is
     /// written and the connection closes with no answer ("connection closed before message
-    /// completed"). Nothing was wrong with OpenBot, so the page must not see a failure: a request
+    /// completed"). Nothing was wrong with Mangaba Bot, so the page must not see a failure: a request
     /// that is safe to send twice goes once more, on a new connection.
     #[test]
     fn a_kept_open_connection_closed_as_it_is_used_is_not_a_failure_for_the_page() {
@@ -1572,18 +1572,18 @@ mod tests {
         assert_eq!(sent["body"], r#"{"name":"Ada"}"#);
         assert_eq!(sent["headers"]["idempotency-key"], "key-1");
 
-        // Each reached OpenBot once: the two that kept the connection open, and the two again.
+        // Each reached Mangaba Bot once: the two that kept the connection open, and the two again.
         assert_eq!(rig.echoes(), 4);
         std::thread::sleep(Duration::from_millis(200));
         assert!(
             rig.ended.lock().unwrap().is_empty(),
-            "the person was told OpenBot was unreachable"
+            "the person was told Mangaba Bot was unreachable"
         );
     }
 
     /// The same close, on a request that may not be sent twice: a write with no Idempotency-Key,
     /// a body that streams (so part of it may already be gone), or a socket. The page gets the
-    /// relay's answer as before, and OpenBot is not sent it again.
+    /// relay's answer as before, and Mangaba Bot is not sent it again.
     #[test]
     fn a_request_that_is_not_safe_to_send_twice_is_not_sent_again() {
         let rig = rig();
@@ -1606,7 +1606,7 @@ mod tests {
             keep_a_connection_open(&window);
             let answered = write.send().unwrap();
             assert_eq!(answered.status(), 502, "write {sent}");
-            assert_eq!(answered.text().unwrap(), "OpenBot could not be reached.");
+            assert_eq!(answered.text().unwrap(), "Mangaba Bot could not be reached.");
             assert_eq!(rig.openbot.closed_unanswered(), sent + 1, "sent once");
         }
         assert_eq!(
@@ -1637,7 +1637,7 @@ mod tests {
     navigation that began on the same site. A redirect is part of the navigation that led to it,
     so it keeps where that began; a page that sends the window on (a refresh) begins a new one, on
     its own site. That is what a real WKWebView did, driven from a page on a custom scheme as the
-    OpenBot window's setup page is: the cookie from the entry's redirect was stored, and not sent.
+    Mangaba Bot window's setup page is: the cookie from the entry's redirect was stored, and not sent.
     */
     struct WebKitWindow {
         jar: Vec<(String, String, bool)>,
@@ -1726,12 +1726,12 @@ mod tests {
         let rig = rig();
         let mut window = WebKitWindow::new();
         let arrived = window.navigate(SETUP_PAGE, &rig.relay.entry());
-        assert_eq!(arrived.body, "<!doctype html><title>OpenBot</title>");
+        assert_eq!(arrived.body, "<!doctype html><title>Mangaba Bot</title>");
         assert_eq!(arrived.status, 200);
         assert_eq!(arrived.url.as_str(), format!("{}/", rig.relay.origin()));
         let app = rig.openbot.seen_at("/");
         assert_eq!(app.len(), 1);
-        // OpenBot never sees the run's secret, by cookie or by referrer.
+        // Mangaba Bot never sees the run's secret, by cookie or by referrer.
         assert_eq!(app[0].header("cookie"), None);
         assert_eq!(app[0].header("referer"), None);
 
@@ -1755,7 +1755,7 @@ mod tests {
         for from in [SETUP_PAGE, rig.relay.origin().as_str()] {
             let refused = stranger.navigate(from, &format!("{}/", rig.relay.origin()));
             assert_eq!(refused.status, 403, "from {from}");
-            assert_eq!(refused.body, "This relay is for the OpenBot window.");
+            assert_eq!(refused.body, "This relay is for the Mangaba Bot window.");
         }
         assert_eq!(rig.openbot.seen_at("/").len(), 0);
 

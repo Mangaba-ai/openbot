@@ -14,7 +14,7 @@ export interface BotDelegationAgent {
   /** What it is good at. Empty for an agent private to somebody other than the caller. */
   description: string;
   kind: BotAgentKind;
-  /** What runs it, by the name a person reads. Absent when OpenBot doesn't know. */
+  /** What runs it, by the name a person reads. Absent when Mangaba Bot doesn't know. */
   framework?: string;
   /** Whether the Bot may still hand it work: false once the agent is deleted, or private to somebody other than the Bot's owner. */
   available: boolean;

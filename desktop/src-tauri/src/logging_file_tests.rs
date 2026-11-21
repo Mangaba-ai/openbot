@@ -144,7 +144,7 @@ mod logging_file {
         let _ = std::fs::remove_dir_all(folder);
     }
 
-    /// The tokens an OpenBot that runs elsewhere gives this app: an access token (`oba_`) and a
+    /// The tokens an Mangaba Bot that runs elsewhere gives this app: an access token (`oba_`) and a
     /// refresh token (`obr_`). Neither reaches the file, however the line carries it, and the line
     /// still says what happened.
     #[test]
@@ -160,7 +160,7 @@ mod logging_file {
         info(
             logger.as_ref(),
             "openbot_desktop_lib::connected::relay",
-            &format!("[relay] OpenBot refused {access} for GET /api/me"),
+            &format!("[relay] Mangaba Bot refused {access} for GET /api/me"),
         );
         info(
             logger.as_ref(),
@@ -182,7 +182,7 @@ mod logging_file {
         }
         assert!(!written.contains("oba_") && !written.contains("obr_"), "{written}");
         assert!(
-            written.contains("[relay] OpenBot refused [redacted] for GET /api/me"),
+            written.contains("[relay] Mangaba Bot refused [redacted] for GET /api/me"),
             "{written}"
         );
         assert!(

@@ -3,7 +3,7 @@
  */
 
 /**
- * How the app is reached: needing nothing, with a key an administrator gives for everybody, as each person through their own sign-in, or inside OpenBot itself.
+ * How the app is reached: needing nothing, with a key an administrator gives for everybody, as each person through their own sign-in, or inside Mangaba Bot itself.
  */
 export type CatalogueAppEntryAuth =
   (typeof CatalogueAppEntryAuth)[keyof typeof CatalogueAppEntryAuth];

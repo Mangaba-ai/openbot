@@ -4,7 +4,7 @@
 import type { PlaygroundDraftSource } from "./playgroundDraftSource";
 
 /**
- * A component's working copy. For one that comes with OpenBot only the description is drafted, and source is null.
+ * A component's working copy. For one that comes with Mangaba Bot only the description is drafted, and source is null.
  */
 export interface ComponentDraft {
   title: string;

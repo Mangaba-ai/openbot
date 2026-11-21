@@ -48,7 +48,7 @@ export type AppAccessState =
 
 /**
  * Why an app is switched off. `absent` — nobody switched it on here. `directory_unavailable` — an
- * app from the directory on an OpenBot whose directory isn't set up. The other three — a scheme the
+ * app from the directory on an Mangaba Bot whose directory isn't set up. The other three — a scheme the
  * server cannot read, an OAuth client nobody registered, a token nobody pasted — are a set-up left
  * unfinished.
  */
@@ -68,11 +68,11 @@ export type AppAccess = {
   /** The app's own name — "Gmail", never a humanised server id. */
   displayName: string;
   logo: string | null;
-  /** Where the app comes from: OpenBot's catalogue, a server added by its address, or the directory. */
+  /** Where the app comes from: Mangaba Bot's catalogue, a server added by its address, or the directory. */
   source: "catalogue" | "address" | "directory";
   /** Whose account calls land in: each person's own, one team account, or nobody's. */
   account: "personal" | "shared" | "deployment";
-  /** How the account is connected: OpenBot's own sign-in, the directory's sign-in, or a key form. */
+  /** How the account is connected: Mangaba Bot's own sign-in, the directory's sign-in, or a key form. */
   connect: "oauth" | "consent" | "key" | null;
   state: AppAccessState;
   /** Why the app is switched off, when state is "disabled"; null otherwise. */

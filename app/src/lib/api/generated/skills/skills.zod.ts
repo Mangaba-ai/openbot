@@ -172,7 +172,7 @@ export const GetSkillResponse = zod
   );
 
 /**
- * Write a skill under its slug, the command a person types after /, or rewrite it. A new slug makes a skill that is the caller's own, or the organization's when an admin sends forEveryone. Rewriting one keeps whose it is. Anybody signed in may write their own skill. Only an admin may write or change the organization's, or anybody else's. A skill adds no access: it can only ask a Bot to use apps the Bot can already use. tools names the actions it needs, each one OpenBot has seen. Recorded on the audit trail.
+ * Write a skill under its slug, the command a person types after /, or rewrite it. A new slug makes a skill that is the caller's own, or the organization's when an admin sends forEveryone. Rewriting one keeps whose it is. Anybody signed in may write their own skill. Only an admin may write or change the organization's, or anybody else's. A skill adds no access: it can only ask a Bot to use apps the Bot can already use. tools names the actions it needs, each one Mangaba Bot has seen. Recorded on the audit trail.
  * @summary Save a skill
  */
 
@@ -238,7 +238,7 @@ export const ReplaceSkillBody = zod.object({
   tools: zod
     .array(zod.string().min(1).regex(replaceSkillBodyToolsItemRegExp))
     .describe(
-      "Every action the skill needs, as appId/toolName, each one OpenBot has seen. Replaces what it named before; empty names none.",
+      "Every action the skill needs, as appId/toolName, each one Mangaba Bot has seen. Replaces what it named before; empty names none.",
     ),
   forEveryone: zod
     .boolean()

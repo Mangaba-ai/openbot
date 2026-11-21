@@ -11,7 +11,7 @@ import type { OrganizationSettingsContextScim } from "./organizationSettingsCont
  */
 export interface OrganizationSettingsContext {
   /**
-   * The model OpenBot's own Bots run on, when one is set.
+   * The model Mangaba Bot's own Bots run on, when one is set.
    * @nullable
    */
   readonly builtInModel: string | null;
@@ -25,6 +25,6 @@ export interface OrganizationSettingsContext {
   readonly otel: OrganizationSettingsContextOtel;
   /** How many days recorded computer actions are kept. */
   readonly actionRecordRetentionDays: number;
-  /** How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an OpenBot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it. */
+  /** How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an Mangaba Bot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it. */
   readonly computerMode?: OrganizationSettingsContextComputerMode;
 }

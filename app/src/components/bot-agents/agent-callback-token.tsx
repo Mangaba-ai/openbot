@@ -12,7 +12,7 @@ import { queryClient } from "@/query-client";
  * The key an agent at its own address presents when it calls a tool back, as the Bot's own key panel
  * offers it (components/agents/callback-token-panel.tsx).
  *
- * Shown once, and said plainly: OpenBot keeps only a hash, so nothing can show it again. A call made
+ * Shown once, and said plainly: Mangaba Bot keeps only a hash, so nothing can show it again. A call made
  * with it is allowed only for a run of a Bot that may use this agent, as the person that run is for.
  */
 export function AgentCallbackToken({ agent }: { agent: AgentRecord }) {

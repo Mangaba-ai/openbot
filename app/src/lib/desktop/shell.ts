@@ -5,7 +5,7 @@ export type ShellIpc = {
   invoke: (command: string, args?: Record<string, unknown>) => Promise<unknown>;
 };
 
-/** The OpenBot Desktop window this page is loaded in, or null in a plain browser. */
+/** The Mangaba Bot Desktop window this page is loaded in, or null in a plain browser. */
 export function desktopShell(): ShellIpc | null {
   if (typeof window === "undefined") return null;
   const internals = (window as { __TAURI_INTERNALS__?: Partial<ShellIpc> })

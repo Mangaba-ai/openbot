@@ -8,20 +8,20 @@ const FIRST_CHECK_MS = 5_000;
 const LONGEST_CHECK_MS = 60_000;
 
 /**
- * One line saying the OpenBot this window is connected to can't be reached, on every screen, until
+ * One line saying the Mangaba Bot this window is connected to can't be reached, on every screen, until
  * it answers again.
  *
- * Only inside OpenBot Desktop connected to an OpenBot that runs somewhere else. There the page talks
- * to the desktop app on this computer, which says when that OpenBot did not answer
+ * Only inside Mangaba Bot Desktop connected to an Mangaba Bot that runs somewhere else. There the page talks
+ * to the desktop app on this computer, which says when that Mangaba Bot did not answer
  * (`lib/desktop/reachability.ts`). This line names the cause once; the screens under it wait for
- * OpenBot and say nothing of their own failures (`lib/desktop/connection-lost.ts`). A browser has its
+ * Mangaba Bot and say nothing of their own failures (`lib/desktop/connection-lost.ts`). A browser has its
  * own cues for a site that is down, and a local Desktop has its own status, so neither draws it.
  *
  * It clears on the next request that gets an answer. While it shows the screens' reads wait, so it
- * asks OpenBot itself now and then, backing off, and clears when it answers; the screens fill in
+ * asks Mangaba Bot itself now and then, backing off, and clears when it answers; the screens fill in
  * then, by themselves.
  *
- * The same bar as the update banner, so it reads as OpenBot's own.
+ * The same bar as the update banner, so it reads as Mangaba Bot's own.
  */
 export function ConnectionBanner() {
   const { lost: showing, address } = useConnectionLost();
@@ -47,7 +47,7 @@ export function ConnectionBanner() {
   }, [showing]);
 
   if (!showing || address === null) return null;
-  const said = `Can't reach ${hostOf(address)}. OpenBot will reconnect when it answers.`;
+  const said = `Can't reach ${hostOf(address)}. Mangaba Bot will reconnect when it answers.`;
   return (
     <aside
       aria-label="Connection"

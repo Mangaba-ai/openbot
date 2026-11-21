@@ -6,7 +6,7 @@ import { desktopShell } from "@/lib/desktop/shell";
 import { appNameFromKey } from "@/lib/plugins/consent-handoff";
 
 /**
- * The link that brings OpenBot Desktop's window forward, on the page it is already showing.
+ * The link that brings Mangaba Bot Desktop's window forward, on the page it is already showing.
  *
  * `openbot://open` with no page named: the window was left where the sign-in started (a conversation,
  * an app's page), and that is where the person goes back to (`open_from_link` in desktop/src-tauri).
@@ -14,10 +14,10 @@ import { appNameFromKey } from "@/lib/plugins/consent-handoff";
 export const DESKTOP_LINK = "openbot://open";
 
 /**
- * Where an app's sign-in started in OpenBot Desktop comes back to, in the person's own browser
+ * Where an app's sign-in started in Mangaba Bot Desktop comes back to, in the person's own browser
  * (`/desktop-return`).
  *
- * The Desktop window opens every site outside OpenBot in the browser, so the vendor's redirect lands
+ * The Desktop window opens every site outside Mangaba Bot in the browser, so the vendor's redirect lands
  * there as well (`desktopReturnUrlFor` on the server). That browser is not the window, and the
  * personal edition only admits requests carrying its install's token, which only the window has. So
  * this page is not behind sign-in and asks the API nothing: it hands the person back to the window
@@ -72,12 +72,12 @@ export function DesktopReturn({
       ? `${name ?? "Your account"} is connected`
       : status === "failed"
         ? `Couldn't connect ${name ?? "your account"}`
-        : "Back to OpenBot";
+        : "Back to Mangaba Bot";
   const line =
     status === "success"
       ? `Bots that have ${name ?? "the app"} can use it now.`
       : status === "failed"
-        ? "Nothing was connected. You can try again in OpenBot."
+        ? "Nothing was connected. You can try again in Mangaba Bot."
         : null;
 
   return (
@@ -88,14 +88,14 @@ export function DesktopReturn({
         {handedBack ? (
           <>
             <p className="text-sm text-muted-foreground" role="status">
-              OpenBot opens on its own. You can close this tab.
+              Mangaba Bot opens on its own. You can close this tab.
             </p>
             {/* An anchor rather than Button: Base UI gives a rendered anchor role="button", and this is a link. */}
             <a
               className={buttonVariants({ variant: "outline" })}
               href={DESKTOP_LINK}
             >
-              Open OpenBot
+              Open Mangaba Bot
             </a>
           </>
         ) : (
@@ -105,7 +105,7 @@ export function DesktopReturn({
               className="font-medium text-sm tabular-nums"
               data-testid="return-countdown"
             >
-              Back to OpenBot in {Math.max(seconds, 0)}
+              Back to Mangaba Bot in {Math.max(seconds, 0)}
             </p>
             <a
               className={buttonVariants()}
@@ -115,7 +115,7 @@ export function DesktopReturn({
                 handBack();
               }}
             >
-              Back to OpenBot now
+              Back to Mangaba Bot now
             </a>
           </>
         )}

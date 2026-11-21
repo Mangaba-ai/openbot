@@ -9,7 +9,7 @@ import type { ConversationWork } from "./conversationWork";
 export interface ConversationSummary {
   /** The conversation's id. */
   id: string;
-  /** The name OpenBot gave it from its Bots. */
+  /** The name Mangaba Bot gave it from its Bots. */
   name: string;
   /** The Bots in the conversation. */
   botIds: string[];
@@ -23,7 +23,7 @@ export interface ConversationSummary {
    */
   lastMessageAt: string | null;
   /**
-   * What the conversation is called: the name its owner gave it, or the few words OpenBot wrote. Null until it has one.
+   * What the conversation is called: the name its owner gave it, or the few words Mangaba Bot wrote. Null until it has one.
    * @nullable
    */
   summary: string | null;

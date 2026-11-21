@@ -183,7 +183,7 @@ export function SharingSections({ agent }: { agent: AgentProfile }) {
             }
           >
             {agent.visibility === "public"
-              ? "It's public, so everyone on OpenBot can already use it."
+              ? "It's public, so everyone on Mangaba Bot can already use it."
               : agent.mine
                 ? "Only you can use it."
                 : null}

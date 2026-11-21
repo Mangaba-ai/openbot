@@ -55,7 +55,7 @@ import { ControlsSection } from "./controls-section";
 export function CapabilitiesSection() {
   const [overridesOpen, setOverridesOpen] = useState(false);
   /*
-   * Whether this OpenBot gives a Bot a computer of its own at all. Where it doesn't (one shared computer, or an
+   * Whether this Mangaba Bot gives a Bot a computer of its own at all. Where it doesn't (one shared computer, or an
    * operator who turned isolated Bots off for every organization), "Isolated Bots" can't do anything: the row says
    * why and its switch is off limits, so an admin isn't shown a setting that has no effect.
    */

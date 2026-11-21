@@ -126,7 +126,7 @@ type Startable = { apiUrl: string; gatewayWsUrl: string; notice?: string };
 type Props = {
   stack?: string | null;
   connected?: boolean;
-  /** Gives the go-ahead on arrival. Without it, Start OpenBot does. */
+  /** Gives the go-ahead on arrival. Without it, Start Mangaba Bot does. */
   auto?: boolean;
   /** Runs up to ready on arrival, without the go-ahead, under its status line. */
   prepare?: boolean;
@@ -212,10 +212,10 @@ function journeyOf(screen: ReturnType<typeof view>) {
   return screen.getByRole("region", { name: "How far along" });
 }
 
-const SETUP = "Setting up OpenBot";
-const CONNECT = "Connecting OpenBot";
-const WAIT = "Getting OpenBot ready";
-const START = "Opening OpenBot";
+const SETUP = "Setting up Mangaba Bot";
+const CONNECT = "Connecting Mangaba Bot";
+const WAIT = "Getting Mangaba Bot ready";
+const START = "Opening Mangaba Bot";
 
 test("the whole sequence runs by itself: set up, connect, wait for ready and valid, start", async () => {
   invokeHandler = answers({
@@ -265,7 +265,7 @@ test("the whole sequence runs by itself: set up, connect, wait for ready and val
 });
 
 /**
- * The Windows fresh-install probe: "Setting up OpenBot · In progress" said nothing while ~690 MB of
+ * The Windows fresh-install probe: "Setting up Mangaba Bot · In progress" said nothing while ~690 MB of
  * back-end images came down, and the person waited behind the AI screen with nothing either. A
  * first setup's download now shows on the screen in front of it while it runs there, with the bar
  * Install shows, and on Start as the journey's own step: one bar, which the download moves, and
@@ -291,14 +291,14 @@ test("a first setup shows its download on the journey and on the screen in front
     { timeout: 3_000 },
   );
   const journey = within(journeyOf(screen));
-  expect(journey.getByText("Downloading the rest of OpenBot")).toBeTruthy();
+  expect(journey.getByText("Downloading the rest of Mangaba Bot")).toBeTruthy();
   // One bar on Start: the journey's. The row says only which step it is.
   expect(within(row(screen, SETUP)).queryByRole("progressbar")).toBeNull();
   expect(row(screen, SETUP).textContent).not.toContain("MB");
   // The screen in front (Install, or Connect your AI) shows the same download while it runs.
-  const behind = within(screen.getByRole("list", { name: "OpenBot download" }));
+  const behind = within(screen.getByRole("list", { name: "Mangaba Bot download" }));
   expect(
-    behind.getByRole("listitem", { name: "Downloading the rest of OpenBot" })
+    behind.getByRole("listitem", { name: "Downloading the rest of Mangaba Bot" })
       .textContent,
   ).toContain("245.0 MB of 690.0 MB");
   expect(
@@ -326,7 +326,7 @@ test("a first setup shows its download on the journey and on the screen in front
   expect(
     screen.queryByRole("progressbar", { name: "Download progress" }),
   ).toBeNull();
-  expect(screen.queryByRole("list", { name: "OpenBot download" })).toBeNull();
+  expect(screen.queryByRole("list", { name: "Mangaba Bot download" })).toBeNull();
 });
 
 test("a recorded, connected stack skips straight to waiting", async () => {
@@ -351,7 +351,7 @@ function onRelease(installedRelease: string, updateTo: string | null) {
   return { ...base, stack: base.stack && { ...base.stack, installedRelease } };
 }
 
-test("a backend an older app installed is updated to this app's release before OpenBot starts on it", async () => {
+test("a backend an older app installed is updated to this app's release before Mangaba Bot starts on it", async () => {
   const updating = deferred<LocalReport>();
   let calls = 0;
   invokeHandler = async (command, args) => {
@@ -375,7 +375,7 @@ test("a backend an older app installed is updated to this app's release before O
   // One plain line while it runs, on the back end's own row.
   await waitFor(() =>
     expect(row(screen, WAIT).textContent).toContain(
-      "Updating OpenBot. Your Bots and data stay as they are.",
+      "Updating Mangaba Bot. Your Bots and data stay as they are.",
     ),
   );
   expect(started).toEqual([]);
@@ -392,7 +392,7 @@ test("a backend an older app installed is updated to this app's release before O
     )?.args,
   ).toMatchObject({ stack: "local-abc123" });
   expect(
-    screen.queryByRole("listitem", { name: "Updating OpenBot's services" }),
+    screen.queryByRole("listitem", { name: "Updating Mangaba Bot's services" }),
   ).toBeNull();
 });
 
@@ -454,7 +454,7 @@ test("a backend already on this app's release is not updated", async () => {
   expect(commands()).toEqual(["run_local_eval:status"]);
 });
 
-test("an update that fails says so and starts OpenBot on the release the backend still has", async () => {
+test("an update that fails says so and starts Mangaba Bot on the release the backend still has", async () => {
   for (const failed of [
     report({
       outcome: "failed",
@@ -491,8 +491,8 @@ test("an update that fails says so and starts OpenBot on the release the backend
       "run_local_eval:update",
       "run_local_eval:status",
     ]);
-    expect(row(screen, "Updating OpenBot's services").textContent).toContain(
-      "OpenBot's services couldn't update, so they run the version they had. Your data is kept, and OpenBot tries again the next time it starts.",
+    expect(row(screen, "Updating Mangaba Bot's services").textContent).toContain(
+      "Mangaba Bot's services couldn't update, so they run the version they had. Your data is kept, and Mangaba Bot tries again the next time it starts.",
     );
     expect(calls).toBe(2);
     cleanup();
@@ -503,9 +503,9 @@ test("an update that fails says so and starts OpenBot on the release the backend
 /**
  * Found on Windows K, updating Desktop over a local install: the CLI refused the services' update
  * (`release_unavailable`: it could not get the release this app installs) and a red "Updating
- * OpenBot · Failed" row came up while OpenBot's own update was still running at step 4. The services
- * kept the version they had and OpenBot started on it. The row names the part, and says it as a
- * note while the Start runs and after it: nothing failed that stops OpenBot.
+ * Mangaba Bot · Failed" row came up while Mangaba Bot's own update was still running at step 4. The services
+ * kept the version they had and Mangaba Bot started on it. The row names the part, and says it as a
+ * note while the Start runs and after it: nothing failed that stops Mangaba Bot.
  */
 test("a services update the CLI refuses is a note on their own row while the Start runs, never Failed", async () => {
   invokeHandler = async (command, args) => {
@@ -527,14 +527,14 @@ test("a services update the CLI refuses is a note on their own row while the Sta
     onStart: () => opening.promise,
   });
   const services = await screen.findByRole("listitem", {
-    name: "Updating OpenBot's services",
+    name: "Updating Mangaba Bot's services",
   });
-  // OpenBot's own start, its update included, is still running.
+  // Mangaba Bot's own start, its update included, is still running.
   expect(row(screen, START).querySelector(".step-spinner")).not.toBeNull();
   const said =
-    "OpenBot's services couldn't update, so they run the version they had. Your data is kept, and OpenBot tries again the next time it starts.";
+    "Mangaba Bot's services couldn't update, so they run the version they had. Your data is kept, and Mangaba Bot tries again the next time it starts.";
   const isNote = () => {
-    const now = row(screen, "Updating OpenBot's services");
+    const now = row(screen, "Updating Mangaba Bot's services");
     expect(now.querySelector(".step-status")?.textContent).toBe("Not updated");
     expect(now.querySelector(".mark.bad, .step-status.bad")).toBeNull();
     expect(now.querySelector(".detail")?.textContent).toBe(said);
@@ -542,10 +542,10 @@ test("a services update the CLI refuses is a note on their own row while the Sta
   isNote();
   expect(services.textContent).not.toContain("Failed");
   expect(
-    screen.queryByRole("listitem", { name: "Updating OpenBot" }),
+    screen.queryByRole("listitem", { name: "Updating Mangaba Bot" }),
   ).toBeNull();
   expect(screen.container.textContent).not.toContain("Failed");
-  // And once OpenBot has started on the version the services had.
+  // And once Mangaba Bot has started on the version the services had.
   opening.resolve("started");
   await waitFor(() =>
     expect(row(screen, START).textContent).toContain("Complete"),
@@ -555,7 +555,7 @@ test("a services update the CLI refuses is a note on their own row while the Sta
 });
 
 /**
- * Found on OpenBot Desktop, 0.16.0-rc.9 to rc.10: every Start after an interrupted update failed
+ * Found on Mangaba Bot Desktop, 0.16.0-rc.9 to rc.10: every Start after an interrupted update failed
  * with the same generic line, while the CLI had recorded exactly where it stopped. The row now
  * says where it stopped from the record, in plain words, and that the data is kept. The step's own
  * name is the log's.
@@ -594,8 +594,8 @@ test("an update that fails says the step it stopped at and that the data is kept
   };
   const screen = view({ stack: "local-abc123", connected: true });
   await waitFor(() =>
-    expect(row(screen, "Updating OpenBot's services").textContent).toContain(
-      "OpenBot's services couldn't finish updating. The update stopped while pausing OpenBot's services. Your data is kept. Retry to try the update again.",
+    expect(row(screen, "Updating Mangaba Bot's services").textContent).toContain(
+      "Mangaba Bot's services couldn't finish updating. The update stopped while pausing Mangaba Bot's services. Your data is kept. Retry to try the update again.",
     ),
   );
 });
@@ -660,7 +660,7 @@ async function servicesRowAfterFailedUpdate(after: LocalReport) {
     "run_local_eval:update",
     "run_local_eval:status",
   ]);
-  return row(screen, "Updating OpenBot's services");
+  return row(screen, "Updating Mangaba Bot's services");
 }
 
 /**
@@ -674,7 +674,7 @@ test("an update that stops after its data is updated says it didn't finish start
       afterFailedUpdate("migrated", failedStep),
     );
     expect(services.querySelector(".detail")?.textContent).toBe(
-      "The update of OpenBot's services didn't finish starting. Your data is kept, and OpenBot finishes the update the next time it starts.",
+      "The update of Mangaba Bot's services didn't finish starting. Your data is kept, and Mangaba Bot finishes the update the next time it starts.",
     );
     expect(services.querySelector(".step-status")?.textContent).toBe(
       "Not finished",
@@ -692,7 +692,7 @@ test("an update that stops while updating the data says it stopped part-way, not
     afterFailedUpdate("migrating"),
   );
   expect(services.querySelector(".detail")?.textContent).toBe(
-    "The update of OpenBot's services stopped while updating your data. Your data is kept, and OpenBot picks up the update the next time it starts.",
+    "The update of Mangaba Bot's services stopped while updating your data. Your data is kept, and Mangaba Bot picks up the update the next time it starts.",
   );
   expect(services.querySelector(".step-status")?.textContent).toBe(
     "Not finished",
@@ -709,18 +709,18 @@ test("an update that fails before updating the data still says the services run 
     "Not updated",
   );
   expect(services.querySelector(".detail")?.textContent).toBe(
-    "OpenBot's services couldn't finish updating, so they run the version they had. The update stopped while preparing the update. Your data is kept, and OpenBot tries again the next time it starts.",
+    "Mangaba Bot's services couldn't finish updating, so they run the version they had. The update stopped while preparing the update. Your data is kept, and Mangaba Bot tries again the next time it starts.",
   );
 });
 
 /**
- * Found on OpenBot Desktop: an update sat on "Updating the back end" for minutes with nothing
+ * Found on Mangaba Bot Desktop: an update sat on "Updating the back end" for minutes with nothing
  * else on the row, while the CLI waited on its databases and Jobs (up to ten minutes each) and
  * logged nothing until each ended. The journey now says which step it is in, from the steps the
  * CLI has finished, and how long is left; the row keeps what this part is, and a part that failed
  * is said on it at once, not ten minutes later.
  */
-const UPDATING_SAID = "Updating OpenBot. Your Bots and data stay as they are.";
+const UPDATING_SAID = "Updating Mangaba Bot. Your Bots and data stay as they are.";
 
 test("a running update says what it is doing on the journey, and a failed part at once on its row", async () => {
   const updating = deferred<LocalReport>();
@@ -767,13 +767,13 @@ test("a running update says what it is doing on the journey, and a failed part a
   await waitFor(
     () =>
       expect(journeyOf(screen).textContent).toContain(
-        "Updating where OpenBot keeps your data",
+        "Updating where Mangaba Bot keeps your data",
       ),
     { timeout: 3_000 },
   );
   // Said once: the row does not repeat the step or its time.
   expect(row(screen, WAIT).textContent).not.toContain("so far");
-  expect(row(screen, WAIT).textContent).not.toContain("where OpenBot keeps");
+  expect(row(screen, WAIT).textContent).not.toContain("where Mangaba Bot keeps");
   // In the chart's Jobs: a failed one at once, not ten minutes later. Its name is the log's.
   updateStep = {
     step: "jobs",
@@ -784,7 +784,7 @@ test("a running update says what it is doing on the journey, and a failed part a
   await waitFor(
     () =>
       expect(row(screen, WAIT).textContent).toContain(
-        `${UPDATING_SAID} Part of the update didn't work, so it will stop. OpenBot waits up to 10 minutes for it first. Your data is kept.`,
+        `${UPDATING_SAID} Part of the update didn't work, so it will stop. Mangaba Bot waits up to 10 minutes for it first. Your data is kept.`,
       ),
     { timeout: 3_000 },
   );
@@ -848,7 +848,7 @@ test("after Quit, the unfinished update starts the stack, and the release it had
         apiUrl: "http://localhost:18082",
         gatewayWsUrl: "ws://localhost:14401",
         notice:
-          "The OpenBot update didn't finish downloading, so OpenBot is running the version it had. It tries again the next time it starts.",
+          "The Mangaba Bot update didn't finish downloading, so Mangaba Bot is running the version it had. It tries again the next time it starts.",
       },
     ]),
   );
@@ -935,7 +935,7 @@ test("a backend an update left not working runs the update again, and opens once
     "run_local_eval:status",
   ]);
   expect(
-    screen.queryByRole("listitem", { name: "Updating OpenBot's services" }),
+    screen.queryByRole("listitem", { name: "Updating Mangaba Bot's services" }),
   ).toBeNull();
 });
 
@@ -966,14 +966,14 @@ test("an update that stops again is tried once per Start, and Retry tries it onc
   });
   const retry = await screen.findByRole("button", { name: "Retry" });
   // The failed update's row, and the wait stopped at once: no second update, no start.
-  expect(row(screen, "Updating OpenBot's services").textContent).toContain(
-    "OpenBot's services couldn't finish updating. The update stopped while updating where OpenBot keeps your data. Your data is kept. Retry to try the update again.",
+  expect(row(screen, "Updating Mangaba Bot's services").textContent).toContain(
+    "Mangaba Bot's services couldn't finish updating. The update stopped while updating where Mangaba Bot keeps your data. Your data is kept. Retry to try the update again.",
   );
-  expect(row(screen, "Updating OpenBot's services").textContent).not.toContain(
+  expect(row(screen, "Updating Mangaba Bot's services").textContent).not.toContain(
     "runs the version it had",
   );
   expect(row(screen, WAIT).textContent).toContain(
-    "OpenBot is running but not working properly. Retry to start it again.",
+    "Mangaba Bot is running but not working properly. Retry to start it again.",
   );
   expect(commands()).toEqual([
     "run_local_eval:status",
@@ -1039,14 +1039,14 @@ test("an update that fails again says Retry once the back end settles not workin
     "run_local_eval:status",
     "run_local_eval:status",
   ]);
-  expect(row(screen, "Updating OpenBot's services").textContent).toContain(
-    "OpenBot's services couldn't finish updating. Your data is kept. Retry to try the update again.",
+  expect(row(screen, "Updating Mangaba Bot's services").textContent).toContain(
+    "Mangaba Bot's services couldn't finish updating. Your data is kept. Retry to try the update again.",
   );
-  expect(row(screen, "Updating OpenBot's services").textContent).not.toContain(
+  expect(row(screen, "Updating Mangaba Bot's services").textContent).not.toContain(
     "runs the version it had",
   );
   expect(row(screen, WAIT).textContent).toContain(
-    "OpenBot is running but not working properly.",
+    "Mangaba Bot is running but not working properly.",
   );
 });
 
@@ -1070,13 +1070,13 @@ test("a back end that starts and then is not working, with no update on record, 
     "run_local_eval:status",
   ]);
   expect(
-    screen.queryByRole("listitem", { name: "Updating OpenBot's services" }),
+    screen.queryByRole("listitem", { name: "Updating Mangaba Bot's services" }),
   ).toBeNull();
   expect(screen.queryByText(/couldn't finish updating/)).toBeNull();
 });
 
 /**
- * The same stack with a disk OpenBot found short: the update downloads the new release's images
+ * The same stack with a disk Mangaba Bot found short: the update downloads the new release's images
  * and would fail there again, after up to ten minutes. The row says to free space, and nothing is
  * updated until a Retry finds the disk no longer short.
  */
@@ -1132,7 +1132,7 @@ test("a backend an update left not working on a full disk says so, and updates o
 
 /**
  * The next Start's retry of an update that did not finish: its download shows on the journey while
- * it runs, and when it stalls OpenBot opens on the release the back end has, with the
+ * it runs, and when it stalls Mangaba Bot opens on the release the back end has, with the
  * running screen's "did not finish" line.
  */
 test("a retried update shows its download, and a stall keeps the line that it did not finish", async () => {
@@ -1168,7 +1168,7 @@ test("a retried update shows its download, and a stall keeps the line that it di
         apiUrl: "http://localhost:18082",
         gatewayWsUrl: "ws://localhost:14401",
         notice:
-          "The OpenBot update didn't finish downloading, so OpenBot is running the version it had. It tries again the next time it starts.",
+          "The Mangaba Bot update didn't finish downloading, so Mangaba Bot is running the version it had. It tries again the next time it starts.",
       },
     ]),
   );
@@ -1204,7 +1204,7 @@ test("an update says how much of its download has arrived, so a slow line reads 
   });
   await waitFor(() =>
     expect(row(screen, WAIT).textContent).toContain(
-      "Updating OpenBot. Your Bots and data stay as they are.",
+      "Updating Mangaba Bot. Your Bots and data stay as they are.",
     ),
   );
   arrived = { done: 48_200_000, total: 147_000_000 };
@@ -1222,7 +1222,7 @@ test("an update says how much of its download has arrived, so a slow line reads 
   ]);
   const waiting = within(row(screen, WAIT));
   expect(row(screen, WAIT).textContent).toContain(
-    "Updating OpenBot. Your Bots and data stay as they are.",
+    "Updating Mangaba Bot. Your Bots and data stay as they are.",
   );
   expect(row(screen, WAIT).textContent).not.toContain("MB");
   // Downloaded: the CLI's update runs, the measure goes, and the row says the same.
@@ -1232,7 +1232,7 @@ test("an update says how much of its download has arrived, so a slow line reads 
     { timeout: 3_000 },
   );
   expect(row(screen, WAIT).textContent).toContain(
-    "Updating OpenBot. Your Bots and data stay as they are.",
+    "Updating Mangaba Bot. Your Bots and data stay as they are.",
   );
   expect(waiting.queryByRole("progressbar")).toBeNull();
   updating.resolve(onRelease("0.16.0-rc.9", null));
@@ -1269,8 +1269,8 @@ test("an update whose download stopped says so, and that the next start continue
     },
   });
   await waitFor(() => expect(started).toEqual([startableUrls]));
-  expect(row(screen, "Updating OpenBot's services").textContent).toContain(
-    "The update of OpenBot's services stopped downloading, so they run the version they had. OpenBot picks up the download the next time it starts.",
+  expect(row(screen, "Updating Mangaba Bot's services").textContent).toContain(
+    "The update of Mangaba Bot's services stopped downloading, so they run the version they had. Mangaba Bot picks up the download the next time it starts.",
   );
   expect(calls).toBe(2);
 });
@@ -1296,7 +1296,7 @@ test("a setup whose download stopped offers Retry, which continues where it left
     },
   });
   await waitFor(() =>
-    expect(row(screen, "Setting up OpenBot").textContent).toContain(
+    expect(row(screen, "Setting up Mangaba Bot").textContent).toContain(
       "The download stopped. Retry continues where it left off.",
     ),
   );
@@ -1306,14 +1306,14 @@ test("a setup whose download stopped offers Retry, which continues where it left
 });
 
 /**
- * Box I: OpenBot's machine was made again, and the backend went with the old one. Every status
+ * Box I: Mangaba Bot's machine was made again, and the backend went with the old one. Every status
  * failed, the card said "Setup stopped partway through with an error. Retry.", and Retry did the
  * same. The native side now says the backend is lost (`stack-lost`, from the CLI's
  * "local-command-failed, no stack" with the backend's cluster gone). The card says so in plain
- * words, offers Start fresh in place of Retry, and Start fresh sets OpenBot up again, connects it,
+ * words, offers Start fresh in place of Retry, and Start fresh sets Mangaba Bot up again, connects it,
  * waits for it and opens it.
  */
-test("a lost backend offers Start fresh, which sets OpenBot up again and opens it", async () => {
+test("a lost backend offers Start fresh, which sets Mangaba Bot up again and opens it", async () => {
   const lost = report({ outcome: "failed", stack: null, reason: "stack-lost" });
   invokeHandler = answers({
     run_local_eval: [lost, ready],
@@ -1334,7 +1334,7 @@ test("a lost backend offers Start fresh, which sets OpenBot up again and opens i
     },
   });
   await screen.findByText(
-    "OpenBot's saved data on this computer is gone, with your Bots and conversations. Start fresh to set OpenBot up again. Your sign-in and AI connection stay.",
+    "Mangaba Bot's saved data on this computer is gone, with your Bots and conversations. Start fresh to set Mangaba Bot up again. Your sign-in and AI connection stay.",
   );
   // Retry would only ask again about what is gone.
   expect(screen.queryByRole("button", { name: "Retry" })).toBeNull();
@@ -1355,10 +1355,10 @@ test("a lost backend offers Start fresh, which sets OpenBot up again and opens i
  * A Mac on Docker Desktop, Desktop 1.1.2: `docker container prune` removed the backend's stopped
  * node, every status failed "local-command-failed, no stack", and Retry failed the same way five
  * times. The native side now says only the backend is gone (`backend-gone`: its cluster is gone,
- * OpenBot's own database is not). The card says what went and what stays, offers Set up again in
- * place of Retry, and Set up again sets the backend up, connects it, waits for it and opens OpenBot.
+ * Mangaba Bot's own database is not). The card says what went and what stays, offers Set up again in
+ * place of Retry, and Set up again sets the backend up, connects it, waits for it and opens Mangaba Bot.
  */
-test("a backend whose node was removed offers Set up again, which sets it up and opens OpenBot", async () => {
+test("a backend whose node was removed offers Set up again, which sets it up and opens Mangaba Bot", async () => {
   const gone = report({
     outcome: "failed",
     stack: null,
@@ -1391,7 +1391,7 @@ test("a backend whose node was removed offers Set up again, which sets it up and
 
   await userEvent.click(screen.getByRole("button", { name: "Set up again" }));
   await waitFor(() => expect(started).toEqual([startableUrls]));
-  // OpenBot's own installation is left as it is: Start, not a first install, moves it forward.
+  // Mangaba Bot's own installation is left as it is: Start, not a first install, moves it forward.
   // A folder still on 1.0.3 under Desktop 1.1.2 failed that first install every time.
   expect(installs).toBe(0);
   expect(commands()).toEqual([
@@ -1417,7 +1417,7 @@ test("a lost backend is said on the status card too, with Start fresh", async ()
   const card = await screen.findByRole("alert", { name: "Setup" });
   await waitFor(() =>
     expect(card.textContent).toContain(
-      "OpenBot's saved data on this computer is gone, with your Bots and conversations.",
+      "Mangaba Bot's saved data on this computer is gone, with your Bots and conversations.",
     ),
   );
   expect(within(card).getByRole("heading").textContent).toBe("Setup needs you");
@@ -1428,7 +1428,7 @@ test("a lost backend is said on the status card too, with Start fresh", async ()
 });
 
 /**
- * A first install on a Mac: on Finishing setup, "Connecting OpenBot" stopped with "Setup stopped
+ * A first install on a Mac: on Finishing setup, "Connecting Mangaba Bot" stopped with "Setup stopped
  * partway through with an error. Retry. If it stops again, copy the logs below.", and nothing was
  * below it but Retry. The card now offers the logs it names, with what failed in them.
  */
@@ -1485,7 +1485,7 @@ test("setup that needs a sign-in offers it in the window, then carries on by its
   });
   const screen = view();
   await userEvent.click(
-    await screen.findByRole("button", { name: "Sign in to OpenBot" }),
+    await screen.findByRole("button", { name: "Sign in to Mangaba Bot" }),
   );
   await waitFor(() =>
     expect(row(screen, START).textContent).toContain("Complete"),
@@ -1529,15 +1529,15 @@ test("a setup refused for a full Docker disk says so, with Retry", async () => {
   await screen.findByRole("button", { name: "Retry" });
   const setup = row(screen, SETUP).textContent;
   expect(setup).toContain(
-    "Docker Desktop has 0 GB of free disk space. OpenBot needs 40 GB. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
+    "Docker Desktop has 0 GB of free disk space. Mangaba Bot needs 40 GB. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
   );
   expect(setup).not.toContain("partway through");
 });
 
 /**
  * A person's own Podman machine with fewer CPUs than the CLI's 4 used to stop at one sentence with
- * a command crammed into it: "OpenBot has 2 CPUs. It needs 4. Stop your Podman machine, run podman
- * machine set --cpus 6, start it again, then Retry." The row now says what happened, and OpenBot
+ * a command crammed into it: "Mangaba Bot has 2 CPUs. It needs 4. Stop your Podman machine, run podman
+ * machine set --cpus 6, start it again, then Retry." The row now says what happened, and Mangaba Bot
  * offers to make the machine bigger and sets up again after.
  */
 const cpuShortOnPodman = report({
@@ -1584,10 +1584,10 @@ test("a 2-CPU Podman machine says so, and Resize makes it bigger and sets up aga
     },
   });
   const offer = await screen.findByRole("region", {
-    name: "OpenBot can fix this for you",
+    name: "Mangaba Bot can fix this for you",
   });
   expect(row(screen, SETUP).textContent).toContain(
-    "Your Podman machine has 2 CPUs. OpenBot needs 4.",
+    "Your Podman machine has 2 CPUs. Mangaba Bot needs 4.",
   );
   // The command is not crammed into the sentence any more.
   expect(row(screen, SETUP).textContent).not.toContain("podman machine set");
@@ -1617,7 +1617,7 @@ test("a 2-CPU Podman machine says so, and Resize makes it bigger and sets up aga
   ]);
 });
 
-test("when OpenBot can't resize the Podman machine, the fix is numbered steps, each command in its own block with Copy", async () => {
+test("when Mangaba Bot can't resize the Podman machine, the fix is numbered steps, each command in its own block with Copy", async () => {
   const withDisk = report({
     ...cpuShortOnPodman,
     shortfall: {
@@ -1637,7 +1637,7 @@ test("when OpenBot can't resize the Podman machine, the fix is numbered steps, e
     name: "Make your Podman machine bigger",
   });
   expect(row(screen, SETUP).textContent).toContain(
-    "Your Podman machine doesn't have enough CPUs and free disk space for OpenBot.",
+    "Your Podman machine doesn't have enough CPUs and free disk space for Mangaba Bot.",
   );
   const items = within(steps).getAllByRole("listitem");
   expect(items.map((item) => item.querySelector("code")?.textContent)).toEqual([
@@ -1663,7 +1663,7 @@ test("a resize Podman refused says so and gives the steps instead", async () => 
     podman_machine_plan: [resizeToSix],
     resize_podman_machine: [
       {
-        said: "OpenBot couldn't resize your Podman machine. Use the steps below instead.",
+        said: "Mangaba Bot couldn't resize your Podman machine. Use the steps below instead.",
         resized: false,
       },
     ],
@@ -1679,7 +1679,7 @@ test("a resize Podman refused says so and gives the steps instead", async () => 
   };
   const screen = view();
   const offer = await screen.findByRole("region", {
-    name: "OpenBot can fix this for you",
+    name: "Mangaba Bot can fix this for you",
   });
   await userEvent.click(
     within(offer).getByRole("button", { name: "Resize my Podman" }),
@@ -1688,7 +1688,7 @@ test("a resize Podman refused says so and gives the steps instead", async () => 
     name: "Make your Podman machine bigger",
   });
   expect(steps.textContent).toContain(
-    "OpenBot couldn't resize your Podman machine. Use the steps below instead.",
+    "Mangaba Bot couldn't resize your Podman machine. Use the steps below instead.",
   );
   expect(steps.textContent).toContain(
     "podman machine set --cpus 6 podman-machine-default",
@@ -1725,7 +1725,7 @@ test("a machine resized but not ready to download in time says so, with Retry al
     },
   });
   const offer = await screen.findByRole("region", {
-    name: "OpenBot can fix this for you",
+    name: "Mangaba Bot can fix this for you",
   });
   await userEvent.click(
     within(offer).getByRole("button", { name: "Resize my Podman" }),
@@ -1762,7 +1762,7 @@ const notStartedOnC = report({
 });
 const shortOnC = notStartedOnC.shortfall;
 const ACCOUNT_STEP_SAYS =
-  "This computer has 13.9 GB of free space on drive C:, and OpenBot needs 40 GB. Free up some space, then Try again.";
+  "This computer has 13.9 GB of free space on drive C:, and Mangaba Bot needs 40 GB. Free up some space, then Try again.";
 
 /**
  * On Windows G that setup was a red "Setup stopped" card with Retry and the troubleshooting logs,
@@ -1842,11 +1842,11 @@ test("a sign-in that does not finish says so and can be tried again", async () =
   });
   const screen = view();
   await userEvent.click(
-    await screen.findByRole("button", { name: "Sign in to OpenBot" }),
+    await screen.findByRole("button", { name: "Sign in to Mangaba Bot" }),
   );
   await screen.findByText("Sign-in did not finish. Try again.");
   expect(
-    screen.getByRole("button", { name: "Sign in to OpenBot" }),
+    screen.getByRole("button", { name: "Sign in to Mangaba Bot" }),
   ).toBeTruthy();
   expect(commands().filter((c) => c === "set_up_local_eval")).toHaveLength(1);
 });
@@ -1865,11 +1865,11 @@ test("a sign-in waiting on the browser shows its code and page, and Cancel stops
   });
   const screen = view();
   await userEvent.click(
-    await screen.findByRole("button", { name: "Sign in to OpenBot" }),
+    await screen.findByRole("button", { name: "Sign in to Mangaba Bot" }),
   );
   await screen.findByText("WXYZ-2345");
   expect(
-    screen.getByText("Finish signing in to OpenBot in your browser…"),
+    screen.getByText("Finish signing in to Mangaba Bot in your browser…"),
   ).toBeTruthy();
   expect(
     screen
@@ -1889,16 +1889,16 @@ test("a sign-in waiting on the browser shows its code and page, and Cancel stops
     },
   });
   expect(
-    await screen.findByRole("button", { name: "Sign in to OpenBot" }),
+    await screen.findByRole("button", { name: "Sign in to Mangaba Bot" }),
   ).toBeTruthy();
   expect(screen.queryByText("WXYZ-2345")).toBeNull();
 });
 
 /*
- * The sign-in setup stops for leads with OpenBot by CopilotKit, before and while it waits on the
+ * The sign-in setup stops for leads with Mangaba Bot by CopilotKit, before and while it waits on the
  * browser, as the Account step does. It showed none, then CopilotKit's logotype alone.
  */
-test("a sign-in setup stops for leads with OpenBot by CopilotKit, before and while it waits", async () => {
+test("a sign-in setup stops for leads with Mangaba Bot by CopilotKit, before and while it waits", async () => {
   invokeHandler = answers({
     set_up_local_eval: [blockedOnSignIn],
     sign_in_to_copilotkit: [new Promise(() => {})],
@@ -1912,20 +1912,20 @@ test("a sign-in setup stops for leads with OpenBot by CopilotKit, before and whi
   });
   const screen = view();
   const leads = () => {
-    const card = screen.getByText("Sign in to finish setting up OpenBot.")
+    const card = screen.getByText("Sign in to finish setting up Mangaba Bot.")
       .parentElement as HTMLElement;
     expect(card.querySelector(".lockup")?.textContent).toBe(
-      "OpenBot™by CopilotKit",
+      "Mangaba Bot™by CopilotKit",
     );
     expect(screen.queryByRole("img", { name: "CopilotKit" })).toBeNull();
   };
   await userEvent.click(
-    await screen.findByRole("button", { name: "Sign in to OpenBot" }),
+    await screen.findByRole("button", { name: "Sign in to Mangaba Bot" }),
   );
   await screen.findByText("WXYZ-2345");
   leads();
   await userEvent.click(screen.getByRole("button", { name: "Cancel" }));
-  await screen.findByRole("button", { name: "Sign in to OpenBot" });
+  await screen.findByRole("button", { name: "Sign in to Mangaba Bot" });
   leads();
 });
 
@@ -1939,7 +1939,7 @@ test("setup that needs the agreement shows it, and only Accept sets up again wit
   });
   const screen = view();
   await screen.findByText(
-    "To run OpenBot on this computer, accept the OpenBot by CopilotKit license agreement.",
+    "To run Mangaba Bot on this computer, accept the Mangaba Bot by CopilotKit license agreement.",
   );
   expect(
     screen.getByRole("link", { name: "Read the license agreement" }),
@@ -1998,7 +1998,7 @@ test("no build sends the person to a terminal", async () => {
     });
     const screen = view();
     await screen.findByRole("button", {
-      name: blocked === blockedOnTerms ? "Accept" : "Sign in to OpenBot",
+      name: blocked === blockedOnTerms ? "Accept" : "Sign in to Mangaba Bot",
     });
     expect(screen.queryByText(/copilotkit |Terminal/)).toBeNull();
     cleanup();
@@ -2010,11 +2010,11 @@ test("a blocked or conflicted connection stops at its row, and Retry resumes at 
   for (const [answer, said] of [
     [
       connection({ outcome: "blocked", reason: "confirmation-required" }),
-      "Setup stopped to ask something OpenBot can't answer. Copy the logs below and ask for help.",
+      "Setup stopped to ask something Mangaba Bot can't answer. Copy the logs below and ask for help.",
     ],
     [
       connection({ outcome: "blocked", conflicted: true }),
-      "Settings OpenBot saved were changed since, so it didn't connect. Retry, or repair the installation.",
+      "Settings Mangaba Bot saved were changed since, so it didn't connect. Retry, or repair the installation.",
     ],
   ] as const) {
     invokeHandler = answers({
@@ -2046,14 +2046,14 @@ test("a blocked or conflicted connection stops at its row, and Retry resumes at 
 
 test("readiness or a licence that is not exactly ready and valid never starts", async () => {
   for (const [answer, said] of [
-    [report(), "OpenBot started, and hasn't said yet whether it's ready."],
+    [report(), "Mangaba Bot started, and hasn't said yet whether it's ready."],
     [
       report({ readiness: "ready", licence: "expired" }),
       "The evaluation licence has expired.",
     ],
     [
       report({ readiness: "degraded", licence: "valid" }),
-      "OpenBot is running but not working properly. Retry to start it again.",
+      "Mangaba Bot is running but not working properly. Retry to start it again.",
     ],
   ] as const) {
     invokeHandler = answers({ run_local_eval: [answer] });
@@ -2091,7 +2091,7 @@ test("polling is bounded, and says so when Intelligence never became ready", asy
     pollDelays: [0, 0],
   });
   await screen.findByText(
-    "OpenBot didn't get ready in time. Retry to check again.",
+    "Mangaba Bot didn't get ready in time. Retry to check again.",
   );
   expect(statusCalls()).toHaveLength(3);
   expect(screen.getByRole("button", { name: "Retry" })).toBeTruthy();
@@ -2102,7 +2102,7 @@ test("polling is bounded, and says so when Intelligence never became ready", asy
   ).toEqual([
     {
       command: "back_end_wait_ended",
-      args: { why: "OpenBot didn't get ready in time. Retry to check again." },
+      args: { why: "Mangaba Bot didn't get ready in time. Retry to check again." },
     },
   ]);
 });
@@ -2110,11 +2110,11 @@ test("polling is bounded, and says so when Intelligence never became ready", asy
 /**
  * Found in a dogfooding report on a Mac (Desktop 1.1.2): the container engine stalled for a few
  * minutes, the CLI took 115 seconds to list the backend's services, and the one status call ran out
- * at its 120-second limit. The window stopped at that first check and said "OpenBot took too long
+ * at its 120-second limit. The window stopped at that first check and said "Mangaba Bot took too long
  * to set up", the sentence for a setup that ran 30 minutes. Retry, once the engine was back,
  * answered at once. A status call that runs out of time is asked again on the wait's schedule.
  */
-test("a status call that runs out of time is asked again, and the backend that answers next starts OpenBot", async () => {
+test("a status call that runs out of time is asked again, and the backend that answers next starts Mangaba Bot", async () => {
   const answers = ["timeout", "timeout", ready];
   invokeHandler = async (command) => {
     if (command !== "run_local_eval") throw new Error(`unexpected ${command}`);
@@ -2135,17 +2135,17 @@ test("a status call that runs out of time is asked again, and the backend that a
   await waitFor(() => expect(started).toEqual([startableUrls]));
   expect(statusCalls()).toHaveLength(3);
   expect(document.body.textContent).not.toContain(
-    "OpenBot took too long to set up",
+    "Mangaba Bot took too long to set up",
   );
 });
 
 /**
  * Found on the Windows pass of the fix above: after the backend's CPU was held back for four and a
  * half minutes, its first answer once it caught up was degraded, its checks still failing, and the
- * wait ended at once with "OpenBot is running but not working properly". Coming back from a slow
+ * wait ended at once with "Mangaba Bot is running but not working properly". Coming back from a slow
  * spell, degraded is waited on like a backend still starting.
  */
-test("a degraded answer after a status call ran out of time is waited on, and the ready one after it starts OpenBot", async () => {
+test("a degraded answer after a status call ran out of time is waited on, and the ready one after it starts Mangaba Bot", async () => {
   const answers: unknown[] = [
     "timeout",
     report({ readiness: "degraded", licence: "valid", checksPassed: false }),
@@ -2170,7 +2170,7 @@ test("a degraded answer after a status call ran out of time is waited on, and th
   await waitFor(() => expect(started).toEqual([startableUrls]));
   expect(statusCalls()).toHaveLength(3);
   expect(document.body.textContent).not.toContain(
-    "OpenBot is running but not working properly",
+    "Mangaba Bot is running but not working properly",
   );
 });
 
@@ -2186,11 +2186,11 @@ test("a backend that never answers a status call says so, and Retry checks again
     pollDelays: [0, 0],
   });
   await screen.findByText(
-    "OpenBot's services didn't answer in time. Retry to check again.",
+    "Mangaba Bot's services didn't answer in time. Retry to check again.",
   );
   expect(statusCalls()).toHaveLength(3);
   expect(document.body.textContent).not.toContain(
-    "OpenBot took too long to set up",
+    "Mangaba Bot took too long to set up",
   );
   expect(screen.getByRole("button", { name: "Retry" })).toBeTruthy();
 });
@@ -2202,7 +2202,7 @@ test("a backend that never answers a status call says so, and Retry checks again
  * answer ("after 0.0s and 1 checks"), though the services were on their way up.
  */
 const NOT_WORKING =
-  "OpenBot is running but not working properly. Retry to start it again.";
+  "Mangaba Bot is running but not working properly. Retry to start it again.";
 function servicesComingUp(): LocalReport {
   const base = report({
     readiness: "degraded",
@@ -2230,7 +2230,7 @@ function servicesComingUp(): LocalReport {
   };
 }
 
-test("Retry waits for a back end whose services are still coming up, and opens OpenBot once it is ready", async () => {
+test("Retry waits for a back end whose services are still coming up, and opens Mangaba Bot once it is ready", async () => {
   invokeHandler = answers({
     run_local_eval: [servicesComingUp(), servicesComingUp(), ready],
   });
@@ -2297,7 +2297,7 @@ test("services coming up behind a short disk or an update on record still stop a
   for (const [answer, said] of [
     [
       shortDisk,
-      "OpenBot is recovering from low disk space. Wait a few minutes, then Retry.",
+      "Mangaba Bot is recovering from low disk space. Wait a few minutes, then Retry.",
     ],
     [onRecord, NOT_WORKING],
   ] as const) {
@@ -2450,7 +2450,7 @@ test("a relaunch whose start fails on a nearly full disk names the disk on its r
   await screen.findByRole("button", { name: "Retry" });
   const waiting = row(screen, WAIT).textContent;
   expect(waiting).toContain(
-    "OpenBot is nearly out of disk space. It has 30.5 GB free of 1006.8 GB. It needs 40 GB. Free up space on drive C:, then Retry.",
+    "Mangaba Bot is nearly out of disk space. It has 30.5 GB free of 1006.8 GB. It needs 40 GB. Free up space on drive C:, then Retry.",
   );
   expect(waiting).not.toContain("partway through");
   expect(commands()).toEqual(["run_local_eval:status", "run_local_eval:start"]);
@@ -2458,7 +2458,7 @@ test("a relaunch whose start fails on a nearly full disk names the disk on its r
 
 /**
  * Windows, after space was freed: Retry reads the status of the back end the failed start left
- * running, which says `degraded`, and the row said only "OpenBot is running but not working properly. Retry to start it again."
+ * running, which says `degraded`, and the row said only "Mangaba Bot is running but not working properly. Retry to start it again."
  * while k3s still reported low disk. `local_eval::checked_when_unhealthy` now says why.
  */
 test("a backend running but not healthy after low disk says it is recovering, and Retry asks again", async () => {
@@ -2488,7 +2488,7 @@ test("a backend running but not healthy after low disk says it is recovering, an
   const retry = await screen.findByRole("button", { name: "Retry" });
   const waiting = row(screen, WAIT).textContent;
   expect(waiting).toContain(
-    "OpenBot is recovering from low disk space. Wait a few minutes, then Retry.",
+    "Mangaba Bot is recovering from low disk space. Wait a few minutes, then Retry.",
   );
   expect(waiting).not.toContain("running but not healthy");
   await userEvent.click(retry);
@@ -2508,7 +2508,7 @@ test("a start that fails stops at its row, and Retry starts again without asking
     onStart: async () => (++starts > 1 ? "started" : "failed"),
   });
   await waitFor(() =>
-    expect(row(screen, START).textContent).toContain("OpenBot did not start."),
+    expect(row(screen, START).textContent).toContain("Mangaba Bot did not start."),
   );
   await userEvent.click(screen.getByRole("button", { name: "Retry" }));
   await waitFor(() => expect(starts).toBe(2));
@@ -2516,10 +2516,10 @@ test("a start that fails stops at its row, and Retry starts again without asking
 });
 
 /**
- * OpenBot itself failing to start is not Intelligence stopping. After a refused Start the AI screen
+ * Mangaba Bot itself failing to start is not Intelligence stopping. After a refused Start the AI screen
  * said "Intelligence stopped" over a stack the CLI reported ready and licensed.
  */
-test("a start that fails says OpenBot did not start, not that Intelligence stopped", async () => {
+test("a start that fails says Mangaba Bot did not start, not that Intelligence stopped", async () => {
   invokeHandler = answers({ run_local_eval: [ready] });
   const screen = view({
     stack: "local-abc123",
@@ -2527,15 +2527,15 @@ test("a start that fails says OpenBot did not start, not that Intelligence stopp
     status: true,
     onStart: async () => "failed",
   });
-  const card = await screen.findByRole("alert", { name: "OpenBot" });
-  expect(card.textContent).toContain("OpenBot did not start");
+  const card = await screen.findByRole("alert", { name: "Mangaba Bot" });
+  expect(card.textContent).toContain("Mangaba Bot did not start");
   expect(card.textContent).toContain("Everything else is ready");
   expect(card.textContent).not.toContain("Setup stopped");
   expect(within(card).getByRole("button", { name: "Retry" })).toBeTruthy();
 });
 
 /**
- * A Start the window put off until OpenBot is installed again is not one that failed. Saying "OpenBot
+ * A Start the window put off until Mangaba Bot is installed again is not one that failed. Saying "Mangaba Bot
  * did not start" over it sent a person who had changed nothing to look for a problem.
  */
 test("a start that is put off says nothing, and starts on the next go-ahead", async () => {
@@ -2569,7 +2569,7 @@ test("a start that is put off says nothing, and starts on the next go-ahead", as
   expect(screen.queryByRole("alert")).toBeNull();
 });
 
-test("without auto, nothing runs until Start OpenBot is chosen", async () => {
+test("without auto, nothing runs until Start Mangaba Bot is chosen", async () => {
   invokeHandler = answers({ run_local_eval: [ready] });
   const started: Startable[] = [];
   const screen = view({
@@ -2583,7 +2583,7 @@ test("without auto, nothing runs until Start OpenBot is chosen", async () => {
   });
   await new Promise((resolve) => setTimeout(resolve, 10));
   expect(invokeCalls).toEqual([]);
-  await userEvent.click(screen.getByRole("button", { name: "Start OpenBot" }));
+  await userEvent.click(screen.getByRole("button", { name: "Start Mangaba Bot" }));
   await waitFor(() => expect(started).toEqual([startableUrls]));
 });
 
@@ -2607,7 +2607,7 @@ test("prepare runs to ready and waits for the go-ahead, which starts at once", a
   expect(screen.queryByRole("alert", { name: "Setup" })).toBeNull();
   expect(screen.queryByRole("listitem", { name: START })).toBeNull();
   expect(started).toEqual([]);
-  // No Start OpenBot once it has run: the go-ahead comes from the screen in front.
+  // No Start Mangaba Bot once it has run: the go-ahead comes from the screen in front.
   expect(screen.queryByRole("button")).toBeNull();
   cleanup();
   invokeCalls = [];
@@ -2636,7 +2636,7 @@ test("the screen in front hears nothing while Intelligence works, and a stop int
   const stopped = await failed.findByRole("alert", { name: "Setup" });
   expect(stopped.textContent).toContain("Setup stopped");
   expect(stopped.textContent).toContain(
-    "Another app is using a network port OpenBot needs. Quit that app, then Retry.",
+    "Another app is using a network port Mangaba Bot needs. Quit that app, then Retry.",
   );
   expect(within(stopped).getByRole("button", { name: "Retry" })).toBeTruthy();
   // The logs to paste into an AI assistant, beside the card that says it stopped.
@@ -2676,22 +2676,22 @@ test("failures arrive as categories, and a stack that could not be recorded as a
   const screen = view();
   await waitFor(() =>
     expect(row(screen, SETUP).textContent).toContain(
-      "OpenBot took too long to set up",
+      "Mangaba Bot took too long to set up",
     ),
   );
   invokeHandler = async () => {
     throw {
-      said: "OpenBot could not save its local evaluation progress.",
+      said: "Mangaba Bot could not save its local evaluation progress.",
       detail: "synthetic",
     };
   };
   await userEvent.click(screen.getByRole("button", { name: "Retry" }));
   expect((await screen.findByRole("alert")).textContent).toContain(
-    "OpenBot could not save its local evaluation progress.",
+    "Mangaba Bot could not save its local evaluation progress.",
   );
 });
 
-test("an answer OpenBot does not recognise is never echoed", async () => {
+test("an answer Mangaba Bot does not recognise is never echoed", async () => {
   invokeHandler = async () => {
     throw "synthetic-secret-marker";
   };

@@ -12,10 +12,10 @@ pub const FILE: &str = "connection.json";
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Mode {
-    /// OpenBot runs on this computer.
+    /// Mangaba Bot runs on this computer.
     #[default]
     Local,
-    /// The app is connected to an OpenBot at an address.
+    /// The app is connected to an Mangaba Bot at an address.
     Connected,
 }
 
@@ -58,7 +58,7 @@ impl Choice {
 }
 
 /// The choice once signed in at `address`: connected there, with the organisation picked earlier
-/// kept only when it was picked at that same address. An organisation belongs to the OpenBot it
+/// kept only when it was picked at that same address. An organisation belongs to the Mangaba Bot it
 /// was picked at, and one the person has since left is answered as not found there, which the app
 /// turns back into their own.
 pub fn signed_in_at(earlier: &Choice, address: &str) -> Choice {

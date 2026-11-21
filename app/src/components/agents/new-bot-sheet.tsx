@@ -159,8 +159,8 @@ function frameworkName(runtime: Runtime): string {
 }
 
 /**
- * The subtitle under a new Bot's name: what runs it. OpenBot itself for a Bot that runs here, the
- * framework for one picked from the list. Nothing for an agent somebody already runs, since OpenBot
+ * The subtitle under a new Bot's name: what runs it. Mangaba Bot itself for a Bot that runs here, the
+ * framework for one picked from the list. Nothing for an agent somebody already runs, since Mangaba Bot
  * cannot know what is behind its address.
  */
 function poweredBy(runtime: Runtime): string {
@@ -1094,12 +1094,12 @@ export function EndpointStep({
           ) : mastra ? (
             <FieldDescription>
               Give the address of your Mastra server. It needs to run one agent,
-              and OpenBot's server has to be able to reach it.
+              and Mangaba Bot's server has to be able to reach it.
             </FieldDescription>
           ) : (
             <FieldDescription>
-              Any agent that speaks AG-UI works. OpenBot connects to it, so it
-              has to be reachable from OpenBot's server.
+              Any agent that speaks AG-UI works. Mangaba Bot connects to it, so it
+              has to be reachable from Mangaba Bot's server.
             </FieldDescription>
           )}
         </Field>

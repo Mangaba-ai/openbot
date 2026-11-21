@@ -68,7 +68,7 @@ function hasText(said: string, slug: string): boolean {
 }
 
 /**
- * Box I: OpenBot's machine was made again and the backend went with the old one, so every status
+ * Box I: Mangaba Bot's machine was made again and the backend went with the old one, so every status
  * failed and the row said "Setup stopped partway through with an error. Retry." for good. A lost
  * backend says what happened and what to do, honestly, and offers Start fresh instead of Retry.
  */
@@ -83,14 +83,14 @@ test("a lost backend says the saved data is gone and offers Start fresh", () => 
   }).intelligence;
   expect(row).toEqual({
     state: "blocked",
-    said: "OpenBot's saved data on this computer is gone, with your Bots and conversations. Start fresh to set OpenBot up again. Your sign-in and AI connection stay.",
+    said: "Mangaba Bot's saved data on this computer is gone, with your Bots and conversations. Start fresh to set Mangaba Bot up again. Your sign-in and AI connection stay.",
     action: "start-fresh",
   });
 });
 
 /**
  * A Mac on Docker Desktop, Desktop 1.1.2: a prune of stopped containers removed the backend's node,
- * and every status failed as on box I. OpenBot's own database was still there, so the row says that
+ * and every status failed as on box I. Mangaba Bot's own database was still there, so the row says that
  * only the backend's data went, and what stays.
  */
 test("a backend whose node was removed says what went and what stays, and offers to set it up again", () => {
@@ -149,7 +149,7 @@ test("Docker reasons block the runtime when the probe has no answer", () => {
   });
   expect(rows.runtime).toEqual({
     state: "blocked",
-    said: "OpenBot can't reach the software it runs on.",
+    said: "Mangaba Bot can't reach the software it runs on.",
     action: "retry",
   });
   expect(rows.intelligence.state).toBe("blocked");
@@ -159,7 +159,7 @@ test("Docker reasons block the runtime when the probe has no answer", () => {
     intelligence: report({ outcome: "blocked", reason: "unsupported-engine" }),
   });
   expect(engine.runtime.said).toBe(
-    "OpenBot can't run on this computer as it's set up.",
+    "Mangaba Bot can't run on this computer as it's set up.",
   );
   expect(engine.runtime.action).toBeUndefined();
 });
@@ -178,7 +178,7 @@ test("runtime probe maps directly", () => {
   );
   expect(localReadiness({ ...base, runtime: "not-running" }).runtime).toEqual({
     state: "blocked",
-    said: "The software OpenBot runs on isn't running.",
+    said: "The software Mangaba Bot runs on isn't running.",
     action: "retry",
   });
   expect(localReadiness({ ...base, runtime: "unknown" }).runtime.state).toBe(
@@ -193,14 +193,14 @@ test("specific wording and actions", () => {
     said(report({ outcome: "blocked", reason: "port-unavailable" })),
   ).toEqual({
     state: "blocked",
-    said: "Another app is using a network port OpenBot needs. Quit that app, then Retry.",
+    said: "Another app is using a network port Mangaba Bot needs. Quit that app, then Retry.",
     action: "retry",
   });
   expect(
     said(report({ outcome: "blocked", reason: "authentication-required" })),
   ).toEqual({
     state: "blocked",
-    said: "Sign in to OpenBot.",
+    said: "Sign in to Mangaba Bot.",
     action: "sign-in",
   });
   expect(said("cancelled").action).toBe("retry");
@@ -209,14 +209,14 @@ test("specific wording and actions", () => {
   );
   expect(
     said(report({ outcome: "blocked", reason: "local-command-busy" })).said,
-  ).toBe("OpenBot is still busy with another step. Wait a moment, then Retry.");
+  ).toBe("Mangaba Bot is still busy with another step. Wait a moment, then Retry.");
   expect(said("timeout")).toEqual({
     state: "blocked",
-    said: "OpenBot took too long to set up, so it stopped waiting. What it already downloaded is kept, so Retry picks up from there.",
+    said: "Mangaba Bot took too long to set up, so it stopped waiting. What it already downloaded is kept, so Retry picks up from there.",
     action: "restart-intelligence",
   });
   expect(said("unexpected-exit").said).toBe(
-    "Part of OpenBot stopped without saying why. Retry. If it stops again, copy the logs below.",
+    "Part of Mangaba Bot stopped without saying why. Retry. If it stops again, copy the logs below.",
   );
   // A setup the CLI itself failed says so, not only that the back end could not start.
   expect(
@@ -241,42 +241,42 @@ test("specific wording and actions", () => {
     );
   expect(short({ disk: true })).toEqual({
     state: "blocked",
-    said: "Docker Desktop doesn't have enough free disk space. OpenBot needs 40 GB free. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
+    said: "Docker Desktop doesn't have enough free disk space. Mangaba Bot needs 40 GB free. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
     action: "retry",
   });
   expect(short({ cpu: true }).said).toBe(
-    "Docker Desktop doesn't have enough CPUs. OpenBot needs 4 CPUs. Raise the CPU limit in Docker Desktop > Settings > Resources, then Retry.",
+    "Docker Desktop doesn't have enough CPUs. Mangaba Bot needs 4 CPUs. Raise the CPU limit in Docker Desktop > Settings > Resources, then Retry.",
   );
   expect(short({ memory: true }).said).toBe(
-    "Docker Desktop doesn't have enough memory. OpenBot needs 4 GB of free memory. Raise the memory limit in Docker Desktop > Settings > Resources, then Retry.",
+    "Docker Desktop doesn't have enough memory. Mangaba Bot needs 4 GB of free memory. Raise the memory limit in Docker Desktop > Settings > Resources, then Retry.",
   );
   expect(short({ cpu: true, memory: true, disk: true }).said).toBe(
-    "Docker Desktop doesn't have enough CPUs, memory and free disk space. OpenBot needs 4 CPUs, 4 GB of free memory and 40 GB free. Raise the limits in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
+    "Docker Desktop doesn't have enough CPUs, memory and free disk space. Mangaba Bot needs 4 CPUs, 4 GB of free memory and 40 GB free. Raise the limits in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
   );
   expect(short({ podman: true, disk: true }).said).toBe(
-    "OpenBot doesn't have enough free disk space. It needs 40 GB free. Stop your Podman machine, run podman machine set --disk-size 160, start it again, then Retry.",
+    "Mangaba Bot doesn't have enough free disk space. It needs 40 GB free. Stop your Podman machine, run podman machine set --disk-size 160, start it again, then Retry.",
   );
   // With the CLI's own numbers, as `local_eval.rs` reads them from its error.
   expect(
     short({ disk: true, cpus: "9.8", memoryGb: "18.9", diskGb: "0" }).said,
   ).toBe(
-    "Docker Desktop has 0 GB of free disk space. OpenBot needs 40 GB. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
+    "Docker Desktop has 0 GB of free disk space. Mangaba Bot needs 40 GB. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
   );
   expect(
     short({ cpu: true, cpus: "2", memoryGb: "5.2", diskGb: "51" }).said,
   ).toBe(
-    "Docker Desktop has 2 CPUs. OpenBot needs 4. Raise the CPU limit in Docker Desktop > Settings > Resources, then Retry.",
+    "Docker Desktop has 2 CPUs. Mangaba Bot needs 4. Raise the CPU limit in Docker Desktop > Settings > Resources, then Retry.",
   );
   expect(short({ memory: true, memoryGb: "2.9" }).said).toBe(
-    "Docker Desktop has 2.9 GB of free memory. OpenBot needs 4 GB. Raise the memory limit in Docker Desktop > Settings > Resources, then Retry.",
+    "Docker Desktop has 2.9 GB of free memory. Mangaba Bot needs 4 GB. Raise the memory limit in Docker Desktop > Settings > Resources, then Retry.",
   );
   expect(
     short({ cpu: true, disk: true, cpus: "2", memoryGb: "6", diskGb: "12" })
       .said,
   ).toBe(
-    "Docker Desktop has 2 CPUs and 12 GB of free disk space. OpenBot needs 4 CPUs and 40 GB of free disk space. Raise the limits in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
+    "Docker Desktop has 2 CPUs and 12 GB of free disk space. Mangaba Bot needs 4 CPUs and 40 GB of free disk space. Raise the limits in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
   );
-  // OpenBot's own check after a start that failed (`local_eval::checked_call`), as it reports
+  // Mangaba Bot's own check after a start that failed (`local_eval::checked_call`), as it reports
   // each case. A nearly full disk is said as k3s's, beside the 40 GB only when it is below it.
   expect(
     short({
@@ -289,7 +289,7 @@ test("specific wording and actions", () => {
       drive: "C:",
     }).said,
   ).toBe(
-    "OpenBot is nearly out of disk space. It has 30.5 GB free of 1006.8 GB. It needs 40 GB. Free up space on drive C:, then Retry.",
+    "Mangaba Bot is nearly out of disk space. It has 30.5 GB free of 1006.8 GB. It needs 40 GB. Free up space on drive C:, then Retry.",
   );
   // C: is what ran short, as `local_eval.rs` reports it after a start that failed on Windows.
   expect(
@@ -302,19 +302,19 @@ test("specific wording and actions", () => {
       freeOnDrive: true,
     }).said,
   ).toBe(
-    "This computer has 30 GB of free space on drive C:, and OpenBot needs 40 GB. Free up some space, then Retry.",
+    "This computer has 30 GB of free space on drive C:, and Mangaba Bot needs 40 GB. Free up some space, then Retry.",
   );
-  // OpenBot's machine's own disk is what ran short, and C: has room: never said as C:'s.
+  // Mangaba Bot's machine's own disk is what ran short, and C: has room: never said as C:'s.
   expect(
     short({ podman: true, disk: true, diskGb: "10", wsl: true, drive: "C:" })
       .said,
   ).toBe(
-    "OpenBot has 10 GB of free disk space. It needs 40 GB. Free up space on drive C:, then Retry.",
+    "Mangaba Bot has 10 GB of free disk space. It needs 40 GB. Free up space on drive C:, then Retry.",
   );
   // On Windows, never `podman machine set --disk-size`: Podman refuses it for WSL machines, even
   // when WSL did not say which drive holds the disk.
   expect(short({ podman: true, disk: true, wsl: true }).said).toBe(
-    "OpenBot doesn't have enough free disk space. It needs 40 GB free. Free up space on the drive OpenBot is installed on, then Retry.",
+    "Mangaba Bot doesn't have enough free disk space. It needs 40 GB free. Free up space on the drive Mangaba Bot is installed on, then Retry.",
   );
   expect(
     short({
@@ -324,7 +324,7 @@ test("specific wording and actions", () => {
       diskSizeGb: "1827.9",
     }).said,
   ).toBe(
-    "OpenBot is nearly out of disk space. Docker Desktop has 160 GB free of 1827.9 GB. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
+    "Mangaba Bot is nearly out of disk space. Docker Desktop has 160 GB free of 1827.9 GB. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
   );
   expect(
     short({
@@ -335,17 +335,17 @@ test("specific wording and actions", () => {
       diskSizeGb: "60",
     }).said,
   ).toBe(
-    "OpenBot is nearly out of disk space. It has 8 GB free of 60 GB. It needs 40 GB. Stop your Podman machine, run podman machine set --disk-size 160, start it again, then Retry.",
+    "Mangaba Bot is nearly out of disk space. It has 8 GB free of 60 GB. It needs 40 GB. Stop your Podman machine, run podman machine set --disk-size 160, start it again, then Retry.",
   );
   // Space was freed and k3s still says the disk is low: wait, rather than free more.
   expect(
     short({ podman: true, recovering: true, wsl: true, drive: "C:" }),
   ).toEqual({
     state: "blocked",
-    said: "OpenBot is recovering from low disk space. Wait a few minutes, then Retry.",
+    said: "Mangaba Bot is recovering from low disk space. Wait a few minutes, then Retry.",
     action: "retry",
   });
-  // A back end that runs but does not answer, with OpenBot's check of its disk, and without.
+  // A back end that runs but does not answer, with Mangaba Bot's check of its disk, and without.
   const degraded = (shortfall?: Partial<Shortfall>) =>
     said(
       report({
@@ -366,7 +366,7 @@ test("specific wording and actions", () => {
     );
   expect(degraded({ recovering: true, wsl: true, drive: "C:" })).toEqual({
     state: "blocked",
-    said: "OpenBot is recovering from low disk space. Wait a few minutes, then Retry.",
+    said: "Mangaba Bot is recovering from low disk space. Wait a few minutes, then Retry.",
     action: "restart-intelligence",
   });
   expect(
@@ -379,14 +379,14 @@ test("specific wording and actions", () => {
       drive: "C:",
     }).said,
   ).toBe(
-    "OpenBot is nearly out of disk space. It has 30.5 GB free of 1006.8 GB. It needs 40 GB. Free up space on drive C:, then Retry.",
+    "Mangaba Bot is nearly out of disk space. It has 30.5 GB free of 1006.8 GB. It needs 40 GB. Free up space on drive C:, then Retry.",
   );
   expect(degraded().said).toBe(
-    "OpenBot is running but not working properly. Retry to start it again.",
+    "Mangaba Bot is running but not working properly. Retry to start it again.",
   );
   // The account step's check before a first setup, on Windows, as Windows F's check answered it
   // (`local-eval-terms-windows-f-short-of-disk.json`): what is free, then what is needed. With 13
-  // GB free it was told "OpenBot is out of disk space" and no figure.
+  // GB free it was told "Mangaba Bot is out of disk space" and no figure.
   expect(
     engineTooSmallSaid({
       podman: true,
@@ -399,7 +399,7 @@ test("specific wording and actions", () => {
       freeOnDrive: true,
     }),
   ).toBe(
-    "This computer has 13.2 GB of free space on drive C:, and OpenBot needs 40 GB. Free up some space, then Try again.",
+    "This computer has 13.2 GB of free space on drive C:, and Mangaba Bot needs 40 GB. Free up some space, then Try again.",
   );
   // Windows G on Docker Desktop: its disk is a sparse virtual disk on C:, and C: ran short. Said
   // as C:'s, never as Docker's disk limit, which had 938.3 GB free.
@@ -414,7 +414,7 @@ test("specific wording and actions", () => {
       freeOnDrive: true,
     }),
   ).toBe(
-    "This computer has 13.9 GB of free space on drive C:, and OpenBot needs 40 GB. Free up some space, then Try again.",
+    "This computer has 13.9 GB of free space on drive C:, and Mangaba Bot needs 40 GB. Free up some space, then Try again.",
   );
   // A disk that is short is never said as out of space, measured or not.
   expect(
@@ -427,19 +427,19 @@ test("specific wording and actions", () => {
       drive: "C:",
     }),
   ).toBe(
-    "OpenBot doesn't have enough free disk space. It needs 40 GB free. Free up space on drive C:, then Try again.",
+    "Mangaba Bot doesn't have enough free disk space. It needs 40 GB free. Free up space on drive C:, then Try again.",
   );
   // A report that does not say which is still about resources, never "partway through".
   expect(
     said(report({ outcome: "failed", reason: "resources-short" })).said,
   ).toBe(
-    "Docker Desktop doesn't give OpenBot enough CPUs, memory or disk space. Raise them in Docker Desktop > Settings > Resources, then Retry.",
+    "Docker Desktop doesn't give Mangaba Bot enough CPUs, memory or disk space. Raise them in Docker Desktop > Settings > Resources, then Retry.",
   );
   expect(said("unavailable").action).toBeUndefined();
   expect(said("unverified").action).toBe("repair");
   expect(said("invalid-json")).toEqual({
     state: "blocked",
-    said: "OpenBot got an answer it couldn't read. Retry. If it happens again, copy the logs below.",
+    said: "Mangaba Bot got an answer it couldn't read. Retry. If it happens again, copy the logs below.",
   });
 });
 
@@ -458,7 +458,7 @@ test("a v1 report is unknown, never ready", () => {
   const row = localReadiness(base).intelligence;
   expect(row).toEqual({
     state: "unknown",
-    said: "OpenBot started, and hasn't said yet whether it's ready.",
+    said: "Mangaba Bot started, and hasn't said yet whether it's ready.",
   });
   expect(
     localReadiness({ ...base, intelligence: null }).intelligence.state,
@@ -508,7 +508,7 @@ test("only exactly ready and valid on a completed report is ready", () => {
   ).not.toBe("ready");
 });
 
-test("OpenBot and provider rows", () => {
+test("Mangaba Bot and provider rows", () => {
   expect(localReadiness({ ...base, openBot: "connected" }).openBot.state).toBe(
     "ready",
   );
@@ -555,7 +555,7 @@ test("rows are independent", () => {
 });
 
 // chatGate does not take the runtime. So the direction that holds is: if every row is ready, chat
-// is open; and if chat is open, the Intelligence, OpenBot and provider rows are ready (the runtime
+// is open; and if chat is open, the Intelligence, Mangaba Bot and provider rows are ready (the runtime
 // row may still be unknown or blocked).
 test("agrees with chatGate", () => {
   const intelligences: ChatGateInput["intelligence"][] = [
@@ -610,7 +610,7 @@ test("types: the failure and reason inputs are the upstream ones", () => {
   const failure: LocalFailure = "spawn";
   expect(
     localReadiness({ ...base, intelligence: failure }).intelligence.said,
-  ).toBe("OpenBot couldn't run part of its own software. Retry.");
+  ).toBe("Mangaba Bot couldn't run part of its own software. Retry.");
 });
 
 test("each readiness state of a valid licence has its own row", () => {
@@ -621,25 +621,25 @@ test("each readiness state of a valid licence has its own row", () => {
     }).intelligence;
   expect(row("ready")).toEqual({
     state: "ready",
-    said: "OpenBot is ready.",
+    said: "Mangaba Bot is ready.",
   });
   expect(row("starting")).toEqual({
     state: "unknown",
-    said: "OpenBot is starting.",
+    said: "Mangaba Bot is starting.",
   });
   expect(row("stopped")).toEqual({
     state: "blocked",
-    said: "OpenBot's services are stopped.",
+    said: "Mangaba Bot's services are stopped.",
     action: "start-intelligence",
   });
   expect(row("degraded")).toEqual({
     state: "blocked",
-    said: "OpenBot is running but not working properly. Retry to start it again.",
+    said: "Mangaba Bot is running but not working properly. Retry to start it again.",
     action: "restart-intelligence",
   });
   expect(row("unknown")).toEqual({
     state: "unknown",
-    said: "OpenBot started, and hasn't said yet whether it's ready.",
+    said: "Mangaba Bot started, and hasn't said yet whether it's ready.",
   });
 });
 
@@ -655,7 +655,7 @@ test("a licence that is not valid blocks a ready Intelligence", () => {
   });
   expect(row("missing")).toEqual({
     state: "blocked",
-    said: "OpenBot has no evaluation licence on this computer.",
+    said: "Mangaba Bot has no evaluation licence on this computer.",
   });
   expect(row("invalid")).toEqual({
     state: "blocked",
@@ -682,11 +682,11 @@ test("a licence expiring in four days is ready with a warning", () => {
     }).intelligence;
   expect(expiring("2026-10-25T18:00:00.000Z")).toEqual({
     state: "ready",
-    said: "OpenBot is ready. Its evaluation licence expires within 5 days.",
+    said: "Mangaba Bot is ready. Its evaluation licence expires within 5 days.",
   });
   expect(expiring("2026-10-27T18:00:00.000Z")).toEqual({
     state: "ready",
-    said: "OpenBot is ready.",
+    said: "Mangaba Bot is ready.",
   });
 });
 
@@ -748,7 +748,7 @@ test("every way setup, start or update can stop is said in plain words, with wha
   ])
     row(future(readiness, "valid"));
   row(null);
-  // Short of something, on Docker Desktop, on OpenBot's own Podman machine, and in WSL.
+  // Short of something, on Docker Desktop, on Mangaba Bot's own Podman machine, and in WSL.
   const resources = [
     { cpu: true },
     { memory: true },
@@ -814,7 +814,7 @@ test("an update with no room says what is free and what the update needs", () =>
     neededGb: "13",
   };
   expect(resourcesShortSaid(mac)).toBe(
-    "This Mac has 7.5 GB of free space, and OpenBot needs about 13 GB to update. Free up some space, then Retry.",
+    "This Mac has 7.5 GB of free space, and Mangaba Bot needs about 13 GB to update. Free up some space, then Retry.",
   );
   // Windows G's C:, under Docker Desktop's disk.
   expect(
@@ -825,7 +825,7 @@ test("an update with no room says what is free and what the update needs", () =>
       diskGb: "11.8",
     }),
   ).toBe(
-    "This computer has 11.8 GB of free space on drive C:, and OpenBot needs about 13 GB to update. Free up some space, then Retry.",
+    "This computer has 11.8 GB of free space on drive C:, and Mangaba Bot needs about 13 GB to update. Free up some space, then Retry.",
   );
   // Docker Desktop's own disk limit is what is short: raised or freed there.
   expect(
@@ -837,11 +837,11 @@ test("an update with no room says what is free and what the update needs", () =>
       neededGb: "16",
     }),
   ).toBe(
-    "Docker Desktop has 12 GB of free disk space, and OpenBot needs about 16 GB to update. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
+    "Docker Desktop has 12 GB of free disk space, and Mangaba Bot needs about 16 GB to update. Raise the disk limit in Docker Desktop > Settings > Resources, or free space in Docker, then Retry.",
   );
   // Memory short as well: said after the disk.
   expect(resourcesShortSaid({ ...mac, memory: true })).toBe(
-    "This Mac has 7.5 GB of free space, and OpenBot needs about 13 GB to update. Free up some space, then Retry. Docker Desktop doesn't have enough memory. OpenBot needs 4 GB of free memory. Raise the memory limit in Docker Desktop > Settings > Resources, then Retry.",
+    "This Mac has 7.5 GB of free space, and Mangaba Bot needs about 13 GB to update. Free up some space, then Retry. Docker Desktop doesn't have enough memory. Mangaba Bot needs 4 GB of free memory. Raise the memory limit in Docker Desktop > Settings > Resources, then Retry.",
   );
   // A first setup on that Mac: its own disk, said as the Mac's, with the setup's 40 GB.
   expect(
@@ -855,6 +855,6 @@ test("an update with no room says what is free and what the update needs", () =>
       mac: true,
     }),
   ).toBe(
-    "This Mac has 7.5 GB of free space, and OpenBot needs 40 GB. Free up some space, then Try again.",
+    "This Mac has 7.5 GB of free space, and Mangaba Bot needs 40 GB. Free up some space, then Try again.",
   );
 });

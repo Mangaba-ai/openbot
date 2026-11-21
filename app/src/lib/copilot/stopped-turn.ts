@@ -48,14 +48,14 @@ export function asksToCarryOn(said: string): boolean {
   return /\bAsk (?:it|the Bot) to carry on\.$/.test(said.trim());
 }
 
-/** Said under a turn cut off part way because OpenBot's backend stopped answering. Its work stands. */
+/** Said under a turn cut off part way because Mangaba Bot's backend stopped answering. Its work stands. */
 export const TURN_CUT_OFF =
-  "The Bot stopped before it finished because OpenBot's backend stopped answering. What it saved is shown here.";
+  "The Bot stopped before it finished because Mangaba Bot's backend stopped answering. What it saved is shown here.";
 
 /**
  * How the backend's event store ends a run whose server went away under it, word for word. Found
  * with the server killed and started again in the middle of a long turn: the conversation, opened
- * again, said only "Runner connection dropped", in words nobody using OpenBot can act on.
+ * again, said only "Runner connection dropped", in words nobody using Mangaba Bot can act on.
  */
 const RUNNER_DROPPED = /^Runner connection dropped\.?$/i;
 
@@ -97,7 +97,7 @@ export function laterRunFailure(reported: unknown): string | null {
     /failed to fetch|load failed|networkerror|network connection/i.test(said)
   ) {
     console.warn(
-      "OpenBot couldn't reach its backend part way through a turn.",
+      "Mangaba Bot couldn't reach its backend part way through a turn.",
       said,
     );
     return TURN_CUT_OFF;
@@ -115,16 +115,16 @@ export function laterRunFailure(reported: unknown): string | null {
  */
 const REST_REQUEST_FAILED = /^REST (\w+) request failed\b:?\s*/;
 
-/** Where OpenBot's own problems (RFC 9457) say what kind they are: `https://open.bot/errors/<code>`. */
+/** Where Mangaba Bot's own problems (RFC 9457) say what kind they are: `https://open.bot/errors/<code>`. */
 const OPENBOT_PROBLEM = "https://open.bot/errors/";
 
 /**
- * The sentence OpenBot's server wrote for the person, when a REST failure is its refusal.
+ * The sentence Mangaba Bot's server wrote for the person, when a REST failure is its refusal.
  *
  * The server refuses a run it may not start (an admin's model allowlist, a switch that is off) with
- * a problem whose `type` is OpenBot's own and whose `detail` is written for the person. The client
+ * a problem whose `type` is Mangaba Bot's own and whose `detail` is written for the person. The client
  * throws that body as it came, the status gone, so the body has to say itself that it is one: an
- * OpenBot problem, about the request (4xx), with a `detail`. Anything else, a raw `{ error }`
+ * Mangaba Bot problem, about the request (4xx), with a `detail`. Anything else, a raw `{ error }`
  * included, is not, and is still the backend failing.
  */
 function refusalForPerson(said: string): string | null {
@@ -152,10 +152,10 @@ function refusalForPerson(said: string): string | null {
 function backEndUnreachable(said: string): string | null {
   const match = REST_REQUEST_FAILED.exec(said.trim());
   if (!match) return null;
-  console.warn("OpenBot couldn't reach its backend.", said);
+  console.warn("Mangaba Bot couldn't reach its backend.", said);
   return match[1] === "run"
-    ? "OpenBot couldn't reach its backend, so your message wasn't sent. Try again, or quit and reopen OpenBot."
-    : "OpenBot couldn't reach its backend. Try again, or quit and reopen OpenBot.";
+    ? "Mangaba Bot couldn't reach its backend, so your message wasn't sent. Try again, or quit and reopen Mangaba Bot."
+    : "Mangaba Bot couldn't reach its backend. Try again, or quit and reopen Mangaba Bot.";
 }
 
 /**
@@ -198,7 +198,7 @@ export const BOT_NOT_SHARED =
  * A person in a conversation with a Bot shared with their team is taken out of the team. Their next
  * message is refused, rightly: the runtime answers the run request 404, because the Bot is not one of
  * theirs. Through Intelligence the runtime client reports that exactly as it reports a back end
- * that is down (see `refusedRequest`), so the person was told OpenBot couldn't reach its back end
+ * that is down (see `refusedRequest`), so the person was told Mangaba Bot couldn't reach its back end
  * and to quit and reopen it, which was false and could not help.
  *
  * So the server is asked: the Bot is read again through the API, and only its own "not found" (404)

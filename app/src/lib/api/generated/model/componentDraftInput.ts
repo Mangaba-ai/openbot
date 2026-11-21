@@ -4,10 +4,10 @@
 import type { PlaygroundDraftSource } from "./playgroundDraftSource";
 
 /**
- * A draft to save. For a component that comes with OpenBot, send its description; a title or source that differs from what it has is refused. For a Playground component, send all three.
+ * A draft to save. For a component that comes with Mangaba Bot, send its description; a title or source that differs from what it has is refused. For a Playground component, send all three.
  */
 export interface ComponentDraftInput {
-  /** Trimmed. Required for a component that comes with OpenBot. A Playground draft may leave it empty until it is published. */
+  /** Trimmed. Required for a component that comes with Mangaba Bot. A Playground draft may leave it empty until it is published. */
   description: string;
   /**
    * Trimmed. Required for a Playground component.

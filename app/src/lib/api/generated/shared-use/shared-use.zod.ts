@@ -62,7 +62,7 @@ export const ListSharedUseRequestsResponse = zod.object({
             .string()
             .nullable()
             .describe(
-              "The id of the Bot's owner. Null for a Bot that comes with OpenBot.",
+              "The id of the Bot's owner. Null for a Bot that comes with Mangaba Bot.",
             ),
           serverId: zod.string().describe("The shared app's id."),
           title: zod.string().describe("The shared app's name."),
@@ -276,7 +276,7 @@ export const ApproveSharedUseRequestResponse = zod
       .string()
       .nullable()
       .describe(
-        "The id of the Bot's owner. Null for a Bot that comes with OpenBot.",
+        "The id of the Bot's owner. Null for a Bot that comes with Mangaba Bot.",
       ),
     serverId: zod.string().describe("The shared app's id."),
     title: zod.string().describe("The shared app's name."),
@@ -415,7 +415,7 @@ export const DeclineSharedUseRequestResponse = zod
       .string()
       .nullable()
       .describe(
-        "The id of the Bot's owner. Null for a Bot that comes with OpenBot.",
+        "The id of the Bot's owner. Null for a Bot that comes with Mangaba Bot.",
       ),
     serverId: zod.string().describe("The shared app's id."),
     title: zod.string().describe("The shared app's name."),
@@ -628,7 +628,7 @@ export const GetBotSharedUseResponse = zod.object({
             .string()
             .nullable()
             .describe(
-              "The id of the Bot's owner. Null for a Bot that comes with OpenBot.",
+              "The id of the Bot's owner. Null for a Bot that comes with Mangaba Bot.",
             ),
           serverId: zod.string().describe("The shared app's id."),
           title: zod.string().describe("The shared app's name."),

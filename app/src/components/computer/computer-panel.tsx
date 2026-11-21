@@ -56,7 +56,7 @@ export function ComputerViewPanel({
       // The empty state brings its own 16px above it, which is the panel's top padding.
       <section aria-label="Computer sidebar" className="px-4 pb-4">
         <PageEmpty icon={IconDeviceDesktopOff} title="No computers for Bots">
-          Bots can't browse or run commands on this OpenBot. An admin can set
+          Bots can't browse or run commands on this Mangaba Bot. An admin can set
           computers up.
         </PageEmpty>
       </section>

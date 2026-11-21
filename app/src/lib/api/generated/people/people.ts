@@ -307,7 +307,7 @@ export const getGetPersonUrl = (organizationId: string, personId: string) => {
 };
 
 /**
- * Return one person: the caller, as me or by their own id, or for an administrator anybody in the organization. Somebody who is not an administrator asking about anybody else is refused, whether or not that person exists. The answer also carries the OpenBot release the server runs, which the apps show under the person's name.
+ * Return one person: the caller, as me or by their own id, or for an administrator anybody in the organization. Somebody who is not an administrator asking about anybody else is refused, whether or not that person exists. The answer also carries the Mangaba Bot release the server runs, which the apps show under the person's name.
  * @summary Get a person
  */
 export const getPerson = async (
@@ -674,7 +674,7 @@ export const getRevokePersonAccessUrl = (
 };
 
 /**
- * Remove a person from the organization. Where everybody has an organization of their own (an OpenBot whose list of organizations answers canCreate true), this ends their membership of this organization alone: they lose its Bots and conversations from their next request, and their account, sessions, API keys, their own organization and any other they belong to are unchanged. Restoring them puts the membership back with its role and teams. Where OpenBot keeps one organization, it stops the person using OpenBot: their address can't sign in again, and the sessions, API keys and app sign-ins they hold end at once; restoring their access lets them sign in again. Either way they keep their record and their history, and the credentials they connected here are retired. Only an administrator may do this, never to themselves, never to somebody the deployment's configuration names as an administrator, and never to the organization's owner. Removing somebody already removed retires anything left and records nothing new.
+ * Remove a person from the organization. Where everybody has an organization of their own (an Mangaba Bot whose list of organizations answers canCreate true), this ends their membership of this organization alone: they lose its Bots and conversations from their next request, and their account, sessions, API keys, their own organization and any other they belong to are unchanged. Restoring them puts the membership back with its role and teams. Where Mangaba Bot keeps one organization, it stops the person using Mangaba Bot: their address can't sign in again, and the sessions, API keys and app sign-ins they hold end at once; restoring their access lets them sign in again. Either way they keep their record and their history, and the credentials they connected here are retired. Only an administrator may do this, never to themselves, never to somebody the deployment's configuration names as an administrator, and never to the organization's owner. Removing somebody already removed retires anything left and records nothing new.
  * @summary Remove a person's access
  */
 export const revokePersonAccess = async (
@@ -828,7 +828,7 @@ export const getRestorePersonAccessUrl = (
 };
 
 /**
- * Give a removed person their access back. Where everybody has an organization of their own, this puts back their membership of this organization with the role and teams it had; their sessions and API keys, which were never ended, work here again from their next request. Where OpenBot keeps one organization, it lets them sign in again, and what ended when they were removed stays ended: they sign in afresh and make new API keys. Only an administrator may do this. Restoring somebody who was never removed changes nothing and records nothing.
+ * Give a removed person their access back. Where everybody has an organization of their own, this puts back their membership of this organization with the role and teams it had; their sessions and API keys, which were never ended, work here again from their next request. Where Mangaba Bot keeps one organization, it lets them sign in again, and what ended when they were removed stays ended: they sign in afresh and make new API keys. Only an administrator may do this. Restoring somebody who was never removed changes nothing and records nothing.
  * @summary Give a person their access back
  */
 export const restorePersonAccess = async (
@@ -1693,7 +1693,7 @@ export const getGetPreferencesUrl = (
 };
 
 /**
- * Return how a person set OpenBot up for themselves, on every device they sign in from, with the default for anything they never chose. Only the person themselves may read them.
+ * Return how a person set Mangaba Bot up for themselves, on every device they sign in from, with the default for anything they never chose. Only the person themselves may read them.
  * @summary Read a person's preferences
  */
 export const getPreferences = async (
@@ -2064,7 +2064,7 @@ export const getGetCompanySignInUrl = (
 };
 
 /**
- * Return whether this organization requires its members to sign in through their company's identity provider, whether the person has, and the providers they can use for it. Any member may read their own, as me or by their own id. It answers even while the organization holds them out for not having signed in that way, when every other request they make in it is refused with SSO_REQUIRED. To use a provider, they sign in through it by its id (POST /api/auth/sign-in/sso with providerId) in a browser where they are signed in, or from an app through createCompanySignInTicket. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), no organization requires it: required is false and no providers are listed.
+ * Return whether this organization requires its members to sign in through their company's identity provider, whether the person has, and the providers they can use for it. Any member may read their own, as me or by their own id. It answers even while the organization holds them out for not having signed in that way, when every other request they make in it is refused with SSO_REQUIRED. To use a provider, they sign in through it by its id (POST /api/auth/sign-in/sso with providerId) in a browser where they are signed in, or from an app through createCompanySignInTicket. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), no organization requires it: required is false and no providers are listed.
  * @summary Read whether a person must use their company sign-in here
  */
 export const getCompanySignIn = async (
@@ -2297,7 +2297,7 @@ export const getCreateCompanySignInTicketUrl = (
 };
 
 /**
- * Return an address for a browser to link the person's company account at one of the organization's identity providers, for an app that has no browser session to carry, such as the phone. The app opens it in the system browser, and the person signs in through the provider there. Sent with returnTo app, the browser goes back to the phone app once the account is linked. The address carries a ticket, never the app's own sign-in. The ticket is the person's, for this organization and this provider, lasts two minutes, and opens once. Signing in through the provider then links the company account as a signed-in browser's sign-in does: the provider must give the person's own email address. Only the person themselves may ask, as me or by their own id, signed in to OpenBot or its app, never with an API key. It answers while the organization holds them out for not having signed in that way. providerId is one of the providers getCompanySignIn lists. Because the answer is a credential shown once, it is not kept: a retry with the same Idempotency-Key is refused as a conflict, so ask again with a new key. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), there is no company account to link: this answers 409 with the code HOSTED_SIGN_IN_ONLY.
+ * Return an address for a browser to link the person's company account at one of the organization's identity providers, for an app that has no browser session to carry, such as the phone. The app opens it in the system browser, and the person signs in through the provider there. Sent with returnTo app, the browser goes back to the phone app once the account is linked. The address carries a ticket, never the app's own sign-in. The ticket is the person's, for this organization and this provider, lasts two minutes, and opens once. Signing in through the provider then links the company account as a signed-in browser's sign-in does: the provider must give the person's own email address. Only the person themselves may ask, as me or by their own id, signed in to Mangaba Bot or its app, never with an API key. It answers while the organization holds them out for not having signed in that way. providerId is one of the providers getCompanySignIn lists. Because the answer is a credential shown once, it is not kept: a retry with the same Idempotency-Key is refused as a conflict, so ask again with a new key. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), there is no company account to link: this answers 409 with the code HOSTED_SIGN_IN_ONLY.
  * @summary Get a ticket to link a company account from an app
  */
 export const createCompanySignInTicket = async (

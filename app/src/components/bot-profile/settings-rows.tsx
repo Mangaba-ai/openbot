@@ -66,8 +66,8 @@ type Row = {
  *
  * Both editions draw the same rows. A row shows only where it has something to set
  * (`docs/how-openbot-works.md`): Conversations and Activity are never rows, Memory only where
- * OpenBot offers it, and Computer only where this Bot has something of its own there (folders on
- * this computer inside OpenBot Desktop, its browser in the personal edition, or a computer of its
+ * Mangaba Bot offers it, and Computer only where this Bot has something of its own there (folders on
+ * this computer inside Mangaba Bot Desktop, its browser in the personal edition, or a computer of its
  * own for someone who may list computers).
  */
 export function BotSettingsRows({ agent }: { agent: AgentProfile }) {

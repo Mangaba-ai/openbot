@@ -198,7 +198,7 @@ pub trait HostApprovalUi: Send + Sync + 'static {
     fn choose_folder(&self, request: &ChooseFolderPrompt) -> HostAccessResult<ApprovedFolder>;
     fn confirm_write(&self, request: &WritePrompt) -> HostAccessResult<()>;
     fn confirm_command(&self, request: &CommandPrompt) -> HostAccessResult<()>;
-    /// The person allowed an action after OpenBot had stopped waiting for the answer, so it did
+    /// The person allowed an action after Mangaba Bot had stopped waiting for the answer, so it did
     /// not run. Told so they do not believe it did. Nothing by default.
     ///
     /// FOUND ON A MAC: a native dialog cannot be closed from outside, so "Allow this command?" stayed
@@ -278,7 +278,7 @@ pub struct CommandPrompt {
     pub working_directory: Option<PathBuf>,
     pub command: String,
     pub writable: bool,
-    /// The member's OpenBot setting after the team cap, as the server sent it.
+    /// The member's Mangaba Bot setting after the team cap, as the server sent it.
     pub command_policy: CommandPolicy,
 }
 
@@ -1383,7 +1383,7 @@ impl Inner {
         Ok(grant.clone())
     }
     /// The person's turn to be shown a dialog. A native dialog cannot be closed from outside, so one
-    /// OpenBot stopped waiting for stays up until the person answers it; a second one shown beside it
+    /// Mangaba Bot stopped waiting for stays up until the person answers it; a second one shown beside it
     /// sat exactly on top of it, two identical dialogs nobody could tell apart. Each dialog waits
     /// for the one before it, the "didn't run" notice included, and an action that is no longer
     /// wanted by the time its turn comes is never shown (`ensure_operation_still_allowed`).
@@ -1549,7 +1549,7 @@ impl Inner {
         self.run_container_with_stdin(operation_id, grant, writable, script, &[])
     }
 
-    /// The text of an operation OpenBot itself ran (a listing, a read, a write), or what stopped it.
+    /// The text of an operation Mangaba Bot itself ran (a listing, a read, a write), or what stopped it.
     fn finished(&self, ran: Ran, doing: &str) -> HostAccessResult<String> {
         operation_answer(ran, &self.config, doing)
     }
@@ -2370,7 +2370,7 @@ fn timed_out_sentence(config: &HostAccessConfig) -> String {
     )
 }
 
-/// A listing, read or write OpenBot ran on the Bot's behalf: its output, or the reason it failed,
+/// A listing, read or write Mangaba Bot ran on the Bot's behalf: its output, or the reason it failed,
 /// from the last line the tool printed (it names only paths inside the sandbox).
 fn operation_answer(ran: Ran, config: &HostAccessConfig, doing: &str) -> HostAccessResult<String> {
     if let Some(stopped) = stopped_by_sandbox(&ran, config) {
@@ -2514,7 +2514,7 @@ fn engine_failure_message(raw: &str, config: &HostAccessConfig) -> String {
     }
     if lower.contains("sandbox image is unavailable") || lower.contains("no such image") {
         return "Nothing ran: the local sandbox's software is missing from this computer. \
-                Restarting OpenBot downloads it again; ask the person to restart OpenBot, then try \
+                Restarting Mangaba Bot downloads it again; ask the person to restart Mangaba Bot, then try \
                 again."
             .into();
     }
@@ -2528,7 +2528,7 @@ fn engine_failure_message(raw: &str, config: &HostAccessConfig) -> String {
     {
         return format!(
             "Nothing ran: {engine}, which runs the local sandbox, is not answering. Ask the \
-             person to restart OpenBot, then try again."
+             person to restart Mangaba Bot, then try again."
         );
     }
     if lower.contains("mounts denied") || lower.contains("is not shared from the host") {
@@ -2556,7 +2556,7 @@ fn engine_failure_message(raw: &str, config: &HostAccessConfig) -> String {
         );
     }
     "Nothing ran: the local sandbox could not start the command, and trying again will not help. \
-     Tell the person the reason is in OpenBot's log (Settings, This computer, Open log folder)."
+     Tell the person the reason is in Mangaba Bot's log (Settings, This computer, Open log folder)."
         .into()
 }
 
@@ -3230,7 +3230,7 @@ mod tests {
                 return Ok(());
             }
             Err(HostAccessError::Denied(
-                "Declined in OpenBot Desktop.".into(),
+                "Declined in Mangaba Bot Desktop.".into(),
             ))
         }
 
@@ -3345,7 +3345,7 @@ mod tests {
         assert_eq!(approval.asked.load(Ordering::SeqCst), 2);
         assert_eq!(
             public_error_message(&next, &inner.config),
-            "Declined in OpenBot Desktop."
+            "Declined in Mangaba Bot Desktop."
         );
         assert!(!inner.state.lock().unwrap().grants["grant"].revoked);
     }
@@ -3475,7 +3475,7 @@ mod tests {
         );
         assert_eq!(
             posted("op-next").unwrap()["error"],
-            "Declined in OpenBot Desktop."
+            "Declined in Mangaba Bot Desktop."
         );
         assert_eq!(posted("op-gone").unwrap()["ok"], false);
         thread::sleep(Duration::from_millis(50));
@@ -3499,7 +3499,7 @@ mod tests {
         fn confirm_write(&self, _: &WritePrompt) -> HostAccessResult<()> {
             self.asked_to_change.fetch_add(1, Ordering::SeqCst);
             Err(HostAccessError::Denied(
-                "Declined in OpenBot Desktop.".into(),
+                "Declined in Mangaba Bot Desktop.".into(),
             ))
         }
 
@@ -3510,7 +3510,7 @@ mod tests {
             );
             self.asked_to_change.fetch_add(1, Ordering::SeqCst);
             Err(HostAccessError::Denied(
-                "Declined in OpenBot Desktop.".into(),
+                "Declined in Mangaba Bot Desktop.".into(),
             ))
         }
     }
@@ -3612,7 +3612,7 @@ mod tests {
             let refused = inner.handle_operation(&change(id, kind)).map(|_| ());
             assert_eq!(
                 public_error_message(&refused.unwrap_err(), &inner.config),
-                "Declined in OpenBot Desktop."
+                "Declined in Mangaba Bot Desktop."
             );
         }
         assert_eq!(approval.asked_to_change.load(Ordering::SeqCst), 2);
@@ -3752,7 +3752,7 @@ mod tests {
         fn confirm_command(&self, _: &CommandPrompt) -> HostAccessResult<()> {
             *self.asked_at.lock().unwrap() = Some(Instant::now());
             Err(HostAccessError::Denied(
-                "Declined in OpenBot Desktop.".into(),
+                "Declined in Mangaba Bot Desktop.".into(),
             ))
         }
     }
@@ -3777,7 +3777,7 @@ mod tests {
             .unwrap_err();
         assert_eq!(
             public_error_message(&refused, &inner.config),
-            "Declined in OpenBot Desktop."
+            "Declined in Mangaba Bot Desktop."
         );
         let told = server.seen.lock().unwrap().clone();
         assert_eq!(told.len(), 1, "{told:?}");
@@ -4553,7 +4553,7 @@ mod live {
             sandbox.run("true"),
             Err(
                 "Nothing ran: the local sandbox's software is missing from this computer. \
-                 Restarting OpenBot downloads it again; ask the person to restart OpenBot, then \
+                 Restarting Mangaba Bot downloads it again; ask the person to restart Mangaba Bot, then \
                  try again."
                     .into()
             )

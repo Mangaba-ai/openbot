@@ -12,7 +12,7 @@ export interface TeamMember {
   /** Their address. */
   email: string;
   /**
-   * What OpenBot calls them. Null until they choose.
+   * What Mangaba Bot calls them. Null until they choose.
    * @nullable
    */
   name: string | null;

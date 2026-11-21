@@ -1,6 +1,6 @@
 import { ClientError } from "@/lib/client";
 
-/** The organization already has as many computers as OpenBot allows it. An admin makes room on Computers. */
+/** The organization already has as many computers as Mangaba Bot allows it. An admin makes room on Computers. */
 export const COMPUTER_LIMIT_REACHED = "COMPUTER_LIMIT_REACHED";
 
 /**

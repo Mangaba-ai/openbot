@@ -3,7 +3,7 @@
  */
 
 /**
- * How the person's account is connected: OpenBot's own sign-in, the directory's sign-in, a key, or nothing to connect.
+ * How the person's account is connected: Mangaba Bot's own sign-in, the directory's sign-in, a key, or nothing to connect.
  */
 export type BotAppConnect =
   | (typeof BotAppConnect)[keyof typeof BotAppConnect]

@@ -427,7 +427,7 @@ export function BrokerDirectory({ provider }: { provider: PluginsProvider }) {
           </>
         )}
       </PageSection>
-      {/* OpenBot's step before a sign-in, in OpenBot Desktop's window. */}
+      {/* Mangaba Bot's step before a sign-in, in Mangaba Bot Desktop's window. */}
       {tab.consentStep}
     </PageShell>
   );

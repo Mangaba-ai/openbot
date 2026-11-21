@@ -32,7 +32,7 @@ export interface Component {
    * @nullable
    */
   description: string | null;
-  /** For a published Playground component, the source a conversation draws it from. Null for one that comes with OpenBot, and for one that isn't published. */
+  /** For a published Playground component, the source a conversation draws it from. Null for one that comes with Mangaba Bot, and for one that isn't published. */
   source: PlaygroundSource | null;
   /** The working copy publishing would make live. For an admin. */
   draft: ComponentDraft | null;

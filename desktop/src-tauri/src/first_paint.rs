@@ -1,18 +1,18 @@
 /*!
-The main window before its page has painted: OpenBot's own ground with "Getting OpenBot ready" on
+The main window before its page has painted: Mangaba Bot's own ground with "Getting Mangaba Bot ready" on
 it, never a blank white window.
 
 The main window is built visible (`build_main_window`), and everything inside it is the webview's.
 On Windows, WebView2 shows its default background until the page paints, and that default is white
 ([`DefaultBackgroundColor`][background]). On a clean Windows Server 2022 that had just installed
-WebView2 with OpenBot (box H, public 1.0.2), the window stayed blank white for about a minute after
+WebView2 with Mangaba Bot (box H, public 1.0.2), the window stayed blank white for about a minute after
 the installer's Finish: WebView2 started its processes within two seconds, then took most of a
 minute to write its new profile and load the setup page, with Microsoft Defender watching each of
-its processes as children of an OpenBot it had not seen before.
+its processes as children of an Mangaba Bot it had not seen before.
 
 So on Windows the window is built on the setup screens' ground, which WebView2 also takes as its
 default background (Tauri's [`background_color`][tauri]), and from the moment the window first shows
-a native window of OpenBot's own sits over the webview and says "Getting OpenBot ready", until the
+a native window of Mangaba Bot's own sits over the webview and says "Getting Mangaba Bot ready", until the
 setup page's first heartbeat says it has painted (`setup_heartbeat`). It is a child of the main
 window, so it moves, resizes, hides and closes with it; the webview under it keeps loading, never
 hidden, so nothing here brings back the hidden window that stopped taking updates (PR 1416).
@@ -38,8 +38,8 @@ the wait is a fraction of a second, not Windows' minute.
 [under]: https://developer.apple.com/documentation/webkit/wkwebview/underpagebackgroundcolor
 */
 
-/// The cover's heading: the words the setup page uses while OpenBot gets ready.
-pub const HEADING: &str = "Getting OpenBot ready";
+/// The cover's heading: the words the setup page uses while Mangaba Bot gets ready.
+pub const HEADING: &str = "Getting Mangaba Bot ready";
 /// The cover's second line.
 #[cfg_attr(not(windows), allow(dead_code))]
 pub const LINE: &str = "This can take a minute.";
@@ -123,7 +123,7 @@ pub fn palette(dark: bool) -> Palette {
     }
 }
 
-/// Whether Windows is set to dark for apps, which the setup screens follow when OpenBot's own page
+/// Whether Windows is set to dark for apps, which the setup screens follow when Mangaba Bot's own page
 /// has not said yet (`AppsUseLightTheme` 0, as tao reads it for the window's theme).
 #[cfg(windows)]
 pub fn system_dark() -> bool {
@@ -134,7 +134,7 @@ pub fn system_dark() -> bool {
 }
 
 /**
-Whether macOS is in Dark Mode, which the setup screens follow when OpenBot's own page has not said
+Whether macOS is in Dark Mode, which the setup screens follow when Mangaba Bot's own page has not said
 yet: the application's effective appearance matched to Aqua or Dark Aqua, as tao reads it for the
 window's theme ([`effectiveAppearance`][app], [`bestMatch(from:)`][match]). The main window is built
 before it has a theme of its own to ask, so this asks the application. AppKit answers on the main
@@ -660,7 +660,7 @@ mod native {
                 let window = CreateWindowExW(
                     Default::default(),
                     w!("OpenBotFirstPaintTest"),
-                    w!("OpenBot"),
+                    w!("Mangaba Bot"),
                     WS_OVERLAPPEDWINDOW,
                     100,
                     100,
@@ -842,7 +842,7 @@ mod tests {
         let main = include_str!("main.rs");
         assert!(main.contains("Color(0xed, 0xed, 0xf5, 0xff)"));
         assert!(main.contains("Color(0x0d, 0x0b, 0x13, 0xff)"));
-        // The words the setup page uses while OpenBot gets ready.
+        // The words the setup page uses while Mangaba Bot gets ready.
         assert!(include_str!("../../src/App.tsx").contains(&format!("<h1>{HEADING}</h1>")));
         assert_eq!(LINE, "This can take a minute.");
         // Box H's window, 1000 by 838 at 100%: the card 576 wide in the middle, 25 down (3vh).
@@ -855,7 +855,7 @@ mod tests {
         assert_eq!(sheet(600, 600, 1.0).card[0], 24);
     }
 
-    /// A fresh Mac in Dark Mode opened setup on the light ground: before OpenBot's page has said
+    /// A fresh Mac in Dark Mode opened setup on the light ground: before Mangaba Bot's page has said
     /// light or dark, the window follows the system's, and every dark appearance AppKit has reads
     /// as dark.
     #[cfg(target_os = "macos")]

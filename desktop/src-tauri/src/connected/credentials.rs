@@ -1,7 +1,7 @@
-//! The sign-in to an OpenBot that runs elsewhere, kept in the operating system's credential store.
+//! The sign-in to an Mangaba Bot that runs elsewhere, kept in the operating system's credential store.
 //!
 //! Keychain on macOS, Credential Manager on Windows, the Secret Service on Linux, through the
-//! `keyring` crate. One entry per OpenBot: the service is this app's identifier and the account is
+//! `keyring` crate. One entry per Mangaba Bot: the service is this app's identifier and the account is
 //! the normalised address. Only the refresh token is kept. The access token lives in memory for
 //! its hour and is never written anywhere; nothing token-shaped is written to a file or a log.
 
@@ -10,7 +10,7 @@ use crate::problem::Problem;
 use std::sync::Arc;
 
 /// The service every entry is filed under: the app's identifier.
-pub const SERVICE: &str = "ai.copilotkit.openbot.desktop";
+pub const SERVICE: &str = "ai.mangaba.bot.desktop";
 
 type MakeEntry = dyn Fn(&str) -> keyring_core::Result<keyring_core::Entry> + Send + Sync;
 
@@ -103,7 +103,7 @@ mod tests {
         let first = refresh_token("Ab3x");
         store.set(ADDRESS, &first).unwrap();
         assert_eq!(store.get(ADDRESS).unwrap(), Some(first));
-        // Another OpenBot has a sign-in of its own.
+        // Another Mangaba Bot has a sign-in of its own.
         assert_eq!(store.get("https://other.example.com").unwrap(), None);
 
         let second = refresh_token("Zq9k");
@@ -134,9 +134,9 @@ mod tests {
         assert_eq!(
             problem.said,
             if cfg!(windows) {
-                "OpenBot couldn't save your sign-in on this computer. Check Windows Credential Manager, then try again."
+                "Mangaba Bot couldn't save your sign-in on this computer. Check Windows Credential Manager, then try again."
             } else {
-                "OpenBot couldn't save your sign-in on this computer. Unlock your keychain, then try again."
+                "Mangaba Bot couldn't save your sign-in on this computer. Unlock your keychain, then try again."
             }
         );
         let detail = problem.detail.unwrap();

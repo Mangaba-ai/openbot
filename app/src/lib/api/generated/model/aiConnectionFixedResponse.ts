@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * Whoever runs this OpenBot sets its AI provider (editable is false), so it can't be changed here. Or the Idempotency-Key was already used for a different request.
+ * Whoever runs this Mangaba Bot sets its AI provider (editable is false), so it can't be changed here. Or the Idempotency-Key was already used for a different request.
  */
 export type AiConnectionFixedResponse = Problem;

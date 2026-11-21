@@ -471,7 +471,7 @@ export const getGetBotNotificationSettingsUrl = (
 };
 
 /**
- * Return how much one Bot may reach the person outside OpenBot: everything, only what needs them, or nothing. A Bot they never set may send everything. Badges in OpenBot always show. Only the person themselves may read it, about a Bot they can see.
+ * Return how much one Bot may reach the person outside Mangaba Bot: everything, only what needs them, or nothing. A Bot they never set may send everything. Badges in Mangaba Bot always show. Only the person themselves may read it, about a Bot they can see.
  * @summary Read how much one Bot may reach a person
  */
 export const getBotNotificationSettings = async (
@@ -718,7 +718,7 @@ export const getUpdateBotNotificationSettingsUrl = (
 };
 
 /**
- * Set how much one Bot may reach the person outside OpenBot. The audit trail records the change. Only the person themselves may change it, about a Bot they can see.
+ * Set how much one Bot may reach the person outside Mangaba Bot. The audit trail records the change. Only the person themselves may change it, about a Bot they can see.
  * @summary Change how much one Bot may reach a person
  */
 export const updateBotNotificationSettings = async (
@@ -896,8 +896,8 @@ export const getListNotificationTransportsUrl = (
 };
 
 /**
- * Return the ways this deployment can reach a person outside OpenBot. One appears only once it is set up where OpenBot runs: push needs the OpenBot phone app's project, Slack and Microsoft Teams need the OpenTag pairing, and text messages need Twilio. A person's settings keep their choice for one that is not, for when it is. A missing cursor starts at the first page and nextCursor null ends the list.
- * @summary List the ways OpenBot can reach people here
+ * Return the ways this deployment can reach a person outside Mangaba Bot. One appears only once it is set up where Mangaba Bot runs: push needs the Mangaba Bot phone app's project, Slack and Microsoft Teams need the OpenTag pairing, and text messages need Twilio. A person's settings keep their choice for one that is not, for when it is. A missing cursor starts at the first page and nextCursor null ends the list.
+ * @summary List the ways Mangaba Bot can reach people here
  */
 export const listNotificationTransports = async (
   organizationId: string,
@@ -1078,7 +1078,7 @@ export function useListNotificationTransports<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 /**
- * @summary List the ways OpenBot can reach people here
+ * @summary List the ways Mangaba Bot can reach people here
  */
 
 export function useListNotificationTransports<

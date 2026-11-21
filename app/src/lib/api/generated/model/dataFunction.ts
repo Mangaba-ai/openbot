@@ -3,7 +3,7 @@
  */
 
 /**
- * Data a component may read for itself, so the figures it shows come from OpenBot and not from the model.
+ * Data a component may read for itself, so the figures it shows come from Mangaba Bot and not from the model.
  */
 export interface DataFunction {
   /** @minLength 1 */

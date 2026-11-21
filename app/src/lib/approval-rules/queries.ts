@@ -20,7 +20,7 @@ export type BacktestChange = ApprovalRuleDraftReplayChange;
 export type ApprovalBacktest = ApprovalRuleDraftReplayReport;
 
 export type ApprovalRulesPreview = {
-  /** The rules as they stand now, checked against this OpenBot's tools and Bots. */
+  /** The rules as they stand now, checked against this Mangaba Bot's tools and Bots. */
   check: RuleRowsCheck;
   warning: string | null;
   report: ApprovalBacktest;

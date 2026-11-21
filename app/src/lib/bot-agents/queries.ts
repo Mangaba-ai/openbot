@@ -29,7 +29,7 @@ export type Delegation = BotDelegation;
 
 /**
  * Whether Bots may hand work to agents, which starts task threads.
- * Off for now: OpenBot runs every Bot as one that does the work itself, whatever it is set to. So the
+ * Off for now: Mangaba Bot runs every Bot as one that does the work itself, whatever it is set to. So the
  * app reads every Bot that way too (`workingMode`): no "Hand work to agents" switch, the Agents page
  * is the agent a Bot runs on, and its Agents row and the model picker say what a Bot that does the
  * work itself says. Task cards and threads already made still read as before. Set it back to true to
@@ -38,7 +38,7 @@ export type Delegation = BotDelegation;
 export const TASK_THREADS_OFFERED: boolean = false;
 
 /**
- * How a Bot works, as OpenBot runs it: what it is set to while task threads are offered, otherwise
+ * How a Bot works, as Mangaba Bot runs it: what it is set to while task threads are offered, otherwise
  * doing the work itself. Every screen reads a Bot's mode through this.
  */
 export function workingMode(
@@ -114,7 +114,7 @@ export function botDelegationQueryOptions(botId: string) {
 /**
  * Whether a person picks the model in a conversation with this Bot.
  *
- * Only a Bot on OpenBot's own model takes a pick, and not one that hands work to agents: that Bot's
+ * Only a Bot on Mangaba Bot's own model takes a pick, and not one that hands work to agents: that Bot's
  * model is set on its Agents page, and each agent keeps its own. Hidden while the answer is on its
  * way, so an orchestrating Bot never shows the picker for a moment; shown if the answer could not
  * be read, which is how every Bot behaved before agents were a list.
@@ -134,7 +134,7 @@ export function useBotTakesModelChoice(
 
 /**
  * Why a conversation with this Bot takes no model pick, or null when it takes one. The rule of
- * `useBotTakesModelChoice`, asked once: the home composer's pick is made before OpenBot has picked
+ * `useBotTakesModelChoice`, asked once: the home composer's pick is made before Mangaba Bot has picked
  * the Bot, so it is asked when the Bot is known, just before its conversation is made.
  */
 export async function whyNoModelChoice(
@@ -163,20 +163,20 @@ export function hostOf(endpoint: string | null): string | null {
   }
 }
 
-/** Where an agent runs, in a few words: "Runs in OpenBot", "LangChain at agents.example.com". */
+/** Where an agent runs, in a few words: "Runs in Mangaba Bot", "LangChain at agents.example.com". */
 export function whereItRuns(agent: {
   kind: AgentRecord["kind"];
   endpoint: string | null;
   framework?: string;
 }): string {
-  if (agent.kind === "openbot") return "Runs in OpenBot";
+  if (agent.kind === "openbot") return "Runs in Mangaba Bot";
   const host = hostOf(agent.endpoint);
   if (agent.framework && host) return `${agent.framework} at ${host}`;
   if (host) return `At ${host}`;
   return agent.framework ?? "At its own address";
 }
 
-/** A Bot's Agents row, in a line: "Does the work itself on OpenBot", "Hands work to 2 agents". */
+/** A Bot's Agents row, in a line: "Does the work itself on Mangaba Bot", "Hands work to 2 agents". */
 export function delegationSummary(delegation: Delegation): string {
   if (workingMode(delegation) === "orchestrate") {
     const count = delegation.agents.length;

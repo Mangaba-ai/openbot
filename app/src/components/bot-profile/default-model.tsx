@@ -95,11 +95,11 @@ export function DefaultModelSection({
   const summary = savedModel
     ? modelSummary(savedModel, saved?.effort ?? null)
     : agent.defaultModel && catalogue
-      ? "The chosen model isn't available. New conversations use OpenBot's default."
+      ? "The chosen model isn't available. New conversations use Mangaba Bot's default."
       : (agent.defaultModel?.model ??
         (deploymentSummary
-          ? `OpenBot's default · ${deploymentSummary}`
-          : "OpenBot's default"));
+          ? `Mangaba Bot's default · ${deploymentSummary}`
+          : "Mangaba Bot's default"));
 
   return (
     <PageSection title="Model">
@@ -158,7 +158,7 @@ export function DefaultModelSection({
                     type="radio"
                   />
                   <span className="grid gap-0.5">
-                    <span className="font-medium">Use OpenBot's default</span>
+                    <span className="font-medium">Use Mangaba Bot's default</span>
                     {deploymentSummary ? (
                       <span className="text-muted-foreground text-xs">
                         {deploymentSummary}

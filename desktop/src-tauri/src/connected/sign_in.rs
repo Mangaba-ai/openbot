@@ -1,9 +1,9 @@
 /*!
-Signing in to an OpenBot that runs elsewhere, and staying signed in.
+Signing in to an Mangaba Bot that runs elsewhere, and staying signed in.
 
 OAuth 2.1 authorization code with PKCE (S256), as a public client with a loopback redirect
 (RFC 8252): a listener on `127.0.0.1` at a port the system picks, the system browser sent to the
-OpenBot's authorization endpoint, and the code it sends back to `/callback` exchanged for tokens.
+Mangaba Bot's authorization endpoint, and the code it sends back to `/callback` exchanged for tokens.
 The PKCE verifier, the `state` and the callback's first line are read with what
 `provider_oauth` already has; nothing new is done with a hash or a random number here.
 
@@ -27,7 +27,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
-/// The redirect's path. The OpenBot accepts exactly `http://127.0.0.1:<port>/callback`.
+/// The redirect's path. The Mangaba Bot accepts exactly `http://127.0.0.1:<port>/callback`.
 pub const CALLBACK_PATH: &str = "/callback";
 
 /// How long the browser has to come back.
@@ -36,7 +36,7 @@ pub const WAIT: Duration = Duration::from_secs(600);
 /// An access token this close to its end is replaced before it is used.
 const REFRESH_BEFORE_END: Duration = Duration::from_secs(60);
 
-/// An access token the OpenBot refused is replaced at most this often. Without it, an address
+/// An access token the Mangaba Bot refused is replaced at most this often. Without it, an address
 /// that answers 401 whatever the token would use a refresh token on every request.
 const REFUSED_REFRESH_EVERY: Duration = Duration::from_secs(30);
 
@@ -45,24 +45,24 @@ pub const SIGNED_IN_HEADING: &str = "You're signed in";
 /// And its sentence. Windows may keep the browser in front of the app (`come_forward` in the
 /// app), so it says where to go next.
 pub const SIGNED_IN_PAGE: &str =
-    "Go back to the OpenBot app to keep going. You can close this tab.";
+    "Go back to the Mangaba Bot app to keep going. You can close this tab.";
 /// The heading when the sign-in was refused or was not this app's.
 pub const NOT_SIGNED_IN_HEADING: &str = "Sign-in didn't finish";
 /// And its sentence.
 pub const NOT_SIGNED_IN_PAGE: &str =
-    "Go back to the OpenBot app to try again. You can close this tab.";
-/// The heading when the person signed in and that OpenBot then refused the app (`access-refused`).
-pub const NOT_LET_IN_HEADING: &str = "You signed in, but OpenBot didn't let the app in";
+    "Go back to the Mangaba Bot app to try again. You can close this tab.";
+/// The heading when the person signed in and that Mangaba Bot then refused the app (`access-refused`).
+pub const NOT_LET_IN_HEADING: &str = "You signed in, but Mangaba Bot didn't let the app in";
 /// And its sentence: the app says the same, with the address.
 pub const NOT_LET_IN_PAGE: &str =
-    "Ask whoever runs your OpenBot to give you access, then sign in again. You can close this tab.";
+    "Ask whoever runs your Mangaba Bot to give you access, then sign in again. You can close this tab.";
 
 /// How the browser tab's page ends the sign-in.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Ending {
-    /// Signed in, and the OpenBot serves the app to the new sign-in.
+    /// Signed in, and the Mangaba Bot serves the app to the new sign-in.
     SignedIn,
-    /// Signed in, and the OpenBot then refused the app.
+    /// Signed in, and the Mangaba Bot then refused the app.
     NotLetIn,
     /// Refused, cancelled, not this sign-in's answer, or anything else that went wrong.
     NotSignedIn,
@@ -87,7 +87,7 @@ impl Attempt {
     }
 }
 
-/// A sign-in to one OpenBot.
+/// A sign-in to one Mangaba Bot.
 pub struct Session {
     address: String,
     host: String,
@@ -126,7 +126,7 @@ struct Granted {
 enum Refused {
     /// The request never got an answer.
     Transport(String),
-    /// The OpenBot answered no: its status and its OAuth error code.
+    /// The Mangaba Bot answered no: its status and its OAuth error code.
     Answer { status: u16, error: String },
 }
 
@@ -140,11 +140,11 @@ impl Refused {
 }
 
 /**
-Sign in to the OpenBot at `address` in the person's browser.
+Sign in to the Mangaba Bot at `address` in the person's browser.
 
 `open` is handed the address to open, the system browser in the app. The wait ends when the browser
 comes back with a code, when the person refuses, when `attempt` is cancelled, or after `wait`.
-Returns once the code is exchanged, the OpenBot has answered `/api/copilotkit/info` with the new
+Returns once the code is exchanged, the Mangaba Bot has answered `/api/copilotkit/info` with the new
 token, and the refresh token is in `store`. The browser tab is answered only then, with the page
 for how it ended (`Ending`).
 */
@@ -188,7 +188,7 @@ pub fn sign_in(
     let (code, mut tab) = wait_for_code(&listener, &state, attempt, wait, &host)?;
     drop(listener);
 
-    // The browser's request is held while the code is exchanged and the OpenBot is asked whether
+    // The browser's request is held while the code is exchanged and the Mangaba Bot is asked whether
     // it lets the app in, so the tab says what the app is about to say, not "signed in" before
     // the app knows. That takes a moment; the browser shows it as loading.
     let signed_in = finish(address, &host, metadata, store, &code, &redirect, &verifier);
@@ -202,7 +202,7 @@ pub fn sign_in(
 }
 
 /// The rest of a sign-in once the browser is back with a code: the exchange, the check that the
-/// OpenBot serves the app to the new sign-in, and the refresh token kept. Tokens the app will not
+/// Mangaba Bot serves the app to the new sign-in, and the refresh token kept. Tokens the app will not
 /// use are revoked.
 fn finish(
     address: &str,
@@ -249,7 +249,7 @@ fn finish(
         }),
         refreshing: Mutex::new(()),
     };
-    // The app's screens start here. An OpenBot that refuses its own new token there does not
+    // The app's screens start here. An Mangaba Bot that refuses its own new token there does not
     // let the app in (`serves_the_app`).
     if let Err(problem) = session.serves_the_app() {
         session.revoke();
@@ -268,7 +268,7 @@ fn finish(
 }
 
 /// The saved sign-in for `address`, made current: the stored refresh token exchanged for a new
-/// access token. `session-ended` when there is none or the OpenBot no longer takes it.
+/// access token. `session-ended` when there is none or the Mangaba Bot no longer takes it.
 pub fn resume(address: &str, metadata: &Metadata, store: Store) -> Result<Session, Problem> {
     let host = host_of(address);
     let Some(refresh) = store.get(address)? else {
@@ -310,7 +310,7 @@ impl Session {
         self.current(None)
     }
 
-    /// The OpenBot answered 401 to `used`: a newer access token, from a refresh unless another
+    /// The Mangaba Bot answered 401 to `used`: a newer access token, from a refresh unless another
     /// request already made one or one was made for a refusal moments ago.
     pub fn after_refused(&self, used: &str) -> Result<String, Problem> {
         self.current(Some(used))
@@ -344,7 +344,7 @@ impl Session {
             Err(Refused::Transport(error)) => {
                 return Err(Kind::Unreachable.problem(&self.host, format!("the refresh: {error}")))
             }
-            // The OpenBot could not answer: the sign-in may still be good.
+            // The Mangaba Bot could not answer: the sign-in may still be good.
             Err(Refused::Answer { status, error }) if status >= 500 => {
                 return Err(Kind::Unreachable
                     .problem(&self.host, format!("the refresh answered {status} {error}")))
@@ -363,7 +363,7 @@ impl Session {
             }
         };
         // The new refresh token is kept before the old one is let go: the old one is already
-        // dead at the OpenBot, so losing the new one here would lose the sign-in.
+        // dead at the Mangaba Bot, so losing the new one here would lose the sign-in.
         let refresh = granted.refresh.unwrap_or(old);
         if let Err(problem) = self.store.set(&self.address, &refresh) {
             // Still signed in for as long as the app runs; the next launch asks again.
@@ -401,11 +401,11 @@ impl Session {
     }
 
     /**
-    Whether the OpenBot serves the app's screens to this sign-in: `GET /api/copilotkit/info` with
+    Whether the Mangaba Bot serves the app's screens to this sign-in: `GET /api/copilotkit/info` with
     the token.
 
-    - 401 or 403: the person signed in, and that OpenBot does not let this sign-in in on the app's
-      screens (`access-refused`). Updating OpenBot is not the way on, so it is not `too-old`.
+    - 401 or 403: the person signed in, and that Mangaba Bot does not let this sign-in in on the app's
+      screens (`access-refused`). Updating Mangaba Bot is not the way on, so it is not `too-old`.
     - 404: its release does not serve that address (`too-old`).
     - Anything else that is not a success: `sign-in-failed`.
     */
@@ -435,7 +435,7 @@ impl Session {
         }
     }
 
-    /// Sign out: both tokens revoked at the OpenBot (RFC 7009), as far as it answers, then the
+    /// Sign out: both tokens revoked at the Mangaba Bot (RFC 7009), as far as it answers, then the
     /// sign-in forgotten on this computer whatever it answered.
     pub fn sign_out(&self) -> Result<(), Problem> {
         let _one_at_a_time = self.refreshing.lock().unwrap();
@@ -450,7 +450,7 @@ impl Session {
     hour.
 
     The access token first. Revoking the refresh token also ends every access token issued with
-    it (RFC 7009 §2.1; OpenBot deletes them), and OpenBot answers 400 `invalid_request` to the
+    it (RFC 7009 §2.1; Mangaba Bot deletes them), and Mangaba Bot answers 400 `invalid_request` to the
     revocation of a token it no longer has, so the other order always failed on the second one.
     */
     fn revoke(&self) {
@@ -481,7 +481,7 @@ impl Session {
     }
 }
 
-/// Revoke a saved sign-in with no session around it: the stored refresh token, when the OpenBot
+/// Revoke a saved sign-in with no session around it: the stored refresh token, when the Mangaba Bot
 /// can be asked, and then forgotten either way.
 pub fn sign_out_saved(
     address: &str,
@@ -625,7 +625,7 @@ fn wait_for_code(
 enum Callback {
     /// This sign-in's code. The browser's request is not answered yet.
     Code(String),
-    /// The OpenBot sent the browser back with an OAuth error code.
+    /// The Mangaba Bot sent the browser back with an OAuth error code.
     Refused(String),
     NotOurs,
 }
@@ -679,8 +679,8 @@ pub fn end_page_for(ending: Ending) -> String {
 
 /**
 The styles of the tab's page, inline: it is served by this app from 127.0.0.1 and loads nothing.
-OpenBot's own tokens (`app/src/styles.css`, as the setup window copies them in `desktop/src/styles.css`):
-the frame's lavender ground with a card on it, its type, its 10px radius, and the orb, OpenBot's
+Mangaba Bot's own tokens (`app/src/styles.css`, as the setup window copies them in `desktop/src/styles.css`):
+the frame's lavender ground with a card on it, its type, its 10px radius, and the orb, Mangaba Bot's
 mark, as the setup window draws it. Light and dark follow the system, as the setup window does.
 Inter when the computer has it, the system's own face otherwise: a font is a file, and this page
 fetches none.
@@ -787,13 +787,13 @@ p {
 }
 "#;
 
-/// The tab's page: OpenBot's orb on a card, a heading, and a sentence. No script, and
+/// The tab's page: Mangaba Bot's orb on a card, a heading, and a sentence. No script, and
 /// nothing loaded from anywhere (`END_PAGE_STYLE`, `END_PAGE_POLICY`).
 pub fn end_page(heading: &str, sentence: &str) -> String {
     format!(
         "<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">\
          <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\
-         <meta name=\"color-scheme\" content=\"light dark\"><title>OpenBot</title>\
+         <meta name=\"color-scheme\" content=\"light dark\"><title>Mangaba Bot</title>\
          <style>{END_PAGE_STYLE}</style></head><body><main>\
          <div class=\"orb\" aria-hidden=\"true\"></div>\
          <h1>{heading}</h1><p>{sentence}</p></main></body></html>"
@@ -829,8 +829,8 @@ mod tests {
         super::super::address::check(&openbot.address()).unwrap()
     }
 
-    /// The whole sign-in, as a person does it: the browser goes to the OpenBot, they approve,
-    /// the tab says they are signed in, and the app holds a sign-in that OpenBot honours.
+    /// The whole sign-in, as a person does it: the browser goes to the Mangaba Bot, they approve,
+    /// the tab says they are signed in, and the app holds a sign-in that Mangaba Bot honours.
     #[test]
     fn a_full_sign_in_ends_with_a_session_and_the_refresh_token_in_the_store() {
         let openbot = FakeOpenBot::start(Shape::Current);
@@ -874,7 +874,7 @@ mod tests {
             "{tab}"
         );
 
-        // The access token is one that OpenBot honours, and only the refresh token is stored.
+        // The access token is one that Mangaba Bot honours, and only the refresh token is stored.
         let access = session.access().unwrap();
         assert!(access.starts_with("oba_"));
         assert!(openbot.honours(&access));
@@ -913,7 +913,7 @@ mod tests {
         assert!(openbot.honours(&session.access().unwrap()));
     }
 
-    /// The tab's pages are OpenBot's: its orb and name on a card, in light and dark as the
+    /// The tab's pages are Mangaba Bot's: its orb and name on a card, in light and dark as the
     /// system is, saying what happened and what to do next. Served by this app from
     /// 127.0.0.1, so everything is inline: no script, no stylesheet, font or image from anywhere.
     #[test]
@@ -933,12 +933,12 @@ mod tests {
             assert!(html.contains(&format!("<p>{sentence}</p>")), "{html}");
             if ending != Ending::NotLetIn {
                 assert!(
-                    sentence.contains("Go back to the OpenBot app"),
+                    sentence.contains("Go back to the Mangaba Bot app"),
                     "{sentence}"
                 );
             }
             assert!(!heading.contains('\u{2014}') && !sentence.contains('\u{2014}'));
-            assert!(html.contains("<title>OpenBot</title>"), "{html}");
+            assert!(html.contains("<title>Mangaba Bot</title>"), "{html}");
             assert!(html.contains("class=\"orb\""), "{html}");
             assert!(
                 html.contains("@media (prefers-color-scheme: dark)"),
@@ -1033,8 +1033,8 @@ mod tests {
         assert_eq!(WAIT, Duration::from_secs(600));
     }
 
-    /// The OpenBot signs the person in, and then the app's first call with the new token
-    /// (`/api/copilotkit/info`) is refused. 401 and 403 are that OpenBot not letting this sign-in
+    /// The Mangaba Bot signs the person in, and then the app's first call with the new token
+    /// (`/api/copilotkit/info`) is refused. 401 and 403 are that Mangaba Bot not letting this sign-in
     /// in: the person is told so, with who to ask. Only 404, an address its release does not serve,
     /// is a release this app cannot connect to. Either way the browser tab says the same as the
     /// app, both tokens are revoked while they still work, and nothing is kept.
@@ -1085,7 +1085,7 @@ mod tests {
         }
     }
 
-    /// Sign-out against an OpenBot whose revocation fails: the failure is only logged, and the
+    /// Sign-out against an Mangaba Bot whose revocation fails: the failure is only logged, and the
     /// sign-in is still forgotten on this computer.
     #[test]
     fn sign_out_forgets_the_sign_in_when_the_openbot_cannot_revoke_it() {
@@ -1155,7 +1155,7 @@ mod tests {
     }
 
     /// Refresh tokens rotate: after a refresh the store holds the new one, the old one no longer
-    /// works, and OpenBot honours the new access token.
+    /// works, and Mangaba Bot honours the new access token.
     #[test]
     fn a_refresh_rotates_and_the_store_holds_the_new_token() {
         let openbot = FakeOpenBot::start(Shape::Current);
@@ -1178,7 +1178,7 @@ mod tests {
         let resumed = resume(&address, &metadata, store.clone()).unwrap();
         assert!(openbot.honours(&resumed.access().unwrap()));
 
-        // The old refresh token, used again, is refused as the real OpenBot refuses it.
+        // The old refresh token, used again, is refused as the real Mangaba Bot refuses it.
         let replayed = token_request(
             &metadata.token_endpoint,
             &[
@@ -1224,7 +1224,7 @@ mod tests {
         assert!(openbot.honours(&tokens[0]));
     }
 
-    /// A refresh the OpenBot refuses ends the sign-in: the problem says so, and the stored token
+    /// A refresh the Mangaba Bot refuses ends the sign-in: the problem says so, and the stored token
     /// is forgotten, so the next launch asks the person to sign in.
     #[test]
     fn a_refused_refresh_ends_the_session_and_forgets_it() {
@@ -1249,9 +1249,9 @@ mod tests {
         );
     }
 
-    /// Sign-out revokes both tokens at the OpenBot, then forgets the sign-in here. The access
+    /// Sign-out revokes both tokens at the Mangaba Bot, then forgets the sign-in here. The access
     /// token goes first: revoking the refresh token also ends the access tokens issued with it,
-    /// and the OpenBot answers 400 to a revocation of a token it no longer has.
+    /// and the Mangaba Bot answers 400 to a revocation of a token it no longer has.
     #[test]
     fn sign_out_revokes_each_token_while_it_still_works_then_forgets() {
         let openbot = FakeOpenBot::start(Shape::Current);
@@ -1279,7 +1279,7 @@ mod tests {
         assert!(session.access().is_err());
     }
 
-    /// Every request the shell itself makes to the OpenBot names this app, `OpenBot-Client:
+    /// Every request the shell itself makes to the Mangaba Bot names this app, `OpenBot-Client:
     /// desktop/<version>`: the two questions before sign-in, the code exchange, the first call
     /// after it, a refresh, and sign-out's revocations. Only the person's browser, which opens the
     /// authorization address, is not the app.
@@ -1382,7 +1382,7 @@ mod tests {
 
         let lines = captured.0.lock().unwrap().join("\n");
         assert!(lines.contains("[connect] signed in to"), "{lines}");
-        // Each revocation the OpenBot answered says so, once: the sign-out and the saved one.
+        // Each revocation the Mangaba Bot answered says so, once: the sign-out and the saved one.
         let revoked = format!("[connect] revoked the sign-in at {}", host_of(&address));
         assert_eq!(lines.matches(revoked.as_str()).count(), 2, "{lines}");
         for token in &tokens {

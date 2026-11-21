@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot is already connected, CopilotKit's management service refused to connect it, or the Idempotency-Key was used for a different request.
+ * This Mangaba Bot is already connected, CopilotKit's management service refused to connect it, or the Idempotency-Key was used for a different request.
  */
 export type ManagementConflictResponse = Problem;

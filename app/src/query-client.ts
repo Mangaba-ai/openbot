@@ -58,10 +58,10 @@ export function organizationScopedHash(queryKey: QueryKey): string {
 }
 
 /**
- * A query that refetches when the person comes back to OpenBot does so when the page is shown again
+ * A query that refetches when the person comes back to Mangaba Bot does so when the page is shown again
  * AND when its window is focused again.
  *
- * TanStack Query 5 listens only for the page being shown (`visibilitychange`). OpenBot Desktop's
+ * TanStack Query 5 listens only for the page being shown (`visibilitychange`). Mangaba Bot Desktop's
  * window stays shown while the person works in their browser beside it, so coming back to it never
  * hid or showed anything: a membership or an invitation made on the web stayed unseen in Desktop
  * until a reload. Its window being focused again is the moment that says it. A browser window
@@ -80,7 +80,7 @@ focusManager.setEventListener((handleFocus) => {
 
 /**
  * The app's client. Every query's retry rule is its own, wrapped once here so that a read failing
- * while OpenBot Desktop can't reach the OpenBot it is connected to waits for it instead of failing
+ * while Mangaba Bot Desktop can't reach the Mangaba Bot it is connected to waits for it instead of failing
  * (`lib/desktop/connection-lost.ts`). Wrapped where options are resolved, so a query that turns its
  * retries off is held the same way.
  *

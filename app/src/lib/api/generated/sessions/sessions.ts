@@ -79,7 +79,7 @@ export const getListSessionsUrl = (
 };
 
 /**
- * Return one page of the sessions a person is signed in with, the newest sign-in first, with the one this request came on marked current. Never a session's token. Only the person themselves may list them, signed in to OpenBot. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the sessions a person is signed in with, the newest sign-in first, with the one this request came on marked current. Never a session's token. Only the person themselves may list them, signed in to Mangaba Bot. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List where a person is signed in
  */
 export const listSessions = async (
@@ -311,7 +311,7 @@ export const getDeleteSessionUrl = (
 };
 
 /**
- * End one session, signing that browser or device out. Ending the current one signs this caller out. Only the person themselves may end their sessions, signed in to OpenBot. A session already ended is not found.
+ * End one session, signing that browser or device out. Ending the current one signs this caller out. Only the person themselves may end their sessions, signed in to Mangaba Bot. A session already ended is not found.
  * @summary Sign a person out of one session
  */
 export const deleteSession = async (

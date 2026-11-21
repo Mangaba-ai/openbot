@@ -1,13 +1,13 @@
 import type { AiConnection } from "@/lib/api/generated/model";
 import { providerById } from "./providers";
 
-/** One line of the AI connection dialog: what it is, and this OpenBot's answer. */
+/** One line of the AI connection dialog: what it is, and this Mangaba Bot's answer. */
 export type AiConnectionDetail = { label: string; value: string };
 
-/** The AI connection in a person's words: who provides it, how OpenBot signs in, and the model. */
+/** The AI connection in a person's words: who provides it, how Mangaba Bot signs in, and the model. */
 export type AiConnectionWords = {
   provider: string;
-  /** The row's second line: how OpenBot signs in, and the model when one was named. */
+  /** The row's second line: how Mangaba Bot signs in, and the model when one was named. */
   summary: string;
   details: AiConnectionDetail[];
 };

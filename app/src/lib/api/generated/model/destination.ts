@@ -4,7 +4,7 @@
 import type { DestinationTransport } from "./destinationTransport";
 
 /**
- * Somewhere outside OpenBot a person continues one conversation with one Bot: a Slack or Microsoft Teams chat, or a phone number.
+ * Somewhere outside Mangaba Bot a person continues one conversation with one Bot: a Slack or Microsoft Teams chat, or a phone number.
  */
 export interface Destination {
   /** The destination's id. */

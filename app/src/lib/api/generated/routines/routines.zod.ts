@@ -127,7 +127,7 @@ export const ListRoutinesResponse = zod.object({
             .describe("When it was made."),
         })
         .describe(
-          "One of a person's routines. schedule is display text and never a value to parse: words for the schedules OpenBot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.",
+          "One of a person's routines. schedule is display text and never a value to parse: words for the schedules Mangaba Bot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.",
         ),
     )
     .describe("Newest first."),
@@ -304,7 +304,7 @@ export const CreateRoutineResponse = zod.object({
         .describe("When it was made."),
     })
     .describe(
-      "One of a person's routines. schedule is display text and never a value to parse: words for the schedules OpenBot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.",
+      "One of a person's routines. schedule is display text and never a value to parse: words for the schedules Mangaba Bot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.",
     ),
 });
 
@@ -470,7 +470,7 @@ export const UpdateRoutineResponse = zod.object({
         .describe("When it was made."),
     })
     .describe(
-      "One of a person's routines. schedule is display text and never a value to parse: words for the schedules OpenBot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.",
+      "One of a person's routines. schedule is display text and never a value to parse: words for the schedules Mangaba Bot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.",
     ),
 });
 
@@ -553,7 +553,7 @@ export const PauseRoutineResponse = zod.object({
 });
 
 /**
- * Switch one of the caller's routines back on, from its next scheduled time. Refused when its goal is complete, when its time zone is one OpenBot does not know, or when the caller already has 20 routines switched on.
+ * Switch one of the caller's routines back on, from its next scheduled time. Refused when its goal is complete, when its time zone is one Mangaba Bot does not know, or when the caller already has 20 routines switched on.
  * @summary Resume a routine
  */
 

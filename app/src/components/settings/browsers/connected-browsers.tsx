@@ -36,7 +36,7 @@ const connectedAt = new Intl.DateTimeFormat(undefined, {
   timeStyle: "short",
 });
 
-/** The browsers signed in to this OpenBot as you, each with a Disconnect that revokes its sign-in. The row of the copy
+/** The browsers signed in to this Mangaba Bot as you, each with a Disconnect that revokes its sign-in. The row of the copy
  * in this browser (`thisInstallId`, from This browser) says so. */
 export function ConnectedBrowsers({
   thisInstallId,
@@ -97,7 +97,7 @@ function ConnectedBrowserRow({
   const which = here
     ? "this browser"
     : connection.via === "openbot-browser"
-      ? "your OpenBot browser"
+      ? "your Mangaba Bot browser"
       : connection.label;
   return (
     <>
@@ -109,16 +109,16 @@ function ConnectedBrowserRow({
           <ItemTitle>{name}</ItemTitle>
           <ItemDescription>
             {connection.via === "openbot-browser"
-              ? "Your OpenBot browser, connected "
+              ? "Your Mangaba Bot browser, connected "
               : "Connected "}
             {connectedAt.format(new Date(connection.createdAt))}
             {connection.via === "desktop"
-              ? " from OpenBot Desktop"
+              ? " from Mangaba Bot Desktop"
               : connection.via === "web"
-                ? " from OpenBot"
+                ? " from Mangaba Bot"
                 : ""}
             ,{" "}
-            {/* A recording streams to the gateway, not to OpenBot, so its last use lags: it says so instead. */}
+            {/* A recording streams to the gateway, not to Mangaba Bot, so its last use lags: it says so instead. */}
             {connection.recording
               ? "recording now"
               : connection.lastUsedAt
@@ -148,7 +148,7 @@ function ConnectedBrowserRow({
           </DialogHeader>
           <DialogBody className="mt-4 text-sm">
             <p>
-              OpenBot signs the Recorder in {which} out. It records nothing for
+              Mangaba Bot signs the Recorder in {which} out. It records nothing for
               you until you connect it again, and a recording running there
               stops.
             </p>

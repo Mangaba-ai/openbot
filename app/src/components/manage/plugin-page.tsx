@@ -255,7 +255,7 @@ function ConnectionStateUnreadable() {
       <ItemContent>
         <ItemTitle>Your account</ItemTitle>
         <ItemDescription role="alert">
-          {/* A hosted OpenBot's logs are OpenBot by CopilotKit's: its admin can't read them. */}
+          {/* A hosted Mangaba Bot's logs are Mangaba Bot by CopilotKit's: its admin can't read them. */}
           {paths.hosted
             ? "Couldn't load whether you've connected an account here. Try again in a moment."
             : `Couldn't load whether you've connected an account here. Try again in a moment, or check ${paths.deploymentName}'s logs if it keeps happening.`}
@@ -278,7 +278,7 @@ export function PluginPage({
   const personal =
     useQuery(deploymentCapabilitiesQueryOptions()).data?.edition === "personal";
   // Whose vault a secret saved here goes into: each organization has its own.
-  const vaultOwner = personal ? "OpenBot" : "this organization";
+  const vaultOwner = personal ? "Mangaba Bot" : "this organization";
   // Routines is on for every Bot in every edition and has no off switch. See personal-defaults.ts.
   const alwaysOn = key === ALWAYS_ON_APP;
   const queryClient = useQueryClient();
@@ -427,7 +427,7 @@ export function PluginPage({
           : null;
       if (authorizationUrl === null) {
         setError(
-          "OpenBot got no consent link back, so nothing was connected. Try again, or check this connector's setup if it keeps happening.",
+          "Mangaba Bot got no consent link back, so nothing was connected. Try again, or check this connector's setup if it keeps happening.",
         );
         return;
       }
@@ -903,8 +903,8 @@ export function PluginPage({
             /* The personal edition has one person, so each sentence speaks to them and names nobody else. */
             auth === "user-oauth"
               ? personal
-                ? `Connect your ${title} account through OpenBot. OpenBot registers an OAuth client, and your Bots see only what you can see.`
-                : `This vendor answers as whoever is asking. ${paths.hosted ? "OpenBot" : "The deployment"} registers an OAuth client, and each person connects their own account. A Bot only sees what that person can see.`
+                ? `Connect your ${title} account through Mangaba Bot. Mangaba Bot registers an OAuth client, and your Bots see only what you can see.`
+                : `This vendor answers as whoever is asking. ${paths.hosted ? "Mangaba Bot" : "The deployment"} registers an OAuth client, and each person connects their own account. A Bot only sees what that person can see.`
               : auth === "builtin"
                 ? `Built into ${paths.deploymentName}. There is no vendor to reach and no credential to keep. ${personal ? "A call runs as you." : "A call runs as whoever asked."}`
                 : auth === "brokered"
@@ -915,8 +915,8 @@ export function PluginPage({
                     : openByUrl
                       ? `${title} answers without an account, so ${personal ? "your Bots use" : "Bots use"} it as it is. Add a key only if ${title} gives you one.`
                       : personal
-                        ? `What OpenBot sends to ${title}. Your Bots all use it.`
-                        : "What OpenBot sends to the vendor. One credential for everybody in this organization."
+                        ? `What Mangaba Bot sends to ${title}. Your Bots all use it.`
+                        : "What Mangaba Bot sends to the vendor. One credential for everybody in this organization."
           }
           title="Connection"
         >
@@ -1220,7 +1220,7 @@ export function PluginPage({
                       ) : (
                         <>
                           <NotConnected />
-                          {/* The arrow says this leaves OpenBot for the vendor's consent page. It does. */}
+                          {/* The arrow says this leaves Mangaba Bot for the vendor's consent page. It does. */}
                           <Button
                             disabled={connectSelf.isPending}
                             onClick={() => {
@@ -1322,7 +1322,7 @@ export function PluginPage({
             <div className="mt-3 p-3">
               {server?.dynamicClient ? (
                 <p className="text-muted-foreground text-sm">
-                  {personal || paths.hosted ? "OpenBot" : "The deployment"}{" "}
+                  {personal || paths.hosted ? "Mangaba Bot" : "The deployment"}{" "}
                   registers its redirect URI itself. There is nothing to add at
                   the vendor.
                 </p>
@@ -1330,14 +1330,14 @@ export function PluginPage({
                 <p className="text-muted-foreground text-sm">
                   Add this to the client's authorised redirect URIs at the
                   vendor, exactly as written. One wrong character fails there,
-                  with an error that doesn't mention OpenBot.
+                  with an error that doesn't mention Mangaba Bot.
                 </p>
               )}
               {!setup.data?.redirectUri ? (
                 <p className="mt-3 text-destructive text-sm" role="alert">
-                  {/* A hosted OpenBot's address is OpenBot by CopilotKit's to set, not its admin's. */}
+                  {/* A hosted Mangaba Bot's address is Mangaba Bot by CopilotKit's to set, not its admin's. */}
                   {paths.hosted
-                    ? "OpenBot has no public address right now, so nobody can finish connecting. Try again later."
+                    ? "Mangaba Bot has no public address right now, so nobody can finish connecting. Try again later."
                     : `${atStart(paths.deploymentName)} has no public URL, so ${personal ? "you can't" : "nobody can"} finish connecting. Set OPENBOT_PUBLIC_URL.`}
                 </p>
               ) : server?.dynamicClient ? null : (

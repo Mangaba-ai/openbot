@@ -107,7 +107,7 @@ export const ENDPOINT_PRESETS: Partial<
 };
 
 /**
- * The ways in a page can offer. A plan or a sign-in runs in OpenBot Desktop, which holds what renews
+ * The ways in a page can offer. A plan or a sign-in runs in Mangaba Bot Desktop, which holds what renews
  * it, so a plain browser offers keys and addresses only.
  */
 export function loginsHere(

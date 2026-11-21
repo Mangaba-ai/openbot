@@ -73,7 +73,7 @@ test("below the floor, the notice is the only thing in the window", async () => 
   await waitFor(() =>
     expect(
       view.getByRole("heading", {
-        name: "This version of OpenBot has a security problem.",
+        name: "This version of Mangaba Bot has a security problem.",
       }),
     ).toBeTruthy(),
   );

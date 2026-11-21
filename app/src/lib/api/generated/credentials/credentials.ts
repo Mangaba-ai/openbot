@@ -316,7 +316,7 @@ export const getCreateCredentialUrl = (organizationId: string) => {
 };
 
 /**
- * Encrypt a secret and keep it in the organization's vault under one key: a kind, a provider and a key id. A key holds one live credential, so adding one for a key that already has one replaces it, and the one it replaces is revoked in the same write. A model key sent without a key id is filed under the name OpenBot's own Bots read (getModelKey). The secret is write-only: no answer includes it, now or later. Recorded on the audit trail. Only an administrator of the organization may add one.
+ * Encrypt a secret and keep it in the organization's vault under one key: a kind, a provider and a key id. A key holds one live credential, so adding one for a key that already has one replaces it, and the one it replaces is revoked in the same write. A model key sent without a key id is filed under the name Mangaba Bot's own Bots read (getModelKey). The secret is write-only: no answer includes it, now or later. Recorded on the audit trail. Only an administrator of the organization may add one.
  * @summary Add a credential to the vault
  */
 export const createCredential = async (
@@ -618,7 +618,7 @@ export const getGetModelKeyUrl = (organizationId: string) => {
 };
 
 /**
- * Return the provider OpenBot's own Bots run on, the key id their model key is filed under in the organization's vault, and whether a live key is kept there. Never the key. A model key added without a key id is filed here. Only an administrator of the organization may read it.
+ * Return the provider Mangaba Bot's own Bots run on, the key id their model key is filed under in the organization's vault, and whether a live key is kept there. Never the key. A model key added without a key id is filed here. Only an administrator of the organization may read it.
  * @summary Read where the Bots find their model key
  */
 export const getModelKey = async (

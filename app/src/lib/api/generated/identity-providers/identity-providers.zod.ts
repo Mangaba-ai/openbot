@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Return one page of the identity providers registered for single sign-on, by email domain: a company's own SAML or OIDC provider, which signs in everybody at its domain. Every administrator sees every provider, whoever registered it. Never a client secret or a signing certificate. Where this OpenBot may keep more than one organization, the list in any organization but `default` also holds the providers registered for the whole OpenBot, marked deployment: they count for this organization's Require SSO only while it has no provider of its own, and can't be removed here. Only an administrator may list them. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the identity providers registered for single sign-on, by email domain: a company's own SAML or OIDC provider, which signs in everybody at its domain. Every administrator sees every provider, whoever registered it. Never a client secret or a signing certificate. Where this Mangaba Bot may keep more than one organization, the list in any organization but `default` also holds the providers registered for the whole Mangaba Bot, marked deployment: they count for this organization's Require SSO only while it has no provider of its own, and can't be removed here. Only an administrator may list them. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List identity providers
  */
 
@@ -75,7 +75,7 @@ export const ListIdentityProvidersResponse = zod.object({
             .boolean()
             .optional()
             .describe(
-              "True for a provider registered for the whole OpenBot, listed in another organization: it counts for that organization's Require SSO only while the organization has no provider of its own, and can't be removed from it. False or absent for the organization's own.",
+              "True for a provider registered for the whole Mangaba Bot, listed in another organization: it counts for that organization's Require SSO only while the organization has no provider of its own, and can't be removed from it. False or absent for the organization's own.",
             ),
         })
         .describe(
@@ -94,7 +94,7 @@ export const ListIdentityProvidersResponse = zod.object({
 });
 
 /**
- * Register a company's identity provider, so everybody it vouches for at its email domain can sign in. SAML takes the metadata the company's identity team supplies; OIDC takes the issuer, which describes itself, and a client. Only an administrator may register one, signed in to OpenBot rather than with a key or an app's sign-in. The audit trail records who registered it. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), no organization registers a provider of its own: this answers 409 with the code HOSTED_SIGN_IN_ONLY.
+ * Register a company's identity provider, so everybody it vouches for at its email domain can sign in. SAML takes the metadata the company's identity team supplies; OIDC takes the issuer, which describes itself, and a client. Only an administrator may register one, signed in to Mangaba Bot rather than with a key or an app's sign-in. The audit trail records who registered it. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), no organization registers a provider of its own: this answers 409 with the code HOSTED_SIGN_IN_ONLY.
  * @summary Register an identity provider
  */
 
@@ -269,7 +269,7 @@ export const CreateIdentityProviderResponse = zod.object({
         .boolean()
         .optional()
         .describe(
-          "True for a provider registered for the whole OpenBot, listed in another organization: it counts for that organization's Require SSO only while the organization has no provider of its own, and can't be removed from it. False or absent for the organization's own.",
+          "True for a provider registered for the whole Mangaba Bot, listed in another organization: it counts for that organization's Require SSO only while the organization has no provider of its own, and can't be removed from it. False or absent for the organization's own.",
         ),
     })
     .describe(
@@ -278,7 +278,7 @@ export const CreateIdentityProviderResponse = zod.object({
 });
 
 /**
- * Remove an identity provider, whoever registered it, so nobody signs in through it again. Only an administrator may remove one. A provider registered for the whole OpenBot (deployment) is removed only where it was registered: in any other organization it is refused with 403. A provider already removed is not found. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), this answers 409 with the code HOSTED_SIGN_IN_ONLY and removes nothing.
+ * Remove an identity provider, whoever registered it, so nobody signs in through it again. Only an administrator may remove one. A provider registered for the whole Mangaba Bot (deployment) is removed only where it was registered: in any other organization it is refused with 403. A provider already removed is not found. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), this answers 409 with the code HOSTED_SIGN_IN_ONLY and removes nothing.
  * @summary Remove an identity provider
  */
 

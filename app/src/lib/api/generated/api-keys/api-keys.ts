@@ -82,7 +82,7 @@ export const getListApiKeysUrl = (
 };
 
 /**
- * Return one page of the API keys a person made, newest first. Never a key itself: start is its first characters, enough to tell keys apart. Only the person themselves may list them, signed in to OpenBot rather than with a key or an app's sign-in. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the API keys a person made, newest first. Never a key itself: start is its first characters, enough to tell keys apart. Only the person themselves may list them, signed in to Mangaba Bot rather than with a key or an app's sign-in. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List a person's API keys
  */
 export const listApiKeys = async (
@@ -313,7 +313,7 @@ export const getCreateApiKeyUrl = (
 };
 
 /**
- * Make an API key that acts as the person on the API, in this organization only: the one it was made in. In any other organization it is refused as if the organization did not exist. The key itself is in this answer and never again: OpenBot keeps only a hash of it. Only the person themselves may make one, signed in to OpenBot: a key can never make another key, and neither can an app's sign-in. A key ends when it expires, when it is deleted, or when an administrator removes the person.
+ * Make an API key that acts as the person on the API, in this organization only: the one it was made in. In any other organization it is refused as if the organization did not exist. The key itself is in this answer and never again: Mangaba Bot keeps only a hash of it. Only the person themselves may make one, signed in to Mangaba Bot: a key can never make another key, and neither can an app's sign-in. A key ends when it expires, when it is deleted, or when an administrator removes the person.
  * @summary Make an API key
  */
 export const createApiKey = async (
@@ -475,7 +475,7 @@ export const getDeleteApiKeyUrl = (
 };
 
 /**
- * End an API key: from now on every request it signs is refused. Only the person who made it may delete it, signed in to OpenBot. A key already deleted is not found.
+ * End an API key: from now on every request it signs is refused. Only the person who made it may delete it, signed in to Mangaba Bot. A key already deleted is not found.
  * @summary Delete an API key
  */
 export const deleteApiKey = async (

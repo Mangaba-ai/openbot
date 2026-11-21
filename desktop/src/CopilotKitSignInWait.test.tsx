@@ -51,7 +51,7 @@ test("a new sign-in shows only its own code, never the one before, even when the
   const screen = render(
     <CopilotKitSignInWait
       attempt="timed-out"
-      waiting="Finish signing in to OpenBot in your browser…"
+      waiting="Finish signing in to Mangaba Bot in your browser…"
       onCancel={() => {}}
     />,
   );
@@ -62,7 +62,7 @@ test("a new sign-in shows only its own code, never the one before, even when the
   screen.rerender(
     <CopilotKitSignInWait
       attempt="try-again"
-      waiting="Finish signing in to OpenBot in your browser…"
+      waiting="Finish signing in to Mangaba Bot in your browser…"
       onCancel={() => {}}
     />,
   );

@@ -81,7 +81,7 @@ export function NewCredentialPage() {
  * A MODEL KEY IS ASKED ONLY WHICH PROVIDER IT IS FOR. The Bots read one entry, the provider they
  * run on under one name, and the form used to ask for a free-text provider and key ID with
  * "OpenAI" and "production" as placeholders: a person who followed them saved a key nothing read,
- * and OpenBot still couldn't answer. The provider is now a choice of the ones the Bots run on, and
+ * and Mangaba Bot still couldn't answer. The provider is now a choice of the ones the Bots run on, and
  * the server files the key under the name they read. A connector key still names itself.
  */
 function CredentialForm({ modelKey }: { modelKey: ModelKeyName | null }) {

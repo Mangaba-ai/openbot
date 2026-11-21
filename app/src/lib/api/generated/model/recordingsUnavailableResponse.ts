@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot keeps no recordings.
+ * This Mangaba Bot keeps no recordings.
  */
 export type RecordingsUnavailableResponse = Problem;

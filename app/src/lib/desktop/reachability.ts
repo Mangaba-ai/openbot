@@ -1,22 +1,22 @@
 /**
- * Whether the OpenBot this page is shown from answered its last request.
+ * Whether the Mangaba Bot this page is shown from answered its last request.
  *
- * Inside OpenBot Desktop connected to an OpenBot that runs somewhere else, every request goes to the
- * desktop app's relay on this computer, which carries it to that OpenBot. When that OpenBot does not
+ * Inside Mangaba Bot Desktop connected to an Mangaba Bot that runs somewhere else, every request goes to the
+ * desktop app's relay on this computer, which carries it to that Mangaba Bot. When that Mangaba Bot does not
  * answer (its address is down, a port forward stopped, the network went), the relay answers the page
  * itself with a 502 and the one sentence below (desktop/src-tauri/src/connected/relay.rs, `unreachable`).
  * That answer is what this reads. Any other answer, a refusal or a 502 from beyond the relay included,
- * means the OpenBot's address answered.
+ * means the Mangaba Bot's address answered.
  *
  * `lib/client.ts` reports every answer here, so the line clears on the next request that gets one.
  * Only connected mode acts on it (`connection-lost.ts`): the line shows, and the screens wait for
- * OpenBot. In a browser and in a local Desktop nothing does.
+ * Mangaba Bot. In a browser and in a local Desktop nothing does.
  *
  * No imports, so the transport can report to it without a cycle.
  */
 
-/** The relay's own body when the OpenBot it carries requests to could not be reached. */
-export const RELAY_UNREACHABLE = "OpenBot could not be reached.";
+/** The relay's own body when the Mangaba Bot it carries requests to could not be reached. */
+export const RELAY_UNREACHABLE = "Mangaba Bot could not be reached.";
 
 let unreachable = false;
 const listeners = new Set<() => void>();

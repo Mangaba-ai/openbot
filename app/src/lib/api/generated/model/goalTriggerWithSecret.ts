@@ -7,7 +7,7 @@ import type { SharedAppsAfterChange } from "./sharedAppsAfterChange";
 export interface GoalTriggerWithSecret {
   trigger: GoalTrigger;
   /**
-   * The secret OpenBot made, shown this once. Null when the secret was pasted, or the kind has none.
+   * The secret Mangaba Bot made, shown this once. Null when the secret was pasted, or the kind has none.
    * @nullable
    */
   secret: string | null;

@@ -17,7 +17,7 @@ import {
  * Settings, in Admin and in the docs. See `docs/how-openbot-works.md`.
  *
  * The order is not a quota. A list leaves out a primitive that has nothing to set where it is
- * drawn (Conversations is never a settings row; Memory only where OpenBot offers it), and never
+ * drawn (Conversations is never a settings row; Memory only where Mangaba Bot offers it), and never
  * reorders the rest or adds a row to complete the set. `app/tests/primitives-order.test.ts` holds
  * Settings and Admin to it.
  */

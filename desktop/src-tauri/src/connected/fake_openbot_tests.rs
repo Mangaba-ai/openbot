@@ -1,5 +1,5 @@
 /*!
-A stand-in for an OpenBot that runs elsewhere, for this module's tests: a real HTTP server on a
+A stand-in for an Mangaba Bot that runs elsewhere, for this module's tests: a real HTTP server on a
 loopback port that answers the addresses the app uses as the real one does.
 
 - the public deployment answer and the authorization server metadata (RFC 8414), at the real paths,
@@ -40,17 +40,17 @@ use std::time::Duration;
 /// What is listening at the address.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Shape {
-    /// An OpenBot this app can connect to.
+    /// An Mangaba Bot this app can connect to.
     Current,
     /// Some other website: every address answers a page.
     WebPage,
     /// Some other service that answers JSON.
     OtherJson,
-    /// An OpenBot somebody is trying on their own computer.
+    /// An Mangaba Bot somebody is trying on their own computer.
     LocalEvaluation,
     /// The personal edition: one person, no sign-in.
     Personal,
-    /// A team's OpenBot from before apps could sign in.
+    /// A team's Mangaba Bot from before apps could sign in.
     NoMetadata,
     /// Metadata whose endpoints are on another host.
     MetadataElsewhere,
@@ -258,7 +258,7 @@ impl FakeOpenBot {
 
     /// For each revocation request, in order, whether it ended a token that still worked. A
     /// `false` is a request for a token that was already over: RFC 7009 answers it 200, and the
-    /// real OpenBot answers it 400 `invalid_request`.
+    /// real Mangaba Bot answers it 400 `invalid_request`.
     pub fn revoke_ended(&self) -> Vec<bool> {
         self.state.lock().unwrap().revoke_ended.clone()
     }
@@ -318,10 +318,10 @@ impl FakeOpenBot {
         }
     }
 
-    /// From now on it behaves as a load balancer or an ingress in front of OpenBot does when it
+    /// From now on it behaves as a load balancer or an ingress in front of Mangaba Bot does when it
     /// closes a kept-open connection for being idle at the very moment the app sends on it: a
     /// connection that has already answered a request is closed when its next request arrives,
-    /// unanswered, and that request never reaches OpenBot. A new connection is answered as usual.
+    /// unanswered, and that request never reaches Mangaba Bot. A new connection is answered as usual.
     pub fn close_kept_open_connections(&self) {
         self.state.lock().unwrap().close_kept_open = true;
     }
@@ -495,7 +495,7 @@ async fn answer(
             if !get("scope").split(' ').all(|scope| SCOPES.contains(&scope)) {
                 return Ok(oauth_error("invalid_scope", "unknown scope"));
             }
-            // The person, signed in to OpenBot in their browser, answering the consent screen.
+            // The person, signed in to Mangaba Bot in their browser, answering the consent screen.
             let approves = headers
                 .iter()
                 .any(|(name, value)| name == "x-fake-person" && value == "approve");
@@ -704,9 +704,9 @@ async fn answer(
             .header("location", "https://elsewhere.example/page")
             .body(full(""))
             .unwrap(),
-        // OpenBot's own socket takes an app's token. The other is not OpenBot's: on a company's
+        // Mangaba Bot's own socket takes an app's token. The other is not Mangaba Bot's: on a company's
         // cluster the same host name hands that path straight to another service, which checks a
-        // join token of its own and has no business seeing the person's OpenBot sign-in.
+        // join token of its own and has no business seeing the person's Mangaba Bot sign-in.
         ("GET", "/api/v2/socket" | "/client/websocket") => {
             let key = headers
                 .iter()
@@ -749,11 +749,11 @@ async fn answer(
         ("GET", "/client/needs-its-own-token") => refused(),
         ("GET", "/assets/app.js") => Response::builder()
             .header("content-type", "text/javascript")
-            .body(full("console.log('OpenBot');"))
+            .body(full("console.log('Mangaba Bot');"))
             .unwrap(),
         ("GET", "/" | "/landing") => Response::builder()
             .header("content-type", "text/html")
-            .body(full("<!doctype html><title>OpenBot</title>"))
+            .body(full("<!doctype html><title>Mangaba Bot</title>"))
             .unwrap(),
         _ => json(
             StatusCode::NOT_FOUND,

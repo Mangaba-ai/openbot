@@ -23,7 +23,7 @@ async function signOut() {
 }
 
 /**
- * Whether this page is inside an OpenBot Desktop connected to an OpenBot that runs somewhere else.
+ * Whether this page is inside an Mangaba Bot Desktop connected to an Mangaba Bot that runs somewhere else.
  * There the desktop app holds the sign-in and the page holds none, so the desktop app is what signs
  * out, and it shows its own setup afterwards.
  */
@@ -37,7 +37,7 @@ export async function connectedThroughDesktop(
   return connection.mode === "connected";
 }
 
-/** Ask the desktop app to sign out of the OpenBot it is connected to. */
+/** Ask the desktop app to sign out of the Mangaba Bot it is connected to. */
 export async function signOutThroughDesktop() {
   try {
     await invokeDesktop("sign_out");
@@ -50,7 +50,7 @@ export async function signOutThroughDesktop() {
 export type SignedOut = { leaving: boolean };
 
 /**
- * Every way out of OpenBot signs out through here, the skins' own menus included.
+ * Every way out of Mangaba Bot signs out through here, the skins' own menus included.
  *
  * The skin is the account's, and this browser only caches it to paint before the preferences load.
  * Clearing it here means the next person on a shared machine starts from the default rather than

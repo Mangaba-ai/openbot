@@ -274,7 +274,7 @@ export function connectAnotherAccountMutationOptions(
 }
 
 /**
- * Every consent a connect press starts, in one place: in OpenBot Desktop's window the account is
+ * Every consent a connect press starts, in one place: in Mangaba Bot Desktop's window the account is
  * confirmed when the window is back in front, whatever screen it is on ({@link confirmOnReturn}).
  * A person's own connection is confirmed as the return page did before, falling back to the app's
  * shared account where the app has one.
@@ -294,8 +294,8 @@ function confirmedOnReturn(
 
 /**
  * One press of Connect, at the person's own connection or, for a Shared app, the app's shared one.
- * Where the person comes back to is one of OpenBot's own pages: the app's page for admins, the
- * person's connection page, or OpenBot Desktop when the press came from its window.
+ * Where the person comes back to is one of Mangaba Bot's own pages: the app's page for admins, the
+ * person's connection page, or Mangaba Bot Desktop when the press came from its window.
  */
 function startConnect(
   serverId: string,

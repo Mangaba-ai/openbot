@@ -4,7 +4,7 @@
 export const THEME_STORAGE_KEY = "openbot-theme-choice";
 
 /**
- * Where releases from before OpenBot followed the system saved a light or dark. They saved one on
+ * Where releases from before Mangaba Bot followed the system saved a light or dark. They saved one on
  * every visit, whether or not the person had touched the setting, so it was never a choice. It is
  * not read, and it is cleared the first time the app opens.
  */
@@ -56,6 +56,6 @@ export function applyTheme(
   effects.toggleRootClass("dark", dark);
   // `index.html` sets this inline before paint, and an inline style outranks the palette.
   effects.setRootColorScheme(dark ? "dark" : "light");
-  // OpenBot Desktop reads this to let its window follow the system, or to pin it to the choice.
+  // Mangaba Bot Desktop reads this to let its window follow the system, or to pin it to the choice.
   effects.setRootChoice(preference);
 }

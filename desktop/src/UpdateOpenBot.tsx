@@ -6,25 +6,25 @@ import { asProblem, InlineFailure, type Problem } from "./Problem";
 import { type AppUpdate, describe } from "./UpdateOffer";
 
 /**
- * The `kind` the shell gives a problem when this app is older than the OpenBot it talks to serves
- * (`client_version::APP_TOO_OLD`): connected to an OpenBot, such as OpenBot Cloud, that raised the
- * oldest app it serves, or with an OpenBot on this computer that needs a newer app.
+ * The `kind` the shell gives a problem when this app is older than the Mangaba Bot it talks to serves
+ * (`client_version::APP_TOO_OLD`): connected to an Mangaba Bot, such as Mangaba Bot Cloud, that raised the
+ * oldest app it serves, or with an Mangaba Bot on this computer that needs a newer app.
  */
 export const APP_TOO_OLD = "app-too-old";
 
 /**
  * The same, when the minimum this app is below was raised because of a security problem in older
  * releases (`client_version::APP_TOO_OLD_SECURITY`). The shell's sentence says so, and the window
- * puts it where "Update OpenBot" would be.
+ * puts it where "Update Mangaba Bot" would be.
  */
 export const APP_TOO_OLD_SECURITY = "app-too-old-security";
 
-/** Whether a problem is this app being too old for its OpenBot, for a security problem or not. */
+/** Whether a problem is this app being too old for its Mangaba Bot, for a security problem or not. */
 export function appTooOld(problem: Problem | null | undefined): boolean {
   return problem?.kind === APP_TOO_OLD || forSecurity(problem);
 }
 
-/** Whether this app is too old for its OpenBot because of a security problem. */
+/** Whether this app is too old for its Mangaba Bot because of a security problem. */
 export function forSecurity(problem: Problem | null | undefined): boolean {
   return problem?.kind === APP_TOO_OLD_SECURITY;
 }
@@ -40,7 +40,7 @@ function told() {
 }
 
 /**
- * Whether an OpenBot that needs a newer app is being said on screen with its Update and restart.
+ * Whether an Mangaba Bot that needs a newer app is being said on screen with its Update and restart.
  * The offer at the top of the window stands back while it is, so the window offers the update
  * once, in the card that says why.
  */
@@ -57,15 +57,15 @@ export function useUpdateOpenBotShowing(): boolean {
 }
 
 /**
- * Update and restart, for an OpenBot that needs a newer version of this app. The same feed and the
+ * Update and restart, for an Mangaba Bot that needs a newer version of this app. The same feed and the
  * same install as the update offer at the top of this window and Check for updates: the feed is read
- * now, and a newer version found is installed, and OpenBot restarts into it. A version the person
+ * now, and a newer version found is installed, and Mangaba Bot restarts into it. A version the person
  * closed the offer on before is still installed: they asked.
  *
  * A build that never updates itself (internal, candidate, or without the updater) says so, with
  * nothing to press. When the feed has nothing newer, it says so and the button stays to try later.
  *
- * `said`: the sentence about the OpenBot, for a screen whose notice for it this draws (the connect
+ * `said`: the sentence about the Mangaba Bot, for a screen whose notice for it this draws (the connect
  * screen): the notice, then Update and restart under it.
  */
 export function UpdateOpenBot({ said }: { said?: string } = {}) {
@@ -151,7 +151,7 @@ export function UpdateOpenBot({ said }: { said?: string } = {}) {
   const doesntUpdate = updatesItself === false || found?.found === "notOffered";
   const line = doesntUpdate && <p role="status">{DOESNT_UPDATE_ITSELF}</p>;
   // Given the sentence, the calm notice is drawn here, so a build that never updates itself says
-  // so in it, in its type, as the card for the OpenBot on this computer does (`AppTooOld`).
+  // so in it, in its type, as the card for the Mangaba Bot on this computer does (`AppTooOld`).
   const notice = said !== undefined && (
     <div className="local-alert needs" role="alert">
       <p>{said}</p>
@@ -177,13 +177,13 @@ export function UpdateOpenBot({ said }: { said?: string } = {}) {
       </div>
       {found?.found === "upToDate" && (
         <p role="status">
-          OpenBot {found.current} is the newest version available. Check again
+          Mangaba Bot {found.current} is the newest version available. Check again
           later.
         </p>
       )}
       {installFailure && (
         <p className="caution" role="alert">
-          OpenBot could not install the update: {installFailure}
+          Mangaba Bot could not install the update: {installFailure}
         </p>
       )}
       {failure && <InlineFailure problem={failure} />}
@@ -192,10 +192,10 @@ export function UpdateOpenBot({ said }: { said?: string } = {}) {
 }
 
 /**
- * An OpenBot that needs a newer version of this app, wherever setup shows a problem: the shell's
- * sentence, which says "Update OpenBot", and Update and restart. Nothing failed, so it is not drawn as
+ * An Mangaba Bot that needs a newer version of this app, wherever setup shows a problem: the shell's
+ * sentence, which says "Update Mangaba Bot", and Update and restart. Nothing failed, so it is not drawn as
  * a failure: no "That didn't finish", no technical details, no troubleshooting logs. For a security
- * problem the shell's sentence is the heading, in place of "Update OpenBot", and is not said twice.
+ * problem the shell's sentence is the heading, in place of "Update Mangaba Bot", and is not said twice.
  */
 export function AppTooOld({
   problem,
@@ -210,7 +210,7 @@ export function AppTooOld({
     // The calm notice the connect screen uses for a connection that didn't work, not the failure
     // card: nothing failed.
     <div className="local-alert needs app-too-old" role="alert">
-      {headed && <h2>{security ? problem.said : "Update OpenBot"}</h2>}
+      {headed && <h2>{security ? problem.said : "Update Mangaba Bot"}</h2>}
       {!security && <p>{problem.said}</p>}
       <UpdateOpenBot />
     </div>

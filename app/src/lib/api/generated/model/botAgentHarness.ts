@@ -3,7 +3,7 @@
  */
 
 /**
- * The framework an agent at an address is built on, by its id in OpenBot's harness list (shared/harnesses.json). Empty means none was named. Kept only for kind address.
+ * The framework an agent at an address is built on, by its id in Mangaba Bot's harness list (shared/harnesses.json). Empty means none was named. Kept only for kind address.
  */
 export type BotAgentHarness =
   (typeof BotAgentHarness)[keyof typeof BotAgentHarness];

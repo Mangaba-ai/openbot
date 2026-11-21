@@ -24,7 +24,7 @@ export const OPENBOT_REPO_URL = "https://github.com/CopilotKit/OpenBot";
 
 /** What the card says. Exported for the tests, which read the words a person reads. */
 export const STAR_ASK =
-  "Enjoying OpenBot? Star it on GitHub so that we can keep making it better.";
+  "Enjoying Mangaba Bot? Star it on GitHub so that we can keep making it better.";
 
 /**
  * Drawn once in this page's life, until it is answered: a card the server said was due a moment
@@ -42,11 +42,11 @@ export function forgetStarPrompt(): void {
 }
 
 /**
- * The ask to star OpenBot on GitHub, as a card above the message box. The same card as the
+ * The ask to star Mangaba Bot on GitHub, as a card above the message box. The same card as the
  * notifications offer, so it reads as part of the composer, and never a dialog.
  *
- * ONLY WHEN THE SERVER SAYS IT IS DUE. That is the personal edition (OpenBot for one person), never a
- * team's, for somebody who has used OpenBot on at least three days, right after a win: a copied
+ * ONLY WHEN THE SERVER SAYS IT IS DUE. That is the personal edition (Mangaba Bot for one person), never a
+ * team's, for somebody who has used Mangaba Bot on at least three days, right after a win: a copied
  * answer, a routine's run that finished, a long task that finished. Never after an error, and never
  * again once answered (shared/notices.ts). The browser only reads the answer: the edition from the
  * deployment, and `noticesDue` from the person's preferences, which `lib/notices.ts` reads again at
@@ -126,7 +126,7 @@ export function StarPrompt() {
         </Button>
         {/*
          * A link, not a button that opens one: it goes somewhere, and a person can see where before
-         * they go. A new tab in a browser; OpenBot Desktop opens it in the system browser, where
+         * they go. A new tab in a browser; Mangaba Bot Desktop opens it in the system browser, where
          * they are signed in to GitHub (`desktop/src-tauri/src/outside-links.js`).
          */}
         <a

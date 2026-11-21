@@ -712,8 +712,8 @@ export function ChannelChat({
   }, [isReady]);
 
   /**
-   * WHEN OPENBOT ANSWERS AGAIN, A CONVERSATION THAT HAD NO ANSWER FILLS IN BY ITSELF. Inside OpenBot
-   * Desktop connected to an OpenBot somewhere else, a conversation opened while that OpenBot did not
+   * WHEN OPENBOT ANSWERS AGAIN, A CONVERSATION THAT HAD NO ANSWER FILLS IN BY ITSELF. Inside Mangaba Bot
+   * Desktop connected to an Mangaba Bot somewhere else, a conversation opened while that Mangaba Bot did not
    * answer has nothing to show: its join and the read of its history both came back from the relay.
    * It used to stay that way until the person opened another conversation and came back. Now, when
    * the connection line clears, a conversation whose join or read had no answer asks again: with an
@@ -732,7 +732,7 @@ export function ChannelChat({
   });
 
   // Join the gateway socket, restore durable history, then release the first-message gate.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: `joins` is the join asked for again when OpenBot answers again.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: `joins` is the join asked for again when Mangaba Bot answers again.
   useEffect(() => {
     if (!isReady) return;
     let current = true;
@@ -1114,7 +1114,7 @@ export function ChannelChat({
   const skillCommands = useSkillCommands(runtimeAgentId);
   const attachmentLimits = useAttachmentLimits();
   /*
-   * The model this conversation's Bot answers on. Only a Bot that runs inside OpenBot uses OpenBot's
+   * The model this conversation's Bot answers on. Only a Bot that runs inside Mangaba Bot uses Mangaba Bot's
    * model, so only it gets a picker; a Bot on its own framework picks its own model.
    */
   /*
@@ -1213,7 +1213,7 @@ export function ChannelChat({
    * `agent.isRunning` looks like both and is neither. It reports the run on the wire, and a turn
    * that touches the browser is several runs in a row: the Bot asks for a click, the run ENDS so
    * the browser can answer it, and another run starts carrying the answer. The agent reports itself
-   * idle in every one of those gaps — the truth about the wire and a lie about the turn. OpenBot
+   * idle in every one of those gaps — the truth about the wire and a lie about the turn. Mangaba Bot
    * registers every computer tool as a frontend tool, so the gaps open on ordinary work rather than
    * on some edge case, and anything keyed on the turn ending fires in the middle of one instead.
    *
@@ -1782,7 +1782,7 @@ export function ChannelChat({
       },
       onRunFinishedEvent: ({ event }) => {
         /*
-         * A run the server stopped to ask the person (an app's call OpenBot asks about) draws its
+         * A run the server stopped to ask the person (an app's call Mangaba Bot asks about) draws its
          * card now, not on the inbox's next poll, as a computer step's does.
          */
         if (

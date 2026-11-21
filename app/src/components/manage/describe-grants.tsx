@@ -327,7 +327,7 @@ export function DescribeGrants({
             check={written.check}
             edited={null}
             explanation={written.explanation}
-            failed="These actions don't check, so OpenBot won't save them."
+            failed="These actions don't check, so Mangaba Bot won't save them."
             heading={`What this lets ${botName} do`}
             passed={`Checks. Every action is one ${appTitle} offers.`}
             warning={written.warning}
@@ -433,7 +433,7 @@ function RecentUse({
       </FieldLabel>
       {report === null ? (
         <FieldDescription>
-          OpenBot keeps no activity it can read here, so there's nothing to test
+          Mangaba Bot keeps no activity it can read here, so there's nothing to test
           against.
         </FieldDescription>
       ) : report.calls === 0 ? (

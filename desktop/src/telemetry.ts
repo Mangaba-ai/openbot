@@ -2,8 +2,8 @@ import { invoke } from "@tauri-apps/api/core";
 import type { ModelChoice } from "./ProviderPicker";
 
 /**
- * `connect` is the Start step, where OpenBot on this computer starts. `connect_openbot` is the
- * first screen with an OpenBot that runs elsewhere chosen: the address field. The address itself is
+ * `connect` is the Start step, where Mangaba Bot on this computer starts. `connect_openbot` is the
+ * first screen with an Mangaba Bot that runs elsewhere chosen: the address field. The address itself is
  * never part of an event.
  */
 export type SetupStep =

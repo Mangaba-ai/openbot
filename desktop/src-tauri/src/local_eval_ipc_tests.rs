@@ -227,17 +227,17 @@ process.stdout.write(JSON.stringify({{ token, keys: JSON.stringify({{ [kid]: key
     /**
     AN UPDATE THAT DID NOT FINISH LEAVES THE BACK END READY ON THE RELEASE IT HAD.
 
-    Found on OpenBot Desktop 0.3.3 on a slow connection. Start began updating the back end from
+    Found on Mangaba Bot Desktop 0.3.3 on a slow connection. Start began updating the back end from
     0.16.0-rc.5 to 0.16.0-rc.9. The CLI stopped downloading one image at its own ten-minute limit
     and recorded `failedStep: "image-download"` with the update still `prepared`. Nothing in the
     cluster changed and every check passed, but `local status` says `degraded` while that record
-    stays. The window said "The back end is running but not healthy." and stopped OpenBot.
+    stays. The window said "The back end is running but not healthy." and stopped Mangaba Bot.
 
     The real CLI this app pins answers `local status` here, over a record for exactly that case,
     against health and engine endpoints served on 127.0.0.1 (a stand-in `docker` lists the pods).
     The window's `run_local_eval` answer for each case is compared with
     `test-fixtures/local-eval/update-did-not-finish.json`, which the window's own tests start
-    OpenBot from (`App.test.tsx`). So the window is tested against what the CLI really says:
+    Mangaba Bot from (`App.test.tsx`). So the window is tested against what the CLI really says:
     - every check passing, the update on record and still due, so the next Start resumes it;
     - the API failing its check, which stays not healthy;
     - the stack stopped by Quit, with the update on record and due.
@@ -432,7 +432,7 @@ process.stdout.write(JSON.stringify({{ token, keys: JSON.stringify({{ [kid]: key
     /**
     CONNECTING THE SAME FOLDER AGAIN AFTER OPENBOT TOOK UP ITS CONNECTION.
 
-    `local connect` writes the stack's addresses at `localhost`. OpenBot then writes them at
+    `local connect` writes the stack's addresses at `localhost`. Mangaba Bot then writes them at
     `127.0.0.1` (`numeric_loopback`) and moves the key to the credential store. Connecting the same
     folder again, which setup Retry, Back and forward through setup, and a reinstall over an
     existing install all do, got "App settings changed after connection was planned" from the CLI
@@ -457,7 +457,7 @@ process.stdout.write(JSON.stringify({{ token, keys: JSON.stringify({{ [kid]: key
         std::fs::create_dir_all(&root).unwrap();
         let root = root.canonicalize().unwrap();
         let home = root.join("home");
-        let installation = home.join("OpenBot");
+        let installation = home.join("Mangaba Bot");
         std::fs::create_dir_all(installation.join(".copilotkit")).unwrap();
         std::fs::write(installation.join(".env"), "SERVER_PORT=3001\n").unwrap();
 
@@ -675,18 +675,18 @@ process.stdout.write(JSON.stringify({{ token, keys: JSON.stringify({{ [kid]: key
     /**
     A STACK WHOSE PODMAN MACHINE WAS REMOVED IS FORGOTTEN, AND SETUP CAN RUN AGAIN.
 
-    Found on a Mac. OpenBot's Podman machine was removed with the back end's cluster in it, after
+    Found on a Mac. Mangaba Bot's Podman machine was removed with the back end's cluster in it, after
     a `local delete` that the stopped machine refused (`docker_unavailable`), so the CLI still had
-    the stack on record. Then the stack's private folder was deleted too, and OpenBot was set up
-    again on a new machine. Every setup stopped with "Setup stopped / OpenBot can't run on this
+    the stack on record. Then the stack's private folder was deleted too, and Mangaba Bot was set up
+    again on a new machine. Every setup stopped with "Setup stopped / Mangaba Bot can't run on this
     computer as it's set up." (`unsupported_engine`) until the record was removed by hand: with
     the folder gone so is the stack's `engine.json`, the CLI takes the stack for a Docker one, and
-    refuses it, and refuses `local delete` too, on the Podman OpenBot names.
+    refuses it, and refuses `local delete` too, on the Podman Mangaba Bot names.
 
-    The real CLI this app pins, against a stand-in for OpenBot's new machine (its API on a unix
+    The real CLI this app pins, against a stand-in for Mangaba Bot's new machine (its API on a unix
     socket, and `podman` and k3d that list no cluster), for each way a person gets there:
     - the machine removed, the stack's folder kept: setup fails (`local_command_failed`), the
-      cluster is gone from OpenBot's own machine, and the stack is forgotten;
+      cluster is gone from Mangaba Bot's own machine, and the stack is forgotten;
     - the folder deleted too: setup is refused (`unsupported_engine`), and the stack is forgotten.
     Forgotten means the CLI's own `local delete` completed: no record and no folder are left, so the
     next setup makes a new stack.
@@ -707,7 +707,7 @@ process.stdout.write(JSON.stringify({{ token, keys: JSON.stringify({{ [kid]: key
         let root = root.canonicalize().unwrap();
         let home = root.join("home");
         let bin = root.join("bin");
-        let installation = home.join("OpenBot");
+        let installation = home.join("Mangaba Bot");
         std::fs::create_dir_all(&bin).unwrap();
         std::fs::create_dir_all(&installation).unwrap();
         use std::os::unix::fs::PermissionsExt;
@@ -716,7 +716,7 @@ process.stdout.write(JSON.stringify({{ token, keys: JSON.stringify({{ [kid]: key
             std::fs::set_permissions(path, std::fs::Permissions::from_mode(0o755)).unwrap();
         };
 
-        // OpenBot's new machine: rootful Podman that answers, with no cluster in it.
+        // Mangaba Bot's new machine: rootful Podman that answers, with no cluster in it.
         let socket = std::env::temp_dir().join(format!("obm-{}.sock", std::process::id()));
         let _ = std::fs::remove_file(&socket);
         serve_unix(&socket, |path| match path {
@@ -802,7 +802,7 @@ process.stdout.write(JSON.stringify({{ token, keys: JSON.stringify({{ [kid]: key
         installed["platforms"] =
             serde_json::json!([{ "os": os, "arch": arch, "tools": { "k3d": k3d, "helm": helm } }]);
 
-        // The CLI's record of the stack OpenBot made, ready, as the removed machine left it.
+        // The CLI's record of the stack Mangaba Bot made, ready, as the removed machine left it.
         let record = serde_json::json!({
             "id": LOST,
             "appPaths": [installation],

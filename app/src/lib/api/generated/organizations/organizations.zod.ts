@@ -61,7 +61,7 @@ export const ListOrganizationsResponse = zod.object({
           personal: zod
             .boolean()
             .describe(
-              "Whether this is the caller's own organization: the one OpenBot made for them when they first signed in.",
+              "Whether this is the caller's own organization: the one Mangaba Bot made for them when they first signed in.",
             ),
           id: zod.string().describe("The organization's id. Opaque."),
           slug: zod
@@ -87,7 +87,7 @@ export const ListOrganizationsResponse = zod.object({
   canCreate: zod
     .boolean()
     .describe(
-      "Whether the caller may create another organization: the server's verdict, true for anybody signed in where OpenBot keeps more than one organization. The same on every page.",
+      "Whether the caller may create another organization: the server's verdict, true for anybody signed in where Mangaba Bot keeps more than one organization. The same on every page.",
     ),
   nextCursor: zod
     .string()
@@ -100,7 +100,7 @@ export const ListOrganizationsResponse = zod.object({
 });
 
 /**
- * Create an organization with the caller as its owner. It starts with what a fresh install starts with, its starter Bots included, and no conversations. Everybody already has an organization of their own, made when they first signed in; this is for making another, which anybody signed in may do where OpenBot keeps more than one. An OpenBot may limit how many organizations one person owns, their own included: at the limit the request is refused with 403 and a detail saying so, and nothing is made. Deleting one they created makes room. While another of the caller's requests is creating one, the request is refused with 409; send it again once that one has answered. Without a slug, one is made from the name. The caller's session keeps working where it was. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Create an organization with the caller as its owner. It starts with what a fresh install starts with, its starter Bots included, and no conversations. Everybody already has an organization of their own, made when they first signed in; this is for making another, which anybody signed in may do where Mangaba Bot keeps more than one. An Mangaba Bot may limit how many organizations one person owns, their own included: at the limit the request is refused with 403 and a detail saying so, and nothing is made. Deleting one they created makes room. While another of the caller's requests is creating one, the request is refused with 409; send it again once that one has answered. Without a slug, one is made from the name. The caller's session keeps working where it was. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Create an organization
  */
 export const createOrganizationHeaderIdempotencyKeyMax = 128;
@@ -151,7 +151,7 @@ export const CreateOrganizationResponse = zod.object({
       personal: zod
         .boolean()
         .describe(
-          "Whether this is the caller's own organization: the one OpenBot made for them when they first signed in.",
+          "Whether this is the caller's own organization: the one Mangaba Bot made for them when they first signed in.",
         ),
       id: zod.string().describe("The organization's id. Opaque."),
       slug: zod.string().describe("Its short name, which also addresses it."),
@@ -173,7 +173,7 @@ export const CreateOrganizationResponse = zod.object({
 });
 
 /**
- * Return one page of the organization's members, in the order they joined. Any member can read it. search narrows the list to the members whose name or address matches it, ignoring case, best matches first: those whose name, a word of their name (a first or a last name) or their address starts with it, then those whose name or address holds it, each group in alphabetical order of name, then address. A search finds only this organization's current members: never somebody it removed, somebody turned away from this OpenBot, or a member of another organization only. A missing cursor starts at the first page and nextCursor null ends the list. A cursor belongs to the search that made it, so changing the search starts again without one.
+ * Return one page of the organization's members, in the order they joined. Any member can read it. search narrows the list to the members whose name or address matches it, ignoring case, best matches first: those whose name, a word of their name (a first or a last name) or their address starts with it, then those whose name or address holds it, each group in alphabetical order of name, then address. A search finds only this organization's current members: never somebody it removed, somebody turned away from this Mangaba Bot, or a member of another organization only. A missing cursor starts at the first page and nextCursor null ends the list. A cursor belongs to the search that made it, so changing the search starts again without one.
  * @summary List an organization's members
  */
 
@@ -240,7 +240,7 @@ export const ListOrganizationMembersResponse = zod.object({
           removable: zod
             .boolean()
             .describe(
-              "Whether this membership can end: an admin can remove them and they can leave. The server's verdict. False for the organization's last owner, who stays in it, for the owner of their own organization, and for somebody this OpenBot's settings keep as an admin of the organization.",
+              "Whether this membership can end: an admin can remove them and they can leave. The server's verdict. False for the organization's last owner, who stays in it, for the owner of their own organization, and for somebody this Mangaba Bot's settings keep as an admin of the organization.",
             ),
           assignableRoles: zod
             .array(
@@ -258,7 +258,7 @@ export const ListOrganizationMembersResponse = zod.object({
           name: zod
             .string()
             .nullable()
-            .describe("What OpenBot calls them. Null until they choose."),
+            .describe("What Mangaba Bot calls them. Null until they choose."),
           image: zod
             .string()
             .nullable()
@@ -275,7 +275,7 @@ export const ListOrganizationMembersResponse = zod.object({
             .boolean()
             .optional()
             .describe(
-              "True for somebody who is a member of the organization where it is kept, at OpenBot by CopilotKit on a hosted OpenBot, and hasn't opened OpenBot yet. Until they do, they have no OpenBot account: id is their id there, and email is empty when none is known. An owner or an admin removes them by that id, as any member (removable says whether they can be). They can't be given another role here until they open OpenBot (assignableRoles is empty). Absent for everybody else.",
+              "True for somebody who is a member of the organization where it is kept, at Mangaba Bot by CopilotKit on a hosted Mangaba Bot, and hasn't opened Mangaba Bot yet. Until they do, they have no Mangaba Bot account: id is their id there, and email is empty when none is known. An owner or an admin removes them by that id, as any member (removable says whether they can be). They can't be given another role here until they open Mangaba Bot (assignableRoles is empty). Absent for everybody else.",
             ),
         })
         .describe("One member of an organization."),
@@ -292,7 +292,7 @@ export const ListOrganizationMembersResponse = zod.object({
 });
 
 /**
- * Give the organization a new name. Its id and its slug stay as they are, so every address that names it keeps working. An organization OpenBot named after its person stops following what that person is called once it has been renamed. Only an owner or an admin of this organization can. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Give the organization a new name. Its id and its slug stay as they are, so every address that names it keeps working. An organization Mangaba Bot named after its person stops following what that person is called once it has been renamed. Only an owner or an admin of this organization can. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Rename an organization
  */
 
@@ -338,7 +338,7 @@ export const UpdateOrganizationResponse = zod.object({
       personal: zod
         .boolean()
         .describe(
-          "Whether this is the caller's own organization: the one OpenBot made for them when they first signed in.",
+          "Whether this is the caller's own organization: the one Mangaba Bot made for them when they first signed in.",
         ),
       id: zod.string().describe("The organization's id. Opaque."),
       slug: zod.string().describe("Its short name, which also addresses it."),
@@ -439,7 +439,7 @@ export const UpdateOrganizationMemberResponse = zod.object({
       removable: zod
         .boolean()
         .describe(
-          "Whether this membership can end: an admin can remove them and they can leave. The server's verdict. False for the organization's last owner, who stays in it, for the owner of their own organization, and for somebody this OpenBot's settings keep as an admin of the organization.",
+          "Whether this membership can end: an admin can remove them and they can leave. The server's verdict. False for the organization's last owner, who stays in it, for the owner of their own organization, and for somebody this Mangaba Bot's settings keep as an admin of the organization.",
         ),
       assignableRoles: zod
         .array(
@@ -457,7 +457,7 @@ export const UpdateOrganizationMemberResponse = zod.object({
       name: zod
         .string()
         .nullable()
-        .describe("What OpenBot calls them. Null until they choose."),
+        .describe("What Mangaba Bot calls them. Null until they choose."),
       image: zod
         .string()
         .nullable()
@@ -474,14 +474,14 @@ export const UpdateOrganizationMemberResponse = zod.object({
         .boolean()
         .optional()
         .describe(
-          "True for somebody who is a member of the organization where it is kept, at OpenBot by CopilotKit on a hosted OpenBot, and hasn't opened OpenBot yet. Until they do, they have no OpenBot account: id is their id there, and email is empty when none is known. An owner or an admin removes them by that id, as any member (removable says whether they can be). They can't be given another role here until they open OpenBot (assignableRoles is empty). Absent for everybody else.",
+          "True for somebody who is a member of the organization where it is kept, at Mangaba Bot by CopilotKit on a hosted Mangaba Bot, and hasn't opened Mangaba Bot yet. Until they do, they have no Mangaba Bot account: id is their id there, and email is empty when none is known. An owner or an admin removes them by that id, as any member (removable says whether they can be). They can't be given another role here until they open Mangaba Bot (assignableRoles is empty). Absent for everybody else.",
         ),
     })
     .describe("One member of an organization."),
 });
 
 /**
- * End somebody's membership of the organization. An owner or an admin of it can remove anybody whose membership can end, and any such member can leave by naming themselves or `me`. The owner stays, so nobody leaves their own organization, and so does somebody this OpenBot's settings keep as an admin of it. The person keeps their account and their other organizations, and what they made here stays here. Removing somebody who is not a member answers the same as removing one.
+ * End somebody's membership of the organization. An owner or an admin of it can remove anybody whose membership can end, and any such member can leave by naming themselves or `me`. The owner stays, so nobody leaves their own organization, and so does somebody this Mangaba Bot's settings keep as an admin of it. The person keeps their account and their other organizations, and what they made here stays here. Removing somebody who is not a member answers the same as removing one.
  * @summary Remove a member, or leave an organization
  */
 
@@ -587,7 +587,7 @@ export const ListOrganizationInvitationsResponse = zod.object({
               name: zod
                 .string()
                 .nullable()
-                .describe("What OpenBot calls them. Null until they choose."),
+                .describe("What Mangaba Bot calls them. Null until they choose."),
               email: zod.string().describe("Their address."),
             })
             .describe("Who sent an invitation."),
@@ -614,7 +614,7 @@ export const ListOrganizationInvitationsResponse = zod.object({
 });
 
 /**
- * Invite the person with this email address to join the organization with a role. They need no account yet: the invitation waits for whoever signs in with that address, and they see it in OpenBot then. Where OpenBot can send email, it also emails them; delivery says which happened, so the inviter knows whether to pass the link on themselves. The invitation lasts seven days. Inviting an address again after its invitation expired or was declined starts a new one. Only an owner or an admin of this organization can. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Invite the person with this email address to join the organization with a role. They need no account yet: the invitation waits for whoever signs in with that address, and they see it in Mangaba Bot then. Where Mangaba Bot can send email, it also emails them; delivery says which happened, so the inviter knows whether to pass the link on themselves. The invitation lasts seven days. Inviting an address again after its invitation expired or was declined starts a new one. Only an owner or an admin of this organization can. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Invite somebody to an organization
  */
 
@@ -676,7 +676,7 @@ export const CreateOrganizationInvitationResponse = zod.object({
           name: zod
             .string()
             .nullable()
-            .describe("What OpenBot calls them. Null until they choose."),
+            .describe("What Mangaba Bot calls them. Null until they choose."),
           email: zod.string().describe("Their address."),
         })
         .describe("Who sent an invitation."),
@@ -693,7 +693,7 @@ export const CreateOrganizationInvitationResponse = zod.object({
   delivery: zod
     .enum(["emailed", "link"])
     .describe(
-      "How the person hears of it. emailed when OpenBot sent them an email. link when it could not or is not set up to, so the inviter passes the invitation's link on themselves. Either way the person sees the invitation in OpenBot when they sign in.",
+      "How the person hears of it. emailed when Mangaba Bot sent them an email. link when it could not or is not set up to, so the inviter passes the invitation's link on themselves. Either way the person sees the invitation in Mangaba Bot when they sign in.",
     ),
 });
 
@@ -738,7 +738,7 @@ export const CancelOrganizationInvitationHeader = zod.object({
 export const CancelOrganizationInvitationResponse = zod.void();
 
 /**
- * Say whether this OpenBot needs an organization to be on a plan before its Bots run, and where this organization stands: on its free trial, on the plan, behind on a payment, or on no plan yet. An OpenBot that needs no plan (every self-hosted install and OpenBot Desktop) answers not_required. Any member can read it. addCardUrl is where an owner or an admin goes, in the browser, to add a card and start or keep the plan; it is null for everyone else.
+ * Say whether this Mangaba Bot needs an organization to be on a plan before its Bots run, and where this organization stands: on its free trial, on the plan, behind on a payment, or on no plan yet. An Mangaba Bot that needs no plan (every self-hosted install and Mangaba Bot Desktop) answers not_required. Any member can read it. addCardUrl is where an owner or an admin goes, in the browser, to add a card and start or keep the plan; it is null for everyone else.
  * @summary Read an organization's plan
  */
 
@@ -758,12 +758,12 @@ export const GetOrganizationPlanResponse = zod
     required: zod
       .boolean()
       .describe(
-        "True when this OpenBot runs an organization's Bots only while it is on a plan or its free trial.",
+        "True when this Mangaba Bot runs an organization's Bots only while it is on a plan or its free trial.",
       ),
     status: zod
       .string()
       .describe(
-        "not_required when this OpenBot needs no plan. trialing during the free trial, which a card on file starts. active on the plan. past_due when a payment failed and the card needs updating. none when the organization has no plan or trial yet, or its plan ended. unknown when the plan couldn't be read just now; Bots keep running meanwhile.",
+        "not_required when this Mangaba Bot needs no plan. trialing during the free trial, which a card on file starts. active on the plan. past_due when a payment failed and the card needs updating. none when the organization has no plan or trial yet, or its plan ended. unknown when the plan couldn't be read just now; Bots keep running meanwhile.",
       ),
     trialEndsAt: zod.iso
       .datetime({ offset: true })
@@ -786,7 +786,7 @@ export const GetOrganizationPlanResponse = zod
       ),
   })
   .describe(
-    "Whether this OpenBot needs the organization to be on a plan, and where the organization stands. When required is true, its Bots run only while status is trialing or active.",
+    "Whether this Mangaba Bot needs the organization to be on a plan, and where the organization stands. When required is true, its Bots run only while status is trialing or active.",
   );
 
 /**
@@ -850,7 +850,7 @@ export const ListInvitationsResponse = zod.object({
               name: zod
                 .string()
                 .nullable()
-                .describe("What OpenBot calls them. Null until they choose."),
+                .describe("What Mangaba Bot calls them. Null until they choose."),
               email: zod.string().describe("Their address."),
             })
             .describe("Who sent an invitation."),
@@ -919,7 +919,7 @@ export const GetInvitationResponse = zod.object({
           name: zod
             .string()
             .nullable()
-            .describe("What OpenBot calls them. Null until they choose."),
+            .describe("What Mangaba Bot calls them. Null until they choose."),
           email: zod.string().describe("Their address."),
         })
         .describe("Who sent an invitation."),
@@ -972,7 +972,7 @@ export const AcceptInvitationResponse = zod.object({
       personal: zod
         .boolean()
         .describe(
-          "Whether this is the caller's own organization: the one OpenBot made for them when they first signed in.",
+          "Whether this is the caller's own organization: the one Mangaba Bot made for them when they first signed in.",
         ),
       id: zod.string().describe("The organization's id. Opaque."),
       slug: zod.string().describe("Its short name, which also addresses it."),

@@ -1,11 +1,11 @@
 /*!
-Which OpenBot app this is, said on every request the shell makes to an OpenBot, and whether this app
-and the OpenBot it talks to can work together.
+Which Mangaba Bot app this is, said on every request the shell makes to an Mangaba Bot, and whether this app
+and the Mangaba Bot it talks to can work together.
 
-Every OpenBot app names itself in `OpenBot-Client: <kind>/<version>`, and every OpenBot says on its
+Every Mangaba Bot app names itself in `OpenBot-Client: <kind>/<version>`, and every Mangaba Bot says on its
 `deployment` which API versions it serves and the oldest release of each app it still serves. When
-this app is too old for that OpenBot, the person reads "Update OpenBot" and is offered this app's
-update. An OpenBot too old for this app is told as it always was (`connected::Kind::TooOld`).
+this app is too old for that Mangaba Bot, the person reads "Update Mangaba Bot" and is offered this app's
+update. An Mangaba Bot too old for this app is told as it always was (`connected::Kind::TooOld`).
 
 The rules are `shared/client-version.ts`'s, carried here in Rust. The tests hold them to every case
 in `shared/fixtures/client-version/cases.json`, the same cases the web app, the Recorder and the
@@ -25,7 +25,7 @@ pub const KIND: &str = "desktop";
 /// The API versions this app speaks.
 pub const API_VERSIONS: &[&str] = &["v2"];
 
-/// The `kind` a problem carries when this app is too old for the OpenBot it talks to. The window
+/// The `kind` a problem carries when this app is too old for the Mangaba Bot it talks to. The window
 /// offers this app's own update for it, wherever it shows.
 pub const APP_TOO_OLD: &str = "app-too-old";
 
@@ -33,10 +33,10 @@ pub const APP_TOO_OLD: &str = "app-too-old";
 /// problem in older releases. The window offers the same update and says [`SECURITY_UPDATE`].
 pub const APP_TOO_OLD_SECURITY: &str = "app-too-old-security";
 
-/// What the person reads in place of "Update OpenBot" when the minimum was raised for a security
+/// What the person reads in place of "Update Mangaba Bot" when the minimum was raised for a security
 /// problem (`shared/client-version.ts` `SECURITY_UPDATE_SENTENCE`).
 pub const SECURITY_UPDATE: &str =
-    "This version of OpenBot has a security problem. Update to keep using it.";
+    "This version of Mangaba Bot has a security problem. Update to keep using it.";
 
 static VERSION: OnceLock<String> = OnceLock::new();
 
@@ -71,7 +71,7 @@ fn header_name() -> HeaderName {
     HeaderName::from_static("openbot-client")
 }
 
-/// The header, for a client every request of which goes to an OpenBot.
+/// The header, for a client every request of which goes to an Mangaba Bot.
 pub fn headers() -> HeaderMap {
     let mut headers = HeaderMap::new();
     if let Ok(value) = HeaderValue::from_str(&token()) {
@@ -102,24 +102,24 @@ pub fn added_to(sent: &HeaderMap) -> Option<HeaderValue> {
     HeaderValue::from_str(&joined).ok()
 }
 
-/// Whether an app and the OpenBot it talks to can work together.
+/// Whether an app and the Mangaba Bot it talks to can work together.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum Fit {
-    /// They can. Features that OpenBot lacks are hidden by the fields that offer them.
+    /// They can. Features that Mangaba Bot lacks are hidden by the fields that offer them.
     Ok,
-    /// The app is too old: that OpenBot serves only newer API versions, or names a minimum for
-    /// this app above its version (`minimum`). "Update OpenBot". `security` when it also names this
+    /// The app is too old: that Mangaba Bot serves only newer API versions, or names a minimum for
+    /// this app above its version (`minimum`). "Update Mangaba Bot". `security` when it also names this
     /// app in `securityMinimumClients` above its version: the minimum is there for a security
     /// problem, and the person reads [`SECURITY_UPDATE`] instead.
     App {
         minimum: Option<String>,
         security: bool,
     },
-    /// That OpenBot is too old: it serves only API versions older than any the app speaks.
+    /// That Mangaba Bot is too old: it serves only API versions older than any the app speaks.
     Server,
 }
 
-/// An OpenBot's `deployment`, as it answered it.
+/// An Mangaba Bot's `deployment`, as it answered it.
 pub type Deployment = serde_json::Map<String, serde_json::Value>;
 
 /// The major of an API version, `v2` as 2.
@@ -206,7 +206,7 @@ pub fn compare_versions(a: &str, b: &str) -> Option<std::cmp::Ordering> {
 }
 
 /**
-Whether an app of `kind` at `version`, speaking `speaks`, and the OpenBot that answered `deployment`
+Whether an app of `kind` at `version`, speaking `speaks`, and the Mangaba Bot that answered `deployment`
 can work together. A `deployment` that publishes no `api` is from a release before it was
 published, and every such release that answers `deployment` serves v2.
 */
@@ -254,7 +254,7 @@ pub fn fit(deployment: &Deployment) -> Fit {
     compatibility(deployment, KIND, &app_version(), API_VERSIONS)
 }
 
-/// Why it doesn't fit, for the log: what that OpenBot said, against this app.
+/// Why it doesn't fit, for the log: what that Mangaba Bot said, against this app.
 pub fn why(deployment: &Deployment, fit: &Fit) -> String {
     let this = format!(
         "this app is {} and speaks {}",
@@ -280,13 +280,13 @@ pub fn why(deployment: &Deployment, fit: &Fit) -> String {
     }
 }
 
-/// What the person reads when the OpenBot on this computer needs a newer version of this app.
+/// What the person reads when the Mangaba Bot on this computer needs a newer version of this app.
 pub const LOCAL_APP_TOO_OLD: &str =
-    "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.";
+    "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.";
 
-/// The OpenBot on this computer needs a newer version of this app, for `why` in the log: whether its
+/// The Mangaba Bot on this computer needs a newer version of this app, for `why` in the log: whether its
 /// `deployment` said so, or its release needs a launcher contract this app does not speak
-/// (`deployment_release::start_problem`). The window says "Update OpenBot" with this app's update.
+/// (`deployment_release::start_problem`). The window says "Update Mangaba Bot" with this app's update.
 pub fn local_app_too_old(why: String) -> Problem {
     let mut problem = Problem::with(LOCAL_APP_TOO_OLD, why);
     problem.kind = Some(APP_TOO_OLD);
@@ -294,9 +294,9 @@ pub fn local_app_too_old(why: String) -> Problem {
 }
 
 /**
-Whether the OpenBot on this computer, at `base` (`http://127.0.0.1:<port>` of its server), needs a
+Whether the Mangaba Bot on this computer, at `base` (`http://127.0.0.1:<port>` of its server), needs a
 newer version of this app: its `deployment` read the way every app reads it, with the install's
-token when it has one. Only that is a problem. An OpenBot from an older release, one that answers
+token when it has one. Only that is a problem. An Mangaba Bot from an older release, one that answers
 no `deployment`, or one that does not answer at all, starts and opens exactly as before: Start
 upgrades an older one, and a missing answer is the readiness check's to report, not this one's.
 */
@@ -440,8 +440,8 @@ mod tests {
         }
     }
 
-    /// The OpenBot on this computer, read as every app reads it, through the real HTTP path with
-    /// the fixture's real answers. Only an OpenBot that needs a newer app is a problem: one of this
+    /// The Mangaba Bot on this computer, read as every app reads it, through the real HTTP path with
+    /// the fixture's real answers. Only an Mangaba Bot that needs a newer app is a problem: one of this
     /// release, one left at 1.1.0 (no version fields) and one that is not answering all start and
     /// open as before, with no sentence.
     #[test]
@@ -450,11 +450,11 @@ mod tests {
         let _version = as_version("1.1.0");
         let plain = Some((
             APP_TOO_OLD,
-            "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+            "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
         ));
         let security = Some((
             APP_TOO_OLD_SECURITY,
-            "This version of OpenBot has a security problem. Update to keep using it.",
+            "This version of Mangaba Bot has a security problem. Update to keep using it.",
         ));
         for (shape, said) in [
             (Shape::Answers("raised"), plain),

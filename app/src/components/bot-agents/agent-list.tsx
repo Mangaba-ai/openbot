@@ -41,10 +41,10 @@ export function usedBy(count: number): string {
 }
 
 /**
- * Every agent the person's Bots may hand work to: OpenBot's own, and the ones the organization and
+ * Every agent the person's Bots may hand work to: Mangaba Bot's own, and the ones the organization and
  * the person added. Each row says where it runs and how many Bots use it. Changing and deleting are
  * in the row's menu, for whoever may manage it; a key for calling tools back is offered on an agent
- * at its own address that OpenBot doesn't run.
+ * at its own address that Mangaba Bot doesn't run.
  */
 export function AgentList({
   onAdd,

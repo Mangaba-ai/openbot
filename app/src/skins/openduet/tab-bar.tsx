@@ -11,7 +11,7 @@ const TAB =
 
 /**
  * The frosted pill at the foot of the app: Chat and Tasks, the current one on a grey capsule.
- * Tasks carries the number of things waiting on the person: OpenBot's own count, the one its Bots
+ * Tasks carries the number of things waiting on the person: Mangaba Bot's own count, the one its Bots
  * badge shows (`useWaitingCount`), so the two never disagree.
  */
 export function TabBar({ current }: { current: OpenDuetTab }) {

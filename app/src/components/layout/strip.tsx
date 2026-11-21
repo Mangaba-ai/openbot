@@ -19,7 +19,7 @@ import { cn } from "@/lib/utils";
  * A sidebar of its own (`collapsible="none"`) inside the app's sidebar, so hiding the panel shrinks
  * the app's sidebar down to this and nothing here moves.
  *
- * In OpenBot Desktop on macOS the window's close, minimise and zoom buttons sit over the strip's
+ * In Mangaba Bot Desktop on macOS the window's close, minimise and zoom buttons sit over the strip's
  * top, about 21 to 37px down (`data-desktop-titlebar`, macOS only), so the strip then starts 32px lower,
  * below them, level with the panel beside it (`SectionPanel`), and the room it leaves above the orb
  * moves the window (`data-desktop-drag`). Windows has its own title bar, and a browser none.

@@ -4,7 +4,7 @@
 import type { ConnectionConsentNext } from "./connectionConsentNext";
 
 /**
- * The app's own sign-in page, which sends the person back to OpenBot once they agree.
+ * The app's own sign-in page, which sends the person back to Mangaba Bot once they agree.
  */
 export interface ConnectionConsent {
   next: ConnectionConsentNext;

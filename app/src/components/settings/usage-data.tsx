@@ -14,16 +14,16 @@ import { setUsageDataMutationOptions } from "@/lib/desktop/mutations";
 import { desktopUsageDataQueryOptions } from "@/lib/desktop/queries";
 import { desktopShell } from "@/lib/desktop/shell";
 
-/** What OpenBot Desktop sends, and what it never does, in full. */
+/** What Mangaba Bot Desktop sends, and what it never does, in full. */
 export const USAGE_DATA_DOC =
   "https://github.com/CopilotKit/OpenBot/blob/main/desktop/TELEMETRY.md";
 
 /**
  * Settings → General's Share usage data: the opt-out that otherwise needs an environment variable,
  * as one switch. Off stops the desktop app's own usage data and the CLI's at once, and the server's
- * the next time OpenBot starts, which is what the row says.
+ * the next time Mangaba Bot starts, which is what the row says.
  *
- * Only inside OpenBot Desktop, which sends this data and keeps the choice. A self-hosted OpenBot
+ * Only inside Mangaba Bot Desktop, which sends this data and keeps the choice. A self-hosted Mangaba Bot
  * sets its telemetry in its own configuration, so the section isn't drawn there. An older desktop
  * app that can't say draws nothing either.
  */
@@ -44,15 +44,15 @@ export function UsageDataSection() {
             <ItemTitle>Share usage data</ItemTitle>
             <ItemDescription className="line-clamp-none">
               {offByEnvironment
-                ? "Turned off on this computer. OpenBot sends no usage data."
-                : "OpenBot sends usage data, linked to your OpenBot account. It never sends your conversations, files or keys. Changes apply the next time OpenBot starts."}{" "}
+                ? "Turned off on this computer. Mangaba Bot sends no usage data."
+                : "Mangaba Bot sends usage data, linked to your Mangaba Bot account. It never sends your conversations, files or keys. Changes apply the next time Mangaba Bot starts."}{" "}
               <a
                 className="underline underline-offset-2 hover:text-foreground"
                 href={USAGE_DATA_DOC}
                 rel="noopener noreferrer"
                 target="_blank"
               >
-                What OpenBot sends
+                What Mangaba Bot sends
               </a>
             </ItemDescription>
             {change.error ? (

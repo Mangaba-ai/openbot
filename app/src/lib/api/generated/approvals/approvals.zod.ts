@@ -179,7 +179,7 @@ export const ListApprovalsResponse = zod.object({
                     ])
                     .optional()
                     .describe(
-                      "A kind of action OpenBot recognises by name and asks about whatever a person's own switch says.",
+                      "A kind of action Mangaba Bot recognises by name and asks about whatever a person's own switch says.",
                     ),
                   closed: zod
                     .boolean()
@@ -379,7 +379,7 @@ export const DecideApprovalResponse = zod
               ])
               .optional()
               .describe(
-                "A kind of action OpenBot recognises by name and asks about whatever a person's own switch says.",
+                "A kind of action Mangaba Bot recognises by name and asks about whatever a person's own switch says.",
               ),
             closed: zod
               .boolean()
@@ -844,7 +844,7 @@ export const ListPersonApprovalRulesResponse = zod.object({
                   "security_settings",
                 ])
                 .describe(
-                  "A kind of action OpenBot recognises by name and asks about whatever a person's own switch says.",
+                  "A kind of action Mangaba Bot recognises by name and asks about whatever a person's own switch says.",
                 ),
               zod.null(),
             ])
@@ -1006,7 +1006,7 @@ export const CreatePersonApprovalRuleResponse = zod
             "security_settings",
           ])
           .describe(
-            "A kind of action OpenBot recognises by name and asks about whatever a person's own switch says.",
+            "A kind of action Mangaba Bot recognises by name and asks about whatever a person's own switch says.",
           ),
         zod.null(),
       ])
@@ -1163,7 +1163,7 @@ export const UpdatePersonApprovalRuleResponse = zod
             "security_settings",
           ])
           .describe(
-            "A kind of action OpenBot recognises by name and asks about whatever a person's own switch says.",
+            "A kind of action Mangaba Bot recognises by name and asks about whatever a person's own switch says.",
           ),
         zod.null(),
       ])
@@ -1310,7 +1310,7 @@ export const ListConversationGrantsResponse = zod.object({
             ])
             .optional()
             .describe(
-              "A kind of action OpenBot recognises by name and asks about whatever a person's own switch says.",
+              "A kind of action Mangaba Bot recognises by name and asks about whatever a person's own switch says.",
             ),
           createdAt: zod.iso.datetime({ offset: true }),
         })

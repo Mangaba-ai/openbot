@@ -162,8 +162,8 @@ mod security_floor_ipc {
         assert!(!at.blocked());
     }
 
-    /// Connected to a company's own OpenBot, the floor is not for this app. Connected to an
-    /// OpenBot Cloud address the floor lists, it is.
+    /// Connected to a company's own Mangaba Bot, the floor is not for this app. Connected to an
+    /// Mangaba Bot Cloud address the floor lists, it is.
     #[test]
     fn a_company_server_ignores_the_floor_and_a_listed_cloud_follows_it() {
         let company = Fixture::new("company");
@@ -187,8 +187,8 @@ mod security_floor_ipc {
         assert!(refusal(fixture.start()).contains(SECURITY_FLOOR_SAID));
     }
 
-    /// Seen on a Windows box: below the floor, the Status window's Start for OpenBot's services
-    /// started the local back end services again. They start no more than OpenBot does.
+    /// Seen on a Windows box: below the floor, the Status window's Start for Mangaba Bot's services
+    /// started the local back end services again. They start no more than Mangaba Bot does.
     #[test]
     fn below_the_floor_openbots_services_do_not_start_either() {
         let fixture = Fixture::new("services");
@@ -202,7 +202,7 @@ mod security_floor_ipc {
                         "stack": "local-abc123",
                     }),
                 )
-                .expect_err("OpenBot's services refuse to start below the floor");
+                .expect_err("Mangaba Bot's services refuse to start below the floor");
             assert_eq!(
                 refused,
                 serde_json::json!("below-security-floor"),
@@ -212,7 +212,7 @@ mod security_floor_ipc {
     }
 
     /// Seen on a Windows box: every launch that found a kept floor logged "Compose down failed:
-    /// OpenBot has no runtime ownership for this installation", because the floor's Stop ran on an
+    /// Mangaba Bot has no runtime ownership for this installation", because the floor's Stop ran on an
     /// installation this run had never started or shown. With nothing of it answering, there is
     /// nothing to take down, and Stop no longer refuses.
     #[test]

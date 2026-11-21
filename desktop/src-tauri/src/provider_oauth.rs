@@ -33,7 +33,7 @@ const UNBIASED_DEVICE_GRANT: &str = "urn:ietf:params:oauth:grant-type:device_cod
 const UNBIASED_EXPIRED: &str =
     "The Unbiased AI sign-in code expired before it was approved. Sign in again.";
 const UNBIASED_UNREGISTERED: &str =
-    "This build of OpenBot is not registered for Unbiased AI sign-in. Update OpenBot, or use an API key from the Unbiased AI dashboard.";
+    "This build of Mangaba Bot is not registered for Unbiased AI sign-in. Update Mangaba Bot, or use an API key from the Unbiased AI dashboard.";
 
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -177,7 +177,7 @@ pub fn begin(root: &Path, provider: &str) -> Result<Authorization, String> {
     let flow = reserve(root);
     let (pending, url, user_code) = match provider {
         "google" => {
-            let client_id = configured("OPENBOT_GOOGLE_MODEL_OAUTH_CLIENT_ID").ok_or("Google sign-in needs this OpenBot build's registered desktop OAuth client. Use an API key until it is configured.")?;
+            let client_id = configured("OPENBOT_GOOGLE_MODEL_OAUTH_CLIENT_ID").ok_or("Google sign-in needs this Mangaba Bot build's registered desktop OAuth client. Use an API key until it is configured.")?;
             let project = configured("OPENBOT_GOOGLE_MODEL_OAUTH_QUOTA_PROJECT").ok_or(
                 "Google sign-in needs a Google Cloud quota project with the Gemini API enabled.",
             )?;
@@ -572,7 +572,7 @@ fn receive_callback(stream: &mut TcpStream, state: &str) -> Result<Option<String
         return Ok(None);
     }
     if let Some(error) = query.get("error") {
-        let _ = stream.write_all(b"HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\nSign-in was not approved. Return to OpenBot.");
+        let _ = stream.write_all(b"HTTP/1.1 400 Bad Request\r\nConnection: close\r\n\r\nSign-in was not approved. Return to Mangaba Bot.");
         return Err(format!("Google sign-in was not approved: {error}"));
     }
     let code = query
@@ -580,7 +580,7 @@ fn receive_callback(stream: &mut TcpStream, state: &str) -> Result<Option<String
         .filter(|v| !v.is_empty())
         .cloned()
         .ok_or("Google did not return an authorization code.")?;
-    stream.write_all(b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\nReturn to OpenBot to finish signing in.").map_err(|e| e.to_string())?;
+    stream.write_all(b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nConnection: close\r\n\r\nReturn to Mangaba Bot to finish signing in.").map_err(|e| e.to_string())?;
     Ok(Some(code))
 }
 
@@ -790,7 +790,7 @@ fn write(
             .map_err(|e| e.to_string())?;
         if !output.status.success() {
             return Err(format!(
-                "OpenBot could not make the provider sign-in private to your Windows account. {}",
+                "Mangaba Bot could not make the provider sign-in private to your Windows account. {}",
                 crate::quiet::said(&output.stderr)
             ));
         }
@@ -1568,7 +1568,7 @@ mod tests {
     }
 
     #[test]
-    #[ignore = "the other writer is the server's own lock, which runs in the OpenBot server image"]
+    #[ignore = "the other writer is the server's own lock, which runs in the Mangaba Bot server image"]
     fn credential_lock_excludes_bun_in_both_directions_and_recovers_after_kill() {
         use std::process::Stdio;
         let root = crate::test_support::temp_root("provider-oauth-cross-writer");
@@ -1616,7 +1616,7 @@ mod tests {
     /// PowerShell starts 20 seconds late and Bun still takes the lock and gives it back.
     #[cfg(windows)]
     #[test]
-    #[ignore = "the other writer is the server's own lock, which runs in the OpenBot server image"]
+    #[ignore = "the other writer is the server's own lock, which runs in the Mangaba Bot server image"]
     fn credential_lock_waits_for_a_windows_powershell_that_starts_slowly() {
         use std::process::Stdio;
         let root = crate::test_support::temp_root("provider-oauth-slow-powershell");

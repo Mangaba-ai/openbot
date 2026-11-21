@@ -27,7 +27,7 @@ export interface GoalTrigger {
    * @nullable
    */
   address: string | null;
-  /** For an email trigger, whether this OpenBot can receive email at all. */
+  /** For an email trigger, whether this Mangaba Bot can receive email at all. */
   emailConfigured?: boolean;
   /** When it was added. */
   createdAt: string;

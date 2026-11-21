@@ -1,7 +1,7 @@
 //! Where the local evaluation has got to, kept beside the installation.
 //!
 //! A checkpoint, not a credential: the stack id, who created the stack, the CLI digest it was
-//! recorded with, the furthest phase reached, and whether OpenBot holds a key for the stack. Nothing here proves the stack is running or the
+//! recorded with, the furthest phase reached, and whether Mangaba Bot holds a key for the stack. Nothing here proves the stack is running or the
 //! person is signed in; the CLI is asked for that every time. A missing, unreadable or unknown
 //! record reads as no record, exactly like the installation's own checkpoints.
 //!
@@ -38,10 +38,10 @@ impl Phase {
     }
 }
 
-/// Whether the stack exists only for OpenBot.
+/// Whether the stack exists only for Mangaba Bot.
 ///
-/// A stack OpenBot created starts and stops with OpenBot. One it found already recorded may serve
-/// other apps too, so OpenBot never stops it.
+/// A stack Mangaba Bot created starts and stops with Mangaba Bot. One it found already recorded may serve
+/// other apps too, so Mangaba Bot never stops it.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum Ownership {
@@ -57,7 +57,7 @@ struct Record {
     ownership: Ownership,
     cli_sha256: String,
     phase: Phase,
-    /// `local connect` ran and its key went into OpenBot's credential store. Absent until then, so
+    /// `local connect` ran and its key went into Mangaba Bot's credential store. Absent until then, so
     /// a record that was never connected keeps the fields it always had.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     connected: bool,
@@ -79,7 +79,7 @@ impl State {
         StackId::parse(&self.stack).expect("a recorded stack id was validated")
     }
 
-    /// Whether stopping OpenBot also stops this stack.
+    /// Whether stopping Mangaba Bot also stops this stack.
     pub fn tied_to_openbot(&self) -> bool {
         self.ownership == Ownership::Created
     }
@@ -123,7 +123,7 @@ pub fn read(root: &Path, cli_sha256: Option<&str>) -> Option<State> {
 
 fn problem(detail: String) -> Problem {
     Problem::with(
-        "OpenBot could not save its local evaluation progress. Check that the installation folder \
+        "Mangaba Bot could not save its local evaluation progress. Check that the installation folder \
          is writable, then try again.",
         detail,
     )
@@ -143,8 +143,8 @@ pub fn begin(
 ) -> Result<State, Problem> {
     if !digest_valid(cli_sha256) {
         return Err(Problem::with(
-            "Part of OpenBot didn't pass its download check. Repair the installation.",
-            "OpenBot refused an invalid CLI digest",
+            "Part of Mangaba Bot didn't pass its download check. Repair the installation.",
+            "Mangaba Bot refused an invalid CLI digest",
         ));
     }
     let record = Record {
@@ -163,10 +163,10 @@ pub fn begin(
 /// Move to `to`, which must be the current phase or the one after it.
 pub fn advance(root: &Path, cli_sha256: &str, to: Phase) -> Result<State, Problem> {
     let current = read(root, Some(cli_sha256))
-        .ok_or_else(|| Problem::plain("OpenBot has no local evaluation progress to continue."))?;
+        .ok_or_else(|| Problem::plain("Mangaba Bot has no local evaluation progress to continue."))?;
     if to != current.phase && current.phase.next() != Some(to) {
         return Err(Problem::plain(
-            "OpenBot refused to skip or repeat a local evaluation step.",
+            "Mangaba Bot refused to skip or repeat a local evaluation step.",
         ));
     }
     let mut record = load(root).expect("read found the record");
@@ -176,15 +176,15 @@ pub fn advance(root: &Path, cli_sha256: &str, to: Phase) -> Result<State, Proble
     Ok(read(root, Some(cli_sha256)).expect("the record just written reads back"))
 }
 
-/// Record that OpenBot now holds the key `local connect` gave it for `stack`, the recorded one.
+/// Record that Mangaba Bot now holds the key `local connect` gave it for `stack`, the recorded one.
 pub fn mark_connected(root: &Path, stack: &StackId) -> Result<State, Problem> {
     let mut record = load(root)
         .filter(|record| record.stack == stack.as_str())
         .ok_or_else(|| {
             Problem::with(
-                "OpenBot has no record of its services on this computer. Start OpenBot to set \
+                "Mangaba Bot has no record of its services on this computer. Start Mangaba Bot to set \
                  them up again.",
-                "OpenBot has no record of that backend",
+                "Mangaba Bot has no record of that backend",
             )
         })?;
     record.connected = true;

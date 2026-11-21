@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * No memory source of the person's has that id, this OpenBot keeps no memory, or the organization does not exist.
+ * No memory source of the person's has that id, this Mangaba Bot keeps no memory, or the organization does not exist.
  */
 export type MemorySourceNotFoundResponse = Problem;

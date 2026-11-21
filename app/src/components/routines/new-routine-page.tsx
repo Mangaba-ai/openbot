@@ -823,7 +823,7 @@ export function NewRoutinePage({
                           <FieldLabel htmlFor={field.name}>Posts in</FieldLabel>
                           <FieldDescription>
                             {field.state.value === NEW_CONVERSATION
-                              ? "OpenBot starts a conversation for this routine, named after it."
+                              ? "Mangaba Bot starts a conversation for this routine, named after it."
                               : "Each run posts in this conversation."}
                           </FieldDescription>
                           <Select

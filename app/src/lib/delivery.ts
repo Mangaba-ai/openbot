@@ -19,7 +19,7 @@ import type { UpdateTransport } from "@/lib/bot-lifecycle/queries";
 import { ClientError } from "@/lib/client";
 
 /**
- * How a person's Bots reach them outside OpenBot, through the API: their phones for push
+ * How a person's Bots reach them outside Mangaba Bot, through the API: their phones for push
  * notifications, the Slack, Teams and phone destinations their conversations continue in, what was
  * sent to them, and which of those ways this deployment has. Each is the person's own (`me`).
  */
@@ -97,7 +97,7 @@ export function devicesQueryOptions() {
   });
 }
 
-/** The hundred newest things sent to the person outside OpenBot. */
+/** The hundred newest things sent to the person outside Mangaba Bot. */
 export function deliveriesQueryOptions() {
   return queryOptions({
     queryKey: deliveryKeys.deliveries,
@@ -138,12 +138,12 @@ export function transportsQueryOptions() {
         sms: set.has("sms"),
       };
     },
-    // Set where OpenBot runs and read at its start, so it doesn't change while a screen is open.
+    // Set where Mangaba Bot runs and read at its start, so it doesn't change while a screen is open.
     staleTime: 60_000,
   });
 }
 
-/** A one-time `link <code>` message for the OpenBot app in Slack or Teams. */
+/** A one-time `link <code>` message for the Mangaba Bot app in Slack or Teams. */
 export type ChatLink = {
   platform: "slack" | "teams";
   code: string;

@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The request did not come from the OpenBot Recorder extension, by its browser Origin.
+ * The request did not come from the Mangaba Bot Recorder extension, by its browser Origin.
  */
 export type RecorderOriginRefusedResponse = Problem;

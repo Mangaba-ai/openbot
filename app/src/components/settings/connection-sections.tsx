@@ -36,7 +36,7 @@ import {
 import { desktopStatusQueryOptions } from "@/lib/desktop/queries";
 import { COMPUTER_SECTION } from "@/lib/settings/computer-sections";
 
-/** The address's host, which is how a person names the OpenBot they connect to. */
+/** The address's host, which is how a person names the Mangaba Bot they connect to. */
 function hostOf(address: string): string {
   try {
     return new URL(address).host;
@@ -46,10 +46,10 @@ function hostOf(address: string): string {
 }
 
 /**
- * Settings → Computer inside an OpenBot Desktop that is connected to an OpenBot running somewhere
+ * Settings → Computer inside an Mangaba Bot Desktop that is connected to an Mangaba Bot running somewhere
  * else: where it is connected, the two ways out, and the app's own details.
  *
- * It takes the place of `ThisComputerSections`. Nothing of OpenBot runs on this computer then, so
+ * It takes the place of `ThisComputerSections`. Nothing of Mangaba Bot runs on this computer then, so
  * there are no services to restart or stop, no memory to report and no install folder. The app's
  * version, its updates and its log folder are about the app, and stay.
  *
@@ -109,7 +109,7 @@ function SignOutRow({ host }: { host: string }) {
         <ItemContent>
           <ItemTitle>Sign out</ItemTitle>
           <ItemDescription className="line-clamp-none">
-            Sign out of this OpenBot on this computer.
+            Sign out of this Mangaba Bot on this computer.
           </ItemDescription>
         </ItemContent>
         <ItemActions>
@@ -123,7 +123,7 @@ function SignOutRow({ host }: { host: string }) {
           <DialogHeader>
             <DialogTitle>Sign out of {host}?</DialogTitle>
             <DialogDescription>
-              You'll sign in again in your browser the next time you use OpenBot
+              You'll sign in again in your browser the next time you use Mangaba Bot
               here. Your Bots and conversations stay as they are.
             </DialogDescription>
           </DialogHeader>
@@ -153,11 +153,11 @@ function SignOutRow({ host }: { host: string }) {
 }
 
 /**
- * Settings → Computer inside an OpenBot Desktop that runs OpenBot on this computer: the way to
- * connect to an OpenBot that runs somewhere else instead. Drawn under `ThisComputerSections`, and
+ * Settings → Computer inside an Mangaba Bot Desktop that runs Mangaba Bot on this computer: the way to
+ * connect to an Mangaba Bot that runs somewhere else instead. Drawn under `ThisComputerSections`, and
  * only by a desktop app that can connect.
  *
- * It stops OpenBot here, as Stop does, and the window shows setup at the choice of where OpenBot
+ * It stops Mangaba Bot here, as Stop does, and the window shows setup at the choice of where Mangaba Bot
  * runs. This page goes with it.
  */
 export function ConnectInsteadSection() {
@@ -172,14 +172,14 @@ export function ConnectInsteadSection() {
             <IconDeviceLaptop className="size-4" />
           </RowMark>
           <ItemContent>
-            <ItemTitle>OpenBot runs on this computer</ItemTitle>
+            <ItemTitle>Mangaba Bot runs on this computer</ItemTitle>
             <ItemDescription className="line-clamp-none">
-              You can connect to an OpenBot your company runs instead.
+              You can connect to an Mangaba Bot your company runs instead.
             </ItemDescription>
           </ItemContent>
           <ItemActions>
             <Button onClick={() => setOpen(true)} size="sm" variant="outline">
-              Connect to an OpenBot
+              Connect to an Mangaba Bot
             </Button>
           </ItemActions>
         </Item>
@@ -187,10 +187,10 @@ export function ConnectInsteadSection() {
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Connect to an OpenBot instead?</DialogTitle>
+            <DialogTitle>Connect to an Mangaba Bot instead?</DialogTitle>
             <DialogDescription>
-              OpenBot stops on this computer and setup opens, where you type the
-              address of the OpenBot to connect to. Nothing on this computer is
+              Mangaba Bot stops on this computer and setup opens, where you type the
+              address of the Mangaba Bot to connect to. Nothing on this computer is
               lost, and you can come back to it later.
             </DialogDescription>
           </DialogHeader>
@@ -210,7 +210,7 @@ export function ConnectInsteadSection() {
               onClick={() => change.mutate()}
               size="sm"
             >
-              {leaving ? "Stopping OpenBot…" : "Stop and open setup"}
+              {leaving ? "Stopping Mangaba Bot…" : "Stop and open setup"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -231,9 +231,9 @@ function UseThisComputerRow({ host }: { host: string }) {
           <IconDeviceLaptop className="size-4" />
         </RowMark>
         <ItemContent>
-          <ItemTitle>Use OpenBot on this computer instead</ItemTitle>
+          <ItemTitle>Use Mangaba Bot on this computer instead</ItemTitle>
           <ItemDescription className="line-clamp-none">
-            Run every part of OpenBot on this computer.
+            Run every part of Mangaba Bot on this computer.
           </ItemDescription>
         </ItemContent>
         <ItemActions>
@@ -245,10 +245,10 @@ function UseThisComputerRow({ host }: { host: string }) {
       <Dialog onOpenChange={setOpen} open={open}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Use OpenBot on this computer instead?</DialogTitle>
+            <DialogTitle>Use Mangaba Bot on this computer instead?</DialogTitle>
             <DialogDescription>
               This signs you out of {host} and opens setup, where you choose
-              where OpenBot runs. Nothing on this computer is lost, and you can
+              where Mangaba Bot runs. Nothing on this computer is lost, and you can
               connect to {host} again later.
             </DialogDescription>
           </DialogHeader>

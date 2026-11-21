@@ -2,12 +2,12 @@ import { IconDeviceLaptop } from "@tabler/icons-react";
 import { BUSINESS_URL } from "../../shared/openbot-for-business";
 import { ExternalLink } from "./ExternalLink";
 
-/** The heading Start shows while it updates the OpenBot that runs on this computer. */
-export const UPDATING_SELF_CONTAINED = "Updating OpenBot (Self-Contained)";
+/** The heading Start shows while it updates the Mangaba Bot that runs on this computer. */
+export const UPDATING_SELF_CONTAINED = "Updating Mangaba Bot (Self-Contained)";
 
 /**
- * Why updating OpenBot shows a screen at all, under the update's progress: this OpenBot runs
- * entirely on this computer, so its update runs here too. Then OpenBot for Business, for teams and
+ * Why updating Mangaba Bot shows a screen at all, under the update's progress: this Mangaba Bot runs
+ * entirely on this computer, so its update runs here too. Then Mangaba Bot for Business, for teams and
  * production, and one link to book a demo, opened in the person's browser. A consumer app updates
  * without a screen like this one, and this says why this one has it.
  *
@@ -27,11 +27,11 @@ export function SelfContainedNote() {
       <div className="self-contained-words">
         <h2 id="self-contained-heading">Everything runs on this computer</h2>
         <p className="self-contained-why">
-          This OpenBot is self-contained. Its services run here, so they update
+          This Mangaba Bot is self-contained. Its services run here, so they update
           here too.
         </p>
         <p>
-          For teams and production, OpenBot for Business runs in OpenBot Cloud,
+          For teams and production, Mangaba Bot for Business runs in Mangaba Bot Cloud,
           your own cloud or on-prem.{" "}
           <ExternalLink href={BUSINESS_URL}>Book a demo</ExternalLink>
         </p>

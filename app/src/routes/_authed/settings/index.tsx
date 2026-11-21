@@ -39,11 +39,11 @@ function RouteComponent() {
    */
   return (
     <PageShell
-      description="Set your name, how OpenBot looks, and the instructions every Bot follows."
+      description="Set your name, how Mangaba Bot looks, and the instructions every Bot follows."
       title="General"
     >
       {/*
-       * What OpenBot and every Bot know of the person, first: their name and how they want things done. Both are free
+       * What Mangaba Bot and every Bot know of the person, first: their name and how they want things done. Both are free
        * text, so both are a summary that opens a dialog.
        */}
       <PageSection title="About you">
@@ -55,9 +55,9 @@ function RouteComponent() {
       </PageSection>
       {/* Only where the organization has identity providers: the person's company account, and the way to link it. */}
       <CompanySignInSection />
-      {/* Only in OpenBot Desktop, which holds the AI connection and changes it in its own window. */}
+      {/* Only in Mangaba Bot Desktop, which holds the AI connection and changes it in its own window. */}
       <AiModelSection />
-      {/* Only in OpenBot Desktop, which sends usage data and keeps this choice. */}
+      {/* Only in Mangaba Bot Desktop, which sends usage data and keeps this choice. */}
       <UsageDataSection />
       <PageSection title="Appearance">
         <PageRows>
@@ -99,7 +99,7 @@ function RouteComponent() {
           ))}
         </PageRows>
       </PageSection>
-      {/* Last: OpenBot itself rather than this person's OpenBot. Gone when the deployment says so. */}
+      {/* Last: Mangaba Bot itself rather than this person's Mangaba Bot. Gone when the deployment says so. */}
       <StarOnGitHubSection />
     </PageShell>
   );

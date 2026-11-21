@@ -433,7 +433,7 @@ export const getCheckWhatIfUrl = (organizationId: string) => {
 };
 
 /**
- * Put one action to the controls a real action passes through, in the order OpenBot applies them, and return what each one decides and which one settles it. No model is asked and nothing is carried out. The audit trail records the check. Only an administrator may ask.
+ * Put one action to the controls a real action passes through, in the order Mangaba Bot applies them, and return what each one decides and which one settles it. No model is asked and nothing is carried out. The audit trail records the check. Only an administrator may ask.
  * @summary Say what every control decides about an action
  */
 export const checkWhatIf = async (

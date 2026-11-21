@@ -6,7 +6,7 @@ import type { ListedRecorderConnection } from "./listedRecorderConnection";
 export interface RecorderConnectionPage {
   /** The oldest connection first, then by id. */
   recorderConnections: ListedRecorderConnection[];
-  /** The Recorder extension ids this OpenBot trusts. */
+  /** The Recorder extension ids this Mangaba Bot trusts. */
   extensionIds: string[];
   /**
    * Pass as cursor for the next page. Null ends the list. Written in URL-safe base64, the only form the cursor parameter accepts.

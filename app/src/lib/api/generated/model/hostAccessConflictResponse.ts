@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot does not run in OpenBot Desktop, Desktop is not connected, the person turned the folder down or let the chooser run out of time, or the Idempotency-Key was used for a different request.
+ * This Mangaba Bot does not run in Mangaba Bot Desktop, Desktop is not connected, the person turned the folder down or let the chooser run out of time, or the Idempotency-Key was used for a different request.
  */
 export type HostAccessConflictResponse = Problem;

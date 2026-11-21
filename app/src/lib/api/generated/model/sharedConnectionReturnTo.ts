@@ -3,7 +3,7 @@
  */
 
 /**
- * Which of OpenBot's own pages the app sends the administrator back to: apps, the app's page for administrators; desktop, back to OpenBot Desktop. Never an address.
+ * Which of Mangaba Bot's own pages the app sends the administrator back to: apps, the app's page for administrators; desktop, back to Mangaba Bot Desktop. Never an address.
  */
 export type SharedConnectionReturnTo =
   (typeof SharedConnectionReturnTo)[keyof typeof SharedConnectionReturnTo];

@@ -4,13 +4,13 @@ import { organizationId } from "@/lib/api/request";
 import { ClientError } from "@/lib/client";
 
 /**
- * Where connecting this OpenBot to CopilotKit's management service stands.
+ * Where connecting this Mangaba Bot to CopilotKit's management service stands.
  *
  * `not-connected`, `waiting-for-approval` (a code waits for somebody signed in to CopilotKit to
  * approve it), `waiting-for-agent` (approved; the admin runs the Helm command and the agent picks
- * up its one-time token from OpenBot itself), `connected` (the agent reports in), `connecting`
- * (OpenBot connects by itself, by its licence, and the agent its chart installed is collecting its
- * token) and `opted-out` (an admin turned managed updates off, so OpenBot doesn't connect by
+ * up its one-time token from Mangaba Bot itself), `connected` (the agent reports in), `connecting`
+ * (Mangaba Bot connects by itself, by its licence, and the agent its chart installed is collecting its
+ * token) and `opted-out` (an admin turned managed updates off, so Mangaba Bot doesn't connect by
  * itself). The server's list is open: a state this app doesn't know reads as not connected, so a
  * newer server never breaks the screen.
  */
@@ -24,7 +24,7 @@ export type ManagementState =
 
 export type ManagementStatus = {
   state: ManagementState;
-  /** OpenBot's chart installs the agent: it connects by itself, and Disconnect needs no Helm. */
+  /** Mangaba Bot's chart installs the agent: it connects by itself, and Disconnect needs no Helm. */
   agentInstalledByChart?: boolean;
   /** Once connected: `on`, or `not-set-up` when upgrading needs a one-time setup first. */
   upgrades?: string;
@@ -33,7 +33,7 @@ export type ManagementStatus = {
   verificationUriComplete?: string;
   expiresAt?: string;
   installId?: string;
-  /** Holds nothing secret: the agent collects its token from OpenBot itself. */
+  /** Holds nothing secret: the agent collects its token from Mangaba Bot itself. */
   helmCommand?: string;
   /** On a build that isn't a release: which agent the command installs, in the server's own sentence. */
   helmCommandNote?: string;
@@ -53,10 +53,10 @@ export type ManagementStatus = {
 };
 
 /**
- * Whether management applies to this OpenBot at all, and if so where it stands.
+ * Whether management applies to this Mangaba Bot at all, and if so where it stands.
  *
  * It applies only to the team edition a company runs itself, in the organization `default`. The
- * server says so: everywhere else (the personal edition, OpenBot Cloud, another organization) it
+ * server says so: everywhere else (the personal edition, Mangaba Bot Cloud, another organization) it
  * answers 404, with the code MANAGEMENT_UNAVAILABLE where it can, and that answer is
  * `applies: false`, which the Admin rail and the page read as nothing to show.
  */
@@ -78,7 +78,7 @@ export const managementKeys = {
   status: () => ["management", "status"] as const,
 };
 
-/** Whether the state means OpenBot is waiting on somebody, so the screen keeps asking. */
+/** Whether the state means Mangaba Bot is waiting on somebody, so the screen keeps asking. */
 export function managementWaiting(state: ManagementState | undefined) {
   return (
     state === "waiting-for-approval" ||

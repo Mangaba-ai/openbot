@@ -3,7 +3,7 @@
  */
 
 /**
- * How large a file attached to a message may be, by kind, in bytes. An upload over its kind's limit is refused. Absent, as from an older OpenBot, the limits are 8388608 for an image or a document (a PDF, or a Word, Excel or PowerPoint file) and 1048576 for any other file. The limits can rise while OpenBot runs, so a client reads them again rather than keeping them for good. What a Bot's model is shown of a large file is a separate matter: the file is kept and can be downloaded whatever the model can read of it.
+ * How large a file attached to a message may be, by kind, in bytes. An upload over its kind's limit is refused. Absent, as from an older Mangaba Bot, the limits are 8388608 for an image or a document (a PDF, or a Word, Excel or PowerPoint file) and 1048576 for any other file. The limits can rise while Mangaba Bot runs, so a client reads them again rather than keeping them for good. What a Bot's model is shown of a large file is a separate matter: the file is kept and can be downloaded whatever the model can read of it.
  */
 export interface AttachmentLimits {
   /**

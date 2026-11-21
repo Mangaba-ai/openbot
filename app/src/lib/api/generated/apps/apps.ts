@@ -105,7 +105,7 @@ export const getListAppsUrl = (
 };
 
 /**
- * Return one page of the apps the organization has added for its Bots: the ones from OpenBot's catalogue, the ones added from the app directory, and servers added by their address. Each organization has its own apps, and an app added in one is not in another. Each app comes with the actions it offers and the Bots that may use each one. Any member of the organization may read them. Ordered by title, ignoring case, then by id. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the apps the organization has added for its Bots: the ones from Mangaba Bot's catalogue, the ones added from the app directory, and servers added by their address. Each organization has its own apps, and an app added in one is not in another. Each app comes with the actions it offers and the Bots that may use each one. Any member of the organization may read them. Ordered by title, ignoring case, then by id. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List the apps added here
  */
 export const listApps = async (
@@ -301,7 +301,7 @@ export const getCreateAppUrl = (organizationId: string) => {
 };
 
 /**
- * Add an app in one of two ways. With from=directory, add an entry of listAppDirectory: a catalogue entry, with the instance host or vault credential it needs, or an app from the wider directory. Only an administrator may. With from=address, add a server by its HTTPS address, and anybody signed in may. OpenBot asks the server how it is reached first. It refuses an address the MCP allowlist doesn't approve, a server that needs a key nobody gave, and an address already added, naming that app in the problem's appId. Only an administrator may give a server a key, because every Bot that uses the server uses it. A server that signs each person in answers with signIn true, and each person then connects their own account. Answers 201 with the app. Adding a directory entry that is already added updates that app with what the request names, and answers it the same way. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Add an app in one of two ways. With from=directory, add an entry of listAppDirectory: a catalogue entry, with the instance host or vault credential it needs, or an app from the wider directory. Only an administrator may. With from=address, add a server by its HTTPS address, and anybody signed in may. Mangaba Bot asks the server how it is reached first. It refuses an address the MCP allowlist doesn't approve, a server that needs a key nobody gave, and an address already added, naming that app in the problem's appId. Only an administrator may give a server a key, because every Bot that uses the server uses it. A server that signs each person in answers with signIn true, and each person then connects their own account. Answers 201 with the app. Adding a directory entry that is already added updates that app with what the request names, and answers it the same way. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Add an app
  */
 export const createApp = async (
@@ -643,7 +643,7 @@ export const getReplaceAppUrl = (organizationId: string, appId: string) => {
 };
 
 /**
- * Add a server by its address at an id an administrator chooses, or replace the server at that id. It is for pointing OpenBot at a server of the organization's own, such as one reached as the signed-in person through Microsoft Entra ID (entraScope). Unlike createApp, it doesn't ask the server how it is reached and doesn't check the MCP allowlist. The id is 2 to 40 lower-case letters, numbers and hyphens, and can't be a catalogue entry's, a screen's, or one kept for apps from the directory. credentialId names a vault credential (createCredential) the server is reached with. An absent entraScope keeps the one the server has, and null takes it away. Recorded on the audit trail. Answers the server, whether it was added or replaced. Only an administrator may.
+ * Add a server by its address at an id an administrator chooses, or replace the server at that id. It is for pointing Mangaba Bot at a server of the organization's own, such as one reached as the signed-in person through Microsoft Entra ID (entraScope). Unlike createApp, it doesn't ask the server how it is reached and doesn't check the MCP allowlist. The id is 2 to 40 lower-case letters, numbers and hyphens, and can't be a catalogue entry's, a screen's, or one kept for apps from the directory. credentialId names a vault credential (createCredential) the server is reached with. An absent entraScope keeps the one the server has, and null takes it away. Recorded on the audit trail. Answers the server, whether it was added or replaced. Only an administrator may.
  * @summary Add or replace a server at a chosen id
  */
 export const replaceApp = async (
@@ -1080,7 +1080,7 @@ export const getRefreshAppUrl = (organizationId: string, appId: string) => {
 };
 
 /**
- * Ask the app what actions it offers now, replace the ones OpenBot has recorded, and answer the app. Where asking needs an account, it is asked with the administrator's own. An app that can't be asked still answers 200, with the reason in lastError and its actions as they were. Bots keep any action the app stopped offering, listed in withdrawn. Recorded on the audit trail when that changes. Only an administrator may.
+ * Ask the app what actions it offers now, replace the ones Mangaba Bot has recorded, and answer the app. Where asking needs an account, it is asked with the administrator's own. An app that can't be asked still answers 200, with the reason in lastError and its actions as they were. Bots keep any action the app stopped offering, listed in withdrawn. Recorded on the audit trail when that changes. Only an administrator may.
  * @summary Ask an app what it offers now
  */
 export const refreshApp = async (
@@ -1222,7 +1222,7 @@ export const getSetAppAccountModeUrl = (
 };
 
 /**
- * Choose whose account an app from the directory acts in: each person's own (personal), or one account OpenBot holds for everybody in the organization (shared). Every account the switch leaves behind is ended at the app's service first. Nothing changes unless all of them ended, and the problem's problems then names each account that didn't. Switching to shared gives each Bot that uses the app an approval, the one in approvals or its default, and makes the app ask before every action that changes something. With validateOnly true nothing changes, and the answer says what the switch would end and approve. Choosing the mode an app is already in puts back anything that mode needs and is missing. Recorded on the audit trail. Only an administrator may.
+ * Choose whose account an app from the directory acts in: each person's own (personal), or one account Mangaba Bot holds for everybody in the organization (shared). Every account the switch leaves behind is ended at the app's service first. Nothing changes unless all of them ended, and the problem's problems then names each account that didn't. Switching to shared gives each Bot that uses the app an approval, the one in approvals or its default, and makes the app ask before every action that changes something. With validateOnly true nothing changes, and the answer says what the switch would end and approve. Choosing the mode an app is already in puts back anything that mode needs and is missing. Recorded on the audit trail. Only an administrator may.
  * @summary Choose whose account an app acts in
  */
 export const setAppAccountMode = async (
@@ -1387,7 +1387,7 @@ export const getSetAppOAuthClientUrl = (
 };
 
 /**
- * Set the OAuth client OpenBot signs people in to an app with, for a catalogue app whose vendor doesn't let OpenBot register one itself. Register redirectUri from getAppSetup with the vendor first. Setting a client again replaces the one before. The secret is kept in the vault and never answered. Recorded on the audit trail. Only an administrator may.
+ * Set the OAuth client Mangaba Bot signs people in to an app with, for a catalogue app whose vendor doesn't let Mangaba Bot register one itself. Register redirectUri from getAppSetup with the vendor first. Setting a client again replaces the one before. The secret is kept in the vault and never answered. Recorded on the audit trail. Only an administrator may.
  * @summary Set the OAuth client people sign in to an app with
  */
 export const setAppOAuthClient = async (
@@ -1555,7 +1555,7 @@ export const getListAppDirectoryUrl = (
 };
 
 /**
- * Return one page of what can be added with createApp: the apps in OpenBot's own catalogue (source catalogue) in the catalogue's own order, then apps from the wider directory (source directory) by title, ignoring case, and then by id. appId names the app an entry was added as, or is null. search narrows the list to entries whose name or description holds it, ignoring case. source narrows it to one kind. Anybody signed in may read the catalogue. Only an administrator sees the wider directory, so anybody else's list holds catalogue entries only, and asking for source=directory is refused. Where no directory is set up, the list holds the catalogue only and source=directory is unavailable. In the personal edition the catalogue leaves out entries meant for a team, unless they're already added. A missing cursor starts at the first page and nextCursor null ends the list. A cursor belongs to the search and source that made it, so changing either starts again without one.
+ * Return one page of what can be added with createApp: the apps in Mangaba Bot's own catalogue (source catalogue) in the catalogue's own order, then apps from the wider directory (source directory) by title, ignoring case, and then by id. appId names the app an entry was added as, or is null. search narrows the list to entries whose name or description holds it, ignoring case. source narrows it to one kind. Anybody signed in may read the catalogue. Only an administrator sees the wider directory, so anybody else's list holds catalogue entries only, and asking for source=directory is refused. Where no directory is set up, the list holds the catalogue only and source=directory is unavailable. In the personal edition the catalogue leaves out entries meant for a team, unless they're already added. A missing cursor starts at the first page and nextCursor null ends the list. A cursor belongs to the search and source that made it, so changing either starts again without one.
  * @summary List the apps that can be added
  */
 export const listAppDirectory = async (
@@ -1800,7 +1800,7 @@ export const getGetAppSetupUrl = (organizationId: string) => {
 };
 
 /**
- * Return how apps are set up on this OpenBot: whether the app directory is available and the service it comes from, the address an administrator registers with an app's vendor, whether a connection approves one action at a time, and whether a Bot with no key of its own can still use an app's actions. Anybody signed in may read it. It holds no secret.
+ * Return how apps are set up on this Mangaba Bot: whether the app directory is available and the service it comes from, the address an administrator registers with an app's vendor, whether a connection approves one action at a time, and whether a Bot with no key of its own can still use an app's actions. Anybody signed in may read it. It holds no secret.
  * @summary Read how apps are set up here
  */
 export const getAppSetup = async (

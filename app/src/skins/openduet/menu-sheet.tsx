@@ -90,13 +90,13 @@ const HERE = { className: "bg-openduet-tile" };
 
 /**
  * The drawer behind the header's left disc. From the top: the product's name and who is signed in;
- * Chat, where a conversation starts; every conversation OpenBot keeps for this person, pinned first
+ * Chat, where a conversation starts; every conversation Mangaba Bot keeps for this person, pinned first
  * and newest after, joined to Chat by a hairline; New conversation; then the pages that set things
  * up, under Manage, closed until somebody opens it; and Settings on its own, never folded, because
  * the skin picker is there.
  *
  * The conversations take the height that is left and scroll by themselves, so the rows above and
- * below stay put, and older ones load as the list nears its end, as OpenBot's sidebar does.
+ * below stay put, and older ones load as the list nears its end, as Mangaba Bot's sidebar does.
  */
 export function MenuSheet({
   open,
@@ -119,7 +119,7 @@ export function MenuSheet({
   // Opened over this drawer with Cmd/Ctrl+K, the menu closes it before it navigates.
   useBeforeCommandNavigate(close);
   const conversations = pinnedFirst(channels.data ?? []);
-  // OpenBot's one navigation list, for this person: Settings on its own, the rest under Manage.
+  // Mangaba Bot's one navigation list, for this person: Settings on its own, the rest under Manage.
   const navigation = useNavigationItems();
   const settings = navigation
     .filter(isNavigationLink)
@@ -135,7 +135,7 @@ export function MenuSheet({
         side="left"
       >
         {/*
-         * In OpenBot Desktop on macOS the window's buttons sit over the drawer's top-left corner,
+         * In Mangaba Bot Desktop on macOS the window's buttons sit over the drawer's top-left corner,
          * about 21–37px down (`data-desktop-titlebar`, macOS only), so the header then starts 48px
          * down, below them, as onboarding's does, and it moves the window (`data-desktop-drag`).
          */}
@@ -312,7 +312,7 @@ export function MenuSheet({
 }
 
 /**
- * What waits on the person across their Bots, from OpenBot's own count (the number its sidebar's
+ * What waits on the person across their Bots, from Mangaba Bot's own count (the number its sidebar's
  * Bots badge shows), in OpenDuet's one badge style: the accent, with what sits on it. A dot when the
  * only news is something unread.
  */
@@ -371,9 +371,9 @@ function RowText({
 }
 
 /**
- * One conversation: its Bots' avatars on a disc (OpenBot's, from each Bot's seed), then its title and its Bot, in the order the person
- * chose in OpenBot's preferences. A dot when a Bot said something they have not seen; the faces
- * type while a Bot works there. Held down or right-clicked, it pins or deletes, as OpenBot's roster
+ * One conversation: its Bots' avatars on a disc (Mangaba Bot's, from each Bot's seed), then its title and its Bot, in the order the person
+ * chose in Mangaba Bot's preferences. A dot when a Bot said something they have not seen; the faces
+ * type while a Bot works there. Held down or right-clicked, it pins or deletes, as Mangaba Bot's roster
  * does.
  */
 function ConversationRow({
@@ -386,7 +386,7 @@ function ConversationRow({
   const emphasis = useMessageListEmphasis();
   const navigate = useNavigate();
   const bots = useQuery(agentListQueryOptions());
-  // Each Bot's own avatar, drawn from its seed as OpenBot's Bot pages draw it.
+  // Each Bot's own avatar, drawn from its seed as Mangaba Bot's Bot pages draw it.
   const seeds = channel.agentIds.map(
     (id) => bots.data?.find((bot) => bot.id === id)?.avatarSeed ?? id,
   );

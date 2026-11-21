@@ -113,7 +113,7 @@ export const ListAppAccessRequestsResponse = zod.object({
 });
 
 /**
- * Ask an administrator to make an app usable on a Bot. OpenBot decides what is asked for from the app's state: turning it on, giving it to the Bot, or connecting its shared account. Asking again answers the same request while it is waiting. A person may have 20 requests waiting at once. Recorded on the audit trail. Anybody who can use the Bot may ask.
+ * Ask an administrator to make an app usable on a Bot. Mangaba Bot decides what is asked for from the app's state: turning it on, giving it to the Bot, or connecting its shared account. Asking again answers the same request while it is waiting. A person may have 20 requests waiting at once. Recorded on the audit trail. Anybody who can use the Bot may ask.
  * @summary Ask an administrator for an app
  */
 

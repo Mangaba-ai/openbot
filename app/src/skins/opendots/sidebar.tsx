@@ -118,7 +118,7 @@ export function IconAction({
 
 /**
  * The deployment's own name, set in OpenDots' wordmark type, which is also the way home. The name
- * is `brand.yaml`'s, the same one OpenBot's sidebar header shows; a skin changes the look, never
+ * is `brand.yaml`'s, the same one Mangaba Bot's sidebar header shows; a skin changes the look, never
  * whose product it is.
  */
 function Wordmark({ onNavigate }: { onNavigate: () => void }) {
@@ -235,7 +235,7 @@ function BotsSection({
                       }
                     : { to: "/channel/new", search: { agent: agent.id } })}
                 >
-                  {/* OpenBot's own avatar for the Bot; hidden so the row is named once. */}
+                  {/* Mangaba Bot's own avatar for the Bot; hidden so the row is named once. */}
                   <span aria-hidden className="contents">
                     <AbstractAvatar
                       name={agent.name}
@@ -264,7 +264,7 @@ function BotsSection({
         </nav>
       )}
       {bots ? (
-        // OpenBot's Bots destination, from the shared list, closing the list of Bots above it.
+        // Mangaba Bot's Bots destination, from the shared list, closing the list of Bots above it.
         <Link
           activeOptions={{ exact: true }}
           activeProps={{ className: navItemActive, "aria-current": "page" }}
@@ -468,7 +468,7 @@ function RecentChats({
             />
           ))
         )}
-        {/* OpenBot's own pager: it loads older conversations as the list scrolls to its end. */}
+        {/* Mangaba Bot's own pager: it loads older conversations as the list scrolls to its end. */}
         <ChannelPagination
           query={channels}
           scrollRoot={scrollRoot}
@@ -517,7 +517,7 @@ function WorkspaceLinks({
   const current = (section: Place["section"]) =>
     place.section === section ? ("page" as const) : undefined;
   /*
-   * OpenDots' sidebar ends on a few rows. OpenBot's primary destinations and the person's own menu
+   * OpenDots' sidebar ends on a few rows. Mangaba Bot's primary destinations and the person's own menu
    * are in the rail at desktop width, so they join these rows only in the phone drawer, where there
    * is no rail. Bots is the row under the list of Bots above.
    */
@@ -570,7 +570,7 @@ function WorkspaceLinks({
           Command palette
         </span>
       </button>
-      {/* OpenBot's own destinations, from the one list every frame reads. */}
+      {/* Mangaba Bot's own destinations, from the one list every frame reads. */}
       {navigation.map((item) => (
         <NavigationTarget
           aria-current={place.section === item.id ? "page" : undefined}
@@ -580,7 +580,7 @@ function WorkspaceLinks({
           onClick={onNavigate}
         >
           <item.icon />
-          {/* The label alone, no trademark sign: "OpenBot for Business" only just fits this rail. */}
+          {/* The label alone, no trademark sign: "Mangaba Bot for Business" only just fits this rail. */}
           <span className="min-w-0 flex-1 truncate">{item.label}</span>
         </NavigationTarget>
       ))}
@@ -600,7 +600,7 @@ export function initialsOf(user: { name?: string | null; email: string }) {
   );
 }
 
-/** Who is signed in, and the way out. OpenBot's sidebar keeps this in its user menu. */
+/** Who is signed in, and the way out. Mangaba Bot's sidebar keeps this in its user menu. */
 function UserRow() {
   const user = useQuery(currentUserQueryOptions());
   const navigate = useNavigate();
@@ -640,8 +640,8 @@ function UserRow() {
 }
 
 /**
- * OpenDots' sidebar over OpenBot's data: the Bots as Dots, the conversations as recent chats, and
- * the workspace views beneath. Every OpenBot surface the default sidebar reaches is here too.
+ * OpenDots' sidebar over Mangaba Bot's data: the Bots as Dots, the conversations as recent chats, and
+ * the workspace views beneath. Every Mangaba Bot surface the default sidebar reaches is here too.
  */
 export function OpenDotsSidebar({
   place,
@@ -655,7 +655,7 @@ export function OpenDotsSidebar({
   const channels = useInfiniteQuery(channelListQueryOptions());
   return (
     /*
-     * In OpenBot Desktop on macOS the window's buttons sit over the sidebar's top-left corner
+     * In Mangaba Bot Desktop on macOS the window's buttons sit over the sidebar's top-left corner
      * (`data-desktop-titlebar`, macOS only), so it then starts 32px lower, below them, level with
      * the rail beside it, and that strip moves the window, as the rail's does (`data-desktop-drag`).
      * The drawer a narrow window opens is this sidebar too.

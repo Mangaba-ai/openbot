@@ -80,10 +80,10 @@ export const Route = createFileRoute("/_authed/admin/learning")({
   component: LearningPageInEveryEdition,
 });
 /**
- * The default container, as the page calls it. Where OpenBot keeps a container for the organization
+ * The default container, as the page calls it. Where Mangaba Bot keeps a container for the organization
  * alone (`own`), or where the person works in one of several organizations (`organization`), it is
  * the organization's: each organization learns in a backend project of its own, so its default is
- * its own even where the server names no container for it. Only an OpenBot that keeps one
+ * its own even where the server names no container for it. Only an Mangaba Bot that keeps one
  * organization and lists none calls it the deployment's.
  */
 function defaultWords(own: string | null, organization: string | undefined) {
@@ -127,8 +127,8 @@ function automaticMessage(
   )
     return own === null
       ? organization
-        ? `Bots in ${organization} learn into its "${automatic.containerId}" container, which OpenBot assigned automatically. You can change it here.`
-        : `OpenBot assigned this project's "${automatic.containerId}" container automatically. You can change it here.`
+        ? `Bots in ${organization} learn into its "${automatic.containerId}" container, which Mangaba Bot assigned automatically. You can change it here.`
+        : `Mangaba Bot assigned this project's "${automatic.containerId}" container automatically. You can change it here.`
       : `${organization ? `Bots in ${organization}` : "Bots"} learn into this organization's default container. You can change it here.`;
   if (automatic.state === "absent")
     return own === null
@@ -141,7 +141,7 @@ function automaticMessage(
   if (automatic.state === "learning_off")
     return "Learning is switched off in the backend. Nothing is collected until it's turned on there.";
   if (automatic.state === "unavailable")
-    return "Couldn't reach the backend to find this project's Learning container. OpenBot will try again.";
+    return "Couldn't reach the backend to find this project's Learning container. Mangaba Bot will try again.";
   return undefined;
 }
 
@@ -279,7 +279,7 @@ export function LearningPage() {
   );
   const delivery = useQuery(learningDeliveryQueryOptions(selected));
   /*
-   * The container OpenBot keeps for this organization alone, by the id the server gives it, or null
+   * The container Mangaba Bot keeps for this organization alone, by the id the server gives it, or null
    * where it keeps none. Nothing that names a container is drawn until this has answered, so an id
    * that says nothing to a person is never on the page, even for a moment.
    */
@@ -323,13 +323,13 @@ export function LearningPage() {
   return (
     <PageShell
       title="Automatic learning"
-      description="Learn from finished conversations, review the skills OpenBot proposes, and give published skills to Bots."
+      description="Learn from finished conversations, review the skills Mangaba Bot proposes, and give published skills to Bots."
     >
       <PageSection
         title="Participation"
         description={
           own === null && organization === undefined
-            ? "Container changes apply to new conversations. Existing ones keep their first container. Containers must already exist in the same project. Until you save here, OpenBot uses that project's openbot container."
+            ? "Container changes apply to new conversations. Existing ones keep their first container. Containers must already exist in the same project. Until you save here, Mangaba Bot uses that project's openbot container."
             : own === null
               ? `Container changes apply to new conversations. Existing ones keep their first container. Containers must already exist in ${organization}'s project. Until you save here, Bots in ${organization} learn into its openbot container.`
               : "Container changes apply to new conversations. Existing ones keep their first container. Until you choose another, Bots learn into this organization's default container."
@@ -485,7 +485,7 @@ export function LearningPage() {
       </PageSection>
       <PageSection
         title="Review and publish"
-        description="OpenBot studies finished conversations and proposes skills. Review and publish them below. Bots only use published skills."
+        description="Mangaba Bot studies finished conversations and proposes skills. Review and publish them below. Bots only use published skills."
       >
         <div className="mt-4 grid gap-4">
           <label className="grid gap-2 text-sm" htmlFor={`${formId}-shown`}>
@@ -648,7 +648,7 @@ export function LearningPage() {
             Refresh status
           </Button>
           <p className="text-muted-foreground text-sm">
-            OpenBot keeps project credentials on the server. Turning Learning
+            Mangaba Bot keeps project credentials on the server. Turning Learning
             off here keeps settings and conversation assignments. Schedules stay
             in the backend.
           </p>
@@ -721,12 +721,12 @@ function ProposedSkills({ agentId }: { agentId?: string }) {
         </p>
       ) : !containerId ? (
         <PageEmpty icon={IconSparkles} title="No container">
-          Choose a container under Participation to see the skills OpenBot
+          Choose a container under Participation to see the skills Mangaba Bot
           proposes for it.
         </PageEmpty>
       ) : proposals.data.proposals.length === 0 ? (
         <PageEmpty icon={IconSparkles} title="No proposed skills yet">
-          OpenBot proposes skills once it has learned from finished
+          Mangaba Bot proposes skills once it has learned from finished
           conversations. Learn now starts it.
         </PageEmpty>
       ) : (
@@ -984,7 +984,7 @@ function PublishedSkills({ agentId }: { agentId?: string }) {
 function LearningPageInEveryEdition() {
   return (
     <TeamPage
-      description="Learn from finished conversations, review the skills OpenBot proposes, and give published skills to Bots."
+      description="Learn from finished conversations, review the skills Mangaba Bot proposes, and give published skills to Bots."
       more={<YourOwnLearning />}
       title="Automatic learning"
     >

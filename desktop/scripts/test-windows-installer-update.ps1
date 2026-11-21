@@ -33,7 +33,7 @@ Set-StrictMode -Version Latest
 $tauri = (Resolve-Path (Join-Path $PSScriptRoot '..\src-tauri')).Path
 $product = 'OpenBot'
 $binary = 'openbot-desktop'
-$bundleId = 'ai.copilotkit.openbot.desktop'
+$bundleId = 'ai.mangaba.bot.desktop'
 $uninstallKey = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Uninstall\$product"
 $locationKey = "HKCU:\Software\CopilotKit\$product"
 $runKey = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'

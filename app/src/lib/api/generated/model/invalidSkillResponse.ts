@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * A field is missing, blank once trimmed or holds text that can't be kept, or a tool is one OpenBot hasn't seen.
+ * A field is missing, blank once trimmed or holds text that can't be kept, or a tool is one Mangaba Bot hasn't seen.
  */
 export type InvalidSkillResponse = Problem;

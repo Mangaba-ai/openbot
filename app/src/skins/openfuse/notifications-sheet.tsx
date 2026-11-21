@@ -13,8 +13,8 @@ import {
 import { FuseEmpty, FuseSheet, LinkRow } from "./ui";
 
 /**
- * The bell: what every Bot is waiting on the person for, the things its number counts (OpenBot's
- * own count, `useWaitingCount`), every one of them. The rows are OpenBot's own: `WaitingForYou` for
+ * The bell: what every Bot is waiting on the person for, the things its number counts (Mangaba Bot's
+ * own count, `useWaitingCount`), every one of them. The rows are Mangaba Bot's own: `WaitingForYou` for
  * questions and approvals, a Bot's Activity row for a hand-off that ran out of tries, and the task
  * rows for tasks waiting on the person. A question inside a task is listed once, as the task.
  */

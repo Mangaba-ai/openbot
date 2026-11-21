@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The conversation cannot take this: it comes with OpenBot and cannot be deleted, it is no longer active, or the call was already saved in another conversation. Or the Idempotency-Key was already used for a different request.
+ * The conversation cannot take this: it comes with Mangaba Bot and cannot be deleted, it is no longer active, or the call was already saved in another conversation. Or the Idempotency-Key was already used for a different request.
  */
 export type ConversationConflictResponse = Problem;

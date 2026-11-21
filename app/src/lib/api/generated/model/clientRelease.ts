@@ -3,7 +3,7 @@
  */
 
 /**
- * An OpenBot release, such as 1.1.0.
+ * An Mangaba Bot release, such as 1.1.0.
  * @pattern ^\d{1,6}\.\d{1,6}\.\d{1,6}(-[0-9A-Za-z.-]{1,64})?$
  */
 export type ClientRelease = string;

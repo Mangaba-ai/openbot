@@ -1,12 +1,12 @@
 //! Raising the stack: the Compose services.
 //!
-//! Compose runs all of OpenBot: postgres, the supervisor, `agent-computer`, the Bots, and the
+//! Compose runs all of Mangaba Bot: postgres, the supervisor, `agent-computer`, the Bots, and the
 //! published image's `server` under the `openbot` profile. The server applies its own migrations
 //! when it starts and does the scheduled work itself, which this release's Compose file says on
 //! one line (`SCHEDULED_WORK_MARKER`). An installation whose Compose file is an earlier release's
 //! has no such line, and its one-shot `migrate` and its `worker` are in use: it is run as that
 //! file requires (`selected_services`). Docker's restart policy keeps them up. Nothing runs on the
-//! host: the person's own browser is on the one computer, shown in the OpenBot window.
+//! host: the person's own browser is on the one computer, shown in the Mangaba Bot window.
 //!
 //! [`HOST_PROCESSES`] still names what earlier versions ran on the host, the server, the app, the
 //! worker and a browser of the person's own on their desktop, so a Start or a Stop can find and end
@@ -24,7 +24,7 @@ use crate::problem::Problem;
 
 /// The services Compose owns in every installation this app runs.
 ///
-/// `server` is OpenBot itself, from the published server image: the API, the app it serves, the
+/// `server` is Mangaba Bot itself, from the published server image: the API, the app it serves, the
 /// database migrations, which it applies when it starts, and the scheduled work (firing routines,
 /// cleaning up unsent attachments, suspending idle computers). It used to be a Bun process this app
 /// started on the host after downloading Bun and running `bun install`, which on a fresh Windows
@@ -382,7 +382,7 @@ fn volume_inventory(engine: &Address, root: &Path) -> Result<Vec<String>, Proble
 
 fn postgres_volume_problem(detail: impl Into<String>) -> Problem {
     Problem::with(
-        "OpenBot couldn't check whether this installation already has your data saved, so it \
+        "Mangaba Bot couldn't check whether this installation already has your data saved, so it \
          changed nothing. Try again.",
         detail,
     )
@@ -632,7 +632,7 @@ impl LeftoverVolumes {
 
 fn leftover_container_problem(detail: impl Into<String>) -> Problem {
     Problem::with(
-        "OpenBot couldn't check what an earlier installation left behind, so it changed nothing. \
+        "Mangaba Bot couldn't check what an earlier installation left behind, so it changed nothing. \
          Try again.",
         detail,
     )
@@ -904,7 +904,7 @@ pub fn reset_leftover_volumes(
             .output()
             .map_err(|error| {
                 Problem::with(
-                    format!("OpenBot could not remove {name}. {}", so_far()),
+                    format!("Mangaba Bot could not remove {name}. {}", so_far()),
                     format!("Could not run {kind} removal: {error}"),
                 )
             })?;
@@ -915,7 +915,7 @@ pub fn reset_leftover_volumes(
                 "It may still be in use."
             };
             return Err(Problem::with(
-                format!("OpenBot could not remove {name}. {why} {} Stop the installation using it, then try Start again.", so_far()),
+                format!("Mangaba Bot could not remove {name}. {why} {} Stop the installation using it, then try Start again.", so_far()),
                 format!("{kind} removal exited with {}. Output omitted because it can contain credentials.", output.status),
             ));
         }
@@ -982,7 +982,7 @@ fn harness_port_overlay(root: &Path, ipv4_only: bool) -> Result<Option<String>, 
     )
     .map_err(|error| {
         Problem::with(
-            "OpenBot could not read the Bot's local port.",
+            "Mangaba Bot could not read the Bot's local port.",
             error.to_string(),
         )
     })?;
@@ -1041,7 +1041,7 @@ fn append_compose_overlay(
     if std::fs::read(&overlay).ok().as_deref() != Some(contents.as_bytes()) {
         std::fs::write(&overlay, contents).map_err(|error| {
             Problem::with(
-                "OpenBot couldn't prepare its settings on this computer. Try again.",
+                "Mangaba Bot couldn't prepare its settings on this computer. Try again.",
                 error.to_string(),
             )
         })?;
@@ -1083,7 +1083,7 @@ fn compose_start_command(
         .args(["config", "--environment"])
         .output();
     // Only the optional telemetry overrides need the probe here. An older Compose without it, or
-    // one that fails it, starts OpenBot as before: telemetry never blocks Start, opted out or not.
+    // one that fails it, starts Mangaba Bot as before: telemetry never blocks Start, opted out or not.
     let optional_only = desktop_telemetry && !macos_podman && harness_ports.is_none();
     if optional_only
         && environment
@@ -1099,19 +1099,19 @@ fn compose_start_command(
     }
     let environment = environment.map_err(|error| {
         Problem::with(
-            "OpenBot couldn't read its installation's settings. Repair the installation.",
+            "Mangaba Bot couldn't read its installation's settings. Repair the installation.",
             error.to_string(),
         )
     })?;
     if !environment.status.success() {
         return Err(Problem::with(
-            "OpenBot couldn't read its installation's settings. Repair the installation.",
+            "Mangaba Bot couldn't read its installation's settings. Repair the installation.",
             command_said(&environment.stderr),
         ));
     }
     let environment = String::from_utf8(environment.stdout).map_err(|_| {
         Problem::with(
-            "OpenBot couldn't read its installation's settings. Repair the installation.",
+            "Mangaba Bot couldn't read its installation's settings. Repair the installation.",
             "Compose returned unreadable deployment settings",
         )
     })?;
@@ -1145,7 +1145,7 @@ fn compose_start_command(
         }
     }
     // Last, so the native opt-out wins over any override. Optional like the rest of telemetry: a
-    // file that cannot be written is logged, and OpenBot starts.
+    // file that cannot be written is logged, and Mangaba Bot starts.
     if desktop_telemetry && desktop_telemetry_disabled(secrets) {
         if let Err(error) = append_compose_overlay(
             &mut command,
@@ -1164,7 +1164,7 @@ fn compose_start_command(
 
 /// The services a Compose file defines: the keys one level under its top-level `services:`.
 ///
-/// Read as text, not parsed: the installation's files are the ones OpenBot ships, block-style with
+/// Read as text, not parsed: the installation's files are the ones Mangaba Bot ships, block-style with
 /// two-space indentation, and a file this cannot read simply contributes no names.
 fn compose_service_names(text: &str) -> Vec<String> {
     let mut names = Vec::new();
@@ -1319,7 +1319,7 @@ fn compose_files(root: &Path, environment: &str) -> Result<Vec<String>, Problem>
     ])
     .ok_or_else(|| {
         Problem::with(
-            "Part of OpenBot's installation is missing. Repair the installation.",
+            "Part of Mangaba Bot's installation is missing. Repair the installation.",
             "the selected installation has no Compose file",
         )
     })?;
@@ -1362,7 +1362,7 @@ pub fn installation_images_in(
     )
 }
 
-/// A Compose of OpenBot's own that runs without any engine, for `config`: the standalone binary
+/// A Compose of Mangaba Bot's own that runs without any engine, for `config`: the standalone binary
 /// `install.rs` downloads (`docker-compose`), with the same settings as `compose_command`. Before
 /// Podman is on a computer, this is the only Compose there is.
 pub fn standalone_compose_command(compose: &Path, root: &Path, secrets: &Secrets) -> Command {
@@ -1398,13 +1398,13 @@ pub fn installation_images_by(
         .output()
         .map_err(|e| {
             Problem::with(
-                "OpenBot could not check which software to install.",
+                "Mangaba Bot could not check which software to install.",
                 e.to_string(),
             )
         })?;
     if !output.status.success() {
         return Err(Problem::with(
-            "OpenBot could not check which software to install.",
+            "Mangaba Bot could not check which software to install.",
             command_said(&output.stderr),
         ));
     }
@@ -1416,7 +1416,7 @@ pub fn installation_images_by(
         .collect();
     if images.is_empty() {
         return Err(Problem::plain(
-            "This deployment does not identify the software OpenBot needs to install.",
+            "This deployment does not identify the software Mangaba Bot needs to install.",
         ));
     }
     Ok(images.into_iter().collect())
@@ -1474,7 +1474,7 @@ pub fn up(
     })
 }
 
-/// A service behind a profile of its own, which OpenBot starts and stops alone: a plan's engine.
+/// A service behind a profile of its own, which Mangaba Bot starts and stops alone: a plan's engine.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct Alone {
     pub profile: &'static str,
@@ -1504,7 +1504,7 @@ pub fn start_alone(
             .output()
             .map_err(|error| {
                 Problem::with(
-                    "OpenBot couldn't start your plan. Try again.",
+                    "Mangaba Bot couldn't start your plan. Try again.",
                     format!("could not run {} compose: {error}", engine.engine.binary()),
                 )
             })?;
@@ -1541,7 +1541,7 @@ pub fn recreate_harness(engine: &Address, root: &Path, secrets: &Secrets) -> Res
             .output()
             .map_err(|error| {
                 Problem::with(
-                    "OpenBot couldn't restart your Bot. Try again.",
+                    "Mangaba Bot couldn't restart your Bot. Try again.",
                     format!("could not run {} compose: {error}", engine.engine.binary()),
                 )
             })?;
@@ -1563,7 +1563,7 @@ pub fn remove_alone(engine: &Address, root: &Path, alone: Alone) -> Result<(), P
             .output()
             .map_err(|error| {
                 Problem::with(
-                    "OpenBot couldn't stop a plan it no longer uses.",
+                    "Mangaba Bot couldn't stop a plan it no longer uses.",
                     format!("could not run {} compose: {error}", engine.engine.binary()),
                 )
             })?;
@@ -1572,7 +1572,7 @@ pub fn remove_alone(engine: &Address, root: &Path, alone: Alone) -> Result<(), P
         }
         let raw = command_said(&output.stderr);
         Err(Problem::with(
-            "OpenBot couldn't stop a plan it no longer uses.",
+            "Mangaba Bot couldn't stop a plan it no longer uses.",
             raw,
         ))
     })
@@ -1590,7 +1590,7 @@ pub fn make_sign_in_folder(root: &Path) -> Result<PathBuf, crate::problem::Probl
     let folder = root.join(".openbot");
     std::fs::create_dir_all(&folder).map_err(|error| {
         crate::problem::Problem::with(
-            "OpenBot couldn't prepare its sign-in folder. Try again.",
+            "Mangaba Bot couldn't prepare its sign-in folder. Try again.",
             format!("{}: {error}", folder.display()),
         )
     })?;
@@ -1598,7 +1598,7 @@ pub fn make_sign_in_folder(root: &Path) -> Result<PathBuf, crate::problem::Probl
 }
 
 /// How long `up` waits before each new try while Docker Desktop cannot see a folder yet: 15
-/// seconds in all. On OpenBot Desktop 1.0.0's first Start it took seconds.
+/// seconds in all. On Mangaba Bot Desktop 1.0.0's first Start it took seconds.
 const FOLDER_NOT_SHARED_YET_WAITS: [std::time::Duration; 4] = [
     std::time::Duration::from_secs(1),
     std::time::Duration::from_secs(2),
@@ -1627,7 +1627,7 @@ The folder of this installation's that Docker Desktop on a Mac refused to stat, 
 
 Docker Desktop shares the Mac's folders into its VM under `/host_mnt` and names the one it could not
 open: `stat /host_mnt/Users/<name>/OpenBot/.openbot: operation not permitted`. Only a folder inside
-`root` counts. Anything else is not OpenBot's to touch.
+`root` counts. Anything else is not Mangaba Bot's to touch.
 */
 fn refused_folder_in(said: &str, root: &Path) -> Option<PathBuf> {
     let roots = [Some(root.to_path_buf()), std::fs::canonicalize(root).ok()];
@@ -1672,7 +1672,7 @@ fn local_image_for_share_refresh(
 Make Docker Desktop look at `folder` again, by reading it through a container that is gone at once.
 
 Docker Desktop's file sharing on a Mac keeps a handle on a folder it has shared. Move that folder to
-the Trash and make a new one at the same place, as reinstalling OpenBot does, and the handle still
+the Trash and make a new one at the same place, as reinstalling Mangaba Bot does, and the handle still
 follows the old one into `~/.Trash`, which macOS keeps from other apps. Every bind mount of the new
 folder is then refused with `operation not permitted`, and waiting does not change that. Reading the
 folder through its parent makes Docker Desktop look it up again, and the next `up` mounts it.
@@ -1705,20 +1705,20 @@ fn refresh_docker_desktop_share(engine: &Address, root: &Path, secrets: &Secrets
         .output();
     match output {
         Ok(output) if output.status.success() => {
-            log::info!("[compose up] refreshed Docker Desktop's view of the OpenBot folder")
+            log::info!("[compose up] refreshed Docker Desktop's view of the Mangaba Bot folder")
         }
         Ok(output) => log::warn!(
-            "[compose up] refreshing Docker Desktop's view of the OpenBot folder failed: {}",
+            "[compose up] refreshing Docker Desktop's view of the Mangaba Bot folder failed: {}",
             command_said(&output.stderr)
         ),
         Err(error) => log::warn!(
-            "[compose up] could not refresh Docker Desktop's view of the OpenBot folder: {error}"
+            "[compose up] could not refresh Docker Desktop's view of the Mangaba Bot folder: {error}"
         ),
     }
 }
 
-/// What a person is told when Docker Desktop still cannot open the OpenBot folder after a refresh.
-const DOCKER_DESKTOP_STALE_FOLDER: &str = "Docker Desktop is still using an older OpenBot folder, \
+/// What a person is told when Docker Desktop still cannot open the Mangaba Bot folder after a refresh.
+const DOCKER_DESKTOP_STALE_FOLDER: &str = "Docker Desktop is still using an older Mangaba Bot folder, \
      so it can't open the new one. Restart Docker Desktop, then try again.";
 
 /**
@@ -1750,7 +1750,7 @@ fn up_retrying(
                 if let (Some(folder), false) = (&refused, refreshed) {
                     refreshed = true;
                     log::warn!(
-                        "[compose up] Docker Desktop cannot open a folder OpenBot mounts; refreshing its file sharing and trying again"
+                        "[compose up] Docker Desktop cannot open a folder Mangaba Bot mounts; refreshing its file sharing and trying again"
                     );
                     refresh_docker_desktop_share(engine, root, secrets, folder);
                     continue;
@@ -1797,7 +1797,7 @@ fn up_now(
     // server that does that work itself.
     remove_retired_containers(engine, root).map_err(|detail| {
         crate::problem::Problem::with(
-            "OpenBot couldn't clear what an earlier version left running. Try again.",
+            "Mangaba Bot couldn't clear what an earlier version left running. Try again.",
             detail,
         )
     })?;
@@ -2014,7 +2014,7 @@ pub fn down(engine: &Address, root: &Path) -> Result<(), String> {
          *
          * `openbot` for the same reason: `server` sits behind it, with `worker` where the file
          * defines one, and a Stop that left them running would leave the app answering a window
-         * that says OpenBot is stopped.
+         * that says Mangaba Bot is stopped.
          *
          * A `worker` or `migrate` container an earlier release left, under a file that no
          * longer uses the service, is removed first: where the file does not define it, it is not
@@ -2122,7 +2122,7 @@ fn record_windows_host_processes_with(
 ) -> Result<(), Problem> {
     let problem = |detail| {
         Problem::with(
-            "OpenBot could not verify its Windows host process ownership.",
+            "Mangaba Bot could not verify its Windows host process ownership.",
             format!(
                 "{}: {detail}; ownership records retained",
                 host_pids_path(root).display()
@@ -2214,7 +2214,7 @@ fn recorded_host_pid_file(root: &Path) -> Result<Option<RecordedHostPidFile>, Pr
     let path = host_pids_path(root);
     let problem = |detail| {
         Problem::with(
-            "OpenBot could not read its recorded host processes.",
+            "Mangaba Bot could not read its recorded host processes.",
             format!("{}: {detail}", path.display()),
         )
     };
@@ -2244,7 +2244,7 @@ fn write_host_pid_file<T: Serialize>(root: &Path, value: &T) -> Result<(), Probl
     let path = host_pids_path(root);
     let problem = |operation: &str, error: &dyn std::fmt::Display| {
         Problem::with(
-            "OpenBot could not record its host processes.",
+            "Mangaba Bot could not record its host processes.",
             format!("{}: {operation}: {error}", path.display()),
         )
     };
@@ -2334,7 +2334,7 @@ pub fn replace_windows_host_process_with(
     let pid = child.id();
     let problem = |detail| {
         Problem::with(
-            "OpenBot could not verify its Windows replacement process ownership.",
+            "Mangaba Bot could not verify its Windows replacement process ownership.",
             format!("{name}, pid {pid}: {detail}; ownership retained"),
         )
     };
@@ -2375,7 +2375,7 @@ pub fn replace_windows_host_process_with(
 #[cfg(unix)]
 fn unix_ownership_problem(detail: impl Into<String>) -> Problem {
     Problem::with(
-        "OpenBot could not verify its host process ownership.",
+        "Mangaba Bot could not verify its host process ownership.",
         detail,
     )
 }
@@ -2813,7 +2813,7 @@ where
         return Ok(true);
     }
     Err(Problem::with(
-        "OpenBot could not stop one of its host processes.",
+        "Mangaba Bot could not stop one of its host processes.",
         format!(
             "pid {pid} is still running after SIGKILL; ownership ancestor and records retained"
         ),
@@ -2852,7 +2852,7 @@ fn signal_unix_process(pid: i32, signal: i32) -> Result<bool, Problem> {
         return Ok(false);
     }
     Err(Problem::with(
-        "OpenBot could not stop one of its host processes.",
+        "Mangaba Bot could not stop one of its host processes.",
         format!("could not send signal {signal} to pid {pid}: {error}"),
     ))
 }
@@ -2867,7 +2867,7 @@ pub fn stop_processes_under(_root: &Path) -> Result<usize, Problem> {
      *
      * MEASURED ON WINDOWS SERVER 2022. Stop took the five containers down, reported success, and
      * left every host process running: the server on 3001, the worker, and both halves of the app
-     * still answering 200 on 3010. Somebody who pressed Stop still had OpenBot serving.
+     * still answering 200 on 3010. Somebody who pressed Stop still had Mangaba Bot serving.
      *
      * So they are found by the ports the deployment publishes, which the shell already owns and
      * already checks for clashes, and each is ended WITH ITS CHILDREN: `bun run serve` starts the
@@ -2894,7 +2894,7 @@ fn stop_windows_processes_with_inventory(
             // A previous Start wrote these PIDs, but a reopened window cannot prove their
             // process instances. Keep that unresolved evidence without authorizing a signal.
             return Err(Problem::with(
-                "OpenBot could not verify its recorded host processes.",
+                "Mangaba Bot could not verify its recorded host processes.",
                 format!(
                     "{}: legacy PID-only evidence lacks Windows process-instance identity; cleanup unresolved; ownership records retained",
                     host_pids_path(root).display()
@@ -2935,7 +2935,7 @@ fn stop_windows_processes_under_with(
         })
     }) {
         return Err(Problem::with(
-            "OpenBot could not verify one of its recorded host processes.",
+            "Mangaba Bot could not verify one of its recorded host processes.",
             format!(
                 "{}: process inventory lacks usable identity metadata for pid {}; ownership records retained",
                 host_pids_path(root).display(),
@@ -2955,7 +2955,7 @@ fn stop_windows_processes_under_with(
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => {}
         Err(error) => {
             return Err(Problem::with(
-                "OpenBot could not remove its recorded host processes.",
+                "Mangaba Bot could not remove its recorded host processes.",
                 format!("{}: could not remove pidfile: {error}", path.display()),
             ));
         }
@@ -3013,7 +3013,7 @@ where
 
 fn cleanup_spawn_problem(operation: &str, error: std::io::Error) -> Problem {
     Problem::with(
-        "OpenBot could not inspect or stop its host processes.",
+        "Mangaba Bot could not inspect or stop its host processes.",
         format!("could not run {operation}: {error}"),
     )
 }
@@ -3031,14 +3031,14 @@ fn cleanup_status_problem(operation: &str, output: &std::process::Output) -> Pro
         detail.push_str(&stdout);
     }
     Problem::with(
-        "OpenBot could not inspect or stop its host processes.",
+        "Mangaba Bot could not inspect or stop its host processes.",
         detail,
     )
 }
 
 fn combined_cleanup_problem(failures: Vec<Problem>) -> Problem {
     Problem::with(
-        "OpenBot could not inspect or stop its host processes.",
+        "Mangaba Bot could not inspect or stop its host processes.",
         failures
             .into_iter()
             .map(problem_detail)
@@ -3143,7 +3143,7 @@ fn windows_processes_with(powershell: &Path) -> Result<Vec<WindowsProcess>, Prob
     if !output.status.success() {
         // The inventory includes other processes' command lines. Never echo a partial snapshot.
         return Err(Problem::with(
-            "OpenBot could not inspect its Windows host processes.",
+            "Mangaba Bot could not inspect its Windows host processes.",
             format!("{operation} exited with status {}", output.status),
         ));
     }
@@ -3154,7 +3154,7 @@ fn windows_processes_with(powershell: &Path) -> Result<Vec<WindowsProcess>, Prob
 fn windows_process_output(output: &[u8]) -> Result<Vec<WindowsProcess>, Problem> {
     let invalid_encoding = || {
         Problem::with(
-            "OpenBot could not inspect its Windows host processes.",
+            "Mangaba Bot could not inspect its Windows host processes.",
             "powershell Get-CimInstance Win32_Process returned invalid UTF-8 or UTF-16LE",
         )
     };
@@ -3189,7 +3189,7 @@ enum WindowsProcessListing {
 pub fn windows_processes_in(listing: &str) -> Result<Vec<WindowsProcess>, Problem> {
     let listing = serde_json::from_str::<WindowsProcessListing>(listing).map_err(|error| {
         Problem::with(
-            "OpenBot could not inspect its Windows host processes.",
+            "Mangaba Bot could not inspect its Windows host processes.",
             format!(
                 "powershell Get-CimInstance Win32_Process returned invalid process JSON: {error}"
             ),
@@ -3201,7 +3201,7 @@ pub fn windows_processes_in(listing: &str) -> Result<Vec<WindowsProcess>, Proble
     })
 }
 
-/// Recorded OpenBot root processes whose live identity still matches the pid file.
+/// Recorded Mangaba Bot root processes whose live identity still matches the pid file.
 pub fn verified_openbot_root_pids(
     recorded: &[RecordedHostProcess],
     processes: &[WindowsProcess],
@@ -3218,7 +3218,7 @@ pub fn verified_openbot_root_pids(
         .collect()
 }
 
-/// Recorded OpenBot processes, or their live children, listening on one of the host ports.
+/// Recorded Mangaba Bot processes, or their live children, listening on one of the host ports.
 ///
 /// A pid file entry is not ownership by itself: the live process must still match the recorded
 /// executable, command line and creation time before its tree is eligible for cleanup.
@@ -3557,7 +3557,7 @@ explain a failure that has already happened, and a second failure on top of it h
 */
 /**
 This machine's IPv4 address as the engine gives it to containers: what `host.docker.internal`
-resolves to inside OpenBot's own `server` container, which `docker-compose.yml` maps to the
+resolves to inside Mangaba Bot's own `server` container, which `docker-compose.yml` maps to the
 engine's host gateway (or `OPENBOT_HOST_GATEWAY`). The same address the Bots reach this machine at.
 None when the server is not running or answers nothing usable. See `learning_model` for why the
 local cluster is given this rather than a name.
@@ -3621,7 +3621,7 @@ pub fn service_log_by(
     }
 }
 
-/// The exit code the OpenBot server uses for every refusal to start: 78, `EX_CONFIG` from
+/// The exit code the Mangaba Bot server uses for every refusal to start: 78, `EX_CONFIG` from
 /// sysexits.h, "configuration error".
 ///
 /// The server refuses when it has no licence or an invalid one, when a single-user server runs in a
@@ -3798,12 +3798,12 @@ fn refusal_sentence_in(stderr: &str, compose_log: &str) -> String {
             })
         })
         .unwrap_or_else(|| {
-            "OpenBot can't start until its settings are changed. The details below say why."
+            "Mangaba Bot can't start until its settings are changed. The details below say why."
                 .to_owned()
         })
 }
 
-/// What the engine says of the installation's `server` container, asked when OpenBot stops
+/// What the engine says of the installation's `server` container, asked when Mangaba Bot stops
 /// answering under an open window (`server_container`).
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ServerContainer {
@@ -4001,7 +4001,7 @@ pub fn services_that_exited_among(
         .output()
         .map_err(|error| {
             crate::problem::Problem::with(
-                "OpenBot couldn't check on its own services. Try again.",
+                "Mangaba Bot couldn't check on its own services. Try again.",
                 format!("could not run {operation}: {error}"),
             )
         })?;
@@ -4019,7 +4019,7 @@ pub fn services_that_exited_among(
             detail.push_str(&stdout);
         }
         return Err(crate::problem::Problem::with(
-            "OpenBot couldn't check on its own services. Try again.",
+            "Mangaba Bot couldn't check on its own services. Try again.",
             detail,
         ));
     }
@@ -4031,7 +4031,7 @@ pub fn services_that_exited_among(
         }
         let Some((service, state)) = line.split_once('\t') else {
             return Err(crate::problem::Problem::with(
-                "OpenBot couldn't check on its own services. Try again.",
+                "Mangaba Bot couldn't check on its own services. Try again.",
                 format!("unusable {operation} row: {line}"),
             ));
         };
@@ -4039,7 +4039,7 @@ pub fn services_that_exited_among(
         let state = state.trim();
         if service.is_empty() || state.is_empty() {
             return Err(crate::problem::Problem::with(
-                "OpenBot couldn't check on its own services. Try again.",
+                "Mangaba Bot couldn't check on its own services. Try again.",
                 format!("unusable {operation} row: {line}"),
             ));
         }
@@ -4075,8 +4075,8 @@ The ports this deployment's own containers already publish.
 
 MEASURED, AND IT LEAVES A PERSON STUCK. A start that fails after `compose up` leaves the containers
 it raised running, so the next press of Start finds the harness port held and refuses with
-"something is already listening on port 4206, which OpenBot uses for the Bot you picked" — about a
-container OpenBot itself started, which the person never saw and cannot find. There is no way
+"something is already listening on port 4206, which Mangaba Bot uses for the Bot you picked" — about a
+container Mangaba Bot itself started, which the person never saw and cannot find. There is no way
 forward from that screen.
 
 Our own containers are not a conflict: `compose up` is idempotent and reuses them. The check exists
@@ -4127,13 +4127,13 @@ pub fn server_publishes_within(
     // does not say within the limit is not taken to publish anything.
     let output = crate::quiet::output_within(&mut listing, limit).map_err(|error| {
         Problem::with(
-            "OpenBot couldn't check on its own services. Try again.",
+            "Mangaba Bot couldn't check on its own services. Try again.",
             format!("could not run {operation}: {error}"),
         )
     })?;
     if !output.status.success() {
         return Err(Problem::with(
-            "OpenBot couldn't check on its own services. Try again.",
+            "Mangaba Bot couldn't check on its own services. Try again.",
             format!("{operation}: {}", command_said(&output.stderr)),
         ));
     }
@@ -4252,7 +4252,7 @@ fn setting_in(environment: &[u8], name: &str) -> Result<Option<String>, String> 
 }
 
 /**
-Restart OpenBot itself and leave everything else running: the server, and the worker where the
+Restart Mangaba Bot itself and leave everything else running: the server, and the worker where the
 installation's Compose file uses one, made again from `.env` and `secrets`, the environment Start
 hands Compose (`compose_environment` in main.rs), so a setting changed in `.env` since Start
 reaches the server.
@@ -4292,7 +4292,7 @@ fn recreate_openbot_now(engine: &Address, root: &Path, secrets: &Secrets) -> Res
         ])
         .args(installation_uses(root, WORKER).then_some(WORKER))
         .output()
-        .map_err(|error| format!("could not restart OpenBot: {error}"))?;
+        .map_err(|error| format!("could not restart Mangaba Bot: {error}"))?;
     if output.status.success() {
         return Ok(());
     }
@@ -4306,7 +4306,7 @@ Those apps ran Compose from the deployment folder with no `-p` and the file name
 the project was the folder's own name as Compose normalises it: lower case, with everything but
 `a-z`, `0-9`, `_` and `-` dropped, then any leading `_` or `-` trimmed. `~/OpenBot` is `openbot`.
 
-ONLY A LEGACY NAME NOW, NEVER ONE TO ADOPT. A developer who runs OpenBot from a source checkout
+ONLY A LEGACY NAME NOW, NEVER ONE TO ADOPT. A developer who runs Mangaba Bot from a source checkout
 called `openbot` gets Compose project `openbot` too, and on such a machine an installation that
 named itself after its folder took the developer's containers and data for its own previous
 installation and refused to start over them. See `project` for the name an installation runs as.
@@ -4337,9 +4337,9 @@ pub const DESKTOP_PROJECT: &str = "openbot-desktop";
 /**
 Names another Compose project for a new installation in place of `DESKTOP_PROJECT`.
 
-For a second OpenBot Desktop run on one computer beside an installed one, such as a build being
+For a second Mangaba Bot Desktop run on one computer beside an installed one, such as a build being
 tested: with its own `HOME` it has its own folder, but on the same engine `DESKTOP_PROJECT` is the
-installed OpenBot's project, so the second one would take the installed one's containers, ports,
+installed Mangaba Bot's project, so the second one would take the installed one's containers, ports,
 database and Bots' computers as its own. Unset, empty, or not a name Compose accepts, it is ignored.
 An installation that already recorded its project keeps it (see `project`).
 
@@ -4351,7 +4351,7 @@ stops the installed one's.
 pub const PROJECT_VARIABLE: &str = "OPENBOT_DESKTOP_PROJECT";
 
 /// The project `PROJECT_VARIABLE` names, when it names one other than `DESKTOP_PROJECT`: this app is
-/// then a second OpenBot beside an installed one.
+/// then a second Mangaba Bot beside an installed one.
 pub fn side_by_side_project() -> Option<String> {
     side_by_side_named(std::env::var(PROJECT_VARIABLE).ok().as_deref())
 }
@@ -4363,7 +4363,7 @@ fn side_by_side_named(named: Option<&str>) -> Option<String> {
 
 /**
 The identifier this run of the app goes by: `built`, the one in `tauri.conf.json`, or, beside an
-installed OpenBot (`side_by_side_project`), `built` followed by the project.
+installed Mangaba Bot (`side_by_side_project`), `built` followed by the project.
 
 Everything the app keeps per installation hangs off its identifier: the single-instance lock, which
 otherwise hands a second app's launch to the first and exits, and the folders Tauri gives the app
@@ -4442,7 +4442,7 @@ computers and their volumes, provided no other folder is running that project ri
 
 When another folder is running it (a developer's checkout called `openbot`), whose data the volume
 holds cannot be told, so nothing is decided and nothing is recorded: Install stops and says so,
-and runs again once that other OpenBot is stopped. Old volumes are never deleted or renamed here.
+and runs again once that other Mangaba Bot is stopped. Old volumes are never deleted or renamed here.
 */
 pub fn project(engine: &Address, root: &Path) -> Result<String, Problem> {
     project_choosing(engine, root, &project_name(root))
@@ -4484,7 +4484,7 @@ pub fn project_choosing(engine: &Address, root: &Path, legacy: &str) -> Result<S
     )
     .map_err(|error| {
         Problem::with(
-            "OpenBot couldn't save which parts of OpenBot belong to this installation. Try again.",
+            "Mangaba Bot couldn't save which parts of Mangaba Bot belong to this installation. Try again.",
             error,
         )
     })?;
@@ -4493,7 +4493,7 @@ pub fn project_choosing(engine: &Address, root: &Path, legacy: &str) -> Result<S
 
 fn project_choice_problem(detail: impl Into<String>) -> Problem {
     Problem::with(
-        "OpenBot couldn't tell which parts of OpenBot belong to this installation, so it changed \
+        "Mangaba Bot couldn't tell which parts of Mangaba Bot belong to this installation, so it changed \
          nothing. Try again.",
         detail,
     )
@@ -4503,7 +4503,7 @@ fn project_choice_problem(detail: impl Into<String>) -> Problem {
 fn legacy_in_use_problem(legacy: &str, folder: &Path) -> Problem {
     Problem::with(
         format!(
-            "OpenBot found the data of your earlier installation, but another copy of OpenBot on this computer is using it right now, from {}. Stop that copy, then try again. Nothing was changed or deleted.",
+            "Mangaba Bot found the data of your earlier installation, but another copy of Mangaba Bot on this computer is using it right now, from {}. Stop that copy, then try again. Nothing was changed or deleted.",
             folder.display()
         ),
         format!(
@@ -4627,7 +4627,7 @@ fn canonical(folder: &Path) -> PathBuf {
 ///
 /// `DESKTOP_PROJECT`'s own, so a new installation's `<namespace>-computer-…`, `-profile-…` and
 /// `-workspace-…` cannot be a source checkout's either, and the project `PROJECT_VARIABLE` names
-/// its own, so a second OpenBot beside an installed one never stops or reuses the installed one's.
+/// its own, so a second Mangaba Bot beside an installed one never stops or reuses the installed one's.
 /// A legacy installation keeps the default its Bots' computers and volumes were made under, or it
 /// would lose them.
 pub fn computer_namespace_for(project: &str) -> Option<&str> {
@@ -4766,7 +4766,7 @@ pub fn port_already_taken_except(
         }
         if something_answers(*port) {
             return Some(format!(
-                "Port {port} for the {name} became unavailable. Try Start again so OpenBot can choose another local port."
+                "Port {port} for the {name} became unavailable. Try Start again so Mangaba Bot can choose another local port."
             ));
         }
     }
@@ -4876,7 +4876,7 @@ pub fn wait_until_healthy_saying(
     let deadline = started + patience;
     let mut waited = crate::logging::WaitLog::new(
         format!(
-            "OpenBot's services, GET /health on port {} (API) and port {} (app)",
+            "Mangaba Bot's services, GET /health on port {} (API) and port {} (app)",
             ready.api, ready.app
         ),
         started,
@@ -4886,7 +4886,7 @@ pub fn wait_until_healthy_saying(
         .default_headers(crate::client_version::headers())
         .build()
         .map_err(|error| {
-            NotReady::NotAnswering(format!("could not ask OpenBot's services: {error}"))
+            NotReady::NotAnswering(format!("could not ask Mangaba Bot's services: {error}"))
         })?;
     let mut api_up = false;
 
@@ -4987,7 +4987,7 @@ pub fn startup_problem(problem: Problem, secrets: &Secrets) -> Problem {
         detail.push_str(&cleanup);
     }
     let mut problem = Problem::with(
-        "OpenBot could not finish starting. Try Start again, or share the details below for help.",
+        "Mangaba Bot could not finish starting. Try Start again, or share the details below for help.",
         without_credentials(detail, secrets),
     );
     problem.database_reset = database_reset;
@@ -4995,7 +4995,7 @@ pub fn startup_problem(problem: Problem, secrets: &Secrets) -> Problem {
 }
 
 /// A server that refused to start (`SERVER_REFUSED_TO_START`): its own sentence is the headline,
-/// because it already says why OpenBot can't start and what to change. Start again won't help
+/// because it already says why Mangaba Bot can't start and what to change. Start again won't help
 /// until that changes. The log stays in the details, with credentials removed.
 pub fn startup_refusal(said: String, detail: String, secrets: &Secrets) -> Problem {
     Problem::with(
@@ -5030,14 +5030,14 @@ fn without_credentials(mut text: String, secrets: &Secrets) -> String {
 pub fn deployment_problem(root: &Path) -> Option<String> {
     if !root.exists() {
         return Some(format!(
-            "{} does not exist yet. OpenBot needs a copy of the deployment there before it can \
+            "{} does not exist yet. Mangaba Bot needs a copy of the deployment there before it can \
              start one.",
             root.display()
         ));
     }
     if !root.join("docker-compose.yml").exists() {
         return Some(format!(
-            "{} is not an OpenBot deployment: it has no docker-compose.yml.",
+            "{} is not an Mangaba Bot deployment: it has no docker-compose.yml.",
             root.display()
         ));
     }
@@ -5051,7 +5051,7 @@ pub fn default_root() -> PathBuf {
 
 /// `default_root` in the home folder `home`.
 pub fn default_root_in(home: &Path) -> PathBuf {
-    home.join("OpenBot")
+    home.join("Mangaba Bot")
 }
 
 /// The deployment directory somebody typed, as a path.
@@ -5172,7 +5172,7 @@ pub fn start_runtime_database(
 /// Return the database to the dump taken before an update, whoever else is connected to it.
 ///
 /// The database is published on the host's loopback, so anything on this computer can hold
-/// sessions open to it and reconnect the moment they are cut: a developer's OpenBot server left
+/// sessions open to it and reconnect the moment they are cut: a developer's Mangaba Bot server left
 /// running on the host was found holding twelve. `pg_restore --clean --create` issues a plain
 /// `DROP DATABASE`, which any one of those sessions refuses. So, the standard way, and with no
 /// moment where a client could connect to half a database:
@@ -5287,7 +5287,7 @@ pub struct CarriedOver {
 Bring each person's Bots' files and browser logins from the computer the supervisor made for them
 into the one computer the personal edition shares, once.
 
-WHY. Before the personal edition, OpenBot Desktop ran a supervisor that gave each person a computer of
+WHY. Before the personal edition, Mangaba Bot Desktop ran a supervisor that gave each person a computer of
 their own, with two volumes: `<namespace>-workspace-person-<person>`, where each Bot's files are in
 `computers/<bot>`, and `<namespace>-profile-person-<person>`, where each Bot's browser profile, its
 logins, is `<bot>`. The personal edition runs no supervisor: every Bot is on the Compose
@@ -7740,7 +7740,7 @@ fn main() {
                     _ => panic!("unexpected command: {actual:?}"),
                 }
             }
-            // What Compose answers for the files OpenBot publishes, where the engine has images to
+            // What Compose answers for the files Mangaba Bot publishes, where the engine has images to
             // list: the database image the file names, and the server's and the computer's from
             // the variables Desktop hands it (`deployment::IMAGE_VARIABLES`), each once.
             Some("compose")
@@ -8328,7 +8328,7 @@ fn main() {
 
         assert_eq!(
             problem.said,
-            "OpenBot couldn't check on its own services. Try again."
+            "Mangaba Bot couldn't check on its own services. Try again."
         );
         assert!(
             problem
@@ -8357,7 +8357,7 @@ fn main() {
 
         assert_eq!(
             problem.said,
-            "OpenBot couldn't check on its own services. Try again."
+            "Mangaba Bot couldn't check on its own services. Try again."
         );
         let detail = problem.detail.as_deref().unwrap_or_default();
         assert!(
@@ -8423,7 +8423,7 @@ fn main() {
 
             assert_eq!(
                 problem.said,
-                "OpenBot couldn't check on its own services. Try again."
+                "Mangaba Bot couldn't check on its own services. Try again."
             );
             assert!(
                 problem
@@ -8474,7 +8474,7 @@ fn main() {
             attempted.push(pid);
             if pid == 9000 {
                 Err(Problem::with(
-                    "OpenBot could not inspect or stop its host processes.",
+                    "Mangaba Bot could not inspect or stop its host processes.",
                     format!("taskkill /PID {pid} /T /F exited with status 5"),
                 ))
             } else {
@@ -8486,7 +8486,7 @@ fn main() {
         assert_eq!(attempted, vec![9000, 9001]);
         assert_eq!(
             problem.said,
-            "OpenBot could not inspect or stop its host processes."
+            "Mangaba Bot could not inspect or stop its host processes."
         );
         assert!(
             problem
@@ -9815,7 +9815,7 @@ fn main() {
     #[test]
     fn a_space_inside_the_path_is_part_of_the_path() {
         // Only the ends. "Documents and Settings" is a directory, and a person whose home has a
-        // space in it must still be able to say where OpenBot lives.
+        // space in it must still be able to say where Mangaba Bot lives.
         assert_eq!(
             root_from("/home/me/My Files/OpenBot"),
             PathBuf::from("/home/me/My Files/OpenBot")
@@ -9913,7 +9913,7 @@ fn main() {
     }
 
     /// Stop has to name both profiles, or what sits behind them keeps running: the one Bot the
-    /// person picked, and OpenBot's own server and worker.
+    /// person picked, and Mangaba Bot's own server and worker.
     #[test]
     fn stopping_names_the_harness_and_openbot_profiles() {
         let source = include_str!("stack.rs");
@@ -10198,7 +10198,7 @@ fn main() {
         )
         .unwrap();
         assert_eq!(command.get_args().collect::<Vec<_>>(), ["compose"]);
-        // An opted-out person is never kept from starting by an optional probe either: OpenBot
+        // An opted-out person is never kept from starting by an optional probe either: Mangaba Bot
         // starts as Compose finds it, with no desktop identity handed to the server.
         let command = compose_start_command(
             &Address::new(crate::engine::Engine::Docker, None),
@@ -10232,7 +10232,7 @@ fn main() {
             ]
         );
         std::fs::remove_dir(root.join(DESKTOP_TELEMETRY_FILE)).unwrap();
-        // And when the opt-out override itself cannot be written, OpenBot still starts.
+        // And when the opt-out override itself cannot be written, Mangaba Bot still starts.
         std::fs::remove_file(root.join(DESKTOP_TELEMETRY_DISABLED_FILE)).ok();
         std::fs::create_dir(root.join(DESKTOP_TELEMETRY_DISABLED_FILE)).unwrap();
         assert!(compose_start_command(
@@ -10724,7 +10724,7 @@ fn main() {
     }
 
     /**
-    OpenBot Desktop 1.0.0's first Start on a Mac with Docker Desktop: `up` was refused with
+    Mangaba Bot Desktop 1.0.0's first Start on a Mac with Docker Desktop: `up` was refused with
     `invalid mount config for type "bind": stat /host_mnt/Users/<name>/OpenBot/.openbot: operation
     not permitted` for the sign-in folder made a moment before, and the person was told "Something
     went wrong". Seconds later the same mount worked. Start now waits and tries again on exactly
@@ -10788,8 +10788,8 @@ fn main() {
         assert!(problem.detail.unwrap().contains("is already in use"));
     }
 
-    /// Docker Desktop's words from OpenBot Desktop 1.0.2-rc.1 on a Mac, after `~/OpenBot` went to
-    /// the Trash and OpenBot was installed again, with the person's name in place of theirs.
+    /// Docker Desktop's words from Mangaba Bot Desktop 1.0.2-rc.1 on a Mac, after `~/OpenBot` went to
+    /// the Trash and Mangaba Bot was installed again, with the person's name in place of theirs.
     const STALE_SHARE_SAID: &str = " Container openbot-desktop-server-1 Creating \n Container openbot-desktop-server-1 Error response from daemon: invalid mount config for type \"bind\": stat /host_mnt/Users/person/OpenBot/.openbot: operation not permitted \nError response from daemon: invalid mount config for type \"bind\": stat /host_mnt/Users/person/OpenBot/.openbot: operation not permitted";
 
     #[test]
@@ -10799,7 +10799,7 @@ fn main() {
             refused_folder_in(STALE_SHARE_SAID, Path::new("/Users/person/OpenBot")),
             Some(PathBuf::from("/Users/person/OpenBot/.openbot"))
         );
-        // Another installation's folder, or somebody else's, is not OpenBot's to touch.
+        // Another installation's folder, or somebody else's, is not Mangaba Bot's to touch.
         assert_eq!(
             refused_folder_in(STALE_SHARE_SAID, Path::new("/Users/person/OpenBot-work")),
             None
@@ -10826,8 +10826,8 @@ fn main() {
     }
 
     /**
-    OpenBot Desktop 1.0.2-rc.1 on a Mac with Docker Desktop: `~/OpenBot` went to the Trash and
-    OpenBot was installed again. Docker Desktop's file sharing still pointed at the old folder, so
+    Mangaba Bot Desktop 1.0.2-rc.1 on a Mac with Docker Desktop: `~/OpenBot` went to the Trash and
+    Mangaba Bot was installed again. Docker Desktop's file sharing still pointed at the old folder, so
     every `up` was refused for the new sign-in folder, Retry and relaunching repeated it, and the
     person read "Something went wrong". One read of the folder's parent through a container made
     Docker Desktop look again. Start now does that read itself, with an image already there, and
@@ -10846,7 +10846,7 @@ fn main() {
         }
         let path = PathFixture::with_fake_engine("stale-share");
         let [docker, _] = computer_stop_addresses(&path);
-        let (root, _) = computer_stop_root(&path, "OpenBot", "{}");
+        let (root, _) = computer_stop_root(&path, "Mangaba Bot", "{}");
         let read = |name: &str| std::fs::read_to_string(root.join(name)).unwrap_or_default();
         let reset = || {
             for name in [
@@ -11434,7 +11434,7 @@ fn main() {
         images: String,
     }
 
-    /// One of OpenBot's published images, pinned by digest as a release's image list names it.
+    /// One of Mangaba Bot's published images, pinned by digest as a release's image list names it.
     fn published(name: &str, digest: char) -> String {
         format!(
             "ghcr.io/copilotkit/{name}@sha256:{}",
@@ -11461,7 +11461,7 @@ fn main() {
 
     /// 1.0.3 as it was published: a server image and a computer image of their own. Its database
     /// is named here by a tag this release's file has moved on from, so an image an earlier
-    /// release pulled that is not OpenBot's own is on the engine too.
+    /// release pulled that is not Mangaba Bot's own is on the engine too.
     fn earlier_release() -> Release {
         Release {
             version: "v1.0.3",
@@ -11486,7 +11486,7 @@ fn main() {
     }
 
     /// A release with this tree's Compose file: the server and the computer run from the one
-    /// OpenBot image, at `digest`. Its first sign-in image is the one 1.0.3 published, unchanged.
+    /// Mangaba Bot image, at `digest`. Its first sign-in image is the one 1.0.3 published, unchanged.
     fn release_with_this_file(version: &'static str, digest: char) -> Release {
         Release {
             version,
@@ -11597,7 +11597,7 @@ fn main() {
         }
     }
 
-    /// 1.0.3 installed and running on an engine that also holds images that are not OpenBot's.
+    /// 1.0.3 installed and running on an engine that also holds images that are not Mangaba Bot's.
     fn running_earlier_release_with_images(
         path: &PathFixture,
         engine: &Address,
@@ -11689,7 +11689,7 @@ fn main() {
     /// has started, the images only the earlier release ran are removed, one `image rm` each and
     /// none forced: its server, its computer and the sign-in image this release replaced. What
     /// this release runs stays, the sign-in image both releases share included. So does every
-    /// image that is not OpenBot's own: the database image the earlier file named by a tag,
+    /// image that is not Mangaba Bot's own: the database image the earlier file named by a tag,
     /// somebody else's image, and the ones the backend's own tool pulled. On Docker and on Podman.
     #[test]
     fn an_update_removes_the_previous_releases_images_once_the_new_release_has_started() {
@@ -11798,7 +11798,7 @@ fn main() {
     /// Podman machine busy as the back end's cluster comes up in it, or just restarted under it),
     /// waits for the engine and goes on: the images Install pulled are there. An engine that did not
     /// answer `image inspect` was read as one without the images, and Start refused with "Finish
-    /// installing OpenBot's local software" until the person went round Install again. An engine
+    /// installing Mangaba Bot's local software" until the person went round Install again. An engine
     /// that answers and does not have an image still sends Start back to Install, without a wait.
     #[test]
     fn start_straight_after_install_waits_for_an_engine_that_is_not_answering_yet() {
@@ -12662,7 +12662,7 @@ fn main() {
             result.unwrap_err(),
             NotReady::NotAnswering(format!("the API is not answering on port {port}."))
         );
-        let what = format!("[wait] OpenBot's services, GET /health on port {port} (API)");
+        let what = format!("[wait] Mangaba Bot's services, GET /health on port {port} (API)");
         let first = &lines[0];
         assert!(first.starts_with(&what), "{lines:#?}");
         assert!(
@@ -12729,14 +12729,14 @@ fn main() {
 "#;
 
     /// The refusing server's own log, as the engine gives it: `docker logs --tail 40`'s stderr.
-    const REFUSAL_STDERR: &str = "OpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nOpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nOpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.\n";
+    const REFUSAL_STDERR: &str = "Mangaba Bot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nOpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nOpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.\n";
 
     /// `compose logs --tail 40 server` for the same server. Compose merges both streams, so the
     /// next attempt's stdout already follows the sentence.
-    const REFUSAL_COMPOSE_LOG: &str = "server-1  | Listening soon.\nserver-1  | OpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nserver-1  | Listening soon.\nserver-1  | OpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nserver-1  | Listening soon.";
+    const REFUSAL_COMPOSE_LOG: &str = "server-1  | Listening soon.\nserver-1  | Mangaba Bot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nserver-1  | Listening soon.\nserver-1  | Mangaba Bot can't start without a licence. Set OPENBOT_LICENSE and start it again.\nserver-1  | Listening soon.";
 
     const REFUSAL: &str =
-        "OpenBot can't start without a licence. Set OPENBOT_LICENSE and start it again.";
+        "Mangaba Bot can't start without a licence. Set OPENBOT_LICENSE and start it again.";
 
     /// A server that exits 78 is recognised as refusing to start, whether Docker is restarting it
     /// or it has stopped, from the rows Compose really prints. A crash (exit 1) is not.
@@ -12835,7 +12835,7 @@ fn main() {
             .contains("server-1  | Listening soon."));
     }
 
-    /// The watcher's question when OpenBot stops answering: is the `server` container up, being
+    /// The watcher's question when Mangaba Bot stops answering: is the `server` container up, being
     /// restarted by Docker, or stopped? From the rows Compose really prints, Docker's and Podman's.
     #[test]
     fn the_server_container_reads_as_up_restarting_or_stopped_from_real_compose_rows() {
@@ -13085,7 +13085,7 @@ fn main() {
     fn legacy_project_name_is_the_folder_name_as_compose_normalises_it() {
         assert_eq!(project_name(Path::new("/Users/someone/OpenBot")), "openbot");
         assert_eq!(
-            project_name(Path::new("/home/someone/My OpenBot!")),
+            project_name(Path::new("/home/someone/My Mangaba Bot!")),
             "myopenbot"
         );
         assert_eq!(project_name(Path::new("/srv/_x")), "x");
@@ -13099,7 +13099,7 @@ fn main() {
     /// A folder named the way the default one is, so its legacy (folder-derived) project is
     /// `openbot`: the name a developer's source checkout called `openbot` also runs as.
     fn project_choice_root(path: &PathFixture, label: &str) -> (PathBuf, PathBuf) {
-        let root = path.bin.join(label).join("OpenBot");
+        let root = path.bin.join(label).join("Mangaba Bot");
         std::fs::create_dir_all(&root).unwrap();
         let record = path.bin.join(format!("{label}.log"));
         std::fs::write(&record, "").unwrap();
@@ -13164,7 +13164,7 @@ fn main() {
         let docker = Address::new(crate::engine::Engine::Docker, None);
         let (installed, _) = project_choice_root(&path, "installed");
         let (root, _) = project_choice_root(&path, "side");
-        // The installed OpenBot is running, as `DESKTOP_PROJECT`, from its own folder.
+        // The installed Mangaba Bot is running, as `DESKTOP_PROJECT`, from its own folder.
         std::fs::write(
             root.join(".fixture-containers"),
             compose_container_row("c-installed", "server", DESKTOP_PROJECT, &installed),
@@ -13181,7 +13181,7 @@ fn main() {
 
     #[test]
     fn only_another_project_gives_the_app_an_identifier_of_its_own() {
-        const BUILT: &str = "ai.copilotkit.openbot.desktop";
+        const BUILT: &str = "ai.mangaba.bot.desktop";
         for unchanged in [None, Some(""), Some("Not A Name"), Some(DESKTOP_PROJECT)] {
             assert_eq!(side_by_side_named(unchanged), None, "{unchanged:?}");
             assert_eq!(
@@ -13193,7 +13193,7 @@ fn main() {
         assert_eq!(side.as_deref(), Some("openbot-test2"));
         assert_eq!(
             identifier_named(BUILT, side.as_deref()),
-            "ai.copilotkit.openbot.desktop.openbot-test2"
+            "ai.mangaba.bot.desktop.openbot-test2"
         );
     }
 
@@ -13282,7 +13282,7 @@ fn main() {
         // Made by an earlier app: a stamp, and no project record.
         crate::deployment::record(&root, "v0.2.0", false).unwrap();
         // Compose labels the folder as given, which need not be its canonical spelling.
-        let spelled = root.join("..").join("OpenBot");
+        let spelled = root.join("..").join("Mangaba Bot");
         std::fs::write(
             root.join(".fixture-containers"),
             compose_container_row("c1", "postgres", "openbot", &spelled),
@@ -13319,7 +13319,7 @@ fn main() {
 
     /// The upgrade every person makes: they quit the earlier app (which takes its containers
     /// down), install this one, and open it. Their database is still on the engine and has to be
-    /// the one OpenBot runs on, not a new empty one beside it.
+    /// the one Mangaba Bot runs on, not a new empty one beside it.
     #[test]
     fn an_upgraded_install_keeps_its_data_after_its_containers_were_taken_down() {
         if crate::test_support::isolated_process(
@@ -13375,7 +13375,7 @@ fn main() {
         assert!(
             problem
                 .said
-                .contains("another copy of OpenBot on this computer is using it"),
+                .contains("another copy of Mangaba Bot on this computer is using it"),
             "{}",
             problem.said
         );

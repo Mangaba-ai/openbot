@@ -95,11 +95,11 @@ test("each part shows its state and memory, and the backend its CLI readiness", 
   const view = render(<StatusWindow readEveryMs={60_000} />);
   const bots = await view.findByRole("region", { name: "App" });
   expect(bots.textContent).toContain("Running · 400 MB");
-  const intelligence = view.getByRole("region", { name: "OpenBot's services" });
+  const intelligence = view.getByRole("region", { name: "Mangaba Bot's services" });
   await waitFor(() =>
     expect(intelligence.textContent).toContain("Ready · 2.4 GB"),
   );
-  // Each row says which part of OpenBot it is. Docker's names are for Copy diagnostics only.
+  // Each row says which part of Mangaba Bot it is. Docker's names are for Copy diagnostics only.
   const rows = (part: HTMLElement) =>
     [...part.querySelectorAll(".status-list li")].map(
       (row) => row.firstElementChild?.textContent,
@@ -112,11 +112,11 @@ test("each part shows its state and memory, and the backend its CLI readiness", 
   ).toMatchObject({ action: "status", stack: "local-abc" });
 });
 
-test("Restart OpenBot restarts its processes; Stop Intelligence stops only the stack", async () => {
+test("Restart Mangaba Bot restarts its processes; Stop Intelligence stops only the stack", async () => {
   invokeHandler = answers();
   const view = render(<StatusWindow readEveryMs={60_000} />);
   const intelligence = await view.findByRole("region", {
-    name: "OpenBot's services",
+    name: "Mangaba Bot's services",
   });
   await userEvent.click(
     within(intelligence).getByRole("button", { name: "Stop" }),
@@ -145,12 +145,12 @@ const stopped = {
 };
 
 /**
- * After Stop, the App row said Stopped and offered nothing: the one way back was Start OpenBot in
+ * After Stop, the App row said Stopped and offered nothing: the one way back was Start Mangaba Bot in
  * the main window. Its Start is that same Start, run in the main window (`start_openbot_from_status`),
- * which brings the services up and then OpenBot. Not the services row's Start, which starts only
+ * which brings the services up and then Mangaba Bot. Not the services row's Start, which starts only
  * the services and leaves the app stopped.
  */
-test("after Stop, the App row offers Start, and Start starts OpenBot as the main window does", async () => {
+test("after Stop, the App row offers Start, and Start starts Mangaba Bot as the main window does", async () => {
   invokeHandler = answers({ desktop_status: stopped });
   const view = render(<StatusWindow readEveryMs={60_000} />);
   const app = await view.findByRole("region", { name: "App" });
@@ -182,13 +182,13 @@ test("after Stop, the App row offers Start, and Start starts OpenBot as the main
 test("a Start the main window could not be asked for says so", async () => {
   invokeHandler = async (command) => {
     if (command === "start_openbot_from_status")
-      throw "the OpenBot window is not there";
+      throw "the Mangaba Bot window is not there";
     return answers({ desktop_status: stopped })(command);
   };
   const view = render(<StatusWindow readEveryMs={60_000} />);
   const app = await view.findByRole("region", { name: "App" });
   await userEvent.click(within(app).getByRole("button", { name: "Start" }));
-  await view.findByText("Starting OpenBot did not finish. Try again.");
+  await view.findByText("Starting Mangaba Bot did not finish. Try again.");
 });
 
 /** What `local status` answers, at a readiness. */
@@ -219,7 +219,7 @@ test("once a start finishes elsewhere, the services row follows without Refresh"
   };
   const view = render(<StatusWindow readEveryMs={20} />);
   const services = await view.findByRole("region", {
-    name: "OpenBot's services",
+    name: "Mangaba Bot's services",
   });
   await waitFor(() => expect(services.textContent).toContain("Stopped"));
   // The main window's Start brings everything up. This window's own reading sees the parts.
@@ -233,32 +233,32 @@ test("once a start finishes elsewhere, the services row follows without Refresh"
   await act(async () => said("status:refresh"));
   await waitFor(() =>
     expect(
-      view.getByRole("region", { name: "OpenBot's services" }).textContent,
+      view.getByRole("region", { name: "Mangaba Bot's services" }).textContent,
     ).toContain("Ready · 2.4 GB"),
   );
   expect(
     within(
-      view.getByRole("region", { name: "OpenBot's services" }),
+      view.getByRole("region", { name: "Mangaba Bot's services" }),
     ).queryByRole("button", { name: "Start" }),
   ).toBeNull();
 });
 
 /**
- * Seen on a Mac: opened while OpenBot updated itself, the App row said Stopped and offered Start,
- * and so did the services row. An update stops OpenBot and starts it again by itself, as the main
- * window's Updating OpenBot says. The App row says Updating, and neither row has Start.
+ * Seen on a Mac: opened while Mangaba Bot updated itself, the App row said Stopped and offered Start,
+ * and so did the services row. An update stops Mangaba Bot and starts it again by itself, as the main
+ * window's Updating Mangaba Bot says. The App row says Updating, and neither row has Start.
  */
-test("while OpenBot updates, the App row says so and nothing offers Start", async () => {
+test("while Mangaba Bot updates, the App row says so and nothing offers Start", async () => {
   invokeHandler = answers({ desktop_status: { ...stopped, updating: true } });
   const view = render(<StatusWindow readEveryMs={60_000} />);
   const app = await view.findByRole("region", { name: "App" });
   expect(app.querySelector(".status-state")?.textContent).toBe("Updating");
   expect(within(app).queryAllByRole("button")).toEqual([]);
   expect(app.textContent).toContain(
-    "OpenBot is updating and opens by itself when it's done.",
+    "Mangaba Bot is updating and opens by itself when it's done.",
   );
   // Nor do the services: the update starts what it needs.
-  const services = view.getByRole("region", { name: "OpenBot's services" });
+  const services = view.getByRole("region", { name: "Mangaba Bot's services" });
   await waitFor(() => expect(services.textContent).toContain("Stopped"));
   expect(
     within(services)
@@ -274,7 +274,7 @@ test("while OpenBot updates, the App row says so and nothing offers Start", asyn
  */
 test("a Restart that needs Start again says so in the window", async () => {
   const said =
-    "OpenBot couldn't restart with your current settings. Choose Stop OpenBot, then Start OpenBot.";
+    "Mangaba Bot couldn't restart with your current settings. Choose Stop Mangaba Bot, then Start Mangaba Bot.";
   invokeHandler = async (command) => {
     if (command === "restart_openbot") throw { said, detail: "no host token" };
     return answers()(command);
@@ -290,7 +290,7 @@ test("a Restart that needs Start again says so in the window", async () => {
 });
 
 /**
- * Seen on a Windows box below the security floor: Start for OpenBot's services was offered, the
+ * Seen on a Windows box below the security floor: Start for Mangaba Bot's services was offered, the
  * shell refused it, and the window said nothing at all. Below the floor nothing starts here, so
  * Start and Restart are not offered, and the window says why.
  */
@@ -305,11 +305,11 @@ test("below the security floor, nothing is offered to start and the window says 
   });
   const view = render(<StatusWindow readEveryMs={60_000} />);
   const services = await view.findByRole("region", {
-    name: "OpenBot's services",
+    name: "Mangaba Bot's services",
   });
   await waitFor(() =>
     expect(services.textContent).toContain(
-      "This version of OpenBot has a security problem. Update to keep using it.",
+      "This version of Mangaba Bot has a security problem. Update to keep using it.",
     ),
   );
   expect(within(services).queryByRole("button", { name: "Start" })).toBeNull();
@@ -388,7 +388,7 @@ test("the back end's stack id goes only to Copy diagnostics", async () => {
     },
   });
   const view = render(<StatusWindow readEveryMs={60_000} />);
-  await view.findByRole("region", { name: "OpenBot's services" });
+  await view.findByRole("region", { name: "Mangaba Bot's services" });
   expect(view.container.textContent).not.toContain("local-08ff56ec9469e95e");
   await userEvent.click(view.getByRole("button", { name: "Copy diagnostics" }));
   await waitFor(() =>
@@ -398,7 +398,7 @@ test("the back end's stack id goes only to Copy diagnostics", async () => {
 
 test("diagnostics carry versions, places and memory, and nothing secret", () => {
   const text = diagnostics(running, "ready");
-  expect(text).toContain("OpenBot Desktop 0.2.0");
+  expect(text).toContain("Mangaba Bot Desktop 0.2.0");
   expect(text).toContain(
     "Installed in /Users/someone/OpenBot, app on port 3010",
   );
@@ -503,11 +503,11 @@ test("every label and value on the Status window is in plain words, and the tech
     expect({ state, technical }).toEqual({ state, technical: [] });
     // Each part has its place and says what it is, in the words setup uses.
     expect(
-      view.getByRole("region", { name: "Software OpenBot runs on" })
+      view.getByRole("region", { name: "Software Mangaba Bot runs on" })
         .textContent,
     ).toContain(state === "running" ? "Running" : "Not running");
     expect(
-      view.queryByRole("region", { name: "OpenBot's services" }),
+      view.queryByRole("region", { name: "Mangaba Bot's services" }),
     ).not.toBeNull();
     expect(
       view.container.querySelector(".status-details")?.textContent,

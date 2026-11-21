@@ -3,7 +3,7 @@
  */
 
 /**
- * The person's name and address, where OpenBot knows them.
+ * The person's name and address, where Mangaba Bot knows them.
  */
 export type ComputerPerson = {
   /** @nullable */

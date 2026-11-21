@@ -3,7 +3,7 @@
  */
 
 /**
- * Where the app comes from: OpenBot's catalogue, a server added by its address, or the directory of apps OpenBot can add.
+ * Where the app comes from: Mangaba Bot's catalogue, a server added by its address, or the directory of apps Mangaba Bot can add.
  */
 export type BotAppSource = (typeof BotAppSource)[keyof typeof BotAppSource];
 

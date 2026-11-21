@@ -3,7 +3,7 @@ import { redirect } from "@tanstack/react-router";
 import { ownOrganizationsQueryOptions } from "./queries";
 
 /**
- * A `beforeLoad` for a page about the person's organizations and invitations. Where OpenBot lists
+ * A `beforeLoad` for a page about the person's organizations and invitations. Where Mangaba Bot lists
  * no organizations (the personal edition among them) there is nothing for it to show, so the person
  * goes home.
  */

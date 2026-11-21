@@ -89,7 +89,7 @@ export const getGetModelCatalogueUrl = (
 };
 
 /**
- * Return the models a person may pick for a conversation, with how hard each can think, the one a run uses when nobody picked, and who serves them. The models come from whatever serves OpenBot's model, the provider or a gateway in front of it, read in the background, and are narrowed to the ones an administrator allowed. With view=all, every model listed before that narrowing, for an administrator choosing which to allow. When the listing can't be read, the catalogue holds the deployment's own model and nothing to pick.
+ * Return the models a person may pick for a conversation, with how hard each can think, the one a run uses when nobody picked, and who serves them. The models come from whatever serves Mangaba Bot's model, the provider or a gateway in front of it, read in the background, and are narrowed to the ones an administrator allowed. With view=all, every model listed before that narrowing, for an administrator choosing which to allow. When the listing can't be read, the catalogue holds the deployment's own model and nothing to pick.
  * @summary Read the models Bots can run on
  */
 export const getModelCatalogue = async (
@@ -710,8 +710,8 @@ export const getGetAiConnectionUrl = (organizationId: string) => {
 };
 
 /**
- * Return the AI provider OpenBot's Bots run on, the way OpenBot signs in to it, the model or address host where one was named, and whether a run can use it now. Never a key. Also which other connections still have a key kept, so they can be used again without pasting it. Where whoever runs OpenBot sets the provider, editable is false and the connection can't be changed here. Only an administrator of the organization may read it.
- * @summary Read how OpenBot reaches its AI provider
+ * Return the AI provider Mangaba Bot's Bots run on, the way Mangaba Bot signs in to it, the model or address host where one was named, and whether a run can use it now. Never a key. Also which other connections still have a key kept, so they can be used again without pasting it. Where whoever runs Mangaba Bot sets the provider, editable is false and the connection can't be changed here. Only an administrator of the organization may read it.
+ * @summary Read how Mangaba Bot reaches its AI provider
  */
 export const getAiConnection = async (
   organizationId: string,
@@ -873,7 +873,7 @@ export function useGetAiConnection<
   queryKey: DataTag<QueryKey, TData, TError>;
 };
 /**
- * @summary Read how OpenBot reaches its AI provider
+ * @summary Read how Mangaba Bot reaches its AI provider
  */
 
 export function useGetAiConnection<
@@ -916,8 +916,8 @@ export const getReplaceAiConnectionUrl = (organizationId: string) => {
 };
 
 /**
- * Switch the AI provider OpenBot's Bots run on, with no restart. OpenBot checks the connection with the provider first: a key, an address or a sign-in it can't use is refused, nothing is saved, and the connection in use keeps running. Once saved, the next run uses it, and runs already going finish on the one they started with. A key goes into the organization's vault and is never sent back; the key of the connection it replaces stays kept, so it can be used again (saved). Recorded on the audit trail, never with a key. Only an administrator of the organization may change it, and not where whoever runs OpenBot sets the provider.
- * @summary Change how OpenBot reaches its AI provider
+ * Switch the AI provider Mangaba Bot's Bots run on, with no restart. Mangaba Bot checks the connection with the provider first: a key, an address or a sign-in it can't use is refused, nothing is saved, and the connection in use keeps running. Once saved, the next run uses it, and runs already going finish on the one they started with. A key goes into the organization's vault and is never sent back; the key of the connection it replaces stays kept, so it can be used again (saved). Recorded on the audit trail, never with a key. Only an administrator of the organization may change it, and not where whoever runs Mangaba Bot sets the provider.
+ * @summary Change how Mangaba Bot reaches its AI provider
  */
 export const replaceAiConnection = async (
   organizationId: string,
@@ -1029,7 +1029,7 @@ export type ReplaceAiConnectionMutationVariables = {
 };
 
 /**
- * @summary Change how OpenBot reaches its AI provider
+ * @summary Change how Mangaba Bot reaches its AI provider
  */
 export const useReplaceAiConnection = <
   TError =

@@ -119,7 +119,7 @@ export type ChannelActivityEvent = {
   lastMessageAt: string | null;
   lastMessageAgentId: string | null;
   /**
-   * A Bot's reply, its first line as plain text, for the notice a reply raises while OpenBot is out
+   * A Bot's reply, its first line as plain text, for the notice a reply raises while Mangaba Bot is out
    * of sight. `lastMessage` runs every line into one. Only on a Bot's message, and absent from a
    * server older than this.
    */
@@ -657,7 +657,7 @@ export function useChannelEvents() {
         applyToRoster(queryClient, activity);
         applyToBotLists(queryClient, activity);
 
-        // A Bot's reply, while OpenBot is out of sight: the notice, when the person allowed them.
+        // A Bot's reply, while Mangaba Bot is out of sight: the notice, when the person allowed them.
         noticeChannelEvent(activity, queryClient, (channelId) => {
           void router.navigate({
             to: "/channel/$channelId",

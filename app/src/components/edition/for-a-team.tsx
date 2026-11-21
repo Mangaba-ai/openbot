@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { deploymentCapabilitiesQueryOptions } from "@/lib/deployment/queries";
 
 /** The sentence an Admin setting that needs a team shows in the personal edition. */
-export const FOR_A_TEAM = "This applies when OpenBot runs for a team.";
+export const FOR_A_TEAM = "This applies when Mangaba Bot runs for a team.";
 
 /**
  * Where an Admin page or section sets something the personal edition has no use for, it shows
@@ -33,7 +33,7 @@ export function ForATeam({ children }: { children?: ReactNode }) {
         <Button onClick={openTeamFeatures} size="sm" variant="outline">
           <OpenBotLogo />
           <span>
-            Meet OpenBot for Business
+            Meet Mangaba Bot for Business
             <Trademark />
           </span>
         </Button>
@@ -101,11 +101,11 @@ export function YourOwnApprovals() {
   );
 }
 
-/** For Automatic learning: where the one person reviews what OpenBot learns. */
+/** For Automatic learning: where the one person reviews what Mangaba Bot learns. */
 export function YourOwnLearning() {
   return (
     <>
-      Review what OpenBot learns on{" "}
+      Review what Mangaba Bot learns on{" "}
       <Link className="underline underline-offset-4" to="/skills">
         Skills
       </Link>

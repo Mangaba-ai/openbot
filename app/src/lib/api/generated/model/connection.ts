@@ -14,11 +14,11 @@ export interface Connection {
   /** Whether the access behind it was withdrawn. A revoked connection can't be used until the person connects again. */
   revoked: boolean;
   /**
-   * What the app granted, in its own words, where OpenBot keeps the sign-in itself. Null where the app keeps it.
+   * What the app granted, in its own words, where Mangaba Bot keeps the sign-in itself. Null where the app keeps it.
    * @nullable
    */
   scope: string | null;
-  /** The last check of the connection with the app. Null where OpenBot keeps the sign-in itself, which leaves nothing to check. */
+  /** The last check of the connection with the app. Null where Mangaba Bot keeps the sign-in itself, which leaves nothing to check. */
   check: ConnectionCheckState | null;
   /** Whether the person can connect a second account at this app beside this one, with connectApp's anotherAccount. */
   canAddAccount: boolean;

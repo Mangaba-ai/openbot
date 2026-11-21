@@ -6,7 +6,7 @@ stays on the engine's disk for good: a container engine never removes an image b
 update a Mac under Podman and a Windows computer each kept the previous server (1.62 GB) and
 computer (1.45 GB) images beside the new 2.29 GB one.
 
-WHICH IMAGES. Only what this app pulled for the release the update replaced, and only OpenBot's own:
+WHICH IMAGES. Only what this app pulled for the release the update replaced, and only Mangaba Bot's own:
 the images that release's finished install recorded (`preparation::installed_images`) that its
 image list (`container-images.json`) publishes. So never an image the release only named by a tag
 anybody may use (the database's, say), never the back end's, which its own tool pulls and keeps, and
@@ -95,7 +95,7 @@ fn published(release: &Path) -> Option<BTreeSet<String>> {
 
 /**
 Note the images the release set aside in `previous` leaves behind, now that the update of `root`
-from it has started and answered: OpenBot's own images that its install pulled. Added to whatever
+from it has started and answered: Mangaba Bot's own images that its install pulled. Added to whatever
 earlier updates left on the list, so an installation several releases on still removes them all.
 
 Called before `previous` is cleared. A release whose records cannot be read adds nothing, and a

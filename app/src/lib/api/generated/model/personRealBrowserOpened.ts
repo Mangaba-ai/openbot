@@ -5,7 +5,7 @@ import type { PersonRealBrowserOpenedOpened } from "./personRealBrowserOpenedOpe
 import type { RealBrowser } from "./realBrowser";
 
 /**
- * On OpenBot Desktop, what happened in the person's own everyday browser instead.
+ * On Mangaba Bot Desktop, what happened in the person's own everyday browser instead.
  */
 export interface PersonRealBrowserOpened {
   ok: true;

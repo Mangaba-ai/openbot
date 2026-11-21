@@ -755,7 +755,7 @@ export const getConfirmConnectionUrl = (
 };
 
 /**
- * Ask the app whether the person's account is really connected, and record its answer: kept when it says yes, forgotten here when it says no. Call it when the person comes back from the app's sign-in page, and whenever a page shows the connection, because a connection can be ended at the app itself. Asking again records nothing new. When the app can't be asked, the last answer stands. An app whose sign-in OpenBot keeps itself has nothing to confirm. Only the person themselves may confirm their connections.
+ * Ask the app whether the person's account is really connected, and record its answer: kept when it says yes, forgotten here when it says no. Call it when the person comes back from the app's sign-in page, and whenever a page shows the connection, because a connection can be ended at the app itself. Asking again records nothing new. When the app can't be asked, the last answer stands. An app whose sign-in Mangaba Bot keeps itself has nothing to confirm. Only the person themselves may confirm their connections.
  * @summary Check with the app that a person's account is connected
  */
 export const confirmConnection = async (
@@ -1077,7 +1077,7 @@ export const getDisconnectAppUrl = (
 };
 
 /**
- * End a person's connection to an app, with every account they connected there. The app is asked to end the access first, then OpenBot forgets the connection. Other apps that share the same sign-in at the app end with it, as getConnectionDisconnectPreview names them. Safe to repeat. revocationRequested is false where the app had nothing to end. Only the person themselves may disconnect their apps.
+ * End a person's connection to an app, with every account they connected there. The app is asked to end the access first, then Mangaba Bot forgets the connection. Other apps that share the same sign-in at the app end with it, as getConnectionDisconnectPreview names them. Safe to repeat. revocationRequested is false where the app had nothing to end. Only the person themselves may disconnect their apps.
  * @summary Disconnect a person's account from an app
  */
 export const disconnectApp = async (
@@ -3280,7 +3280,7 @@ export const getDisconnectSharedAppUrl = (
 };
 
 /**
- * End an app's shared account: the app is asked to end the access first, then OpenBot forgets it. Every Bot using the app loses it until an administrator connects an account again. Other apps that share the same sign-in at the app end with it. Safe to repeat. Only an administrator may disconnect it.
+ * End an app's shared account: the app is asked to end the access first, then Mangaba Bot forgets it. Every Bot using the app loses it until an administrator connects an account again. Other apps that share the same sign-in at the app end with it. Safe to repeat. Only an administrator may disconnect it.
  * @summary Disconnect an app's shared account
  */
 export const disconnectSharedApp = async (

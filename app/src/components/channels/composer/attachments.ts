@@ -148,7 +148,7 @@ function isUploadedAttachment(body: unknown): body is UploadedAttachment {
  * to some trouble to accept everywhere else. `matchesAcceptFilter` and every browser's dialog both
  * read a leading-dot entry as a filename suffix, so the two doors now agree.
  *
- * Built from the one list of files OpenBot takes (`ACCEPTED_FILE_TYPES`): every type and every
+ * Built from the one list of files Mangaba Bot takes (`ACCEPTED_FILE_TYPES`): every type and every
  * extension that claims it, so a type added there is offered here with nothing else to change.
  */
 export const FILE_PICKER_ACCEPT = ACCEPTED_FILE_TYPES.flatMap((type) => [

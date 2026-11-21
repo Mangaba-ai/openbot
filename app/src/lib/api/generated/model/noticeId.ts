@@ -3,7 +3,7 @@
  */
 
 /**
- * A notice OpenBot shows a person once, such as a nudge, by its id: star-on-github is the ask to star OpenBot on GitHub.
+ * A notice Mangaba Bot shows a person once, such as a nudge, by its id: star-on-github is the ask to star Mangaba Bot on GitHub.
  * @minLength 1
  * @maxLength 64
  * @pattern ^[a-z0-9]+(?:-[a-z0-9]+)*$

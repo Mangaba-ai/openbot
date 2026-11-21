@@ -3,7 +3,7 @@
  */
 
 /**
- * One of OpenBot's controls.
+ * One of Mangaba Bot's controls.
  */
 export type WhatIfLayerId = (typeof WhatIfLayerId)[keyof typeof WhatIfLayerId];
 

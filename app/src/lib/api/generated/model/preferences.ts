@@ -7,11 +7,11 @@ import type { OnOff } from "./onOff";
 import type { SkinId } from "./skinId";
 
 /**
- * How a person set OpenBot up for themselves, on every device they sign in from.
+ * How a person set Mangaba Bot up for themselves, on every device they sign in from.
  */
 export interface Preferences {
   messageListEmphasis: MessageListEmphasis;
-  /** Whether they closed the banner offering help self-hosting OpenBot. */
+  /** Whether they closed the banner offering help self-hosting Mangaba Bot. */
   selfHostBannerDismissed: boolean;
   /**
    * The notices they answered, either way, by id. A notice in this list is never shown to them again, on any device. Empty until they answer one.
@@ -19,11 +19,11 @@ export interface Preferences {
    */
   dismissedNotices: NoticeId[];
   /**
-   * The notices OpenBot would show them now, by id, worked out by the server from the edition and how they have used OpenBot. A notice they dismissed is never here. Absent from a server that works out none.
+   * The notices Mangaba Bot would show them now, by id, worked out by the server from the edition and how they have used Mangaba Bot. A notice they dismissed is never here. Absent from a server that works out none.
    * @maxItems 64
    */
   readonly noticesDue?: readonly NoticeId[];
-  /** Whether they narrate their recordings in OpenBot's browser, which opens the microphone only when on. Null until they choose, which the browser asks before their first recording. */
+  /** Whether they narrate their recordings in Mangaba Bot's browser, which opens the microphone only when on. Null until they choose, which the browser asks before their first recording. */
   narration: OnOff | null;
   skin: SkinId;
   /** Whether their Bots check in on their behalf at all. off stops every Bot's check-ins, whatever each Bot's own setting says. */

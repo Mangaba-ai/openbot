@@ -7,11 +7,11 @@ import { cn } from "@/lib/utils";
  * A slim bar over every page while the organization's plan is something its people need to know:
  * how long its free trial has left, or that Bots can't run until a card is added or updated.
  *
- * Only where this OpenBot needs a plan (`required`); a self-hosted OpenBot and OpenBot Desktop draw
+ * Only where this Mangaba Bot needs a plan (`required`); a self-hosted Mangaba Bot and Mangaba Bot Desktop draw
  * nothing. An owner or an admin is given the way to add the card (`addCardUrl`, the server's verdict
  * on who may), a member is told who to ask. Nothing while the plan is read, or when it couldn't be.
  *
- * The same bar as the update and self-host ones, so it reads as OpenBot's own, packed from the left.
+ * The same bar as the update and self-host ones, so it reads as Mangaba Bot's own, packed from the left.
  * The card is added on another page, so the button is a link that leaves the app: the person comes
  * back signed in, with the trial started.
  */

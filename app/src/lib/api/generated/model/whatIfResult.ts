@@ -12,7 +12,7 @@ export interface WhatIfResult {
   decidedBy: WhatIfLayerId | null;
   /** The outcome and the control that settles it, in a line. */
   headline: string;
-  /** The controls that apply, in the order OpenBot applies them. */
+  /** The controls that apply, in the order Mangaba Bot applies them. */
   layers: WhatIfLayer[];
   /** The controls that don't apply to this kind of action, by title. */
   notApplicable: string[];

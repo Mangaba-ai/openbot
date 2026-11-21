@@ -97,7 +97,7 @@ function OktaMark() {
 }
 
 /**
- * CopilotKit's mark, at its published colours, for a hosted OpenBot's sign-in with a CopilotKit
+ * CopilotKit's mark, at its published colours, for a hosted Mangaba Bot's sign-in with a CopilotKit
  * account. Its gradients are named for this drawing alone, so two on a page never share one.
  */
 export function CopilotKitMark() {

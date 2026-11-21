@@ -3,7 +3,7 @@
  */
 
 /**
- * What a credential is for. model: a key OpenBot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.
+ * What a credential is for. model: a key Mangaba Bot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.
  */
 export type CredentialKind =
   (typeof CredentialKind)[keyof typeof CredentialKind];

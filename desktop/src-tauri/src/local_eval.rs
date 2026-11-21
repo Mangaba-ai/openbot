@@ -12,22 +12,22 @@
 //! - **Arguments are fixed.** Only `status`, `start`, `stop` and `login`, a validated stack id and
 //!   `--json`, plus the constant `list`, `setup`, `connect` and `login --help` lists and the sign-in's
 //!   `--mode openbot`, and `integrations composio provision` with a validated installation id and
-//!   a file OpenBot made, `local setup --model-config` with a model file OpenBot made, and
+//!   a file Mangaba Bot made, `local setup --model-config` with a model file Mangaba Bot made, and
 //!   `telemetry link` with validated installation and account IDs, as separate arguments with
 //!   no shell. The CLI's `resumeCommand` strings
 //!   are text for a terminal user; they are dropped here and never executed.
 //! - **Only allowlisted facts leave.** Raw stdout, stderr, error messages and recovery text never
 //!   cross IPC. Failures are static categories with no payload. The one place CLI words go is the
 //!   log, scrubbed, when a call that sets up, starts, updates or stops the stack, or connects
-//!   OpenBot to it, ends: its exit,
+//!   Mangaba Bot to it, ends: its exit,
 //!   its report's error and the end of its stderr (`ending_entry`), so a setup that stops can be
-//!   told apart from one OpenBot stopped. The account
+//!   told apart from one Mangaba Bot stopped. The account
 //!   sign-in's approval page and code are the one CLI-printed text the window shows, checked
 //!   first (`sign_in_page`).
 //!
 //! One exception to leaving the CLI's work to it: the images `local update` (a new update, or the
 //! retry of one that did not finish) and a resumed `local setup` pull. The CLI pulls each under a
-//! fixed limit that a slow line cannot meet, so OpenBot downloads the same images into the same
+//! fixed limit that a slow line cannot meet, so Mangaba Bot downloads the same images into the same
 //! node first (`local_images`, `run_with`, `setup_installed`) and the CLI finds them there.
 //!
 //! And one more: a `local update` stopped partway leaves a stack no later update can get past, so
@@ -131,7 +131,7 @@ pub enum Failure {
     UnexpectedExit,
     /// An accepted agreement version that is not one `terms` could have reported.
     InvalidAcceptance,
-    /// OpenBot runs on a rootless Podman machine, and local Intelligence needs rootful Podman.
+    /// Mangaba Bot runs on a rootless Podman machine, and local Intelligence needs rootful Podman.
     /// Refused here, before `setup` or `start`, so the window can name the switch; the CLI would
     /// refuse it too, as an engine it does not support. See `acquire::create_machine` for why the
     /// switch is the person's to make.
@@ -139,7 +139,7 @@ pub enum Failure {
     /// The back end's images stopped downloading: no new bytes for `local_images::Limits::stall`.
     /// What arrived is kept, and the next attempt continues from there. See `local_images`.
     DownloadStalled,
-    /// This version of OpenBot is below the security floor (`security_floor`): nothing of it starts
+    /// This version of Mangaba Bot is below the security floor (`security_floor`): nothing of it starts
     /// on this computer until it is updated.
     BelowSecurityFloor,
 }
@@ -208,15 +208,15 @@ pub enum Reason {
     ResourcesShort,
     /// A reason this build does not know. Treated as blocking, never as success.
     Unrecognized,
-    /// Not the CLI's: OpenBot's own finding, behind a status the CLI could only fail
+    /// Not the CLI's: Mangaba Bot's own finding, behind a status the CLI could only fail
     /// (`local_command_failed` with no stack, its ownership check answering 404 in its log). The
-    /// backend OpenBot created is recorded but its cluster is gone from the engine, with everything
-    /// in it, as when OpenBot's Podman machine was removed and made again (`stack_lost`). Waiting or
+    /// backend Mangaba Bot created is recorded but its cluster is gone from the engine, with everything
+    /// in it, as when Mangaba Bot's Podman machine was removed and made again (`stack_lost`). Waiting or
     /// Retry can't bring it back; setting it up again starts over.
     StackLost,
-    /// OpenBot's own finding, like `StackLost`, when OpenBot's own database is still there: only
+    /// Mangaba Bot's own finding, like `StackLost`, when Mangaba Bot's own database is still there: only
     /// the backend's cluster went, as when `docker container prune` removed its node while it was
-    /// stopped (a dogfooding Mac on Docker Desktop, Desktop 1.1.2). OpenBot's Bots and settings
+    /// stopped (a dogfooding Mac on Docker Desktop, Desktop 1.1.2). Mangaba Bot's Bots and settings
     /// stay; the conversations and memory the backend kept went with the node.
     BackendGone,
 }
@@ -258,7 +258,7 @@ pub struct Report {
     pub licence_expires_at: Option<String>,
     /// On `status`: the release this app's CLI installs, when the stack runs an older one, or the
     /// release an update the CLI did not finish was moving to. The window runs `update` once,
-    /// before it starts OpenBot on that stack (see `update_due`).
+    /// before it starts Mangaba Bot on that stack (see `update_due`).
     pub update_to: Option<String>,
     /// Every check the CLI made from this computer passed: the back end's API, its gateway and its
     /// dashboard each answered (`readiness.checks`). Only the result is kept.
@@ -268,14 +268,14 @@ pub struct Report {
     /// from a back end that is down (see `UnfinishedUpdate`).
     pub checks_passed: bool,
     /// With `Reason::ResourcesShort`: which resources the CLI found short, and on which engine.
-    /// With `Readiness::Degraded`: a disk OpenBot found short, or recovering, behind a back end that
+    /// With `Readiness::Degraded`: a disk Mangaba Bot found short, or recovering, behind a back end that
     /// runs but does not answer (`checked_when_unhealthy`).
     #[serde(skip_serializing_if = "Option::is_none")]
     pub shortfall: Option<Shortfall>,
 }
 
 impl Report {
-    /// The answer for a call made while the engine OpenBot runs on does not answer, without asking
+    /// The answer for a call made while the engine Mangaba Bot runs on does not answer, without asking
     /// the CLI: blocked, as the CLI says it (`docker_unavailable`), with nothing known.
     pub fn engine_not_answering() -> Self {
         Report {
@@ -310,7 +310,7 @@ pub struct Shortfall {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub disk_gb: Option<String>,
     /// The back end's own disk is nearly full: its node reports `DiskPressure`, or so little is
-    /// free that k3s removes the back end's images (`EngineCheck::nearly_full`). OpenBot's own
+    /// free that k3s removes the back end's images (`EngineCheck::nearly_full`). Mangaba Bot's own
     /// check after a start that failed, never the CLI's.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub nearly_full: bool,
@@ -393,7 +393,7 @@ pub struct Stack {
     pub unfinished_update: Option<UnfinishedUpdate>,
     pub observed: Option<Observed>,
     /// The app folders the CLI records the stack for (`appPaths`), as it reported them. Kept only
-    /// to tell OpenBot's own stack from another app's (`lists_folder`); never sent to the window.
+    /// to tell Mangaba Bot's own stack from another app's (`lists_folder`); never sent to the window.
     #[serde(skip)]
     pub app_paths: Vec<String>,
 }
@@ -597,13 +597,13 @@ pub const LIST_ARGUMENTS: [&str; 3] = ["local", "list", "--json"];
 /**
 `local setup` creates the stack for the folder it runs in, or resumes one it left unfinished.
 
-The model is deferred: OpenBot's own setup chooses the model, and asking twice would be two answers
+The model is deferred: Mangaba Bot's own setup chooses the model, and asking twice would be two answers
 to keep in step.
 
 `--accept-eula-version` is passed only with a version the person accepted in the window, after
-reading the agreement `terms` reported (`EulaVersion`). Their click in OpenBot is their acceptance:
+reading the agreement `terms` reported (`EulaVersion`). Their click in Mangaba Bot is their acceptance:
 a product decision of 2026-10-22, recorded in the local evaluation policy. The CLI still refuses
-an acceptance from a coding agent, and OpenBot's Bots never reach the CLI.
+an acceptance from a coding agent, and Mangaba Bot's Bots never reach the CLI.
 */
 pub const SETUP_ARGUMENTS: [&str; 4] = ["local", "setup", "--defer-model", "--json"];
 
@@ -623,14 +623,14 @@ pub fn setup_arguments(accepted: Option<&EulaVersion>) -> Vec<&str> {
 }
 
 /**
-`local setup` again on the stack OpenBot already made, to give its Learning agent the model the
-person signed in to (`learning_model`): `--model-config` with a file OpenBot wrote, or
+`local setup` again on the stack Mangaba Bot already made, to give its Learning agent the model the
+person signed in to (`learning_model`): `--model-config` with a file Mangaba Bot wrote, or
 `--defer-model` to take a model an earlier sign-in gave it away.
 
 On a stack that is running and ready, the CLI changes the Learning agent alone, and a choice it
 already has changes nothing (Intelligence `apps/cli/src/services/local-setup.ts`, in the CLI pinned
 since `desktop/intelligence-cli.json` named 48a3863). It asks for no licence or agreement there:
-those belong to a stack's first setup. The file is an absolute path OpenBot made, never anything
+those belong to a stack's first setup. The file is an absolute path Mangaba Bot made, never anything
 that reads as a flag.
 */
 pub fn learning_model_arguments(file: Option<&str>) -> Vec<&str> {
@@ -664,7 +664,7 @@ impl EulaVersion {
 /// licence. A device authorization grant; the CLI opens the approval page itself.
 pub const ACCOUNT_SIGN_IN_ARGUMENTS: [&str; 2] = ["login", "--json"];
 
-/// What `login` adds so the hosted sign-in page explains OpenBot's setup instead of the generic
+/// What `login` adds so the hosted sign-in page explains Mangaba Bot's setup instead of the generic
 /// CopilotKit pitch (`source=cli&mode=openbot`, Intelligence#2214 and #2240). Display only: who
 /// signs in, what is approved and the token are the same either way.
 pub const OPENBOT_SIGN_IN_MODE: [&str; 2] = ["--mode", "openbot"];
@@ -717,7 +717,7 @@ pub fn apps_arguments<'a>(installation: &'a Installation, env_file: &'a str) -> 
     ]
 }
 
-/// An installation id, as OpenBot keeps it: a lowercase UUID, and nothing that could be another
+/// An installation id, as Mangaba Bot keeps it: a lowercase UUID, and nothing that could be another
 /// argument.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Installation(String);
@@ -762,7 +762,7 @@ pub struct AppsProvisioned {
 Any failure exits 1 with a sentence on stderr, which is never read: a missing or expired session,
 another account's installation, provisioning not set up on Ops, or a repair. Only `completed`, for
 the installation asked about, with the file written, is believed. `already_configured` means the
-file already held a key, and the file OpenBot hands over never does.
+file already held a key, and the file Mangaba Bot hands over never does.
 */
 pub fn normalize_apps(
     installation: &Installation,
@@ -810,7 +810,7 @@ folder's stack.
 Approved in the arguments because the person approved it in the window: the CLI's own
 confirmation step only prints which settings it will write. It writes `INTELLIGENCE_API_URL`,
 `INTELLIGENCE_GATEWAY_WS_URL`, `CPK_INTELLIGENCE_API_KEY`, `SL_ENABLED` and
-`.copilotkit/project.json` into the folder. Interim, until the CLI issues OpenBot a credential of
+`.copilotkit/project.json` into the folder. Interim, until the CLI issues Mangaba Bot a credential of
 its own (contract request 8).
 */
 pub const CONNECT_ARGUMENTS: [&str; 4] = ["local", "connect", "--approve-connection", "--json"];
@@ -1073,7 +1073,7 @@ pub enum Terms {
         switch_engine: bool,
     },
     /// The engine has fewer CPUs or less memory than local setup needs (`engine_size_terms`).
-    /// Not a CLI answer: OpenBot's own check, so a small engine is caught before Start.
+    /// Not a CLI answer: Mangaba Bot's own check, so a small engine is caught before Start.
     EngineTooSmall {
         podman: bool,
         cpu: bool,
@@ -1086,7 +1086,7 @@ pub enum Terms {
         drive: Option<String>,
         /// With disk short: the free disk that counts (`EngineCheck::free_disk`), in GiB to one
         /// decimal as `Shortfall::disk_gb`, so the window says what is free beside what is needed.
-        /// Windows F had 13.2 GiB free on C: and was told only "OpenBot is out of disk space".
+        /// Windows F had 13.2 GiB free on C: and was told only "Mangaba Bot is out of disk space".
         #[serde(skip_serializing_if = "Option::is_none")]
         disk_gb: Option<String>,
         /// That figure is what is free on `drive` (`Shortfall::free_on_drive`).
@@ -1101,7 +1101,7 @@ pub enum Terms {
     },
 }
 
-/// The engine's CPUs, memory and free disk as OpenBot measured them (`EngineCheck`), in counts and
+/// The engine's CPUs, memory and free disk as Mangaba Bot measured them (`EngineCheck`), in counts and
 /// bytes. Free disk that could not be measured is absent.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct EngineMeasure {
@@ -1307,7 +1307,7 @@ fn terms_said(terms: &Terms) -> String {
         Terms::Unavailable => "unavailable".to_owned(),
         Terms::SignedOut => "signed-out".to_owned(),
         Terms::EngineNotReady { cause } => format!("engine-not-ready ({cause})"),
-        // The CLI's own sentence for it: the window says OpenBot's, and the log keeps this one.
+        // The CLI's own sentence for it: the window says Mangaba Bot's, and the log keeps this one.
         Terms::Blocked { reason, said, .. } => match said {
             Some(said) => format!("blocked ({reason:?}): {said}"),
             None => format!("blocked ({reason:?})"),
@@ -1576,12 +1576,12 @@ pub fn engine_machine() -> Option<String> {
 const GIB: u64 = 1024 * 1024 * 1024;
 
 /**
-The smallest engine OpenBot lets through before local setup: 4 CPUs, 4 GiB of memory and 40 GiB of
+The smallest engine Mangaba Bot lets through before local setup: 4 CPUs, 4 GiB of memory and 40 GiB of
 free disk.
 
 The CLI's own check wants 4 CPUs in the engine's total, whatever already runs on it, and 4 GiB of
 free memory inside a container, so an engine below those totals can never pass it. Anything larger
-is left to the CLI at Start: OpenBot's own Podman machine is 4 CPUs and 6 GiB and passes there, so
+is left to the CLI at Start: Mangaba Bot's own Podman machine is 4 CPUs and 6 GiB and passes there, so
 a stricter total here would stop every Podman install. Free disk is the CLI's own 40 GiB, measured
 as it measures it, inside a container.
 */
@@ -1797,7 +1797,7 @@ fn machine_drive(_address: &crate::engine::Address) -> Option<crate::windows::Ma
 }
 
 /**
-What OpenBot measured of the engine the back end runs on (`[local check]` in the log): its CPUs and
+What Mangaba Bot measured of the engine the back end runs on (`[local check]` in the log): its CPUs and
 memory, its disk as a container sees it, on Windows the drive that holds the engine's disk, and
 after a call that failed, whether the back end's node says it is short of disk.
 */
@@ -1963,7 +1963,7 @@ impl EngineCheck {
             verdict.push(if short.nearly_full {
                 "disk (nearly full)"
             } else {
-                "disk (OpenBot needs 40 GiB free)"
+                "disk (Mangaba Bot needs 40 GiB free)"
             });
         }
         let verdict = if short.recovering && verdict.is_empty() {
@@ -2078,9 +2078,9 @@ Before it, the check is only logged: an existing back end can run on less than t
 the CLI enforces that only at a first setup. After a call that failed, it is checked again, with the
 back end's node asked whether it is short of disk, and anything short becomes the report's reason
 with its numbers, so the card names it and says where to raise or free it. A failure the CLI already
-named, or one OpenBot stopped, keeps its own words.
+named, or one Mangaba Bot stopped, keeps its own words.
 
-On OpenBot's own machine on Windows, its dead port rules are cleared before the call, so the back end
+On Mangaba Bot's own machine on Windows, its dead port rules are cleared before the call, so the back end
 it starts is not reached through rules for its containers' addresses from before
 (`acquire::readied_for_backend`).
 
@@ -2105,7 +2105,7 @@ fn checked_call(
     if command == "local setup" {
         if let Some(short) = drive_short_of(&before) {
             log::warn!(
-                "[local check] {command} not started: the drive that holds the engine's disk has less than OpenBot needs"
+                "[local check] {command} not started: the drive that holds the engine's disk has less than Mangaba Bot needs"
             );
             crate::early_downloads::hold_for_room();
             return Ok(short_of_drive(short));
@@ -2130,7 +2130,7 @@ fn checked_call(
                     None | Some(Reason::LocalCommandFailed | Reason::Unrecognized)
                 )
         }
-        // The back end ran and stopped without a report OpenBot can use. One OpenBot stopped, or
+        // The back end ran and stopped without a report Mangaba Bot can use. One Mangaba Bot stopped, or
         // that never ran, is not about the engine.
         Err(failure) => matches!(
             failure,
@@ -2178,17 +2178,17 @@ pub fn drive_short() -> Option<Shortfall> {
 
 /**
 ROOM FOR AN UPDATE, checked before an update does anything: before the back end's `local update`
-(`checked_call`) and before OpenBot's own update stops, backs up or downloads (`upgrade::run`).
+(`checked_call`) and before Mangaba Bot's own update stops, backs up or downloads (`upgrade::run`).
 
 The first setup's 40 GiB is what the back end needs free before it is installed. An installation
 already uses part of that, so an update is held to what the update itself writes, beside what is
 there, until it removes what it replaced:
 
-- New images: an update downloads at most `MOST_AN_UPDATE_DOWNLOADS` (every image of OpenBot's and
+- New images: an update downloads at most `MOST_AN_UPDATE_DOWNLOADS` (every image of Mangaba Bot's and
   the back end's changed), and an image takes `update_ready::ON_DISK` times its download on disk.
 - The database, twice: the backup `upgrade` writes before anything changes (`upgrade::DUMP`, a
   `pg_dump` of it), and the copy a failed update restores into before it swaps it in
-  (`stack::restore_runtime_database`). Measured when OpenBot can (`installation_database`), and
+  (`stack::restore_runtime_database`). Measured when Mangaba Bot can (`installation_database`), and
   counted as `UNMEASURED_DATABASE` when not.
 
 Then the same lines `update_ready` holds its downloads to: inside the engine, what is left keeps
@@ -2209,7 +2209,7 @@ pub fn update_needs(database: Option<u64>) -> u64 {
         + 2 * database.unwrap_or(UNMEASURED_DATABASE)
 }
 
-/// The size of OpenBot's own database, as the window last measured it, for the back end's update.
+/// The size of Mangaba Bot's own database, as the window last measured it, for the back end's update.
 static INSTALLATION_DATABASE: std::sync::Mutex<Option<u64>> = std::sync::Mutex::new(None);
 
 /// The size of this installation's database, for the room an update needs (`update_needs`).
@@ -2285,7 +2285,7 @@ fn update_room_of(check: &EngineCheck, database: Option<u64>) -> Option<Shortfal
     }
 }
 
-/// A setup OpenBot did not start, for a drive short of disk (`checked_call`): blocked on resources,
+/// A setup Mangaba Bot did not start, for a drive short of disk (`checked_call`): blocked on resources,
 /// with what was measured, as the CLI's own resource check reports it.
 fn short_of_drive(shortfall: Shortfall) -> Report {
     Report {
@@ -2438,7 +2438,7 @@ fn stack(value: &Value) -> Result<Stack, Failure> {
 const MAX_APP_PATHS: usize = 256;
 
 /// `appPaths` as `local list`, `status`, `setup` and `connect` report it: `[{path, missing}]`. Only
-/// the paths are kept. Anything else lists no folder, so a stack it describes is never OpenBot's.
+/// the paths are kept. Anything else lists no folder, so a stack it describes is never Mangaba Bot's.
 fn app_paths(value: Option<&Value>) -> Vec<String> {
     value
         .and_then(Value::as_array)
@@ -2650,7 +2650,7 @@ impl Limits {
     /// `local setup` downloads a release and creates the cluster. 88 seconds on a warm machine
     /// with a fast connection; a first pull of every image is what this allows for. An hour, not
     /// half of one: a fresh Windows VM ran out the 30 minutes this used to allow while it was also
-    /// installing OpenBot's packages, and a timeout throws away a setup that was getting there.
+    /// installing Mangaba Bot's packages, and a timeout throws away a setup that was getting there.
     pub fn for_setup() -> Self {
         Self {
             timeout: Duration::from_secs(60 * 60),
@@ -2681,7 +2681,7 @@ impl Limits {
         }
     }
 
-    /// `stop` while OpenBot quits. Somebody is waiting for the app to close, so the stop gets two
+    /// `stop` while Mangaba Bot quits. Somebody is waiting for the app to close, so the stop gets two
     /// minutes rather than ten; a stack that has not stopped by then is reported, not waited on.
     pub fn for_quit() -> Self {
         Self {
@@ -2729,7 +2729,7 @@ pub fn bundled_release() -> Option<String> {
 }
 
 /**
-Whether a local Intelligence must be updated before OpenBot starts on it, and to what.
+Whether a local Intelligence must be updated before Mangaba Bot starts on it, and to what.
 
 THE PROBLEM. The app installs Intelligence once, at setup, and only ever starts it after that. So a
 person whose stack an older app set up kept that release however many apps came after: a stack on
@@ -2742,8 +2742,8 @@ not moved back. Never when either version cannot be read. The CLI's own `local u
 work, keeping the stack's data and app connections, and leaves the stack as it was when it fails.
 
 AN UPDATE THAT DID NOT FINISH is due again, to the release it was moving to: `local update` with no
-candidate resumes the one on record. The window promises that retry ("OpenBot tries again the next
-time it starts") and nothing else makes it. The window opens OpenBot on a running stack without
+candidate resumes the one on record. The window promises that retry ("Mangaba Bot tries again the next
+time it starts") and nothing else makes it. The window opens Mangaba Bot on a running stack without
 calling `start`, and on a stopped one the CLI refuses `start` while a `prepared` update is on record
 (`update_recovery_required`, naming `local update`). A record that does not name its release is
 left alone.
@@ -2963,27 +2963,27 @@ const INHERITED: &[&str] = &[
  * ONE ENGINE FOR OPENBOT AND INTELLIGENCE.
  *
  * Left to itself the CLI picks Docker when Docker answers and Podman otherwise. That is not always
- * the engine OpenBot is running on: Docker Desktop started after OpenBot settled on Podman, or a
+ * the engine Mangaba Bot is running on: Docker Desktop started after Mangaba Bot settled on Podman, or a
  * Podman machine of the person's own that is running beside ours. Two engines on one computer is
- * two VMs' worth of memory, and an Intelligence that OpenBot's containers reach through a host
- * port of a different VM. So every CLI process is told the engine OpenBot uses, by the variable
+ * two VMs' worth of memory, and an Intelligence that Mangaba Bot's containers reach through a host
+ * port of a different VM. So every CLI process is told the engine Mangaba Bot uses, by the variable
  * the CLI reads for exactly this (`COPILOTKIT_LOCAL_ENGINE`), and for Podman the API of the
- * machine OpenBot uses: the CLI would otherwise take the first running machine, and it looks
- * `podman` up on a PATH that, in the session OpenBot installed Podman, does not have it.
+ * machine Mangaba Bot uses: the CLI would otherwise take the first running machine, and it looks
+ * `podman` up on a PATH that, in the session Mangaba Bot installed Podman, does not have it.
  *
  * Recorded by the app when it knows its engine (`use_engine`), and read for every call, because
  * the machine's mode can change between calls and asking costs one `podman machine inspect`.
  */
 static ENGINE: std::sync::Mutex<Option<crate::engine::Address>> = std::sync::Mutex::new(None);
 
-/// Run the CLI on the engine OpenBot runs on.
+/// Run the CLI on the engine Mangaba Bot runs on.
 pub fn use_engine(address: &crate::engine::Address) {
     *ENGINE
         .lock()
         .unwrap_or_else(|poisoned| poisoned.into_inner()) = Some(address.clone());
 }
 
-/// Whether the app has said which engine OpenBot runs on.
+/// Whether the app has said which engine Mangaba Bot runs on.
 pub fn engine_known() -> bool {
     ENGINE
         .lock()
@@ -2995,7 +2995,7 @@ pub fn engine_known() -> bool {
 #[derive(Clone, Debug, PartialEq, Eq)]
 struct CliEngine {
     engine: crate::engine::Engine,
-    /// The Podman API OpenBot's machine forwards to this computer, when it could be found.
+    /// The Podman API Mangaba Bot's machine forwards to this computer, when it could be found.
     api: Option<String>,
     /// The machine's rootful connection, for the `podman` the CLI runs, when `api` is a named pipe
     /// that `podman` cannot open itself (Windows).
@@ -3011,7 +3011,7 @@ impl CliEngine {
 
     /// The machine's mode and API, not the connection's.
     ///
-    /// A rootful machine whose OpenBot is still in its rootless storage keeps OpenBot on the
+    /// A rootful machine whose Mangaba Bot is still in its rootless storage keeps Mangaba Bot on the
     /// machine's bare connection (see `acquire::connection_keeping_openbot`). Intelligence then
     /// runs on that same machine's rootful engine, the one its forwarded API reaches: one VM, so
     /// none of the cost of two engines above, and the only engine there Intelligence runs on.
@@ -3027,7 +3027,7 @@ impl CliEngine {
             connection: None,
             rootless: false,
         };
-        // Linux runs OpenBot's containers without local Intelligence for now, and its Podman has
+        // Linux runs Mangaba Bot's containers without local Intelligence for now, and its Podman has
         // no machine: the CLI finds the rootful socket itself, or declines a rootless one.
         if address.engine == Engine::Docker || cfg!(target_os = "linux") {
             return named_only();
@@ -3129,7 +3129,7 @@ fn command_for(
     command
 }
 
-/// `command_for`, with this process's environment read through `var` and OpenBot's Docker
+/// `command_for`, with this process's environment read through `var` and Mangaba Bot's Docker
 /// configuration kept in `docker_config`.
 fn command_inheriting(
     cli: &PinnedCli,
@@ -3163,7 +3163,7 @@ fn command_inheriting(
 const GIT_CEILING: &str = "GIT_CEILING_DIRECTORIES";
 
 /**
-The folder above OpenBot's own, as `GIT_CEILING_DIRECTORIES`, for every call that runs in OpenBot's
+The folder above Mangaba Bot's own, as `GIT_CEILING_DIRECTORIES`, for every call that runs in Mangaba Bot's
 folder: git run there by the CLI never finds a repository above it.
 
 Before `local connect` writes the backend's key into `.env`, the CLI asks git whether `.env` is
@@ -3173,8 +3173,8 @@ came out ignored too, and the `!.env.example` the CLI adds in `~/OpenBot/.gitign
 an ignored parent folder. Connect failed every time, and Retry failed the same way. Outside any
 repository git cannot say, and the CLI goes on, as on a computer with no git at all.
 
-A repository in OpenBot's own folder is still found: git always looks in the folder it runs in, and
-only going up is stopped. Its own ignore rules then decide, as before. OpenBot's `.env` holds no key
+A repository in Mangaba Bot's own folder is still found: git always looks in the folder it runs in, and
+only going up is stopped. Its own ignore rules then decide, as before. Mangaba Bot's `.env` holds no key
 once connect is done: the key moves to the credential store (`connect_local_eval_at`).
 
 Both forms of the parent where they differ, as given and with links resolved, so a folder reached
@@ -3200,14 +3200,14 @@ fn git_ceiling(folder: &std::path::Path) -> Option<std::ffi::OsString> {
 }
 
 /**
-`--app-path <folder>`, added to every `local` call that runs in OpenBot's folder (`local setup` and
+`--app-path <folder>`, added to every `local` call that runs in Mangaba Bot's folder (`local setup` and
 `local connect`): the CLI acts for exactly that folder.
 
 Without it the CLI finds a folder's stack through `.copilotkit/local.json` in the folder or in any
 folder above it. Someone who once ran `copilotkit local setup` in their home folder had that stack
 resumed for `~/OpenBot`, and `local connect` wrote the home folder's `.env`, so Start found
 `~/OpenBot/.env` naming no stack it set up. With it, setup creates or resumes the stack the CLI
-records for OpenBot's folder, and connect writes OpenBot's `.env` (Intelligence
+records for Mangaba Bot's folder, and connect writes Mangaba Bot's `.env` (Intelligence
 `apps/cli/src/commands/local.ts`, in the CLI pinned since `desktop/intelligence-cli.json` named
 f5c45eb).
 */
@@ -3234,7 +3234,7 @@ pub fn node_engine() -> impl Fn() -> std::process::Command + Send + Sync + 'stat
     move || engine_command(engine.as_ref())
 }
 
-/// Only `INHERITED`, OpenBot's Docker configuration, the engines' directories on `PATH` and the
+/// Only `INHERITED`, Mangaba Bot's Docker configuration, the engines' directories on `PATH` and the
 /// variables that name the engine.
 fn cli_environment(
     command: &mut std::process::Command,
@@ -3253,7 +3253,7 @@ fn cli_environment(
         command.env("COPILOTKIT_TELEMETRY_DISABLED", "1");
     }
     // Docker's configuration without the person's credential helper, which macOS stops to ask
-    // about when OpenBot runs it, so the chart and image downloads never wait on a dialog. See
+    // about when Mangaba Bot runs it, so the chart and image downloads never wait on a dialog. See
     // `docker_config`. The person's own configuration is what it mirrors.
     if let Some(dir) =
         docker_config.and_then(|owned| crate::docker_config::for_commands_in(owned, &var))
@@ -3319,7 +3319,7 @@ pub fn run(
 How long `local start` waits before it is asked again, after the engine refused to start the back
 end's node: twice at most, so a start that keeps being refused fails within about half a minute.
 
-Windows G: OpenBot quit, opened again within seconds, and its `local start` failed in 0.3 s, the
+Windows G: Mangaba Bot quit, opened again within seconds, and its `local start` failed in 0.3 s, the
 CLI's `podman start` of the node exiting 125, the engine's own error before anything ran. The window
 said "Setup stopped partway through with an error. Retry.", and Retry started it at once.
 */
@@ -3401,8 +3401,8 @@ pub fn model_file(file: &std::path::Path) -> Result<&str, Failure> {
 `login --json`: the CopilotKit account sign-in. `shown` hears each new approval page the CLI
 prints while it waits, so the window can show it (`sign_in_page`).
 
-Every sign-in OpenBot starts gets a new code. The CLI saves the code a `login` is waiting on in
-`saved_code` and shows it again in the next `login`, unless the one before ended by itself. OpenBot
+Every sign-in Mangaba Bot starts gets a new code. The CLI saves the code a `login` is waiting on in
+`saved_code` and shows it again in the next `login`, unless the one before ended by itself. Mangaba Bot
 stops a `login` that waits too long, or is cancelled, so after "Sign-in didn't finish" Try again
 showed the code that had just timed out, and approving it said it had expired. So the saved code is
 forgotten first. This runs in the CLI's turn (`one_at_a_time`): no other `login` is waiting on it.
@@ -3528,7 +3528,7 @@ pub fn provision_apps(
     limits: Limits,
     cancel: &Cancel,
 ) -> Result<AppsProvisioned, Failure> {
-    // The CLI takes an absolute path in a folder that exists; OpenBot makes both.
+    // The CLI takes an absolute path in a folder that exists; Mangaba Bot makes both.
     let env_file = env_file
         .is_absolute()
         .then(|| env_file.to_str())
@@ -3665,7 +3665,7 @@ fn ending_entry(
             let ended = match (status, failure) {
                 (Some(status), _) => format!(", {}", exit_described(status)),
                 (None, Failure::Timeout | Failure::Cancelled | Failure::OutputLimit) => {
-                    ", stopped by OpenBot".to_owned()
+                    ", stopped by Mangaba Bot".to_owned()
                 }
                 (None, _) => String::new(),
             };
@@ -4195,7 +4195,7 @@ fn in_flight() -> std::sync::MutexGuard<'static, Vec<(String, Cancel, Kind)>> {
 /// How many Stops are shutting the stack down right now.
 static STOPPING: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
 
-/// Set once OpenBot is quitting, and never cleared: nothing the window asks for after that should
+/// Set once Mangaba Bot is quitting, and never cleared: nothing the window asks for after that should
 /// start.
 static QUITTING: AtomicBool = AtomicBool::new(false);
 
@@ -4216,7 +4216,7 @@ impl Drop for Closing {
 /**
 Refuse new calls and cancel the running ones, until the returned guard is dropped.
 
-Cancelling once is not enough. A status or start the window sends while Stop is taking OpenBot's
+Cancelling once is not enough. A status or start the window sends while Stop is taking Mangaba Bot's
 containers down would otherwise take its turn ahead of the shutdown's own stop, or start after it
 and leave the stack running. So every call registered while closing is cancelled before it begins,
 except the shutdown's own (`stop_for_shutdown`). A stop of the stack already running for another
@@ -4257,7 +4257,7 @@ pub fn close_for_quit_reporting(finishing: impl FnOnce()) -> bool {
     loop {
         if update_finishing() {
             if let Some(say) = finishing.take() {
-                log::info!("[quit] letting the backend update finish before OpenBot quits");
+                log::info!("[quit] letting the backend update finish before Mangaba Bot quits");
                 say();
             }
         } else if RUNNING.load(Ordering::SeqCst) == 0 || Instant::now() >= until {
@@ -4392,12 +4392,12 @@ own.
 Quit used to cancel it and run its own. Cancelling cuts the CLI short, which on Windows is a hard
 kill that leaves the CLI's lock behind, so Quit's own stop was refused as busy and the stack kept
 running. Waiting for it costs Quit no more than its own stop would have: a stop takes about 12 s on
-macOS and 13 s on Windows (measured on OpenBot 1.1.0), and `bound` is the two minutes Quit allows
+macOS and 13 s on Windows (measured on Mangaba Bot 1.1.0), and `bound` is the two minutes Quit allows
 its own stop (`Limits::for_quit`).
 
 When `bound` runs out first, Quit says the stop did not finish in time (`Failure::Timeout`) and
 leaves that stop running: it is the CLI's own `local stop`, and cut short it would leave the stack
-half stopped, so it finishes on its own after OpenBot has exited.
+half stopped, so it finishes on its own after Mangaba Bot has exited.
 */
 fn a_stops_answer(bound: Duration) -> Option<Result<Report, Failure>> {
     let running: Vec<_> = stops().clone();
@@ -4665,7 +4665,7 @@ fn checked_when_unhealthy(mut report: Report, stack: &StackId) -> Report {
 `local update`, and once more after repairing the stack when it failed on something a repair puts
 right (`local_update`): an update stopped partway earlier, which every later one fails on at once.
 
-Only after a failure the CLI reported. Not after one OpenBot stopped, or while closing: the next
+Only after a failure the CLI reported. Not after one Mangaba Bot stopped, or while closing: the next
 Start repairs then (`repaired_before`), and Quit is not held behind a second update.
 */
 fn update_repairing(
@@ -5039,7 +5039,7 @@ pub fn setup_installed(
     .map_err(SetupStopped::Said)
 }
 
-/// Why `setup_installed` gave no report: the CLI's own static category, or OpenBot's plain words.
+/// Why `setup_installed` gave no report: the CLI's own static category, or Mangaba Bot's plain words.
 #[derive(Debug, PartialEq, Eq)]
 pub enum SetupStopped {
     Failure(Failure),
@@ -5128,7 +5128,7 @@ fn private_files(folder: &std::path::Path) -> PrivateFiles {
 /**
 A failed `local setup` for a stack that can no longer be resumed.
 
-Found on OpenBot Desktop 1.0.0, reinstalled after the earlier installation's folder, app data and
+Found on Mangaba Bot Desktop 1.0.0, reinstalled after the earlier installation's folder, app data and
 back end were deleted. The CLI still recorded a stack for `~/OpenBot`, and its private folder was
 gone, so every setup stopped with "Restore the private setup and credentials files before resuming
 this stack" and the window said "Back end setup stopped", with nothing the person could do.
@@ -5140,8 +5140,8 @@ None for every other failure, and for a stack whose files are there.
 
 On Podman the same stack is refused sooner, as `unsupported_engine`: the engine that made a stack is
 recorded in its private folder (`engine.json`), and with the folder gone the CLI takes the stack for
-a Docker one, which the Podman OpenBot names (`COPILOTKIT_LOCAL_ENGINE`) may not manage. Found on a
-Mac after the stack's folder was deleted and OpenBot set up again: "Setup stopped / OpenBot can't
+a Docker one, which the Podman Mangaba Bot names (`COPILOTKIT_LOCAL_ENGINE`) may not manage. Found on a
+Mac after the stack's folder was deleted and Mangaba Bot set up again: "Setup stopped / Mangaba Bot can't
 run on this computer as it's set up." until the record was removed by hand. So that refusal is a
 lost stack too, but only for this folder's stack whose private files, its engine file among them,
 are all gone. Any other `unsupported_engine` is the engine's own, and is said as the CLI said it.
@@ -5231,7 +5231,7 @@ fn lost_stack(
             .flatten();
         if gone == Some(true) {
             log::warn!(
-                "[local setup] {}'s cluster is gone from OpenBot's engine; setting it up again",
+                "[local setup] {}'s cluster is gone from Mangaba Bot's engine; setting it up again",
                 stack.as_str()
             );
         }
@@ -5243,7 +5243,7 @@ fn lost_stack(
             PrivateFiles::Missing if !shared => Some(Lost::Forgettable(stack)),
             PrivateFiles::Missing => Some(Lost::Said(crate::problem::Problem::with(
                 format!(
-                    "OpenBot's services on this computer are missing their saved settings, and \
+                    "Mangaba Bot's services on this computer are missing their saved settings, and \
                      another app on this computer uses them too. Restore {} from a backup, then try \
                      again.",
                     private.display()
@@ -5252,7 +5252,7 @@ fn lost_stack(
             ))),
             PrivateFiles::Damaged => Some(Lost::Said(crate::problem::Problem::with(
                 format!(
-                    "The saved settings of OpenBot's services on this computer can't be read. \
+                    "The saved settings of Mangaba Bot's services on this computer can't be read. \
                      Restore {} from a backup, or delete that folder to set them up again from the \
                      start. Then try again.",
                     private.display()
@@ -5279,7 +5279,7 @@ that can't be said (`cluster_gone_at`): then nothing is said to be gone.
 Asked with the very environment the CLI gets (`engine_command`), so it is the engine whose answer
 the CLI's own ownership check read as a 404: on Docker Desktop, a node container that
 `docker container prune` removed while it was stopped (a dogfooding Mac, Desktop 1.1.2), and on
-OpenBot's Podman machine, one that went with the machine (box I).
+Mangaba Bot's Podman machine, one that went with the machine (box I).
 */
 pub fn cluster_gone(stack: &StackId) -> Option<bool> {
     cluster_gone_at(cli_engine().as_ref(), stack, |address| {
@@ -5291,7 +5291,7 @@ pub fn cluster_gone(stack: &StackId) -> Option<bool> {
 Whether the installed CLI still records `stack` (`local list`). None when the CLI can't say.
 
 A Mac on Docker Desktop, Desktop 1.1.2: after `copilotkit local delete` removed a stack whose node a
-prune had taken, OpenBot's folder still recorded it, and every launch's `local status` answered "No
+prune had taken, Mangaba Bot's folder still recorded it, and every launch's `local status` answered "No
 recorded local stack was found" (`local_command_failed`, no stack) and stopped there. A stack the CLI
 no longer records can never be asked about again, so it is gone whatever the engine still holds.
 */
@@ -5419,7 +5419,7 @@ Whether `stack`'s cluster was removed from the engine the CLI runs on, so setup 
 (`lost_stack`). Stricter than `cluster_gone`, which only offers to set the backend up again: this
 deletes the stack's record and private folder.
 
-Gone, and either in OpenBot's own Podman machine (`acquire::MACHINE`), where nothing but OpenBot runs
+Gone, and either in Mangaba Bot's own Podman machine (`acquire::MACHINE`), where nothing but Mangaba Bot runs
 a cluster and one that isn't there went with the machine (box I), or with what k3d leaves in an
 engine after the cluster's containers are removed: the cluster's network `k3d-<stack>` or its image
 volume `k3d-<stack>-images`. Neither goes with `docker container prune`. An engine with no trace of
@@ -5440,7 +5440,7 @@ fn cluster_removed(stack: &StackId) -> Option<bool> {
     Some(cluster_traces_in(&networks, &volumes, stack))
 }
 
-/// OpenBot's own Podman machine, where nothing but OpenBot runs a cluster.
+/// Mangaba Bot's own Podman machine, where nothing but Mangaba Bot runs a cluster.
 fn own_machine(address: &crate::engine::Address) -> bool {
     address.engine == crate::engine::Engine::Podman
         && address.connection.as_deref().is_some_and(|connection| {
@@ -5489,7 +5489,7 @@ pub fn forget_arguments(stack: &StackId) -> [&str; 7] {
 }
 
 /// `local delete` for `stack` with the installed CLI, for the Windows uninstaller when the person
-/// deletes OpenBot's data (`uninstall`): the stack's cluster, its private folder and its record go, as
+/// deletes Mangaba Bot's data (`uninstall`): the stack's cluster, its private folder and its record go, as
 /// when setup forgets one. Anything but a completed delete is a failure.
 pub fn delete_installed(stack: &StackId) -> Result<(), Failure> {
     let cli = installed()?;
@@ -5515,7 +5515,7 @@ pub fn delete_installed(stack: &StackId) -> Result<(), Failure> {
 /// `apps/cli/src/services/local-stack-engine.ts`).
 const STACK_ENGINE_FILE: &str = "engine.json";
 
-/// The CLI's name for the engine OpenBot runs on, as a stack's engine file holds it. None when the
+/// The CLI's name for the engine Mangaba Bot runs on, as a stack's engine file holds it. None when the
 /// app has not said which engine that is.
 fn stack_engine_name() -> Option<&'static str> {
     use crate::engine::Engine;
@@ -5528,7 +5528,7 @@ fn stack_engine_name() -> Option<&'static str> {
 
 /**
 Before forgetting a stack whose private folder is gone, its engine file is put back, naming the engine
-OpenBot runs on, the engine the CLI is told to use. Without it the CLI takes the stack for a Docker
+Mangaba Bot runs on, the engine the CLI is told to use. Without it the CLI takes the stack for a Docker
 one, and on Podman refuses `local delete` as it refused `local setup` (`lost_stack`). The CLI's own
 answer for a missing engine file is to restore it naming the engine, and this is that. A file that
 is there is left as it is.
@@ -5758,7 +5758,7 @@ The CLI pulls a first setup's images itself, into the node it has just made, eac
 good the first time containerd cannot connect: 30 s for the mirror, then 30 s for the registry
 (containerd 1.7 `remotes/docker/config/hosts.go`). On the EC2 Mac pass, the first setup after a
 Podman machine was resized stopped there, every pull at 60.5 s, 2 times out of 2, and a Retry a
-minute later finished. Retry finds the stack the CLI recorded, with its node, so OpenBot downloads
+minute later finished. Retry finds the stack the CLI recorded, with its node, so Mangaba Bot downloads
 its images first (`local_images::download`, which waits out a line that stalls) and the CLI finds
 them present. So a setup that stopped in its download does the same, once, before it is reported.
 Any other failure, or one with no stack on record, is reported as the CLI said it.
@@ -5994,7 +5994,7 @@ can say what a long setup, start or update is doing now and how far along it is,
 one line for minutes.
 
 From the call's turn on (`one_at_a_time`), the log's new `local.step` lines are the call's own:
-OpenBot runs one CLI call at a time. Only the steps' names, which are identifiers, leave this
+Mangaba Bot runs one CLI call at a time. Only the steps' names, which are identifiers, leave this
 module, and the seconds since the last one ended.
 */
 struct Trail(String);
@@ -6684,7 +6684,7 @@ mod tests {
         // What the window gives up with, and the last answer it had.
         let gave_up = wait.as_ref().unwrap().ended(
             at(40),
-            "gave up: OpenBot didn't get ready in time. Retry to check again.",
+            "gave up: Mangaba Bot didn't get ready in time. Retry to check again.",
         );
         assert!(gave_up.contains("after 40.0s and 3 checks"), "{gave_up}");
         assert!(gave_up.ends_with("last answer: the status call failed: Timeout"));
@@ -6864,9 +6864,9 @@ mod tests {
         assert_eq!(report.licence, Licence::Unknown);
     }
 
-    /// Box I, after OpenBot's machine was made again: `local status` for the recorded stack failed
+    /// Box I, after Mangaba Bot's machine was made again: `local status` for the recorded stack failed
     /// at its ownership check (`cli.log`: `"step":"ownership-check","outcome":"failed","reason":
-    /// "status 404"`), and OpenBot read "local-command-failed, no stack". That answer, and only that
+    /// "status 404"`), and Mangaba Bot read "local-command-failed, no stack". That answer, and only that
     /// one, is the shape of a lost stack.
     #[test]
     fn a_status_that_failed_with_no_stack_is_the_shape_of_a_lost_stack() {
@@ -6893,8 +6893,8 @@ mod tests {
         assert!(!failed_without_stack(&report));
     }
 
-    /// Box I's engine before and after: `podman ps` on OpenBot's old machine listed the backend's
-    /// node, `k3d-local-1915a7aafba78d6207a561b0-server-0`, beside OpenBot's containers; the machine
+    /// Box I's engine before and after: `podman ps` on Mangaba Bot's old machine listed the backend's
+    /// node, `k3d-local-1915a7aafba78d6207a561b0-server-0`, beside Mangaba Bot's containers; the machine
     /// made again listed nothing.
     #[test]
     fn a_stack_whose_cluster_left_with_the_old_machine_is_found_gone() {
@@ -6935,7 +6935,7 @@ mod tests {
 
     /// A Mac on Docker Desktop, Desktop 1.1.2: `docker container prune` removed the backend's
     /// stopped node, `local-044466e209069a0812bc9764`, and the CLI's ownership check answered 404 at
-    /// every status, stop and Retry. Only OpenBot's own Podman machine was ever asked, so the
+    /// every status, stop and Retry. Only Mangaba Bot's own Podman machine was ever asked, so the
     /// window said "Setup stopped partway through with an error. Retry." for good. The engine the
     /// CLI runs on is asked now, whichever it is, and a node it doesn't list is gone.
     #[test]
@@ -7298,7 +7298,7 @@ mod tests {
         }
     }
 
-    /// A setup OpenBot stopped says so, and a finished one says how long it took.
+    /// A setup Mangaba Bot stopped says so, and a finished one says how long it took.
     #[test]
     fn a_setup_logs_that_openbot_stopped_it_or_that_it_finished() {
         let fixture = Fixture::new("local-eval-setup-stopped-logged", "sleep");
@@ -7318,7 +7318,7 @@ mod tests {
         let entry = last_ending().expect("the stopped setup's ending was logged");
         assert!(
             entry.starts_with("[local setup] failed after ")
-                && entry.ends_with("Cancelled, stopped by OpenBot"),
+                && entry.ends_with("Cancelled, stopped by Mangaba Bot"),
             "{entry}"
         );
 
@@ -7354,7 +7354,7 @@ mod tests {
     }
 
     /// The Learning agent's model goes to `local setup` on the stack the installation already has:
-    /// the file OpenBot wrote, or `--defer-model` to take a model away. Nothing else is passed.
+    /// the file Mangaba Bot wrote, or `--defer-model` to take a model away. Nothing else is passed.
     #[test]
     fn the_learning_model_is_given_by_running_setup_again_with_its_file() {
         let mut done = envelope();
@@ -7486,7 +7486,7 @@ mod tests {
         assert!(status.success(), "git {arguments:?} in {}", dir.display());
     }
 
-    /// Every call in OpenBot's folder runs with git told not to go above it: the folder over it is
+    /// Every call in Mangaba Bot's folder runs with git told not to go above it: the folder over it is
     /// the ceiling, as given and as resolved. A call with no folder of its own is told nothing.
     #[test]
     fn calls_in_openbots_folder_tell_git_not_to_look_above_it() {
@@ -7495,7 +7495,7 @@ mod tests {
             &format!("0\n{}", connected("completed", json!([]), Value::Null)),
         );
         let home = fixture.root.join("home");
-        let installation = home.join("OpenBot");
+        let installation = home.join("Mangaba Bot");
         std::fs::create_dir_all(&installation).unwrap();
         connect(
             &fixture.cli(),
@@ -7517,7 +7517,7 @@ mod tests {
             );
         }
         assert!(
-            !ceilings.iter().any(|ceiling| ceiling.ends_with("OpenBot")),
+            !ceilings.iter().any(|ceiling| ceiling.ends_with("Mangaba Bot")),
             "{ceiling}"
         );
 
@@ -7537,10 +7537,10 @@ mod tests {
 
     /// A Mac's home folder was a git repository that ignores everything (`*`), and `local connect`
     /// failed on every try: before it writes the key, the CLI asks git that `.env.example` is not
-    /// ignored, and nothing inside an ignored folder can be un-ignored. Real git, asked in OpenBot's
+    /// ignored, and nothing inside an ignored folder can be un-ignored. Real git, asked in Mangaba Bot's
     /// folder with the environment the CLI is given: it finds no repository there now (128), which
     /// the CLI passes, where it found the home folder's and said ignored (0). A repository in
-    /// OpenBot's own folder still answers with its own rules: not ignored (1), as the CLI requires.
+    /// Mangaba Bot's own folder still answers with its own rules: not ignored (1), as the CLI requires.
     #[test]
     fn a_home_folder_repository_that_ignores_everything_does_not_reach_openbots_folder() {
         let Some(git) = real_git() else {
@@ -7552,11 +7552,11 @@ mod tests {
             &format!("0\n{}", connected("completed", json!([]), Value::Null)),
         );
         let home = fixture.root.join("home");
-        let installation = home.join("OpenBot");
+        let installation = home.join("Mangaba Bot");
         std::fs::create_dir_all(&installation).unwrap();
         git_in(&git, &home, &["init", "-q"]);
         std::fs::write(home.join(".gitignore"), "*\n!.gitignore\n").unwrap();
-        // What the CLI appends in OpenBot's folder before it asks.
+        // What the CLI appends in Mangaba Bot's folder before it asks.
         std::fs::write(
             installation.join(".gitignore"),
             ".env\n.env.*\n!.env.example\n",
@@ -7635,7 +7635,7 @@ mod tests {
         }
     }
 
-    /// A first install on a Mac stopped at "Connecting OpenBot" with "Setup stopped partway through
+    /// A first install on a Mac stopped at "Connecting Mangaba Bot" with "Setup stopped partway through
     /// with an error", and neither log said why: the CLI's error was in its report, and only the
     /// reason was kept. A connect that fails now logs its exit and the CLI's own message, scrubbed
     /// as every log line is, and one that finishes logs only that it did.
@@ -8815,7 +8815,7 @@ printf '%s' '{completed}'
     /**
     AN UPDATE QUIT STOPPED PARTWAY IS REPAIRED, AND THE NEXT ONE FINISHES.
 
-    Found on OpenBot Desktop, 0.16.0-rc.9 to rc.10: Quit stopped `local update` after its first
+    Found on Mangaba Bot Desktop, 0.16.0-rc.9 to rc.10: Quit stopped `local update` after its first
     `helm upgrade`, which had deleted the Learning Deployments. Every Start after that failed in
     under a second with "Local update-quiesce failed (exit 1)", the CLI scaling a Deployment that
     was gone. Here the update fails exactly so, the repair applies the update's chart without hooks,
@@ -9126,7 +9126,7 @@ printf '%s' '{completed}'
         assert!(status(&input).is_ok());
     }
 
-    /// The CLI's environment, from an environment of `pairs` and OpenBot's Docker configuration
+    /// The CLI's environment, from an environment of `pairs` and Mangaba Bot's Docker configuration
     /// in `owned`.
     #[cfg(unix)]
     fn cli_environment(
@@ -9167,7 +9167,7 @@ printf '%s' '{completed}'
     }
 
     /// Docker Desktop's `~/.docker` on a Mac: its credential helper, which macOS stops to ask about
-    /// when OpenBot runs it, and its context.
+    /// when Mangaba Bot runs it, and its context.
     #[cfg(unix)]
     fn docker_desktop_home(home: &Path) {
         let docker = home.join(".docker");
@@ -9181,8 +9181,8 @@ printf '%s' '{completed}'
 
     /// The CLI's `helm pull` of the chart, and its `docker run` of the probe image, read Docker's
     /// configuration. Docker Desktop's names `docker-credential-desktop`, which macOS stopped to ask
-    /// "OpenBot would like to access data from other apps" and setup timed out behind. The CLI runs
-    /// with OpenBot's own configuration instead: no credential store, the person's context.
+    /// "Mangaba Bot would like to access data from other apps" and setup timed out behind. The CLI runs
+    /// with Mangaba Bot's own configuration instead: no credential store, the person's context.
     #[cfg(unix)]
     #[test]
     fn the_cli_runs_without_the_persons_docker_credential_helper() {
@@ -9390,8 +9390,8 @@ printf '%s' '{completed}'
         }
     }
 
-    /// OpenBot on the bare connection of a rootful machine: Intelligence goes to the same machine's
-    /// rootful engine. OpenBot on a rootless machine, by either connection: declined.
+    /// Mangaba Bot on the bare connection of a rootful machine: Intelligence goes to the same machine's
+    /// rootful engine. Mangaba Bot on a rootless machine, by either connection: declined.
     #[cfg(not(target_os = "linux"))]
     #[test]
     fn intelligence_runs_on_the_rootful_engine_of_the_machine_openbot_is_on() {
@@ -9473,7 +9473,7 @@ printf '%s' '{completed}'
         ));
     }
 
-    /// With the person's own machine passed over (`engine::passed_over_machine`), OpenBot runs on
+    /// With the person's own machine passed over (`engine::passed_over_machine`), Mangaba Bot runs on
     /// its own, and the CLI is told that machine's API and connection. The machine behind Podman's
     /// default connection, which is the person's, is never the one asked about.
     #[cfg(not(target_os = "linux"))]
@@ -9792,7 +9792,7 @@ fn main() {
     /**
     A first setup leaves the k3s node image and k3d's tools and proxy to k3d. The CLI hands k3d
     them by digest and, after the cluster is made, checks the node's `Config.Image` is exactly that
-    digest reference. Pulled first and tagged by OpenBot, Podman on Windows recorded the node's
+    digest reference. Pulled first and tagged by Mangaba Bot, Podman on Windows recorded the node's
     image as the tag (`docker.io/rancher/k3s:sha256-...`) with no digest, and every fresh install
     failed right after the CLI inspected its runtime. So the engine is never asked to pull or tag
     any of them, before or during the setup.
@@ -9925,7 +9925,7 @@ fn main() {
         .unwrap();
         let program = root.join(format!("copilotkit{}", std::env::consts::EXE_SUFFIX));
         compile_fixture(&source, &program);
-        // An engine that answers nothing: no node is seen, and nothing is downloaded by OpenBot.
+        // An engine that answers nothing: no node is seen, and nothing is downloaded by Mangaba Bot.
         let engine_source = root.join("docker.rs");
         std::fs::write(&engine_source, "fn main() { std::process::exit(1); }\n").unwrap();
         compile_fixture(
@@ -10519,7 +10519,7 @@ fn main() {
     }
 
     /**
-    Windows G: OpenBot quit, and opened again a few seconds later. `local start` failed in 0.3 s,
+    Windows G: Mangaba Bot quit, and opened again a few seconds later. `local start` failed in 0.3 s,
     the engine refusing the node's start with exit 125, and the window said "Setup stopped partway
     through with an error. Retry." Retry, a minute later, started it at once. The start is now asked
     again, twice at most and within seconds, before its failure is the answer.
@@ -10836,7 +10836,7 @@ fn main() {
         format!("{report}\n")
     }
 
-    /// Only an id OpenBot could have made reaches the command line, and the arguments are fixed.
+    /// Only an id Mangaba Bot could have made reaches the command line, and the arguments are fixed.
     #[test]
     fn apps_arguments_are_fixed_and_take_only_a_lowercase_installation_id() {
         let id = Installation::parse(APPS_ID).unwrap();
@@ -10939,7 +10939,7 @@ fn main() {
         );
     }
 
-    /// #991: the sign-in page a person sees explains OpenBot's setup. The CLI carries that as
+    /// #991: the sign-in page a person sees explains Mangaba Bot's setup. The CLI carries that as
     /// `login --mode openbot`, once it has the flag; an older one would refuse it and sign nobody in.
     #[test]
     fn the_account_sign_in_asks_for_openbots_sign_in_page_when_the_cli_takes_it() {
@@ -11066,8 +11066,8 @@ fn main() {
     /**
     The first Try again after "Sign-in didn't finish" showed the code that had just timed out, on two
     Windows computers, and approving it said it had expired; only the second Try again got a new
-    one. OpenBot stops a `login` that waits too long, and a `login` stopped mid-wait leaves its code
-    saved, which the next `login` shows again. Each sign-in OpenBot starts forgets that code first:
+    one. Mangaba Bot stops a `login` that waits too long, and a `login` stopped mid-wait leaves its code
+    saved, which the next `login` shows again. Each sign-in Mangaba Bot starts forgets that code first:
     the one before is stopped, and the next shows a new code.
     */
     #[test]
@@ -11199,7 +11199,7 @@ fn main() {
     fn only_a_help_that_lists_the_openbot_mode_says_the_cli_takes_it() {
         assert!(help_lists_openbot_mode(
             0,
-            b"  --mode openbot  Show the OpenBot setup text\n"
+            b"  --mode openbot  Show the Mangaba Bot setup text\n"
         ));
         assert!(!help_lists_openbot_mode(
             0,
@@ -11341,7 +11341,7 @@ fn main() {
     }
 
     /// The onboarding check stops only an engine that can never pass the CLI's check at Start:
-    /// fewer than 4 CPUs, under 4 GiB of memory, or under 40 GiB of free disk. OpenBot's own
+    /// fewer than 4 CPUs, under 4 GiB of memory, or under 40 GiB of free disk. Mangaba Bot's own
     /// 4 CPU, 6 GiB Podman machine passes. Free disk is measured as the CLI measures it, with
     /// `df -Pk /` in a container.
     #[test]
@@ -11350,7 +11350,7 @@ fn main() {
         let roomy = Some(100 * GB);
         // `docker info --format '{{.NCPU}} {{.MemTotal}}'` on Docker Desktop.
         for (said, free, cpu, memory, disk) in [
-            // OpenBot's own Podman machine: 4 CPUs and 6144 MiB, as `podman info` reports it. The
+            // Mangaba Bot's own Podman machine: 4 CPUs and 6144 MiB, as `podman info` reports it. The
             // CLI's check passes on it, so this check must too.
             (
                 "4 6262661120
@@ -11749,7 +11749,7 @@ overlay 164506208 20481024 135620148 14% /
 
     /**
     A container engine as `local start` meets it, put on PATH as `docker` or `podman`. It answers
-    what OpenBot asks before and after a start with what the real one prints, from files beside it:
+    what Mangaba Bot asks before and after a start with what the real one prints, from files beside it:
     `info --format` (`info`), `image ls --quiet --no-trunc` (`images`), `df -Pk /` in a container
     (`df`), `kubectl get nodes -o json` in the stack's node (`nodes`) and `machine inspect`
     (`inspect`). A node or a file that is not there fails as the engine does.
@@ -11827,7 +11827,7 @@ fn main() {
     }
 
     /// `docker info --format '{{.NCPU}} {{.MemTotal}}'` on a Mac's Docker Desktop with 10 CPUs and
-    /// 20.5 GiB, and `podman info --format '{{.Host.CPUs}} {{.Host.MemTotal}}'` on OpenBot's own
+    /// 20.5 GiB, and `podman info --format '{{.Host.CPUs}} {{.Host.MemTotal}}'` on Mangaba Bot's own
     /// Podman machine, 4 CPUs and 6144 MiB.
     const DOCKER_INFO: &str = "10 22011707392\n";
     const PODMAN_INFO: &str = "4 6262661120\n";
@@ -11842,7 +11842,7 @@ fn main() {
     }
 
     const KIB_PER_GIB: u64 = 1024 * 1024;
-    /// OpenBot's Podman machine on WSL: a sparse virtual disk of about a terabyte.
+    /// Mangaba Bot's Podman machine on WSL: a sparse virtual disk of about a terabyte.
     const WSL_DISK: u64 = 1_055_762_868;
 
     /// `kubectl get nodes -o json` in the stack's node, as k3s v1.31.5 printed it, with its
@@ -11867,7 +11867,7 @@ fn main() {
         serde_json::to_string_pretty(&nodes).unwrap()
     }
 
-    /// `podman machine inspect openbot` for OpenBot's own rootful machine on WSL, as Podman 5
+    /// `podman machine inspect openbot` for Mangaba Bot's own rootful machine on WSL, as Podman 5
     /// prints it on Windows.
     const WSL_INSPECT: &str = r#"[
      {
@@ -11934,7 +11934,7 @@ fn main() {
 
     /**
     An engine and a CLI for `local start` through `run_installed`, the window's own path. The engine
-    is `engine` on PATH answering with `answers` (`FAKE_ENGINE`), and named to the CLI as OpenBot
+    is `engine` on PATH answering with `answers` (`FAKE_ENGINE`), and named to the CLI as Mangaba Bot
     names it; the CLI is pinned as a developer pins one. Windows' answer for the drive that holds a
     Podman machine's disk is `drive`. Sets process environment: only for a test in its own process.
     */
@@ -12157,7 +12157,7 @@ fn main() {
         let home = home.to_string_lossy().into_owned();
 
         let text = crate::troubleshooting::gather(crate::troubleshooting::Sources {
-            desktop: "OpenBot Desktop 1.0.0 (Built 2026-11-08 06:40 UTC from 52ea4b5)".into(),
+            desktop: "Mangaba Bot Desktop 1.0.0 (Built 2026-11-08 06:40 UTC from 52ea4b5)".into(),
             failure: Some("The backend could not start.".into()),
             log_folder: Some(&logs),
             home: Some(&home),
@@ -12200,7 +12200,7 @@ fn main() {
     }
 
     /**
-    1.0.0 on Windows, a used install on OpenBot's own Podman machine with 30.5 GiB free inside it:
+    1.0.0 on Windows, a used install on Mangaba Bot's own Podman machine with 30.5 GiB free inside it:
     Quit, then a relaunch. The CLI checks resources only at a first setup, and an existing back end
     can run on less than its 40 GiB, so a start that finishes is let through. The log warns, with the
     numbers, and nothing else changes.
@@ -12289,7 +12289,7 @@ fn main() {
         );
         assert_eq!(
             checks_logged().last().unwrap(),
-            "WARN [local check] after local start failed: 10 CPUs and 20.5 GiB of memory, 30 GiB free of 64 GiB in a container, no disk pressure; short of disk (OpenBot needs 40 GiB free)"
+            "WARN [local check] after local start failed: 10 CPUs and 20.5 GiB of memory, 30 GiB free of 64 GiB in a container, no disk pressure; short of disk (Mangaba Bot needs 40 GiB free)"
         );
 
         // Docker on a 1.8 TiB disk with 160 GiB free, its node under DiskPressure: nearly full
@@ -12382,8 +12382,8 @@ fn main() {
         assert_eq!(
             checks_logged(),
             [
-                "WARN [local check] before local start: 4 CPUs and 5.8 GiB of memory, 941 GiB free of 1006.8 GiB in a container, 30 GiB free on C:; short of disk (OpenBot needs 40 GiB free)",
-                "WARN [local check] after local start failed: 4 CPUs and 5.8 GiB of memory, 941 GiB free of 1006.8 GiB in a container, 30 GiB free on C:, no disk pressure; short of disk (OpenBot needs 40 GiB free)",
+                "WARN [local check] before local start: 4 CPUs and 5.8 GiB of memory, 941 GiB free of 1006.8 GiB in a container, 30 GiB free on C:; short of disk (Mangaba Bot needs 40 GiB free)",
+                "WARN [local check] after local start failed: 4 CPUs and 5.8 GiB of memory, 941 GiB free of 1006.8 GiB in a container, 30 GiB free on C:, no disk pressure; short of disk (Mangaba Bot needs 40 GiB free)",
             ]
         );
         assert_eq!(
@@ -12395,7 +12395,7 @@ fn main() {
         );
     }
 
-    /// F's 16 CPUs and 30.8 GiB, a container whose `df` OpenBot can't read, and `tenths` of a GiB
+    /// F's 16 CPUs and 30.8 GiB, a container whose `df` Mangaba Bot can't read, and `tenths` of a GiB
     /// free on C:, as Windows F's account step measured it.
     fn windows_f(lab: &StartLab, tenths: u64) {
         lab.engine(
@@ -12408,9 +12408,9 @@ fn main() {
     }
 
     /**
-    Windows F, filled to 15.0 GB free, after Install made OpenBot's machine. The account step's
+    Windows F, filled to 15.0 GB free, after Install made Mangaba Bot's machine. The account step's
     check logged no disk measured in a container and 13.2 GiB on C:, and the step said only
-    "OpenBot is out of disk space. It needs 40 GB free.", with 13 GB free. Its answer carries what
+    "Mangaba Bot is out of disk space. It needs 40 GB free.", with 13 GB free. Its answer carries what
     is free, so the step says it. `local-eval-terms-windows-f-short-of-disk.json` is what the
     window's own test is given.
     */
@@ -12430,7 +12430,7 @@ fn main() {
         assert_eq!(serde_json::to_value(engine_size_terms()).unwrap(), window);
         assert_eq!(
             checks_logged(),
-            ["WARN [local check] before local setup: 16 CPUs and 30.8 GiB of memory, free disk not measured, 13.2 GiB free on C:; short of disk (OpenBot needs 40 GiB free)"]
+            ["WARN [local check] before local setup: 16 CPUs and 30.8 GiB of memory, free disk not measured, 13.2 GiB free on C:; short of disk (Mangaba Bot needs 40 GiB free)"]
         );
         // A machine whose own disk is what ran short, with room on C:, is never said as C:'s.
         lab.engine(
@@ -12513,7 +12513,7 @@ fn main() {
                 mac: true,
             }),
         );
-        // OpenBot's own database, as the window measured it: 52 MiB.
+        // Mangaba Bot's own database, as the window measured it: 52 MiB.
         installation_database(Some(52 * 1024 * 1024));
     }
 
@@ -12613,7 +12613,7 @@ fn main() {
             ),
             (Some("12"), Some("16"), false)
         );
-        // An engine with too little memory for OpenBot is short for an update too.
+        // An engine with too little memory for Mangaba Bot is short for an update too.
         let small = EngineCheck {
             size: Some((4, 2 * GIB)),
             ..check
@@ -12646,7 +12646,7 @@ fn main() {
         );
         assert_eq!(
             checks_logged(),
-            ["WARN [local check] before local setup: 16 CPUs and 30.8 GiB of memory, 938.3 GiB free of 1006.8 GiB in a container, 13.9 GiB free on C:; short of disk (OpenBot needs 40 GiB free)"]
+            ["WARN [local check] before local setup: 16 CPUs and 30.8 GiB of memory, 938.3 GiB free of 1006.8 GiB in a container, 13.9 GiB free on C:; short of disk (Mangaba Bot needs 40 GiB free)"]
         );
         assert!(crate::early_downloads::held_for_room());
         // What the held downloads look at is C:, below the same 40 GiB.
@@ -12707,7 +12707,7 @@ fn main() {
     }
 
     /**
-    OpenBot's own Podman machine, 4 CPUs and 6144 MiB, with room on its disk and its drive, passes:
+    Mangaba Bot's own Podman machine, 4 CPUs and 6144 MiB, with room on its disk and its drive, passes:
     a start that finishes says so in the log, and one that fails for some other reason keeps its
     own words rather than being blamed on resources. The account step lets it through.
     */

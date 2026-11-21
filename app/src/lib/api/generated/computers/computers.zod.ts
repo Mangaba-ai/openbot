@@ -68,7 +68,7 @@ export const ListComputersResponse = zod.object({
             })
             .optional()
             .describe(
-              "The person's name and address, where OpenBot knows them.",
+              "The person's name and address, where Mangaba Bot knows them.",
             ),
           botId: zod
             .string()
@@ -208,7 +208,7 @@ export const ResetComputerResponse = zod.object({
 });
 
 /**
- * Move one computer onto the image this OpenBot now runs, and record it on the audit trail. Files and sign-ins stay; a running computer restarts. The computer is named by whose it is, person:<id> or bot:<id>. A computer that is not one of the organization's is not found. Only an administrator of the organization may do this.
+ * Move one computer onto the image this Mangaba Bot now runs, and record it on the audit trail. Files and sign-ins stay; a running computer restarts. The computer is named by whose it is, person:<id> or bot:<id>. A computer that is not one of the organization's is not found. Only an administrator of the organization may do this.
  * @summary Update a computer
  */
 

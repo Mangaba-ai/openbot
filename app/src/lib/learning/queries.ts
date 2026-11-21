@@ -54,7 +54,7 @@ export type LearningSettings = ApiLearningSettings;
 export type LearningOverview = ApiLearningOverview;
 /** How a Bot's learned skills reach it. */
 export type LearningDeliveryStatus = SkillDelivery;
-/** One run of Learning over a space, with OpenBot's sentence for why it stopped when it failed. */
+/** One run of Learning over a space, with Mangaba Bot's sentence for why it stopped when it failed. */
 export type LearningRunSummary = LearningRun;
 /** Settings, Learning: the person's sharing choice and the skills in their own space. */
 export type PersonalLearningSharing = PersonLearning;
@@ -134,7 +134,7 @@ export function learningSettingsQueryOptions() {
 }
 
 /**
- * What OpenBot last found looking for the space it assigns by itself, as the Admin page words it. The space it assigns
+ * What Mangaba Bot last found looking for the space it assigns by itself, as the Admin page words it. The space it assigns
  * is always the same one, so an answer that leaves out which is about that one.
  */
 export function autoAssignState(
@@ -161,7 +161,7 @@ export function autoAssignState(
 }
 
 /**
- * The id of the container OpenBot keeps for this organization alone, or null where it keeps none and the default is
+ * The id of the container Mangaba Bot keeps for this organization alone, or null where it keeps none and the default is
  * whichever container is assigned or chosen. Never drawn: lib/learning/display.ts names a container from it.
  */
 export function learningOrganizationSpaceQueryOptions() {

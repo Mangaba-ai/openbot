@@ -10,13 +10,13 @@ import { ClientError } from "@/lib/client";
 import { useCurrentOrganizationId } from "@/lib/organizations/current";
 
 /**
- * The organization's plan, as the server reads it: whether this OpenBot needs one at all, and where
+ * The organization's plan, as the server reads it: whether this Mangaba Bot needs one at all, and where
  * the organization stands. `addCardUrl` is the server's verdict on who may add a card: present for
  * an owner or an admin, null for a member.
  */
 export type PlanStatus = OrganizationPlan;
 
-/** What an OpenBot that answers no plan address means: it needs none, as every self-hosted one. */
+/** What an Mangaba Bot that answers no plan address means: it needs none, as every self-hosted one. */
 const NOT_REQUIRED: PlanStatus = {
   required: false,
   status: "not_required",
@@ -33,7 +33,7 @@ export const planKeys = {
 /**
  * The plan of the organization the person is working in.
  *
- * An OpenBot from before plans has no such address and answers not found: it needs no plan, so that
+ * An Mangaba Bot from before plans has no such address and answers not found: it needs no plan, so that
  * is read as not required. Any other failure is an error the screens draw nothing for.
  */
 export function planQueryOptions() {

@@ -884,7 +884,7 @@ export const getResumeRoutineUrl = (
 };
 
 /**
- * Switch one of the caller's routines back on, from its next scheduled time. Refused when its goal is complete, when its time zone is one OpenBot does not know, or when the caller already has 20 routines switched on.
+ * Switch one of the caller's routines back on, from its next scheduled time. Refused when its goal is complete, when its time zone is one Mangaba Bot does not know, or when the caller already has 20 routines switched on.
  * @summary Resume a routine
  */
 export const resumeRoutine = async (

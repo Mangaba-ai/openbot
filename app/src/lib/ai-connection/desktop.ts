@@ -5,7 +5,7 @@ import type {
 import { invokeDesktop } from "@/lib/desktop/queries";
 
 /**
- * OpenBot Desktop's side of changing the AI connection in place (desktop_page.rs). A plan's or a
+ * Mangaba Bot Desktop's side of changing the AI connection in place (desktop_page.rs). A plan's or a
  * sign-in's credential stays with Desktop, which renews it: these commands never hand one to the
  * page, except the key an Unbiased AI sign-in mints, which goes straight on to the server.
  *
@@ -107,7 +107,7 @@ export function prepareAiConnection(
   return desktop(
     "prepare_ai_connection",
     { provider, login },
-    "OpenBot couldn't start what this plan needs. Try again.",
+    "Mangaba Bot couldn't start what this plan needs. Try again.",
   );
 }
 
@@ -131,6 +131,6 @@ export function settleAiConnection(connection: {
         ? { endpointHost: connection.endpointHost }
         : {}),
     },
-    "OpenBot Desktop couldn't finish the switch.",
+    "Mangaba Bot Desktop couldn't finish the switch.",
   );
 }

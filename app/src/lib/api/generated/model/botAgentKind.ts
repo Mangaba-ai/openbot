@@ -3,7 +3,7 @@
  */
 
 /**
- * openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.
+ * openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.
  */
 export type BotAgentKind = (typeof BotAgentKind)[keyof typeof BotAgentKind];
 

@@ -1,15 +1,15 @@
-//! OpenBot's own Podman machine, beside or in place of the person's own.
+//! Mangaba Bot's own Podman machine, beside or in place of the person's own.
 //!
 //! A person who already uses Podman usually has a machine of their own, `podman-machine-default`,
-//! running and answering. OpenBot used to settle on it. Made the default way it is rootless, and the
+//! running and answering. Mangaba Bot used to settle on it. Made the default way it is rootless, and the
 //! Intelligence CLI refused it ("Rootless Podman is not supported"), a dead end. On Windows even a
-//! rootful one lacks the networking OpenBot's containers need to reach Intelligence. OpenBot never
+//! rootful one lacks the networking Mangaba Bot's containers need to reach Intelligence. Mangaba Bot never
 //! changes somebody's machine (see `acquire::create_machine`), so it passes theirs over
 //! (`engine::passed_over_machine`) and uses its own rootful machine, `acquire::MACHINE`, made as on
 //! a computer with no Podman machine.
 //!
 //! **Windows: side by side.** WSL machines run at the same time (`WSLStubber.RequireExclusiveActive`
-//! is false in Podman 6.1.1's `pkg/machine/wsl/stubber.go`), so OpenBot's machine starts beside the
+//! is false in Podman 6.1.1's `pkg/machine/wsl/stubber.go`), so Mangaba Bot's machine starts beside the
 //! person's, and nothing of theirs changes.
 //!
 //! **macOS: one at a time.** Only a rootless machine is passed over there. Podman starts one
@@ -17,14 +17,14 @@
 //! and `shim.Start` refuses a second machine while any other is running
 //! (`checkExclusiveActiveVM` in `pkg/machine/shim/host.go`). Podman 6.1.1 on a Mac says so:
 //! `unable to start "obtest-own": obtest-theirs already starting or running: only one VM can be
-//! active at a time`. So OpenBot says plainly that it needs its own, and offers to pause the
-//! person's while OpenBot runs. Only once they say yes does it stop theirs (`start_own_with`). Quit
-//! stops OpenBot's machine and starts theirs again, with the containers that were running in it
-//! (`give_back_with`). What was paused is kept on disk (`Paused`), so a Quit after OpenBot was
+//! active at a time`. So Mangaba Bot says plainly that it needs its own, and offers to pause the
+//! person's while Mangaba Bot runs. Only once they say yes does it stop theirs (`start_own_with`). Quit
+//! stops Mangaba Bot's machine and starts theirs again, with the containers that were running in it
+//! (`give_back_with`). What was paused is kept on disk (`Paused`), so a Quit after Mangaba Bot was
 //! closed some other way still gives it back. An app update's restart is not a Quit, and theirs
 //! stays paused across it.
 //!
-//! **The person's default connection stays theirs.** OpenBot addresses its machine by name, never
+//! **The person's default connection stays theirs.** Mangaba Bot addresses its machine by name, never
 //! through the default connection (see `engine.rs`). Every `machine init`, `machine start` and
 //! `machine rm` it runs, the person's machine's start on a Mac included, goes through
 //! `podman_default::keeping`: init and start are told to leave the default alone, and a default
@@ -49,16 +49,16 @@ pub fn one_machine_at_a_time(os: &str) -> bool {
 /// The step row the pause offer is said on, and the window looks for.
 pub const PAUSE_STEP: &str = "pause-podman";
 
-/// What the person reads when OpenBot needs their go-ahead to pause their Podman.
-pub const PAUSE_OFFER: &str = "Your Podman is set up in a way OpenBot can't use. OpenBot will use \
-                               its own, and pause yours while OpenBot is running. Yours starts \
-                               again when you quit OpenBot.";
+/// What the person reads when Mangaba Bot needs their go-ahead to pause their Podman.
+pub const PAUSE_OFFER: &str = "Your Podman is set up in a way Mangaba Bot can't use. Mangaba Bot will use \
+                               its own, and pause yours while Mangaba Bot is running. Yours starts \
+                               again when you quit Mangaba Bot.";
 
-/// The offer, said on the row while OpenBot waits for the person's go-ahead in its window.
+/// The offer, said on the row while Mangaba Bot waits for the person's go-ahead in its window.
 pub fn pause_offer(theirs: &[String]) -> StepLine {
     StepLine::asks(PAUSE_OFFER).logged(format!(
         "{} runs rootless, and a Mac runs one Podman machine at a time. Waiting for the go-ahead \
-         to stop it (podman machine stop) while OpenBot's machine, {}, runs. Quit starts it again.",
+         to stop it (podman machine stop) while Mangaba Bot's machine, {}, runs. Quit starts it again.",
         theirs.join(", "),
         crate::acquire::MACHINE
     ))
@@ -66,14 +66,14 @@ pub fn pause_offer(theirs: &[String]) -> StepLine {
 
 /// The row while one of the person's machines is stopped.
 pub fn pausing_line(name: &str) -> StepLine {
-    StepLine::here("Pausing your Podman while OpenBot runs.").logged(format!(
+    StepLine::here("Pausing your Podman while Mangaba Bot runs.").logged(format!(
         "Stopping {name} (podman machine stop) so {} can start.",
         crate::acquire::MACHINE
     ))
 }
 
 /// The row once the person's machines are paused.
-pub const PAUSED: &str = "Your Podman is paused while OpenBot runs.";
+pub const PAUSED: &str = "Your Podman is paused while Mangaba Bot runs.";
 
 /// The Podman machines here, as pausing and giving back needs them, so the sequence can be tested
 /// without one.
@@ -108,7 +108,7 @@ impl Machines for ThisComputer {
     }
 }
 
-/// The person's machines OpenBot paused, and the containers that were running in each.
+/// The person's machines Mangaba Bot paused, and the containers that were running in each.
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Paused {
     pub machines: Vec<PausedMachine>,
@@ -121,13 +121,13 @@ pub struct PausedMachine {
     pub containers: Containers,
 }
 
-/// Where `Paused` is kept: beside the engine files OpenBot downloads, one place per computer
+/// Where `Paused` is kept: beside the engine files Mangaba Bot downloads, one place per computer
 /// whichever installation folder is in use.
 pub fn record_path() -> PathBuf {
     crate::acquire::download_dir(&crate::stack::default_root()).join("paused-podman.json")
 }
 
-/// What OpenBot paused, or nothing when it paused nothing.
+/// What Mangaba Bot paused, or nothing when it paused nothing.
 pub fn read_paused(path: &Path) -> Paused {
     std::fs::read(path)
         .ok()
@@ -156,13 +156,13 @@ pub fn write_paused(path: &Path, paused: &Paused) -> Result<(), String> {
 }
 
 /**
-Start OpenBot's own machine (`start`), first pausing the person's machines that would keep it from
+Start Mangaba Bot's own machine (`start`), first pausing the person's machines that would keep it from
 starting, once the person says yes (`ask`).
 
 Only where Podman runs one machine at a time (`exclusive`, a Mac). Elsewhere, and on a Mac with no
-other machine running, OpenBot's machine starts at once and nothing is asked. Each machine paused is
+other machine running, Mangaba Bot's machine starts at once and nothing is asked. Each machine paused is
 recorded in `record` before it is stopped, with the containers running in it, so Quit starts it
-again (`give_back_with`) even if OpenBot is closed before it finishes.
+again (`give_back_with`) even if Mangaba Bot is closed before it finishes.
 
 `ask` answers once the person said yes, or with why not (Stop or Quit while it waited).
 */
@@ -220,18 +220,18 @@ fn pause(
                 log::warn!("[engine] could not record {name} as running: {error}");
             }
             return Err(Problem::with(
-                "OpenBot couldn't pause your Podman. Try again.",
+                "Mangaba Bot couldn't pause your Podman. Try again.",
                 format!("podman machine stop {name}: {error}"),
             ));
         }
-        log::info!("[engine] paused {name} while OpenBot runs");
+        log::info!("[engine] paused {name} while Mangaba Bot runs");
     }
     Ok(())
 }
 
 /**
-Quit's part: OpenBot's machine stopped, and every machine OpenBot paused started again, with the
-containers that were running in it. Answers false when OpenBot paused nothing, which is every
+Quit's part: Mangaba Bot's machine stopped, and every machine Mangaba Bot paused started again, with the
+containers that were running in it. Answers false when Mangaba Bot paused nothing, which is every
 computer but a Mac whose Podman ran rootless, and then nothing is touched.
 
 A machine that will not start again stays recorded, so the next Quit tries again.
@@ -246,7 +246,7 @@ pub fn give_back_with(
         return Ok(false);
     }
     if let Err(error) = machines.stop(own) {
-        // Stopped already, most often: OpenBot's machine may never have started this time.
+        // Stopped already, most often: Mangaba Bot's machine may never have started this time.
         log::info!("[engine] podman machine stop {own}: {error}");
     }
     let mut failed = Vec::new();
@@ -273,7 +273,7 @@ pub fn give_back_with(
 }
 
 /**
-Stop's and Quit's last part: OpenBot's own machine, `own`, stopped when it runs, telling `stopping`
+Stop's and Quit's last part: Mangaba Bot's own machine, `own`, stopped when it runs, telling `stopping`
 just before. Answers whether it stopped it. Every other machine is left exactly as it is: the
 person's own are never stopped here, running or not.
 */
@@ -289,13 +289,13 @@ pub fn stop_own_with(
     machines.stop(own).map(|()| true)
 }
 
-/// Whether OpenBot has a machine of the person's paused, for Quit to say so.
+/// Whether Mangaba Bot has a machine of the person's paused, for Quit to say so.
 pub fn has_paused(record: &Path) -> bool {
     !read_paused(record).machines.is_empty()
 }
 
 /**
-The person's go-ahead to pause their Podman, given in OpenBot's window.
+The person's go-ahead to pause their Podman, given in Mangaba Bot's window.
 
 Waits for as long as it takes: pausing somebody's machine is their choice, and nothing is paused
 for them by a timer. Stop or Quit ends the wait with nothing paused. A go-ahead given while nothing
@@ -331,7 +331,7 @@ impl Consent {
         self.state.lock().unwrap_or_else(|held| held.into_inner())
     }
 
-    /// The person said yes. True when OpenBot was waiting for it.
+    /// The person said yes. True when Mangaba Bot was waiting for it.
     pub fn give(&self) -> bool {
         let mut state = self.state();
         if *state != Asked::Waiting {
@@ -356,7 +356,7 @@ impl Consent {
             if cancelled() {
                 *state = Asked::Nothing;
                 return Err(Problem::with(
-                    "OpenBot stopped before pausing your Podman. Start again when you're ready.",
+                    "Mangaba Bot stopped before pausing your Podman. Start again when you're ready.",
                     "stopped while waiting for the go-ahead to pause the person's Podman machine",
                 ));
             }
@@ -372,7 +372,7 @@ impl Consent {
 /// The go-ahead the window gives (`allow_pause`).
 pub static PAUSE_GATE: Consent = Consent::new();
 
-/// The window's go-ahead. True when OpenBot was waiting for it.
+/// The window's go-ahead. True when Mangaba Bot was waiting for it.
 pub fn allow_pause() -> bool {
     PAUSE_GATE.give()
 }
@@ -466,7 +466,7 @@ mod tests {
         vec![(THEIRS.to_string(), vec!["my-web".to_string()])]
     }
 
-    /// Start OpenBot's machine as setup and a relaunch do, with `answer` as the person's reply.
+    /// Start Mangaba Bot's machine as setup and a relaunch do, with `answer` as the person's reply.
     fn start_ours(
         fake: &mut Fake,
         record: &Path,
@@ -500,8 +500,8 @@ mod tests {
         })
     }
 
-    /// A Mac with the person's rootless machine running: OpenBot asks, and only after yes pauses
-    /// theirs and starts its own. Quit stops OpenBot's and starts theirs again with its container.
+    /// A Mac with the person's rootless machine running: Mangaba Bot asks, and only after yes pauses
+    /// theirs and starts its own. Quit stops Mangaba Bot's and starts theirs again with its container.
     #[test]
     fn on_a_mac_the_persons_machine_is_paused_only_after_yes_and_given_back_on_quit() {
         let root = temp_root("own-machine-mac");
@@ -524,7 +524,7 @@ mod tests {
             }
         );
 
-        // Quit gives it back as it was: OpenBot's machine stopped first, then theirs and its
+        // Quit gives it back as it was: Mangaba Bot's machine stopped first, then theirs and its
         // container started again. The record is gone.
         fake.done.clear();
         assert_eq!(give_back_with(&mut fake, &record, OURS), Ok(true));
@@ -546,8 +546,8 @@ mod tests {
         let _ = std::fs::remove_dir_all(root);
     }
 
-    /// Without the person's yes nothing of theirs is touched: Stop or Quit while OpenBot waits
-    /// leaves their machine running and OpenBot's not started.
+    /// Without the person's yes nothing of theirs is touched: Stop or Quit while Mangaba Bot waits
+    /// leaves their machine running and Mangaba Bot's not started.
     #[test]
     fn on_a_mac_nothing_is_paused_without_the_persons_yes() {
         let root = temp_root("own-machine-no");
@@ -600,11 +600,11 @@ mod tests {
         });
         assert_eq!(
             problem.said,
-            "OpenBot stopped before pausing your Podman. Start again when you're ready."
+            "Mangaba Bot stopped before pausing your Podman. Start again when you're ready."
         );
     }
 
-    /// Windows runs WSL machines side by side: OpenBot's starts beside the person's, nothing is
+    /// Windows runs WSL machines side by side: Mangaba Bot's starts beside the person's, nothing is
     /// asked, nothing of theirs is stopped, and Quit has nothing to give back.
     #[test]
     fn on_windows_openbots_machine_starts_beside_the_persons_and_theirs_is_untouched() {
@@ -622,7 +622,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(root);
     }
 
-    /// A Mac with no other machine running, or with OpenBot's own already up: nothing to ask.
+    /// A Mac with no other machine running, or with Mangaba Bot's own already up: nothing to ask.
     #[test]
     fn on_a_mac_with_nothing_else_running_openbots_machine_just_starts() {
         let root = temp_root("own-machine-alone");
@@ -637,7 +637,7 @@ mod tests {
     }
 
     /// A machine that will not stop is still the person's, running: it is not recorded, so Quit
-    /// does not start what OpenBot never paused, and setup says so with Try again.
+    /// does not start what Mangaba Bot never paused, and setup says so with Try again.
     #[test]
     fn a_machine_that_will_not_pause_is_said_and_not_recorded() {
         let root = temp_root("own-machine-stuck");
@@ -665,18 +665,18 @@ mod tests {
             OURS,
             &mut |_| Ok(()),
             &mut |_| {},
-            &mut || panic!("OpenBot's machine is not started while theirs runs"),
+            &mut || panic!("Mangaba Bot's machine is not started while theirs runs"),
         )
         .unwrap_err();
         assert_eq!(
             problem.said,
-            "OpenBot couldn't pause your Podman. Try again."
+            "Mangaba Bot couldn't pause your Podman. Try again."
         );
         assert!(!has_paused(&record));
         let _ = std::fs::remove_dir_all(root);
     }
 
-    /// The record survives OpenBot itself: written before the stop, read by a later Quit.
+    /// The record survives Mangaba Bot itself: written before the stop, read by a later Quit.
     #[test]
     fn what_was_paused_is_kept_on_disk_until_it_is_given_back() {
         let root = temp_root("own-machine-record");
@@ -707,7 +707,7 @@ mod tests {
 /**
 The pause and give-back on a real Mac, with throwaway machines only: a rootless one standing for the
 person's (`OPENBOT_LIVE_THEIRS`, running, with a container running in it) and a rootful one standing
-for OpenBot's (`OPENBOT_LIVE_OWN`, stopped). Nothing else is touched. Run by hand:
+for Mangaba Bot's (`OPENBOT_LIVE_OWN`, stopped). Nothing else is touched. Run by hand:
 
 ```text
 OPENBOT_LIVE_THEIRS=obtest-theirs OPENBOT_LIVE_OWN=obtest-own \
@@ -761,7 +761,7 @@ mod live {
             "only theirs runs to begin with"
         );
 
-        // Theirs is passed over (rootless), and OpenBot's stand-in is not (rootful).
+        // Theirs is passed over (rootless), and Mangaba Bot's stand-in is not (rootful).
         assert_eq!(
             crate::engine::passed_over(&theirs, "macos", crate::acquire::machine_behind),
             Some(theirs.clone())
@@ -827,7 +827,7 @@ mod live {
         assert_eq!(default_connection(), default_before);
         println!("[live] {own} runs, {theirs} is paused, the default is still {default_before}");
 
-        // Quit: OpenBot's stand-in stopped, theirs and its container started again.
+        // Quit: Mangaba Bot's stand-in stopped, theirs and its container started again.
         assert_eq!(give_back_with(&mut ThisComputer, &record, &own), Ok(true));
         assert_eq!(running(), std::slice::from_ref(&theirs));
         crate::acquire::machine_api_answers(&theirs).unwrap();

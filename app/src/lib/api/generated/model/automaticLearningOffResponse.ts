@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * OpenBot doesn't assign a Learning space by itself here.
+ * Mangaba Bot doesn't assign a Learning space by itself here.
  */
 export type AutomaticLearningOffResponse = Problem;

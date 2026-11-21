@@ -1,12 +1,12 @@
-//! WINDOWS. A lone Alt or F10 never puts an OpenBot window into Windows' menu mode.
+//! WINDOWS. A lone Alt or F10 never puts an Mangaba Bot window into Windows' menu mode.
 //!
 //! Alt pressed and released on its own, or F10, makes `DefWindowProc` send the top-level window
 //! `WM_SYSCOMMAND` with `SC_KEYMENU` and an `lParam` of 0 ("the character code of the key that is
 //! used with the ALT key", none). Handled by `DefWindowProc`, that starts a modal menu loop on the
-//! window's thread even though OpenBot's windows have no menu bar, so nothing on screen says so.
-//! While the thread is in it, WebView2's page and OpenBot stop hearing each other in both
+//! window's thread even though Mangaba Bot's windows have no menu bar, so nothing on screen says so.
+//! While the thread is in it, WebView2's page and Mangaba Bot stop hearing each other in both
 //! directions: an invoke's answer does not reach the page and the page's next invoke does not
-//! reach OpenBot. The page itself keeps painting, so its timers tick. It lasts until a click
+//! reach Mangaba Bot. The page itself keeps painting, so its timers tick. It lasts until a click
 //! anywhere, Esc or Alt+Tab ends the menu loop. tao (0.37.2) hands `SC_KEYMENU` to `DefWindowProc`
 //! as it is.
 //!
@@ -98,7 +98,7 @@ mod tests {
     /**
     A real lone Alt's `SC_KEYMENU`, posted to two windows on a thread of their own, as tao's are:
     a plain one goes into menu mode (`GetGUIThreadInfo` says `GUI_INMENUMODE`), which shows this
-    desktop reproduces it. OpenBot's, with the subclass, never goes into menu mode, and a message
+    desktop reproduces it. Mangaba Bot's, with the subclass, never goes into menu mode, and a message
     posted to it after (as wry posts an invoke's answer) is handled at once. Without the subclass
     the second window behaves as the first and this fails.
     */
@@ -155,7 +155,7 @@ mod tests {
             let window = CreateWindowExW(
                 Default::default(),
                 w!("OpenBotKeyMenuTest"),
-                w!("OpenBot"),
+                w!("Mangaba Bot"),
                 WS_OVERLAPPEDWINDOW,
                 100,
                 100,
@@ -276,7 +276,7 @@ mod tests {
         );
         assert!(
             !ours_menu_mode,
-            "a lone Alt put OpenBot's window into menu mode"
+            "a lone Alt put Mangaba Bot's window into menu mode"
         );
         assert!(
             ours_answered,

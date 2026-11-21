@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot keeps no audit trail it can read, so there is nothing to test against.
+ * This Mangaba Bot keeps no audit trail it can read, so there is nothing to test against.
  */
 export type NoTrailToReplayResponse = Problem;

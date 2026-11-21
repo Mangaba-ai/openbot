@@ -51,7 +51,7 @@ export const agentKeys = {
 };
 
 /**
- * Which Bots one Bot may hand work to, and whether this OpenBot lets it: the `BotHandoff` of
+ * Which Bots one Bot may hand work to, and whether this Mangaba Bot lets it: the `BotHandoff` of
  * api/openapi.yaml.
  *
  * `enabled` is separate from the grants because the two fail differently: with it false, a grant

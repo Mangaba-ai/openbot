@@ -5,12 +5,12 @@ import type { DevicePlatform } from "./devicePlatform";
 
 export interface RegisterDeviceRequest {
   /**
-   * The phone's Expo push token, as the OpenBot app read it when it started. It is a credential: OpenBot never sends it back.
+   * The phone's Expo push token, as the Mangaba Bot app read it when it started. It is a credential: Mangaba Bot never sends it back.
    * @maxLength 256
    * @pattern ^(Expo|Exponent)PushToken\[[A-Za-z0-9_-]+\]$
    */
   token: string;
-  /** The OpenBot app's project, which must be the one this deployment sends push notifications through. */
+  /** The Mangaba Bot app's project, which must be the one this deployment sends push notifications through. */
   projectId: string;
   platform: DevicePlatform;
 }

@@ -46,7 +46,7 @@ export const DEPLOYMENT_ORGANIZATION = "default";
 /**
  * A key for one write, so a retry of the same write is recognised as the same one.
  *
- * Not `crypto.randomUUID()`: that exists only in a secure context, and a self-hosted OpenBot opened
+ * Not `crypto.randomUUID()`: that exists only in a secure context, and a self-hosted Mangaba Bot opened
  * at a plain-HTTP address on a network is not one, where every write would throw before it was sent.
  * `getRandomValues` is available everywhere.
  */

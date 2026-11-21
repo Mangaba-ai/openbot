@@ -19,7 +19,7 @@ import { ControlsSection } from "./controls-section";
 /**
  * What the directory deactivating somebody does. Where everybody has an organization of their own
  * and may create others (`canCreate`, the server's verdict), it ends their membership of this
- * organization alone; where OpenBot keeps one, it ends their access to OpenBot.
+ * organization alone; where Mangaba Bot keeps one, it ends their access to Mangaba Bot.
  */
 function deprovisioning(severalOrganizations: boolean): string {
   return severalOrganizations
@@ -37,7 +37,7 @@ export function SignInSection({
   organizationOnly?: boolean;
 }) {
   const severalOrganizations = useOrganizationChoices()?.canCreate === true;
-  // A hosted OpenBot: no social sign-in, and nothing here is set in an environment its admin holds.
+  // A hosted Mangaba Bot: no social sign-in, and nothing here is set in an environment its admin holds.
   const hosted =
     useQuery(deploymentCapabilitiesQueryOptions()).data?.hostedSignIn === true;
   const words = identityProviderWords(organizationOnly, hosted);

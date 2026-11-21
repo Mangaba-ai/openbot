@@ -5,7 +5,7 @@ import type { Problem } from "./problem";
 import type { RecorderProblemReason } from "./recorderProblemReason";
 
 /**
- * A problem for the OpenBot Recorder: the shared problem details, with why its connection ended.
+ * A problem for the Mangaba Bot Recorder: the shared problem details, with why its connection ended.
  */
 export type RecorderProblem = Problem & {
   /** Why a Recorder's connection ended, on RECORDER_SIGNED_OUT: the connection was ended or is unknown (revoked), the person was removed (removed), or their organization sign-in ended (organization). */

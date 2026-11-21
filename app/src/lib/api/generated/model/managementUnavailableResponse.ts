@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * CopilotKit management doesn't apply here: the personal edition, OpenBot Cloud, or an organization other than `default`.
+ * CopilotKit management doesn't apply here: the personal edition, Mangaba Bot Cloud, or an organization other than `default`.
  */
 export type ManagementUnavailableResponse = Problem;

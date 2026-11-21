@@ -6,13 +6,13 @@ import {
 } from "@/lib/apps/queries";
 
 /**
- * The step OpenBot shows before it sends somebody to an app's sign-in through Composio, and the
+ * The step Mangaba Bot shows before it sends somebody to an app's sign-in through Composio, and the
  * words it says there.
  *
  * WHY COMPOSIO IS NAMED HERE, AND NOWHERE ELSE OUTSIDE ADMIN. The rest of the app never names the
  * broker (`provider-vocabulary.ts`). But the next page is not ours: Composio's own Connect Link
  * page flashes by, and then Google's page says "Composio wants access to your Google Account", and
- * Slack's says "Allow Composio to access Slack". Somebody who expected OpenBot meets a stranger's
+ * Slack's says "Allow Composio to access Slack". Somebody who expected Mangaba Bot meets a stranger's
  * name at the moment they are granting access to their mail. Saying the name first, and who it is,
  * is the whole point of this step, so this is the one place a person's screen says it.
  *
@@ -30,7 +30,7 @@ export const CONSENT_HANDOFF_PATH = "/connecting";
 export type ConsentHandoff = {
   /** The app's own name, as people see it: "Gmail". */
   app: string;
-  /** Who runs the sign-in page that comes next, where OpenBot can tell: "Google". */
+  /** Who runs the sign-in page that comes next, where Mangaba Bot can tell: "Google". */
   signIn: string | null;
   /** The app's logo, where it has one. */
   logo?: string | null;
@@ -71,7 +71,7 @@ function squashed(text: string): string {
   return text.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-/** Who runs the sign-in page an app sends people to, or null where OpenBot can't say. */
+/** Who runs the sign-in page an app sends people to, or null where Mangaba Bot can't say. */
 export function signInPageFor(app: {
   title: string;
   slug?: string | null;
@@ -116,7 +116,7 @@ const APP_NAMES: ReadonlyMap<string, string> = new Map([
   ["youtube", "YouTube"],
 ]);
 
-/** An app's name from its key ("composio-gmail" is Gmail), or null where OpenBot can't tell. */
+/** An app's name from its key ("composio-gmail" is Gmail), or null where Mangaba Bot can't tell. */
 export function appNameFromKey(key: string): string | null {
   const slug = squashed(key.replace(/^(?:composio|arcade)-/, ""));
   return APP_NAMES.get(slug) ?? null;
@@ -143,7 +143,7 @@ export function consentHandoffWords(handoff: {
           : "your account";
   const next = signIn ?? `${app}'s sign-in page`;
   const paragraphs = [
-    "OpenBot connects to your apps through Composio, the service that holds those connections for OpenBot.",
+    "Mangaba Bot connects to your apps through Composio, the service that holds those connections for Mangaba Bot.",
     `Next, ${next} will ask you to allow Composio to access ${account}. That's expected. Allowing it lets your Bots use ${app}.`,
   ];
   if (signIn === "Slack")
@@ -159,8 +159,8 @@ export function consentHandoffWords(handoff: {
 }
 
 /**
- * Whether a consent OpenBot is about to open for this app goes through Composio, and the app's
- * name and sign-in page if so. Null otherwise: an Arcade deployment, an app OpenBot signs in to
+ * Whether a consent Mangaba Bot is about to open for this app goes through Composio, and the app's
+ * name and sign-in page if so. Null otherwise: an Arcade deployment, an app Mangaba Bot signs in to
  * itself, or a read that failed (the sign-in then opens straight away, as it always did).
  *
  * FROM WHAT THE SCREEN ALREADY HOLDS. The screen that drew Connect read how apps are set up and
@@ -201,12 +201,12 @@ export async function brokeredConsentFor(
 
 /*
  * HANDING THE STEP TO ANOTHER TAB. A sign-in that opens in a new tab claims that tab on the click
- * and fills it when the server answers. The step goes there, as one of OpenBot's own pages, and
+ * and fills it when the server answers. The step goes there, as one of Mangaba Bot's own pages, and
  * what it needs is left in this origin's storage under a one-time name the page's address carries.
  *
  * NEVER THE ADDRESS ITSELF IN THE URL. A page that sent the browser wherever its own URL said would
- * let anybody send a link that passes through OpenBot to a page of their choosing. Storage can only
- * be written by OpenBot's own pages, so a link somebody made up finds nothing and goes nowhere.
+ * let anybody send a link that passes through Mangaba Bot to a page of their choosing. Storage can only
+ * be written by Mangaba Bot's own pages, so a link somebody made up finds nothing and goes nowhere.
  */
 const STORAGE_PREFIX = "openbot.consent-handoff.";
 /** How long a handed-over step is good for: long enough to load the tab, short enough to forget. */
@@ -218,7 +218,7 @@ type StoredHandoff = ConsentHandoff & { at: number };
 export function storeConsentHandoff(handoff: ConsentHandoff): string {
   /*
    * `getRandomValues` and not `randomUUID`: the second exists only in a secure context, and an
-   * OpenBot reached over plain http (a LAN address, a test origin) is not one.
+   * Mangaba Bot reached over plain http (a LAN address, a test origin) is not one.
    */
   const id = [...crypto.getRandomValues(new Uint8Array(16))]
     .map((byte) => byte.toString(16).padStart(2, "0"))

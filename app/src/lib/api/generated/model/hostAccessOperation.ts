@@ -5,7 +5,7 @@ import type { HostAccessOperationCommandPolicy } from "./hostAccessOperationComm
 import type { HostAccessOperationKind } from "./hostAccessOperationKind";
 
 /**
- * Something OpenBot Desktop has been asked to do for a Bot and has not answered yet.
+ * Something Mangaba Bot Desktop has been asked to do for a Bot and has not answered yet.
  */
 export interface HostAccessOperation {
   /** The operation's id. */

@@ -37,7 +37,7 @@ export function Mark({ id, name }: { id: string | null; name: string }) {
 
 /**
  * A brand's mark on its own, named for a screen reader by `name`, for a row that lists brands
- * rather than naming one: the clouds OpenBot for Business runs on. Nothing where there is no mark.
+ * rather than naming one: the clouds Mangaba Bot for Business runs on. Nothing where there is no mark.
  */
 export function MarkImage({ id, name }: { id: string; name: string }) {
   const uri = markFor(id);

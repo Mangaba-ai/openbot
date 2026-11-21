@@ -24,27 +24,27 @@ export interface Bot {
   hidden: boolean;
   /** Whether the caller pinned it to the top of their own list. */
   pinned: boolean;
-  /** Whether it comes with OpenBot rather than belonging to a person. */
+  /** Whether it comes with Mangaba Bot rather than belonging to a person. */
   systemOwned: boolean;
   /**
-   * Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.
+   * Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.
    * @nullable
    */
   readonly packageBotId?: string | null;
   /**
-   * The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.
+   * The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.
    * @nullable
    */
   endpoint: string | null;
   /** Whether a key is set for its address. Never the key. */
   hasAuth: boolean;
-  /** Whether it holds a credential for calling OpenBot's tools back. Never the credential. */
+  /** Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential. */
   hasCallbackToken: boolean;
   /** Whether its owner asked for it to have a computer of its own. isolationActive says whether it has one now. */
   isolated: boolean;
   /** What the starter Bot is told, kept apart from its role description. Only the starter Bot has instructions. */
   instructions?: string;
-  /** What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn't know. */
+  /** What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn't know. */
   framework?: string;
   /** Whether the caller may change and delete it. */
   canManage: boolean;
@@ -61,14 +61,14 @@ export interface Bot {
   lastConversationAt?: string | null;
   /** Whether it runs at the deployment's own managed address, so it needs no callback credential of its own. */
   builtIn: boolean;
-  /** Whether it runs on OpenBot's model, so a person can pick the model per conversation. */
+  /** Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation. */
   runsOnOpenBotModel: boolean;
   /**
    * The Bot's saved default model and thinking level. Null follows the deployment default.
    * @nullable
    */
   defaultModel?: BotDefaultModel;
-  /** Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it. */
+  /** Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it. */
   keyFromOpenBot: boolean;
   /** Whether its next run gets a computer of its own. */
   isolationActive: boolean;

@@ -51,7 +51,7 @@ export function fileSize(bytes: number): string {
 
 /**
  * What the card calls a file's kind, from the type the server found and the names in the one list
- * of files OpenBot takes (`ACCEPTED_FILE_TYPES`): "PNG image", "PDF", "CSV". Plain text has no
+ * of files Mangaba Bot takes (`ACCEPTED_FILE_TYPES`): "PNG image", "PDF", "CSV". Plain text has no
  * better name than its extension, so it reads as "LOG file" or "Text file".
  */
 export function kindLabel(mimeType: string, name: string): string {

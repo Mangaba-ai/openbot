@@ -6,6 +6,6 @@ import type { OrganizationInvitationResponseDelivery } from "./organizationInvit
 
 export interface OrganizationInvitationResponse {
   invitation: OrganizationInvitation;
-  /** How the person hears of it. emailed when OpenBot sent them an email. link when it could not or is not set up to, so the inviter passes the invitation's link on themselves. Either way the person sees the invitation in OpenBot when they sign in. */
+  /** How the person hears of it. emailed when Mangaba Bot sent them an email. link when it could not or is not set up to, so the inviter passes the invitation's link on themselves. Either way the person sees the invitation in Mangaba Bot when they sign in. */
   delivery: OrganizationInvitationResponseDelivery;
 }

@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The caller is not an administrator, or signed the request with an API key or an app's sign-in rather than signing in to OpenBot.
+ * The caller is not an administrator, or signed the request with an API key or an app's sign-in rather than signing in to Mangaba Bot.
  */
 export type SignedInAdminOnlyResponse = Problem;

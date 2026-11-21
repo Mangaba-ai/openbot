@@ -64,7 +64,7 @@ export const ListCredentialsResponse = zod.object({
               "mcp_user_token",
             ])
             .describe(
-              "What a credential is for. model: a key OpenBot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.",
+              "What a credential is for. model: a key Mangaba Bot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.",
             ),
           provider: zod
             .string()
@@ -105,7 +105,7 @@ export const ListCredentialsResponse = zod.object({
 });
 
 /**
- * Encrypt a secret and keep it in the organization's vault under one key: a kind, a provider and a key id. A key holds one live credential, so adding one for a key that already has one replaces it, and the one it replaces is revoked in the same write. A model key sent without a key id is filed under the name OpenBot's own Bots read (getModelKey). The secret is write-only: no answer includes it, now or later. Recorded on the audit trail. Only an administrator of the organization may add one.
+ * Encrypt a secret and keep it in the organization's vault under one key: a kind, a provider and a key id. A key holds one live credential, so adding one for a key that already has one replaces it, and the one it replaces is revoked in the same write. A model key sent without a key id is filed under the name Mangaba Bot's own Bots read (getModelKey). The secret is write-only: no answer includes it, now or later. Recorded on the audit trail. Only an administrator of the organization may add one.
  * @summary Add a credential to the vault
  */
 
@@ -189,7 +189,7 @@ export const CreateCredentialResponse = zod
         "mcp_user_token",
       ])
       .describe(
-        "What a credential is for. model: a key OpenBot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.",
+        "What a credential is for. model: a key Mangaba Bot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.",
       ),
     provider: zod
       .string()
@@ -254,7 +254,7 @@ export const RevokeCredentialResponse = zod
         "mcp_user_token",
       ])
       .describe(
-        "What a credential is for. model: a key OpenBot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.",
+        "What a credential is for. model: a key Mangaba Bot's Bots call a model with. connector: an app's key. mcp: a token for an app's server. agent: a key for a company's own agent. mcp_oauth_client: the organization's registration with an app. mcp_user_token: one person's sign-in to an app, kept when they connected it.",
       ),
     provider: zod
       .string()
@@ -280,7 +280,7 @@ export const RevokeCredentialResponse = zod
   );
 
 /**
- * Return the provider OpenBot's own Bots run on, the key id their model key is filed under in the organization's vault, and whether a live key is kept there. Never the key. A model key added without a key id is filed here. Only an administrator of the organization may read it.
+ * Return the provider Mangaba Bot's own Bots run on, the key id their model key is filed under in the organization's vault, and whether a live key is kept there. Never the key. A model key added without a key id is filed here. Only an administrator of the organization may read it.
  * @summary Read where the Bots find their model key
  */
 
@@ -304,5 +304,5 @@ export const GetModelKeyResponse = zod
       .describe("Whether a live model key is kept under that name."),
   })
   .describe(
-    "Where OpenBot's own Bots find their model key in the vault, and whether one is kept there. Never the key.",
+    "Where Mangaba Bot's own Bots find their model key in the vault, and whether one is kept there. Never the key.",
   );

@@ -4,7 +4,7 @@
 
 export interface ReplaceGoalTriggerSecretRequest {
   /**
-   * The provider's new signing secret. Absent has OpenBot make one, for a webhook or GitHub trigger.
+   * The provider's new signing secret. Absent has Mangaba Bot make one, for a webhook or GitHub trigger.
    * @maxLength 4096
    */
   secret?: string;

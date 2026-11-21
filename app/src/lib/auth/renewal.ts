@@ -1,11 +1,11 @@
 /**
- * Renewing a hosted OpenBot's sign-in without asking the person anything.
+ * Renewing a hosted Mangaba Bot's sign-in without asking the person anything.
  *
- * On a hosted OpenBot an admin's actions carry a proof from OpenBot by CopilotKit that lasts an
- * hour. When it has run out, OpenBot refuses the action with 401 and the code
+ * On a hosted Mangaba Bot an admin's actions carry a proof from Mangaba Bot by CopilotKit that lasts an
+ * hour. When it has run out, Mangaba Bot refuses the action with 401 and the code
  * `HOSTED_SIGN_IN_RENEWAL_REQUIRED`, naming where sign-in renews it (`OpenBot-Sign-In`). That is not
  * being signed out: the session still works. The page goes through the hosted sign-in and comes
- * back where it was, with a marker on its address. The person is still signed in to OpenBot by
+ * back where it was, with a marker on its address. The person is still signed in to Mangaba Bot by
  * CopilotKit, so the round trip takes no clicks; the page then reads everything again, and says
  * so in case what they were doing needs doing again.
  *
@@ -43,7 +43,7 @@ export function renewalRequired(error: unknown): boolean {
 }
 
 /**
- * Where to send the browser: the sign-in the server named (a path on this OpenBot, else the hosted
+ * Where to send the browser: the sign-in the server named (a path on this Mangaba Bot, else the hosted
  * sign-in's own), returning to `href` with the marker on it.
  */
 export function renewalAddress(signIn: string | null, href: string): string {

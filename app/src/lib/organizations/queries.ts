@@ -33,7 +33,7 @@ export type OrganizationSummary = Organization;
 
 /** The person's organizations, and the one they are working in. */
 export type OwnOrganizations = {
-  /** The one they joined first at the top. Empty where OpenBot keeps one organization and lists none. */
+  /** The one they joined first at the top. Empty where Mangaba Bot keeps one organization and lists none. */
   organizations: OrganizationSummary[];
   /** The server's verdict: whether this person may create an organization. */
   canCreate: boolean;
@@ -67,7 +67,7 @@ export const organizationKeys = {
 };
 
 /**
- * The one organization of an OpenBot that keeps one, which every install has. The API addresses it
+ * The one organization of an Mangaba Bot that keeps one, which every install has. The API addresses it
  * as `default` (api/openapi.yaml, `OrganizationId`), and an API key made before keys were bound to
  * an organization acts in it.
  */
@@ -82,12 +82,12 @@ const LOAD_FALLBACK =
   "Couldn't load your organizations. Try again in a moment.";
 export const SWITCH_FALLBACK = "Couldn't switch organizations. Try again.";
 /**
- * Whether a failed read is an OpenBot that has no such address, which is how one that keeps one
+ * Whether a failed read is an Mangaba Bot that has no such address, which is how one that keeps one
  * organization answers the person's organizations and invitations: the address is not served, so it
  * is the API's plain not found (`NOT_FOUND`), or a 404 that names no code at all. Every other 404 is
  * a refusal and is said as one: `ORGANIZATION_NOT_FOUND` is the organization the request named not
  * being one of the person's, which an app's sign-in meets when it names an organization they are
- * not in (at the list of their own, OpenBot Desktop then names none: `ownOrganizations`). A 401 or
+ * not in (at the list of their own, Mangaba Bot Desktop then names none: `ownOrganizations`). A 401 or
  * 403 is never this.
  */
 function noSuchAddress(error: unknown): boolean {
@@ -109,7 +109,7 @@ export async function workIn(organizationId: string): Promise<void> {
     body: { organizationId },
     fallback: SWITCH_FALLBACK,
   });
-  // Inside OpenBot Desktop connected to this OpenBot, the desktop app names it on every request.
+  // Inside Mangaba Bot Desktop connected to this Mangaba Bot, the desktop app names it on every request.
   await tellDesktopTheOrganization(organizationId);
 }
 
@@ -123,7 +123,7 @@ async function everyOrganization(
   let cursor: string | undefined;
   do {
     // No OpenBot-Organization header: the page's own sign-in says which one is active, and where
-    // an app's token signs it in, the app adds the header on its way to OpenBot.
+    // an app's token signs it in, the app adds the header on its way to Mangaba Bot.
     const page = await listOrganizations(
       { limit: 100, ...(cursor ? { cursor } : {}) },
       undefined,
@@ -147,7 +147,7 @@ async function ownOrganizations(
   try {
     listed = await everyOrganization(signal).catch(async (error) => {
       /*
-       * Inside OpenBot Desktop connected to this OpenBot, the desktop app names the organization the
+       * Inside Mangaba Bot Desktop connected to this Mangaba Bot, the desktop app names the organization the
        * person last worked in, kept through signing out and in again. One they have since left is
        * answered as not found: the desktop app is asked to name none, so the server works in their
        * own, and the list is read again. Once, and never an error screen for it.
@@ -168,7 +168,7 @@ async function ownOrganizations(
       !renewalRequired(error)
     )
       return null;
-    // An OpenBot that keeps one organization has no list of them. A refusal is not that.
+    // An Mangaba Bot that keeps one organization has no list of them. A refusal is not that.
     if (noSuchAddress(error)) return ONLY;
     throw error;
   }
@@ -179,7 +179,7 @@ async function ownOrganizations(
   if (!first) throw new InNoOrganization();
   /*
    * In some, working in none: the session still names one this person has left. The rest of
-   * OpenBot refuses every request until the session works somewhere they are, so it moves to the
+   * Mangaba Bot refuses every request until the session works somewhere they are, so it moves to the
    * one they joined first before anything else is asked.
    */
   await workIn(first.id);
@@ -284,7 +284,7 @@ export async function ensureCurrentOrganization(
 
 /**
  * The name of the organization the person is working in, for a page that says whose something is.
- * Undefined until the list has answered, and where OpenBot keeps one organization and lists none.
+ * Undefined until the list has answered, and where Mangaba Bot keeps one organization and lists none.
  */
 export function useCurrentOrganizationName(): string | undefined {
   const capabilities = useQuery(deploymentCapabilitiesQueryOptions());
@@ -298,7 +298,7 @@ export function useCurrentOrganizationName(): string | undefined {
 
 /**
  * Whether the person has an organization to show: one to switch to, to open the settings of, or to
- * create. An OpenBot that lists none has none, and its account menu is as it always was.
+ * create. An Mangaba Bot that lists none has none, and its account menu is as it always was.
  */
 export function offersOrganizations(
   mine: OwnOrganizations | null | undefined,
@@ -308,7 +308,7 @@ export function offersOrganizations(
 
 /**
  * The person's organizations for the account menu and the organization screens, or undefined when
- * OpenBot lists none. The personal edition has one person and one organization, so it never asks.
+ * Mangaba Bot lists none. The personal edition has one person and one organization, so it never asks.
  */
 export function useOrganizationChoices(): OwnOrganizations | undefined {
   const capabilities = useQuery(deploymentCapabilitiesQueryOptions());
@@ -383,14 +383,14 @@ export function receivedInvitationsQueryOptions() {
           return { items: page.invitations, nextCursor: page.nextCursor };
         });
       } catch (error) {
-        // An OpenBot that keeps one organization has no invitations to list, as it has no list of them.
+        // An Mangaba Bot that keeps one organization has no invitations to list, as it has no list of them.
         if (noSuchAddress(error)) return [];
         throw error;
       }
     },
     staleTime: 60_000,
     /*
-     * Somebody invited, or who answered on the web, while OpenBot was open sees it when they come
+     * Somebody invited, or who answered on the web, while Mangaba Bot was open sees it when they come
      * back to the window: always, however lately it was read, so the count agrees with the web.
      */
     refetchOnWindowFocus: "always",
@@ -415,7 +415,7 @@ export function receivedInvitationQueryOptions(invitationId: string) {
       } catch (error) {
         /*
          * Not found is an answer, which the page says in words: the invitation's own
-         * (`INVITATION_NOT_FOUND`, api/openapi/organizations.yaml), or an OpenBot with no
+         * (`INVITATION_NOT_FOUND`, api/openapi/organizations.yaml), or an Mangaba Bot with no
          * invitations at all. Any other refusal is said as one.
          */
         if (
@@ -432,7 +432,7 @@ export function receivedInvitationQueryOptions(invitationId: string) {
 
 /**
  * How many invitations are waiting for the person's answer, for the account menu. Zero where
- * OpenBot lists no organizations, which never asks. Null when they could not be read: how many is
+ * Mangaba Bot lists no organizations, which never asks. Null when they could not be read: how many is
  * not known, which is not none, and the invitations page says why.
  */
 export function useWaitingInvitationCount(): number | null {

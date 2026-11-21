@@ -122,13 +122,13 @@ export function useUnclaimedDropGuard() {
 
 function RootComponent() {
   useUnclaimedDropGuard();
-  // OpenBot Desktop opens a notice's page here, as a route change. See `lib/desktop/open-requests.ts`.
+  // Mangaba Bot Desktop opens a notice's page here, as a route change. See `lib/desktop/open-requests.ts`.
   useDesktopOpenRequests();
   return (
     <div className="min-h-dvh w-full antialiased">
       <ThemeProvider>
         <TooltipProvider>
-          {/* In place of every route when this app and its OpenBot can't work together. */}
+          {/* In place of every route when this app and its Mangaba Bot can't work together. */}
           <ClientVersionGate>
             <Outlet />
           </ClientVersionGate>

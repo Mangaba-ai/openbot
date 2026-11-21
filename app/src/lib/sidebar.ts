@@ -61,7 +61,7 @@ export const SIDEBAR_MIN_WIDTH = 180;
 export const SIDEBAR_MAX_WIDTH = 480;
 /**
  * The most of the window the sidebar takes, whatever width was dragged or remembered. Every width
- * here is in the page's pixels, and zooming in (OpenBot Desktop's View menu, a browser's zoom) makes
+ * here is in the page's pixels, and zooming in (Mangaba Bot Desktop's View menu, a browser's zoom) makes
  * the window fewer of them wide while the sidebar keeps its count: a 480px sidebar is a third of a
  * 1440px window and, zoomed to 175%, well over half of the 820px it becomes. So the sidebar is held
  * to a share of the window as well, and the remembered width comes back whole once the window is

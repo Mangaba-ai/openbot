@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The caller already owns as many organizations as this OpenBot allows one person. Or the request was refused for the caller, as any request can be (SSO_REQUIRED).
+ * The caller already owns as many organizations as this Mangaba Bot allows one person. Or the request was refused for the caller, as any request can be (SSO_REQUIRED).
  */
 export type OrganizationNotAllowedResponse = Problem;

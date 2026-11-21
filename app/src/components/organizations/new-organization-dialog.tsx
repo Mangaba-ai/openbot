@@ -92,7 +92,7 @@ function NewOrganizationForm() {
         <DialogHeader>
           <DialogTitle>New organization</DialogTitle>
           <DialogDescription>
-            A new organization starts with OpenBot's starter Bots and skills,
+            A new organization starts with Mangaba Bot's starter Bots and skills,
             and no conversations. You switch to it as soon as it's created.
           </DialogDescription>
         </DialogHeader>

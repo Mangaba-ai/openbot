@@ -11,7 +11,7 @@ import { afterAll, beforeAll, describe, expect, test } from "bun:test";
  *
  * The real window (`main.tsx` and `styles.css`), bundled as the app is, in a real Chromium, because
  * where a field lands is the browser's layout to decide. Only the native side is scripted, as it
- * answers on a first run: install done, the account passed, the rest of OpenBot setting up behind
+ * answers on a first run: install done, the account passed, the rest of Mangaba Bot setting up behind
  * the step, its download arriving and ending.
  *
  *   OPENBOT_APP_BROWSER=1 bun test src/setupLayout.browser.test.ts
@@ -75,7 +75,7 @@ type Chromium = {
 /**
  * `@tauri-apps/api/core`, scripted. The page's `__fake.download` is what the download poll answers,
  * and `__fake.emit` sends setup progress as the native side does. `#start` is a relaunch whose
- * Start updates OpenBot; otherwise it is a first run.
+ * Start updates Mangaba Bot; otherwise it is a first run.
  */
 const FAKE_CORE = `
 const fake = (globalThis.__fake ??= { listeners: {}, download: null });
@@ -83,16 +83,16 @@ const emit = (name, payload) => {
   for (const listener of fake.listeners[name] ?? []) listener({ payload });
 };
 fake.emit = emit;
-// A relaunch whose update this computer has no room for: OpenBot's own (Windows, C: at 7.4 GB), or
+// A relaunch whose update this computer has no room for: Mangaba Bot's own (Windows, C: at 7.4 GB), or
 // the back end's, which the window runs first (a Mac at 8.2 GB).
 const updateShort = location.hash === "#update-short";
 const backEndShort = location.hash === "#backend-short";
-// This app too old for its OpenBot, as the shell says it: connected to an OpenBot (such as OpenBot
-// Cloud) that needs a newer app; one whose sign-in ended, as it always was; and the OpenBot on
+// This app too old for its Mangaba Bot, as the shell says it: connected to an Mangaba Bot (such as Mangaba Bot
+// Cloud) that needs a newer app; one whose sign-in ended, as it always was; and the Mangaba Bot on
 // this computer needing a newer app once Start has it running.
 const CONNECTED_PROBLEMS = {
-  "#connect-app-too-old": { said: "The OpenBot at openbot.example.com needs a newer version of this app. Update OpenBot, then connect again.", kind: "app-too-old" },
-  "#connect-app-too-old-security": { said: "This version of OpenBot has a security problem. Update to keep using it.", kind: "app-too-old-security" },
+  "#connect-app-too-old": { said: "The Mangaba Bot at openbot.example.com needs a newer version of this app. Update Mangaba Bot, then connect again.", kind: "app-too-old" },
+  "#connect-app-too-old-security": { said: "This version of Mangaba Bot has a security problem. Update to keep using it.", kind: "app-too-old-security" },
   "#connect-session-ended": { said: "Your sign-in to openbot.example.com has ended. Sign in again to keep going.", kind: "session-ended" },
 };
 const connectedProblem = CONNECTED_PROBLEMS[location.hash];
@@ -101,7 +101,7 @@ const localSecurity = location.hash === "#local-app-too-old-security";
 const localTooOld = location.hash === "#local-app-too-old" || localSecurity;
 // Start finding the release on this computer needs a newer launcher contract than this app speaks.
 const launcherAhead = location.hash === "#local-launcher-ahead";
-// A launch that finds this computer's OpenBot already running, and that it needs a newer app.
+// A launch that finds this computer's Mangaba Bot already running, and that it needs a newer app.
 const runningTooOld = location.hash === "#local-app-too-old-running";
 // The same launch, where showing it fails as it could before: the slot the card above lands in.
 const runningFails = location.hash === "#local-running-fails";
@@ -151,16 +151,16 @@ export async function invoke(command, args) {
   if (connectedProblem && command === "show_connected") throw connectedProblem;
   if ((runningTooOld || runningFails) && command === "already_running") return true;
   if (runningFails && command === "show_openbot")
-    throw { said: "Part of OpenBot needs recovery. Try starting OpenBot once more." };
+    throw { said: "Part of Mangaba Bot needs recovery. Try starting Mangaba Bot once more." };
   if (localSecurity && command === "show_openbot")
     throw {
-      said: "This version of OpenBot has a security problem. Update to keep using it.",
+      said: "This version of Mangaba Bot has a security problem. Update to keep using it.",
       detail: "the deployment's minimumClients.desktop is 1.2.0, raised for a security problem (securityMinimumClients); this app is desktop/1.1.0 and speaks v2",
       kind: "app-too-old-security",
     };
   if ((localTooOld || runningTooOld) && command === "show_openbot")
     throw {
-      said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+      said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
       detail: "the deployment's minimumClients.desktop is 1.2.0; this app is desktop/1.1.0 and speaks v2",
       kind: "app-too-old",
     };
@@ -203,11 +203,11 @@ export async function invoke(command, args) {
       ];
     case "prepare_installation":
       if (pausing) {
-        // A Mac whose own Podman OpenBot can't use: Install waits for the person's yes.
-        emit("setup:progress", { step: "pause-podman", ok: true, running: true, asks: true, detail: "Your Podman is set up in a way OpenBot can't use. OpenBot will use its own, and pause yours while OpenBot is running. Yours starts again when you quit OpenBot." });
+        // A Mac whose own Podman Mangaba Bot can't use: Install waits for the person's yes.
+        emit("setup:progress", { step: "pause-podman", ok: true, running: true, asks: true, detail: "Your Podman is set up in a way Mangaba Bot can't use. Mangaba Bot will use its own, and pause yours while Mangaba Bot is running. Yours starts again when you quit Mangaba Bot." });
         return new Promise(() => {});
       }
-      emit("setup:progress", { step: "engine", ok: true, running: false, detail: "The software OpenBot runs on is ready." });
+      emit("setup:progress", { step: "engine", ok: true, running: false, detail: "The software Mangaba Bot runs on is ready." });
       return installing ? installed : new Promise((resolve) => setTimeout(() => resolve(null), 50));
     case "sign_in_to_copilotkit":
       if (slowCheck) return new Promise((resolve) => setTimeout(() => resolve({ signedIn: true }), 1500));
@@ -239,20 +239,20 @@ export async function invoke(command, args) {
       // The Status window's services, stopped until the main window's Start brings them up.
       if (location.search === "?started" && !fake.up) return status("stopped", "valid");
       return status("ready", "valid");
-    // OpenBot's own start, the step's last row: it stays there for the test to look at. Running,
+    // Mangaba Bot's own start, the step's last row: it stays there for the test to look at. Running,
     // when the window is about to find it needs a newer app. Refused, when the release laid out
     // needs a newer launcher contract than this app speaks.
     case "start_stack":
       if (launcherAhead)
         throw {
-          said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
-          detail: "OpenBot v1.3.0 needs launcherApi 2; this app is v1.1.1 and speaks launcherApi 1",
+          said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
+          detail: "Mangaba Bot v1.3.0 needs launcherApi 2; this app is v1.1.1 and speaks launcherApi 1",
           kind: "app-too-old",
         };
       return localTooOld ? null : new Promise(() => {});
     // The Status window (\`#status\`): everything running, or, at \`?stopped#status\`, all of it
-    // stopped as Stop leaves it, the software OpenBot runs on still running. At
-    // \`?updating#status\`, stopped by an update of OpenBot. At \`?started#status\`, stopped until
+    // stopped as Stop leaves it, the software Mangaba Bot runs on still running. At
+    // \`?updating#status\`, stopped by an update of Mangaba Bot. At \`?started#status\`, stopped until
     // \`__fake.up\`, as when the main window's Start brings everything up.
     case "desktop_status": {
       const stopped =
@@ -303,7 +303,7 @@ type Window = { script: string; style: string };
 
 /**
  * The window as the app builds it, with the native side scripted and the marks left out. `env` is
- * Vite's build-time values; none set is a build without a whitelabel support page or OpenBot Cloud.
+ * Vite's build-time values; none set is a build without a whitelabel support page or Mangaba Bot Cloud.
  */
 async function buildWindow(env: Record<string, string> = {}): Promise<Window> {
   const built = await Bun.build({
@@ -379,7 +379,7 @@ async function open(page: Page, hash = "", served: Window = built) {
 
 let browser: Browser;
 let built: Window;
-/** The same window from a build that turns OpenBot Cloud on. */
+/** The same window from a build that turns Mangaba Bot Cloud on. */
 let cloudBuilt: Window;
 let chromium: Chromium;
 
@@ -431,31 +431,31 @@ async function measure(page: Page) {
  */
 const LONGEST_ROW_LINES: [string, boolean][] = [
   [
-    "The Docker Desktop on this computer is too old for OpenBot, so OpenBot is updating it. Windows will ask for your approval.",
+    "The Docker Desktop on this computer is too old for Mangaba Bot, so Mangaba Bot is updating it. Windows will ask for your approval.",
     true,
   ],
   [
-    "The Docker Desktop on this computer is too old for OpenBot, so OpenBot is updating it. Your Mac will ask for your password.",
+    "The Docker Desktop on this computer is too old for Mangaba Bot, so Mangaba Bot is updating it. Your Mac will ask for your password.",
     true,
   ],
   [
-    "The Docker Desktop on this computer is too old for OpenBot, so OpenBot is updating it. About 25 minutes left.",
+    "The Docker Desktop on this computer is too old for Mangaba Bot, so Mangaba Bot is updating it. About 25 minutes left.",
     false,
   ],
   [
-    "The Podman on this computer is too old for OpenBot, so OpenBot is updating it. Your Mac will ask for your password.",
+    "The Podman on this computer is too old for Mangaba Bot, so Mangaba Bot is updating it. Your Mac will ask for your password.",
     true,
   ],
   [
-    "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. OpenBot comes back when Docker is ready.",
+    "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. Mangaba Bot comes back when Docker is ready.",
     true,
   ],
   [
-    "Docker Desktop hasn't started yet. It may be waiting for you in its own window. Accept its terms or sign in there, and OpenBot carries on by itself.",
+    "Docker Desktop hasn't started yet. It may be waiting for you in its own window. Accept its terms or sign in there, and Mangaba Bot carries on by itself.",
     true,
   ],
   [
-    "Preparing this computer to run OpenBot. If a window asks to install a Windows feature OpenBot needs, allow it. Windows then asks for your approval and a restart.",
+    "Preparing this computer to run Mangaba Bot. If a window asks to install a Windows feature Mangaba Bot needs, allow it. Windows then asks for your approval and a restart.",
     true,
   ],
 ];
@@ -509,13 +509,13 @@ describe.skipIf(!asked)("the window through a first run", () => {
 
 /*
  * Seen on Windows F (a 1016x839 window): "Connect your AI" was taller than the window and scrolled
- * in its card, and the "Installing OpenBot in the background" row sat below the fold at y 822-839,
+ * in its card, and the "Installing Mangaba Bot in the background" row sat below the fold at y 822-839,
  * seen only by scrolling. It is pinned to the bottom of the card's visible area now, and Continue
  * still scrolls into view above it.
  */
 /*
  * Seen on Windows F (a 1016x839 window): "Connect your AI" was taller than the window and scrolled
- * in its card. First the "Installing OpenBot in the background" row sat below the fold; then, with
+ * in its card. First the "Installing Mangaba Bot in the background" row sat below the fold; then, with
  * only that row pinned, Continue sat under it with a grey sliver showing until the person
  * scrolled. A step's foot is pinned now: its action and the background row, both in view, with the
  * step scrolling above them.
@@ -539,7 +539,7 @@ describe.skipIf(!asked)("a setup step's foot", () => {
           page,
           await page
             .getByRole("listitem", {
-              name: "Installing OpenBot in the background",
+              name: "Installing Mangaba Bot in the background",
             })
             .boundingBox(),
           "the background row",
@@ -699,10 +699,10 @@ describe.skipIf(!asked)(
             step: "images",
             ok: true,
             running: true,
-            detail: "Checking what OpenBot needs to download.",
+            detail: "Checking what Mangaba Bot needs to download.",
           });
           await licence
-            .getByText("Checking what OpenBot needs to download.")
+            .getByText("Checking what Mangaba Bot needs to download.")
             .waitFor();
           seen.push(await top(licence, "Accept"));
           // Downloading, with its bar and bytes.
@@ -710,7 +710,7 @@ describe.skipIf(!asked)(
             step: "images",
             ok: true,
             running: true,
-            detail: "Downloading OpenBot.",
+            detail: "Downloading Mangaba Bot.",
             downloads: {
               done: 1,
               total: 5,
@@ -728,7 +728,7 @@ describe.skipIf(!asked)(
             step: "images",
             ok: true,
             running: true,
-            detail: "Downloading OpenBot.",
+            detail: "Downloading Mangaba Bot.",
             downloads: {
               done: 3,
               total: 5,
@@ -766,7 +766,7 @@ describe.skipIf(!asked)(
           await page.waitForTimeout(1200);
           const seen: (number | undefined)[] = [];
           // A plain line: setting up, with nothing downloading.
-          await page.getByText(/Setting up OpenBot on this computer/).waitFor();
+          await page.getByText(/Setting up Mangaba Bot on this computer/).waitFor();
           seen.push(await top(page, "Continue"));
           // Downloading the rest, with its bar and bytes.
           await page.evaluate(() => {
@@ -782,7 +782,7 @@ describe.skipIf(!asked)(
               globalThis as unknown as { __fake: { finishSetUp: () => void } }
             ).__fake.finishSetUp(),
           );
-          await page.getByText("OpenBot is installed").waitFor();
+          await page.getByText("Mangaba Bot is installed").waitFor();
           seen.push(await top(page, "Continue"));
           expect(seen.every((y) => y !== undefined && y === seen[0])).toBe(
             true,
@@ -850,16 +850,16 @@ describe.skipIf(!asked)("the background row under the step's button", () => {
 
 /*
  * Seen on Windows F: on the first screen the download line shrank about 40px when the download
- * finished ("Downloading OpenBot." with its bar and bytes, then a line saying it was downloaded),
+ * finished ("Downloading Mangaba Bot." with its bar and bytes, then a line saying it was downloaded),
  * and the text under it moved up. The line holds its tallest height in every state, and before it
  * says anything, so the card's bottom edge stays where it is.
  */
 describe.skipIf(!asked)("the first screen at the window's default size", () => {
   // The window opens at 1000x800 (tauri.conf.json); a title bar takes some of that. Seen on
-  // Windows: once the first screen listed where OpenBot runs and what this computer needs, the card
+  // Windows: once the first screen listed where Mangaba Bot runs and what this computer needs, the card
   // showed a scrollbar for a few pixels at that size. Everything on it has to show without one.
   for (const theme of ["light", "dark"] as const) {
-    test(`at 1000x760 (${theme}), everything on it shows without the card scrolling, OpenBot for Business's two ways stacked`, async () => {
+    test(`at 1000x760 (${theme}), everything on it shows without the card scrolling, Mangaba Bot for Business's two ways stacked`, async () => {
       const page = await browser.newPage({
         viewport: { width: 1000, height: 760 },
         colorScheme: theme,
@@ -867,10 +867,10 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
       const shots = process.env.OPENBOT_APP_SHOTS;
       try {
         await open(page);
-        await page.getByRole("heading", { name: "Set up OpenBot" }).waitFor();
+        await page.getByRole("heading", { name: "Set up Mangaba Bot" }).waitFor();
         await page.waitForTimeout(400);
-        // A build without OpenBot Cloud (VITE_OPENBOT_CLOUD_ENABLED unset) offers no Cloud row.
-        expect(await page.getByText("OpenBot Cloud").count()).toBe(0);
+        // A build without Mangaba Bot Cloud (VITE_OPENBOT_CLOUD_ENABLED unset) offers no Cloud row.
+        expect(await page.getByText("Mangaba Bot Cloud").count()).toBe(0);
         if (shots)
           await page.screenshot({ path: `${shots}/welcome-off-${theme}.png` });
         const shape = await page.evaluate(() => {
@@ -913,9 +913,9 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
         const { overflow, ...laid } = shape;
         expect(overflow).toBeLessThanOrEqual(0);
         expect(laid).toEqual({ stacked: true, marks: true, oneLine: true });
-        // And connecting to a company's own OpenBot, by the link under the rows: the address and Connect.
+        // And connecting to a company's own Mangaba Bot, by the link under the rows: the address and Connect.
         await page.getByRole("button", { name: "Connect to it" }).click();
-        await page.getByLabel("OpenBot address", { exact: true }).waitFor();
+        await page.getByLabel("Mangaba Bot address", { exact: true }).waitFor();
         await page.waitForTimeout(400);
         expect(
           await page.evaluate(() => {
@@ -931,8 +931,8 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
       }
     });
 
-    // A build with OpenBot Cloud on: three rows, and Cloud's sign-in fits as Install does.
-    test(`at 1000x760 (${theme}), a build with OpenBot Cloud on shows three rows without the card scrolling, and so does Cloud's sign-in`, async () => {
+    // A build with Mangaba Bot Cloud on: three rows, and Cloud's sign-in fits as Install does.
+    test(`at 1000x760 (${theme}), a build with Mangaba Bot Cloud on shows three rows without the card scrolling, and so does Cloud's sign-in`, async () => {
       const page = await browser.newPage({
         viewport: { width: 1000, height: 760 },
         colorScheme: theme,
@@ -940,7 +940,7 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
       const shots = process.env.OPENBOT_APP_SHOTS;
       try {
         await open(page, "", cloudBuilt);
-        await page.getByRole("heading", { name: "Set up OpenBot" }).waitFor();
+        await page.getByRole("heading", { name: "Set up Mangaba Bot" }).waitFor();
         await page.waitForTimeout(400);
         const shape = await page.evaluate(() => {
           const card = document.querySelector("main > .sheet") as HTMLElement;
@@ -967,7 +967,7 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
                   row.width === rows[0]?.width &&
                   (at === 0 || row.top >= (rows[at - 1]?.bottom ?? 0)),
               ),
-            // The four clouds' marks inside OpenBot for Business's row, on one line, past its words.
+            // The four clouds' marks inside Mangaba Bot for Business's row, on one line, past its words.
             marks:
               marks.length === 4 &&
               !!words &&
@@ -994,7 +994,7 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
           await page.screenshot({ path: `${shots}/welcome-on-${theme}.png` });
         await page.getByText("We run it for you.").click();
         await page
-          .getByRole("button", { name: "Sign in to OpenBot Cloud" })
+          .getByRole("button", { name: "Sign in to Mangaba Bot Cloud" })
           .waitFor();
         await page.waitForTimeout(200);
         expect(
@@ -1014,19 +1014,19 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
   }
 
   /*
-   * OpenBot for Business books a call: either of its two ways to run, picked, shows the app's
-   * OpenBot for Business view, what it adds and the booking calendar, where it used to show an
+   * Mangaba Bot for Business books a call: either of its two ways to run, picked, shows the app's
+   * Mangaba Bot for Business view, what it adds and the booking calendar, where it used to show an
    * address field. Taller than the window, it scrolls in the card as any tall step does; the page
    * never does, nothing runs off the card's side, and the calendar takes the height Calendly reports.
    */
-  test("at 1000x760, OpenBot for Business shows its booker in the card, which scrolls, and no address field", async () => {
+  test("at 1000x760, Mangaba Bot for Business shows its booker in the card, which scrolls, and no address field", async () => {
     const page = await browser.newPage({
       viewport: { width: 1000, height: 760 },
     });
     try {
       await routeCalendar(page);
       await open(page);
-      await page.getByRole("heading", { name: "Set up OpenBot" }).waitFor();
+      await page.getByRole("heading", { name: "Set up Mangaba Bot" }).waitFor();
       await page.getByText("Your own cloud or on-prem.").click();
       await page.locator(".tile-option.chosen").waitFor();
       await page.getByText("We run it for you.").click();
@@ -1036,7 +1036,7 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
         )
         .waitFor();
       expect(
-        await page.getByLabel("OpenBot address", { exact: true }).count(),
+        await page.getByLabel("Mangaba Bot address", { exact: true }).count(),
       ).toBe(0);
       expect(
         await page
@@ -1071,7 +1071,7 @@ describe.skipIf(!asked)("the first screen at the window's default size", () => {
       expect(shape.frame).toBe(660);
       // The way to connect is still under the rows, and leads to the address.
       await page.getByRole("button", { name: "Connect to it" }).click();
-      await page.getByLabel("OpenBot address", { exact: true }).waitFor();
+      await page.getByLabel("Mangaba Bot address", { exact: true }).waitFor();
       expect(
         await page.locator('iframe[title="Booking calendar"]').count(),
       ).toBe(0);
@@ -1105,7 +1105,7 @@ describe.skipIf(!asked)("the first screen while its downloads run", () => {
       const page = await browser.newPage({ viewport: { width, height } });
       try {
         await open(page);
-        await page.getByRole("heading", { name: "Set up OpenBot" }).waitFor();
+        await page.getByRole("heading", { name: "Set up Mangaba Bot" }).waitFor();
         await page.waitForTimeout(400);
         // The card's bottom edge: nothing under the line moves, and the card does not shrink.
         const usage = async () => {
@@ -1157,7 +1157,7 @@ describe.skipIf(!asked)("the first screen while its downloads run", () => {
   }
 });
 
-describe.skipIf(!asked)("the AI step while OpenBot installs behind it", () => {
+describe.skipIf(!asked)("the AI step while Mangaba Bot installs behind it", () => {
   for (const [width, height] of [
     [1000, 800],
     [720, 560],
@@ -1177,7 +1177,7 @@ describe.skipIf(!asked)("the AI step while OpenBot installs behind it", () => {
         const before = await measure(page);
         expect(before.field).toBeGreaterThan(0);
 
-        // The rest of OpenBot starts downloading, while the person types in the form.
+        // The rest of Mangaba Bot starts downloading, while the person types in the form.
         await page.evaluate(() => {
           (
             globalThis as unknown as { __fake: { download: unknown } }
@@ -1201,7 +1201,7 @@ describe.skipIf(!asked)("the AI step while OpenBot installs behind it", () => {
             globalThis as unknown as { __fake: { finishSetUp: () => void } }
           ).__fake.finishSetUp(),
         );
-        await page.getByText("OpenBot is installed").waitFor();
+        await page.getByText("Mangaba Bot is installed").waitFor();
         expect(await measure(page)).toEqual(before);
       } finally {
         await page.close();
@@ -1213,23 +1213,23 @@ describe.skipIf(!asked)("the AI step while OpenBot installs behind it", () => {
 /** Where the step's heading and its first row are: what a person is reading. */
 async function anchors(page: Page) {
   const heading = await page
-    // Only the Start that updates OpenBot (`#start`) asks.
-    .getByRole("heading", { name: "Updating OpenBot" })
+    // Only the Start that updates Mangaba Bot (`#start`) asks.
+    .getByRole("heading", { name: "Updating Mangaba Bot" })
     .boundingBox();
   const first = await page
-    .getByRole("listitem", { name: "Setting up OpenBot" })
+    .getByRole("listitem", { name: "Setting up Mangaba Bot" })
     .boundingBox();
   return { heading: heading?.y, first: first?.y };
 }
 
 /*
- * Seen on Windows: Start's card re-centred as rows came and went while OpenBot updated, so the
+ * Seen on Windows: Start's card re-centred as rows came and went while Mangaba Bot updated, so the
  * heading and the rows jumped up 31px when the update's row appeared, up 20px when its download
  * bar did, and down 20px when the bar went. The card is held from the top now, and the update is
  * the Start journey's: its download's measure sits on the journey's time line, so neither the
  * heading nor the rows move as it comes and goes.
  */
-describe.skipIf(!asked)("the Start screen while OpenBot updates", () => {
+describe.skipIf(!asked)("the Start screen while Mangaba Bot updates", () => {
   for (const [width, height] of [
     [1000, 800],
     [720, 560],
@@ -1238,7 +1238,7 @@ describe.skipIf(!asked)("the Start screen while OpenBot updates", () => {
       const page = await browser.newPage({ viewport: { width, height } });
       try {
         await open(page, "#start");
-        await page.getByRole("listitem", { name: "Opening OpenBot" }).waitFor();
+        await page.getByRole("listitem", { name: "Opening Mangaba Bot" }).waitFor();
         await page.waitForTimeout(600);
         const before = await anchors(page);
         expect(before.heading).toBeGreaterThan(0);
@@ -1307,8 +1307,8 @@ describe.skipIf(!asked)("the Start screen while OpenBot updates", () => {
 });
 
 /*
- * David's decision for 1.0.2: on a Mac whose own Podman OpenBot can't use, the account step says
- * OpenBot needs its own and offers to pause theirs, with one button. The card, its button and the
+ * David's decision for 1.0.2: on a Mac whose own Podman Mangaba Bot can't use, the account step says
+ * Mangaba Bot needs its own and offers to pause theirs, with one button. The card, its button and the
  * background row are all in the window at the setup window's sizes, without the page growing.
  * `OPENBOT_APP_SHOTS=<folder>` keeps a screenshot of each size for a look.
  */
@@ -1328,14 +1328,14 @@ describe.skipIf(!asked)("the offer to pause the person's Podman", () => {
           .getByRole("heading", { name: "Setting up this computer" })
           .waitFor();
         const card = page.getByRole("region", {
-          name: "OpenBot needs its own Podman",
+          name: "Mangaba Bot needs its own Podman",
         });
         await card.waitFor();
         await page.waitForTimeout(400);
         const button = page.getByRole("button", { name: "Pause my Podman" });
         const box = await button.boundingBox();
         const behind = page.getByRole("listitem", {
-          name: "Installing OpenBot in the background",
+          name: "Installing Mangaba Bot in the background",
         });
         const foot = await page.locator(".step-footer").boundingBox();
         expect(box).not.toBeNull();
@@ -1481,7 +1481,7 @@ describe.skipIf(!asked)("Connect your AI with every provider", () => {
 });
 
 /*
- * Seen on Windows G: the background row read "Installing OpenBot in the backgr..." beside its
+ * Seen on Windows G: the background row read "Installing Mangaba Bot in the backgr..." beside its
  * "Step 3 of 4 · 4m 18s elapsed" badge. Its name is whole now, the badge on a line of its own, and
  * the row still fits the height its slot holds in every state.
  */
@@ -1526,11 +1526,11 @@ describe.skipIf(!asked)(
               };
             });
           // Setting up, then downloading the rest with its bar and bytes, then installed.
-          await page.getByText(/Setting up OpenBot on this computer/).waitFor();
+          await page.getByText(/Setting up Mangaba Bot on this computer/).waitFor();
           await page.waitForTimeout(1100);
           const plain = await read();
           expect(plain).toEqual({
-            name: "Installing OpenBot in the background",
+            name: "Installing Mangaba Bot in the background",
             cut: false,
             badge: expect.stringMatching(/^Step 3 of 4 · 4m \d+s elapsed$/),
             fits: true,
@@ -1666,7 +1666,7 @@ describe.skipIf(!asked)("Finishing setup's usage data choice", () => {
 
         // The step's first moment: one row, setting up, and the choice already there to click.
         await page
-          .getByRole("listitem", { name: "Setting up OpenBot" })
+          .getByRole("listitem", { name: "Setting up Mangaba Bot" })
           .waitFor();
         const first = await where();
         expect(await rows()).toBe(1);
@@ -1680,7 +1680,7 @@ describe.skipIf(!asked)("Finishing setup's usage data choice", () => {
             globalThis as unknown as { __fake: { finishSetUp: () => void } }
           ).__fake.finishSetUp(),
         );
-        await page.getByRole("listitem", { name: "Opening OpenBot" }).waitFor();
+        await page.getByRole("listitem", { name: "Opening Mangaba Bot" }).waitFor();
         await page.waitForTimeout(600);
         expect(await rows()).toBe(4);
         await keep("last-row");
@@ -1706,7 +1706,7 @@ describe.skipIf(!asked)("Finishing setup's usage data choice", () => {
 });
 
 /*
- * Seen on a Mac's first install: on Finishing setup, "Connecting OpenBot" stopped with "Setup
+ * Seen on a Mac's first install: on Finishing setup, "Connecting Mangaba Bot" stopped with "Setup
  * stopped partway through with an error. Retry. If it stops again, copy the logs below.", and the
  * card had nothing below it but Retry. The logs it names are in the card now, and in view.
  * `OPENBOT_APP_SHOTS=<folder>` keeps a screenshot of the stopped card.
@@ -1740,7 +1740,7 @@ describe.skipIf(!asked)("Finishing setup when a step stops", () => {
           path: `${shots}/finishing-setup-stopped-${process.env.OPENBOT_APP_ENGINE ?? "chromium"}.png`,
         });
       const connect = await page
-        .getByRole("listitem", { name: "Connecting OpenBot" })
+        .getByRole("listitem", { name: "Connecting Mangaba Bot" })
         .textContent();
       expect(connect).toContain("copy the logs below");
       const copy = page.getByRole("button", { name: "Copy logs", exact: true });
@@ -1753,7 +1753,7 @@ describe.skipIf(!asked)("Finishing setup when a step stops", () => {
       // In the window as it opens, under the row that names it: nothing to scroll to.
       const [row, button] = await Promise.all([
         page
-          .getByRole("listitem", { name: "Connecting OpenBot" })
+          .getByRole("listitem", { name: "Connecting Mangaba Bot" })
           .boundingBox(),
         copy.boundingBox(),
       ]);
@@ -1768,21 +1768,21 @@ describe.skipIf(!asked)("Finishing setup when a step stops", () => {
 
 /*
  * An update this computer has no room for. On Windows the sentence with the figures sat at the foot
- * of the window, in a "That didn't finish" box under "OpenBot is stopped / ready to reopen", a row
- * that said "OpenBot did not start." and a second copy of the logs. What it needs is the heading and
+ * of the window, in a "That didn't finish" box under "Mangaba Bot is stopped / ready to reopen", a row
+ * that said "Mangaba Bot did not start." and a second copy of the logs. What it needs is the heading and
  * the sentence under it, with Retry beside it, in the window as it opens; the row that stopped says
- * why; the logs are offered once. For OpenBot's own update, and for the back end's, which the window
+ * why; the logs are offered once. For Mangaba Bot's own update, and for the back end's, which the window
  * runs first. `OPENBOT_APP_SHOTS=<folder>` keeps a screenshot of each, light and dark.
  */
 describe.skipIf(!asked)("an update this computer has no room for", () => {
   const cases = [
     {
       hash: "#update-short",
-      said: "This computer has 7.4 GB of free space on drive C:, and OpenBot needs about 13 GB to update. Free up some space, then Retry.",
+      said: "This computer has 7.4 GB of free space on drive C:, and Mangaba Bot needs about 13 GB to update. Free up some space, then Retry.",
     },
     {
       hash: "#backend-short",
-      said: "This Mac has 8.2 GB of free space, and OpenBot needs about 13 GB to update. Free up some space, then Retry.",
+      said: "This Mac has 8.2 GB of free space, and Mangaba Bot needs about 13 GB to update. Free up some space, then Retry.",
     },
   ];
   for (const { hash, said } of cases)
@@ -1844,7 +1844,7 @@ describe.skipIf(!asked)("an update this computer has no room for", () => {
             };
           });
           expect(seen).toEqual({
-            heading: "OpenBot needs more free space to update",
+            heading: "Mangaba Bot needs more free space to update",
             lede: said,
             retries: 1,
             retryUnderSentence: true,
@@ -1864,10 +1864,10 @@ describe.skipIf(!asked)("an update this computer has no room for", () => {
       }, 40_000);
 });
 
-/** Opens a relaunch whose Start updates OpenBot, at its last step, OpenBot opening. */
+/** Opens a relaunch whose Start updates Mangaba Bot, at its last step, Mangaba Bot opening. */
 async function toStart(page: Page) {
   await open(page, "#start");
-  await page.getByRole("listitem", { name: "Opening OpenBot" }).waitFor();
+  await page.getByRole("listitem", { name: "Opening Mangaba Bot" }).waitFor();
   await page.waitForTimeout(600);
 }
 
@@ -1884,7 +1884,7 @@ const emitProgress = (page: Page, payload: Record<string, unknown>) =>
 
 describe.skipIf(!asked)("the Start screen's words and card", () => {
   /*
-   * Seen on Windows G: "Starting OpenBot" said "This usually takes a minute or two" over a card
+   * Seen on Windows G: "Starting Mangaba Bot" said "This usually takes a minute or two" over a card
    * that said "About 3 minutes left", and the start took four. The card's time comes from how long
    * each part takes; the heading gives none of its own.
    */
@@ -1899,9 +1899,9 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
         lede: document.querySelector("main .lede")?.textContent ?? "",
         card: document.querySelector(".journey-time")?.textContent ?? "",
       }));
-      // This Start updates OpenBot, and its heading says so.
-      expect(said.heading).toBe("Updating OpenBot (Self-Contained)");
-      expect(said.lede).toBe("OpenBot is getting ready and opens by itself.");
+      // This Start updates Mangaba Bot, and its heading says so.
+      expect(said.heading).toBe("Updating Mangaba Bot (Self-Contained)");
+      expect(said.lede).toBe("Mangaba Bot is getting ready and opens by itself.");
       expect(said.lede).not.toMatch(/minute|second|hour/i);
       expect(said.card).toMatch(/left/);
     } finally {
@@ -1937,7 +1937,7 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
           return {
             card: card?.height ?? 0,
             row: document
-              .querySelector('[aria-label="Setting up OpenBot"]')
+              .querySelector('[aria-label="Setting up Mangaba Bot"]')
               ?.getBoundingClientRect().top,
             // The padding above what it says, and under the bar.
             above: (words?.top ?? 0) - (card?.top ?? 0),
@@ -1955,7 +1955,7 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
           detail: "Downloading local software.",
           downloads,
         });
-      // OpenBot updating itself, its download under way, as on Windows G.
+      // Mangaba Bot updating itself, its download under way, as on Windows G.
       await emitProgress(page, {
         step: "release",
         ok: true,
@@ -2031,7 +2031,7 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
         return card();
       };
       const starting = await handOff(
-        "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. OpenBot comes back when Docker is ready.",
+        "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. Mangaba Bot comes back when Docker is ready.",
       );
       const waiting = await handOff(
         "Docker Desktop hasn't started yet. It may be waiting for you. Accept its terms there.",
@@ -2045,7 +2045,7 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
 
   /*
    * Seen on Windows G: Cancel went at step 4 and the card shrank. Cancel stops the setup's own
-   * steps; the last, OpenBot starting or updating, can't be stopped partway. Its place says so, in
+   * steps; the last, Mangaba Bot starting or updating, can't be stopped partway. Its place says so, in
    * a button's height.
    */
   test("at its last step, the place of Cancel says why it can't be cancelled", async () => {
@@ -2058,12 +2058,12 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
         0,
       );
       const note = page.locator(".cannot-cancel");
-      // This Start updates OpenBot (`upgrade_due` answers a move), so it is said as the update.
+      // This Start updates Mangaba Bot (`upgrade_due` answers a move), so it is said as the update.
       expect(await note.textContent()).toBe(
         "You can't cancel this last step. Stopping it partway could leave the update half done.",
       );
       expect((await note.boundingBox())?.height).toBe(40);
-      // OpenBot updating itself, as on Windows G.
+      // Mangaba Bot updating itself, as on Windows G.
       await emitProgress(page, {
         step: "release",
         ok: true,
@@ -2081,9 +2081,9 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
 });
 
 /*
- * A dogfooding report: the screen OpenBot Desktop shows while it updates OpenBot is a strange one
- * for an app, and said nothing of why. It is headed as the self-contained OpenBot's update now, and
- * under its progress says that everything runs on this computer, then offers OpenBot for Business
+ * A dogfooding report: the screen Mangaba Bot Desktop shows while it updates Mangaba Bot is a strange one
+ * for an app, and said nothing of why. It is headed as the self-contained Mangaba Bot's update now, and
+ * under its progress says that everything runs on this computer, then offers Mangaba Bot for Business
  * with a link to book a demo. That adds no click and no scroll: at the window's default size (1000x800
  * less a title bar), in light and dark, the card shows whole, the progress first, the note under it.
  * Docker Desktop's three-line hand-off makes the journey 44px taller, which scrolled the card by
@@ -2092,7 +2092,7 @@ describe.skipIf(!asked)("the Start screen's words and card", () => {
  * `OPENBOT_APP_SHOTS=<folder>` keeps a screenshot of each, taken before anything is asserted.
  */
 const DOCKER_STARTING =
-  "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. OpenBot comes back when Docker is ready.";
+  "Docker Desktop is starting in its own window. If it asks you to accept its terms or sign in, do that there. Mangaba Bot comes back when Docker is ready.";
 
 /** The update screen as a person sees it: its words, and where the progress and the note sit. */
 function updateScreen(page: Page) {
@@ -2117,7 +2117,7 @@ function updateScreen(page: Page) {
       sheetBox: box(sheet),
       journey: box(journey),
       journeyHeight: journey?.getBoundingClientRect().height ?? 0,
-      rows: box(document.querySelector('[aria-label="Opening OpenBot"]')),
+      rows: box(document.querySelector('[aria-label="Opening Mangaba Bot"]')),
       scrolls: sheet.scrollHeight - sheet.clientHeight,
       page: document.documentElement.scrollHeight,
       window: window.innerHeight,
@@ -2146,7 +2146,7 @@ function expectWholeUnderProgress(
 }
 
 describe.skipIf(!asked)(
-  "the Start screen that updates OpenBot says why",
+  "the Start screen that updates Mangaba Bot says why",
   () => {
     for (const scheme of ["light", "dark"] as const) {
       test(`in ${scheme}, at 1000x760, it says it runs on this computer under the progress, whole and without a scroll`, async () => {
@@ -2156,7 +2156,7 @@ describe.skipIf(!asked)(
         });
         try {
           await toStart(page);
-          // OpenBot updating itself, its download under way, as in the report.
+          // Mangaba Bot updating itself, its download under way, as in the report.
           await emitProgress(page, {
             step: "release",
             ok: true,
@@ -2174,11 +2174,11 @@ describe.skipIf(!asked)(
             });
 
           const seen = await updateScreen(page);
-          expect(seen.heading).toBe("Updating OpenBot (Self-Contained)");
+          expect(seen.heading).toBe("Updating Mangaba Bot (Self-Contained)");
           expect(seen.note).toContain("Everything runs on this computer");
-          expect(seen.note).toContain("This OpenBot is self-contained.");
+          expect(seen.note).toContain("This Mangaba Bot is self-contained.");
           expect(seen.said).toBe(true);
-          expect(seen.note).toContain("OpenBot for Business");
+          expect(seen.note).toContain("Mangaba Bot for Business");
           expect(seen.note).not.toMatch(/—/);
           // Nothing to click to go on: its one link opens a page, and the update carries on.
           expect(seen.buttons).toBe(0);
@@ -2202,10 +2202,10 @@ describe.skipIf(!asked)(
             });
           const handingOff = await updateScreen(page);
           expect(handingOff.journeyHeight).toBe(seen.journeyHeight + 44);
-          expect(handingOff.heading).toBe("Updating OpenBot (Self-Contained)");
+          expect(handingOff.heading).toBe("Updating Mangaba Bot (Self-Contained)");
           expect(handingOff.note).toContain("Everything runs on this computer");
           expect(handingOff.said).toBe(false);
-          expect(handingOff.note).toContain("OpenBot for Business");
+          expect(handingOff.note).toContain("Mangaba Bot for Business");
           expect(handingOff.link).toBe("https://open.bot/business");
           expectWholeUnderProgress(handingOff);
 
@@ -2221,7 +2221,7 @@ describe.skipIf(!asked)(
             .waitFor({ state: "hidden" });
           expect((await updateScreen(page)).said).toBe(true);
 
-          // Book a demo opens OpenBot for Business's page in the person's browser.
+          // Book a demo opens Mangaba Bot for Business's page in the person's browser.
           await page.getByRole("link", { name: "Book a demo" }).click();
           await page.waitForTimeout(200);
           expect(
@@ -2236,7 +2236,7 @@ describe.skipIf(!asked)(
             await page.evaluate(
               () => document.querySelector("main h1")?.textContent,
             ),
-          ).toBe("Updating OpenBot (Self-Contained)");
+          ).toBe("Updating Mangaba Bot (Self-Contained)");
         } finally {
           await page.close();
         }
@@ -2251,7 +2251,7 @@ describe.skipIf(!asked)(
     /*
      * Seen on Windows G: for two seconds before the license agreement, a signed-in person saw the
      * signed-out pitch ("It requires a free license key", "does NOT send traffic data") over
-     * "Checking your OpenBot account". The step says only that it is checking, until it knows.
+     * "Checking your Mangaba Bot account". The step says only that it is checking, until it knows.
      */
     test("while the sign-in is checked, the screen says so and nothing about signing in", async () => {
       const page = await browser.newPage({
@@ -2263,13 +2263,13 @@ describe.skipIf(!asked)(
           .getByRole("button", { name: "Install", exact: true })
           .click();
         await page
-          .getByRole("heading", { name: "Your OpenBot account" })
+          .getByRole("heading", { name: "Your Mangaba Bot account" })
           .waitFor();
         const text = await page.evaluate(
           () =>
             (document.querySelector("main > .sheet") as HTMLElement).innerText,
         );
-        expect(text).toContain("Checking your OpenBot account");
+        expect(text).toContain("Checking your Mangaba Bot account");
         expect(text).not.toMatch(
           /license key|traffic data|Self-contained|sign in/i,
         );
@@ -2298,7 +2298,7 @@ describe.skipIf(!asked)(
           .getByRole("heading", { name: "Accept the license agreement" })
           .waitFor();
         const row = page.getByRole("listitem", {
-          name: "Installing OpenBot in the background",
+          name: "Installing Mangaba Bot in the background",
         });
         await page.getByText(/The rest of the install starts/).waitFor();
         const said = (await row.textContent()) ?? "";
@@ -2314,78 +2314,78 @@ describe.skipIf(!asked)(
 );
 
 /*
- * When this app is too old for its OpenBot (`client_version.rs`), the window says the shell's
+ * When this app is too old for its Mangaba Bot (`client_version.rs`), the window says the shell's
  * sentence and offers its one way on, Update and restart, in view and uncovered, without outgrowing
  * the window. Beside them problems the screen always had, a sign-in that ended and a found-running
- * OpenBot that fails to show, for comparison. With `OPENBOT_SHOTS_DIR` set, each is
+ * Mangaba Bot that fails to show, for comparison. With `OPENBOT_SHOTS_DIR` set, each is
  * saved there in light and dark, at the window's default size.
  */
-describe.skipIf(!asked)("an OpenBot this app is too old for", () => {
+describe.skipIf(!asked)("an Mangaba Bot this app is too old for", () => {
   const shots = process.env.OPENBOT_SHOTS_DIR;
   const states: {
     name: string;
     at: string;
     said: string;
     way: { role: "button" | "link"; name: string };
-    /** The window's heading, where the state's screen is OpenBot on this computer running. */
+    /** The window's heading, where the state's screen is Mangaba Bot on this computer running. */
     heading?: string;
   }[] = [
     {
       name: "connected-app-too-old",
       at: "#connect-app-too-old",
-      said: "needs a newer version of this app. Update OpenBot, then connect again.",
+      said: "needs a newer version of this app. Update Mangaba Bot, then connect again.",
       way: { role: "button", name: "Update and restart" },
     },
     {
       name: "connected-app-too-old-with-offer",
       at: "?offer#connect-app-too-old",
-      said: "needs a newer version of this app. Update OpenBot, then connect again.",
+      said: "needs a newer version of this app. Update Mangaba Bot, then connect again.",
       way: { role: "button", name: "Update and restart" },
     },
     {
       name: "connected-app-too-old-security",
       at: "#connect-app-too-old-security",
-      said: "This version of OpenBot has a security problem. Update to keep using it.",
+      said: "This version of Mangaba Bot has a security problem. Update to keep using it.",
       way: { role: "button", name: "Update and restart" },
     },
     {
       name: "local-app-too-old-security",
       at: "#local-app-too-old-security",
-      said: "This version of OpenBot has a security problem. Update to keep using it.",
+      said: "This version of Mangaba Bot has a security problem. Update to keep using it.",
       way: { role: "button", name: "Update and restart" },
     },
     {
       name: "local-app-too-old",
       at: "#local-app-too-old",
-      said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+      said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
       way: { role: "button", name: "Update and restart" },
-      heading: "Update OpenBot",
+      heading: "Update Mangaba Bot",
     },
     // Found running by a launch that did not start it: the same screen as when Start finds it.
     {
       // Start refused: the release on this computer needs a newer launcher contract (launcherApi).
       name: "local-launcher-ahead",
       at: "#local-launcher-ahead",
-      said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+      said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
       way: { role: "button", name: "Update and restart" },
     },
     {
       name: "local-launcher-ahead-with-offer",
       at: "?offer#local-launcher-ahead",
-      said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+      said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
       way: { role: "button", name: "Update and restart" },
     },
     {
       name: "local-app-too-old-found-running",
       at: "?offer#local-app-too-old-running",
-      said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+      said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
       way: { role: "button", name: "Update and restart" },
-      heading: "Update OpenBot",
+      heading: "Update Mangaba Bot",
     },
     {
       name: "existing-found-running-fails",
       at: "#local-running-fails",
-      said: "Part of OpenBot needs recovery. Try starting OpenBot once more.",
+      said: "Part of Mangaba Bot needs recovery. Try starting Mangaba Bot once more.",
       way: { role: "button", name: "Install" },
     },
     {
@@ -2443,7 +2443,7 @@ describe.skipIf(!asked)("an OpenBot this app is too old for", () => {
               covered: false,
             });
             expect(way?.enabled).toBe(true);
-            // Running, so never "OpenBot is stopped" with a Start: Show OpenBot and Stop OpenBot.
+            // Running, so never "Mangaba Bot is stopped" with a Start: Show Mangaba Bot and Stop Mangaba Bot.
             if (state.heading) {
               const screen = await page.evaluate(() => ({
                 heading: document.querySelector("h1")?.textContent?.trim(),
@@ -2452,9 +2452,9 @@ describe.skipIf(!asked)("an OpenBot this app is too old for", () => {
                 ),
               }));
               expect(screen.heading).toBe(state.heading);
-              expect(screen.buttons).not.toContain("Start OpenBot");
-              expect(screen.buttons).toContain("Show OpenBot");
-              expect(screen.buttons).toContain("Stop OpenBot");
+              expect(screen.buttons).not.toContain("Start Mangaba Bot");
+              expect(screen.buttons).toContain("Show Mangaba Bot");
+              expect(screen.buttons).toContain("Stop Mangaba Bot");
             }
             // One Update and restart: the offer at the top stands back while the card says why.
             if (state.way.name === "Update and restart")
@@ -2489,19 +2489,19 @@ describe.skipIf(!asked)("an OpenBot this app is too old for", () => {
 
   /*
    * On a build that never updates itself, the line that says so is part of the notice, in the
-   * notice's type, on the connect screen as on the screen for the OpenBot on this computer. Seen on
+   * notice's type, on the connect screen as on the screen for the Mangaba Bot on this computer. Seen on
    * a Mac: on the connect screen it sat under the notice in body type.
    */
   for (const state of [
     {
       name: "connected-app-too-old-internal",
       at: "?internal#connect-app-too-old",
-      said: "needs a newer version of this app. Update OpenBot, then connect again.",
+      said: "needs a newer version of this app. Update Mangaba Bot, then connect again.",
     },
     {
       name: "local-app-too-old-internal",
       at: "?internal#local-app-too-old",
-      said: "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+      said: "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
     },
   ]) {
     test(`${state.name}: "doesn't update itself" is in the notice, in the notice's type`, async () => {
@@ -2607,7 +2607,7 @@ describe.skipIf(!asked)("the Status window after Stop", () => {
                 className: buttons[0]?.className,
               };
             };
-            return { app: part("App"), services: part("OpenBot's services") };
+            return { app: part("App"), services: part("Mangaba Bot's services") };
           });
           expect(seen.app.said).toEqual(["Start"]);
           expect(seen.services.said).toEqual(["Start"]);
@@ -2624,7 +2624,7 @@ describe.skipIf(!asked)("the Status window after Stop", () => {
 });
 
 /*
- * Two states the Mac and Windows pass found. Opened while OpenBot updated itself, the App row said
+ * Two states the Mac and Windows pass found. Opened while Mangaba Bot updated itself, the App row said
  * Stopped and offered Start: it says Updating now, with nothing to press. And after the App row's
  * Start brought everything up in the main window, the services row still said Stopped, with Start,
  * until Refresh: told the Start finished (`status:refresh`), it reads its readiness again. Each
@@ -2655,7 +2655,7 @@ describe.skipIf(!asked)(
     const servicesRow = (page: Page) =>
       page.evaluate(() => {
         const section = document.querySelector(
-          `section[aria-label="OpenBot's services"]`,
+          `section[aria-label="Mangaba Bot's services"]`,
         );
         return {
           state: section?.querySelector(".status-state")?.textContent ?? null,
@@ -2666,7 +2666,7 @@ describe.skipIf(!asked)(
       });
 
     for (const colorScheme of ["light", "dark"] as const) {
-      test(`while OpenBot updates, the App row says Updating and nothing offers Start (${colorScheme})`, async () => {
+      test(`while Mangaba Bot updates, the App row says Updating and nothing offers Start (${colorScheme})`, async () => {
         const page = await browser.newPage({
           viewport: { width: 640, height: 720 },
           colorScheme,

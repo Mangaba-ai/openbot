@@ -580,13 +580,13 @@ export function ConversationView({
           <NotifyPrompt />
         ) : null}
         {/*
-         * The ask to star OpenBot on GitHub, when the server says it is due (`StarPrompt`), and never
+         * The ask to star Mangaba Bot on GitHub, when the server says it is due (`StarPrompt`), and never
          * beside the notifications offer: one card above the composer at a time, and the offer that
          * is useful to this person goes first.
          *
          * Never right after an error: not while the last turn here ended without an answer
          * (`stopped`, where a failed run is said). Not read off `notice`: a conversation passes one
-         * every time, mostly empty, so its presence says nothing. It also waits while OpenBot Desktop has not yet
+         * every time, mostly empty, so its presence says nothing. It also waits while Mangaba Bot Desktop has not yet
          * said whether notifications are on (`checking`), or the card could draw, be counted as
          * shown, and vanish when the answer is "not asked yet". And never in a conversation that
          * cannot take a message: the brief "Picking a Bot" screen, or one whose Bot was deleted.

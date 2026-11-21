@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Return one page of the apps the organization has added for its Bots: the ones from OpenBot's catalogue, the ones added from the app directory, and servers added by their address. Each organization has its own apps, and an app added in one is not in another. Each app comes with the actions it offers and the Bots that may use each one. Any member of the organization may read them. Ordered by title, ignoring case, then by id. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the apps the organization has added for its Bots: the ones from Mangaba Bot's catalogue, the ones added from the app directory, and servers added by their address. Each organization has its own apps, and an app added in one is not in another. Each app comes with the actions it offers and the Bots that may use each one. Any member of the organization may read them. Ordered by title, ignoring case, then by id. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List the apps added here
  */
 
@@ -60,7 +60,7 @@ export const ListAppsResponse = zod.object({
           source: zod
             .enum(["catalogue", "address", "directory"])
             .describe(
-              "How the app was added: from OpenBot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
+              "How the app was added: from Mangaba Bot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
             ),
           directoryEntryId: zod
             .string()
@@ -72,7 +72,7 @@ export const ListAppsResponse = zod.object({
             .string()
             .nullable()
             .describe(
-              "The server's address, or null for an app from the directory, which OpenBot reaches through the directory's own service.",
+              "The server's address, or null for an app from the directory, which Mangaba Bot reaches through the directory's own service.",
             ),
           logo: zod
             .string()
@@ -99,7 +99,7 @@ export const ListAppsResponse = zod.object({
               zod
                 .enum(["sign-in", "key", "nothing", "unreadable"])
                 .describe(
-                  "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when OpenBot can't tell from what it recorded when the app was added.",
+                  "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when Mangaba Bot can't tell from what it recorded when the app was added.",
                 ),
               zod.null(),
             ])
@@ -112,7 +112,7 @@ export const ListAppsResponse = zod.object({
           dynamicClient: zod
             .boolean()
             .describe(
-              "Whether OpenBot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
+              "Whether Mangaba Bot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
             ),
           signIn: zod
             .boolean()
@@ -130,12 +130,12 @@ export const ListAppsResponse = zod.object({
               zod
                 .enum(["personal", "shared"])
                 .describe(
-                  "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+                  "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
                 ),
               zod.null(),
             ])
             .describe(
-              "Whose account an app from the directory acts in: each person's own, or one account OpenBot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
+              "Whose account an app from the directory acts in: each person's own, or one account Mangaba Bot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
             ),
           sharedAccountConnected: zod
             .boolean()
@@ -145,7 +145,7 @@ export const ListAppsResponse = zod.object({
           sharedOnly: zod
             .boolean()
             .describe(
-              "Whether the app can only hold one shared account and never a person's own, because it connects with this OpenBot's own client.",
+              "Whether the app can only hold one shared account and never a person's own, because it connects with this Mangaba Bot's own client.",
             ),
           ownerGrants: zod
             .enum(["any", "admin"])
@@ -168,17 +168,17 @@ export const ListAppsResponse = zod.object({
             .string()
             .nullable()
             .describe(
-              "The email address of whoever added the app, where OpenBot knows it.",
+              "The email address of whoever added the app, where Mangaba Bot knows it.",
             ),
           toolsRefreshedAt: zod.iso
             .datetime({ offset: true })
             .nullable()
-            .describe("When OpenBot last recorded what the app offers."),
+            .describe("When Mangaba Bot last recorded what the app offers."),
           lastError: zod
             .string()
             .nullable()
             .describe(
-              "Why OpenBot couldn't last ask the app what it offers, or null.",
+              "Why Mangaba Bot couldn't last ask the app what it offers, or null.",
             ),
           skippedTools: zod
             .array(zod.string())
@@ -255,7 +255,7 @@ export const ListAppsResponse = zod.object({
 });
 
 /**
- * Add an app in one of two ways. With from=directory, add an entry of listAppDirectory: a catalogue entry, with the instance host or vault credential it needs, or an app from the wider directory. Only an administrator may. With from=address, add a server by its HTTPS address, and anybody signed in may. OpenBot asks the server how it is reached first. It refuses an address the MCP allowlist doesn't approve, a server that needs a key nobody gave, and an address already added, naming that app in the problem's appId. Only an administrator may give a server a key, because every Bot that uses the server uses it. A server that signs each person in answers with signIn true, and each person then connects their own account. Answers 201 with the app. Adding a directory entry that is already added updates that app with what the request names, and answers it the same way. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Add an app in one of two ways. With from=directory, add an entry of listAppDirectory: a catalogue entry, with the instance host or vault credential it needs, or an app from the wider directory. Only an administrator may. With from=address, add a server by its HTTPS address, and anybody signed in may. Mangaba Bot asks the server how it is reached first. It refuses an address the MCP allowlist doesn't approve, a server that needs a key nobody gave, and an address already added, naming that app in the problem's appId. Only an administrator may give a server a key, because every Bot that uses the server uses it. A server that signs each person in answers with signIn true, and each person then connects their own account. Answers 201 with the app. Adding a directory entry that is already added updates that app with what the request names, and answers it the same way. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Add an app
  */
 
@@ -378,7 +378,7 @@ export const CreateAppResponse = zod
     source: zod
       .enum(["catalogue", "address", "directory"])
       .describe(
-        "How the app was added: from OpenBot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
+        "How the app was added: from Mangaba Bot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
       ),
     directoryEntryId: zod
       .string()
@@ -390,7 +390,7 @@ export const CreateAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The server's address, or null for an app from the directory, which OpenBot reaches through the directory's own service.",
+        "The server's address, or null for an app from the directory, which Mangaba Bot reaches through the directory's own service.",
       ),
     logo: zod
       .string()
@@ -417,7 +417,7 @@ export const CreateAppResponse = zod
         zod
           .enum(["sign-in", "key", "nothing", "unreadable"])
           .describe(
-            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when OpenBot can't tell from what it recorded when the app was added.",
+            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when Mangaba Bot can't tell from what it recorded when the app was added.",
           ),
         zod.null(),
       ])
@@ -430,7 +430,7 @@ export const CreateAppResponse = zod
     dynamicClient: zod
       .boolean()
       .describe(
-        "Whether OpenBot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
+        "Whether Mangaba Bot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
       ),
     signIn: zod
       .boolean()
@@ -448,12 +448,12 @@ export const CreateAppResponse = zod
         zod
           .enum(["personal", "shared"])
           .describe(
-            "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+            "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
           ),
         zod.null(),
       ])
       .describe(
-        "Whose account an app from the directory acts in: each person's own, or one account OpenBot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
+        "Whose account an app from the directory acts in: each person's own, or one account Mangaba Bot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
       ),
     sharedAccountConnected: zod
       .boolean()
@@ -463,7 +463,7 @@ export const CreateAppResponse = zod
     sharedOnly: zod
       .boolean()
       .describe(
-        "Whether the app can only hold one shared account and never a person's own, because it connects with this OpenBot's own client.",
+        "Whether the app can only hold one shared account and never a person's own, because it connects with this Mangaba Bot's own client.",
       ),
     ownerGrants: zod
       .enum(["any", "admin"])
@@ -486,17 +486,17 @@ export const CreateAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The email address of whoever added the app, where OpenBot knows it.",
+        "The email address of whoever added the app, where Mangaba Bot knows it.",
       ),
     toolsRefreshedAt: zod.iso
       .datetime({ offset: true })
       .nullable()
-      .describe("When OpenBot last recorded what the app offers."),
+      .describe("When Mangaba Bot last recorded what the app offers."),
     lastError: zod
       .string()
       .nullable()
       .describe(
-        "Why OpenBot couldn't last ask the app what it offers, or null.",
+        "Why Mangaba Bot couldn't last ask the app what it offers, or null.",
       ),
     skippedTools: zod
       .array(zod.string())
@@ -598,7 +598,7 @@ export const GetAppResponse = zod
     source: zod
       .enum(["catalogue", "address", "directory"])
       .describe(
-        "How the app was added: from OpenBot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
+        "How the app was added: from Mangaba Bot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
       ),
     directoryEntryId: zod
       .string()
@@ -610,7 +610,7 @@ export const GetAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The server's address, or null for an app from the directory, which OpenBot reaches through the directory's own service.",
+        "The server's address, or null for an app from the directory, which Mangaba Bot reaches through the directory's own service.",
       ),
     logo: zod
       .string()
@@ -637,7 +637,7 @@ export const GetAppResponse = zod
         zod
           .enum(["sign-in", "key", "nothing", "unreadable"])
           .describe(
-            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when OpenBot can't tell from what it recorded when the app was added.",
+            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when Mangaba Bot can't tell from what it recorded when the app was added.",
           ),
         zod.null(),
       ])
@@ -650,7 +650,7 @@ export const GetAppResponse = zod
     dynamicClient: zod
       .boolean()
       .describe(
-        "Whether OpenBot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
+        "Whether Mangaba Bot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
       ),
     signIn: zod
       .boolean()
@@ -668,12 +668,12 @@ export const GetAppResponse = zod
         zod
           .enum(["personal", "shared"])
           .describe(
-            "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+            "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
           ),
         zod.null(),
       ])
       .describe(
-        "Whose account an app from the directory acts in: each person's own, or one account OpenBot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
+        "Whose account an app from the directory acts in: each person's own, or one account Mangaba Bot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
       ),
     sharedAccountConnected: zod
       .boolean()
@@ -683,7 +683,7 @@ export const GetAppResponse = zod
     sharedOnly: zod
       .boolean()
       .describe(
-        "Whether the app can only hold one shared account and never a person's own, because it connects with this OpenBot's own client.",
+        "Whether the app can only hold one shared account and never a person's own, because it connects with this Mangaba Bot's own client.",
       ),
     ownerGrants: zod
       .enum(["any", "admin"])
@@ -706,17 +706,17 @@ export const GetAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The email address of whoever added the app, where OpenBot knows it.",
+        "The email address of whoever added the app, where Mangaba Bot knows it.",
       ),
     toolsRefreshedAt: zod.iso
       .datetime({ offset: true })
       .nullable()
-      .describe("When OpenBot last recorded what the app offers."),
+      .describe("When Mangaba Bot last recorded what the app offers."),
     lastError: zod
       .string()
       .nullable()
       .describe(
-        "Why OpenBot couldn't last ask the app what it offers, or null.",
+        "Why Mangaba Bot couldn't last ask the app what it offers, or null.",
       ),
     skippedTools: zod
       .array(zod.string())
@@ -782,7 +782,7 @@ export const GetAppResponse = zod
   );
 
 /**
- * Add a server by its address at an id an administrator chooses, or replace the server at that id. It is for pointing OpenBot at a server of the organization's own, such as one reached as the signed-in person through Microsoft Entra ID (entraScope). Unlike createApp, it doesn't ask the server how it is reached and doesn't check the MCP allowlist. The id is 2 to 40 lower-case letters, numbers and hyphens, and can't be a catalogue entry's, a screen's, or one kept for apps from the directory. credentialId names a vault credential (createCredential) the server is reached with. An absent entraScope keeps the one the server has, and null takes it away. Recorded on the audit trail. Answers the server, whether it was added or replaced. Only an administrator may.
+ * Add a server by its address at an id an administrator chooses, or replace the server at that id. It is for pointing Mangaba Bot at a server of the organization's own, such as one reached as the signed-in person through Microsoft Entra ID (entraScope). Unlike createApp, it doesn't ask the server how it is reached and doesn't check the MCP allowlist. The id is 2 to 40 lower-case letters, numbers and hyphens, and can't be a catalogue entry's, a screen's, or one kept for apps from the directory. credentialId names a vault credential (createCredential) the server is reached with. An absent entraScope keeps the one the server has, and null takes it away. Recorded on the audit trail. Answers the server, whether it was added or replaced. Only an administrator may.
  * @summary Add or replace a server at a chosen id
  */
 
@@ -878,7 +878,7 @@ export const ReplaceAppResponse = zod
     source: zod
       .enum(["catalogue", "address", "directory"])
       .describe(
-        "How the app was added: from OpenBot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
+        "How the app was added: from Mangaba Bot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
       ),
     directoryEntryId: zod
       .string()
@@ -890,7 +890,7 @@ export const ReplaceAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The server's address, or null for an app from the directory, which OpenBot reaches through the directory's own service.",
+        "The server's address, or null for an app from the directory, which Mangaba Bot reaches through the directory's own service.",
       ),
     logo: zod
       .string()
@@ -917,7 +917,7 @@ export const ReplaceAppResponse = zod
         zod
           .enum(["sign-in", "key", "nothing", "unreadable"])
           .describe(
-            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when OpenBot can't tell from what it recorded when the app was added.",
+            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when Mangaba Bot can't tell from what it recorded when the app was added.",
           ),
         zod.null(),
       ])
@@ -930,7 +930,7 @@ export const ReplaceAppResponse = zod
     dynamicClient: zod
       .boolean()
       .describe(
-        "Whether OpenBot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
+        "Whether Mangaba Bot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
       ),
     signIn: zod
       .boolean()
@@ -948,12 +948,12 @@ export const ReplaceAppResponse = zod
         zod
           .enum(["personal", "shared"])
           .describe(
-            "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+            "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
           ),
         zod.null(),
       ])
       .describe(
-        "Whose account an app from the directory acts in: each person's own, or one account OpenBot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
+        "Whose account an app from the directory acts in: each person's own, or one account Mangaba Bot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
       ),
     sharedAccountConnected: zod
       .boolean()
@@ -963,7 +963,7 @@ export const ReplaceAppResponse = zod
     sharedOnly: zod
       .boolean()
       .describe(
-        "Whether the app can only hold one shared account and never a person's own, because it connects with this OpenBot's own client.",
+        "Whether the app can only hold one shared account and never a person's own, because it connects with this Mangaba Bot's own client.",
       ),
     ownerGrants: zod
       .enum(["any", "admin"])
@@ -986,17 +986,17 @@ export const ReplaceAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The email address of whoever added the app, where OpenBot knows it.",
+        "The email address of whoever added the app, where Mangaba Bot knows it.",
       ),
     toolsRefreshedAt: zod.iso
       .datetime({ offset: true })
       .nullable()
-      .describe("When OpenBot last recorded what the app offers."),
+      .describe("When Mangaba Bot last recorded what the app offers."),
     lastError: zod
       .string()
       .nullable()
       .describe(
-        "Why OpenBot couldn't last ask the app what it offers, or null.",
+        "Why Mangaba Bot couldn't last ask the app what it offers, or null.",
       ),
     skippedTools: zod
       .array(zod.string())
@@ -1128,7 +1128,7 @@ export const UpdateAppResponse = zod
     source: zod
       .enum(["catalogue", "address", "directory"])
       .describe(
-        "How the app was added: from OpenBot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
+        "How the app was added: from Mangaba Bot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
       ),
     directoryEntryId: zod
       .string()
@@ -1140,7 +1140,7 @@ export const UpdateAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The server's address, or null for an app from the directory, which OpenBot reaches through the directory's own service.",
+        "The server's address, or null for an app from the directory, which Mangaba Bot reaches through the directory's own service.",
       ),
     logo: zod
       .string()
@@ -1167,7 +1167,7 @@ export const UpdateAppResponse = zod
         zod
           .enum(["sign-in", "key", "nothing", "unreadable"])
           .describe(
-            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when OpenBot can't tell from what it recorded when the app was added.",
+            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when Mangaba Bot can't tell from what it recorded when the app was added.",
           ),
         zod.null(),
       ])
@@ -1180,7 +1180,7 @@ export const UpdateAppResponse = zod
     dynamicClient: zod
       .boolean()
       .describe(
-        "Whether OpenBot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
+        "Whether Mangaba Bot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
       ),
     signIn: zod
       .boolean()
@@ -1198,12 +1198,12 @@ export const UpdateAppResponse = zod
         zod
           .enum(["personal", "shared"])
           .describe(
-            "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+            "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
           ),
         zod.null(),
       ])
       .describe(
-        "Whose account an app from the directory acts in: each person's own, or one account OpenBot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
+        "Whose account an app from the directory acts in: each person's own, or one account Mangaba Bot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
       ),
     sharedAccountConnected: zod
       .boolean()
@@ -1213,7 +1213,7 @@ export const UpdateAppResponse = zod
     sharedOnly: zod
       .boolean()
       .describe(
-        "Whether the app can only hold one shared account and never a person's own, because it connects with this OpenBot's own client.",
+        "Whether the app can only hold one shared account and never a person's own, because it connects with this Mangaba Bot's own client.",
       ),
     ownerGrants: zod
       .enum(["any", "admin"])
@@ -1236,17 +1236,17 @@ export const UpdateAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The email address of whoever added the app, where OpenBot knows it.",
+        "The email address of whoever added the app, where Mangaba Bot knows it.",
       ),
     toolsRefreshedAt: zod.iso
       .datetime({ offset: true })
       .nullable()
-      .describe("When OpenBot last recorded what the app offers."),
+      .describe("When Mangaba Bot last recorded what the app offers."),
     lastError: zod
       .string()
       .nullable()
       .describe(
-        "Why OpenBot couldn't last ask the app what it offers, or null.",
+        "Why Mangaba Bot couldn't last ask the app what it offers, or null.",
       ),
     skippedTools: zod
       .array(zod.string())
@@ -1352,7 +1352,7 @@ export const DeleteAppHeader = zod.object({
 export const DeleteAppResponse = zod.void();
 
 /**
- * Ask the app what actions it offers now, replace the ones OpenBot has recorded, and answer the app. Where asking needs an account, it is asked with the administrator's own. An app that can't be asked still answers 200, with the reason in lastError and its actions as they were. Bots keep any action the app stopped offering, listed in withdrawn. Recorded on the audit trail when that changes. Only an administrator may.
+ * Ask the app what actions it offers now, replace the ones Mangaba Bot has recorded, and answer the app. Where asking needs an account, it is asked with the administrator's own. An app that can't be asked still answers 200, with the reason in lastError and its actions as they were. Bots keep any action the app stopped offering, listed in withdrawn. Recorded on the audit trail when that changes. Only an administrator may.
  * @summary Ask an app what it offers now
  */
 
@@ -1400,7 +1400,7 @@ export const RefreshAppResponse = zod
     source: zod
       .enum(["catalogue", "address", "directory"])
       .describe(
-        "How the app was added: from OpenBot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
+        "How the app was added: from Mangaba Bot's own catalogue, as a server at an address somebody typed, or from the wider app directory.",
       ),
     directoryEntryId: zod
       .string()
@@ -1412,7 +1412,7 @@ export const RefreshAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The server's address, or null for an app from the directory, which OpenBot reaches through the directory's own service.",
+        "The server's address, or null for an app from the directory, which Mangaba Bot reaches through the directory's own service.",
       ),
     logo: zod
       .string()
@@ -1439,7 +1439,7 @@ export const RefreshAppResponse = zod
         zod
           .enum(["sign-in", "key", "nothing", "unreadable"])
           .describe(
-            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when OpenBot can't tell from what it recorded when the app was added.",
+            "How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when Mangaba Bot can't tell from what it recorded when the app was added.",
           ),
         zod.null(),
       ])
@@ -1452,7 +1452,7 @@ export const RefreshAppResponse = zod
     dynamicClient: zod
       .boolean()
       .describe(
-        "Whether OpenBot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
+        "Whether Mangaba Bot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient).",
       ),
     signIn: zod
       .boolean()
@@ -1470,12 +1470,12 @@ export const RefreshAppResponse = zod
         zod
           .enum(["personal", "shared"])
           .describe(
-            "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+            "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
           ),
         zod.null(),
       ])
       .describe(
-        "Whose account an app from the directory acts in: each person's own, or one account OpenBot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
+        "Whose account an app from the directory acts in: each person's own, or one account Mangaba Bot holds for everybody in the organization. Null for an app with no account at all, and for any other app.",
       ),
     sharedAccountConnected: zod
       .boolean()
@@ -1485,7 +1485,7 @@ export const RefreshAppResponse = zod
     sharedOnly: zod
       .boolean()
       .describe(
-        "Whether the app can only hold one shared account and never a person's own, because it connects with this OpenBot's own client.",
+        "Whether the app can only hold one shared account and never a person's own, because it connects with this Mangaba Bot's own client.",
       ),
     ownerGrants: zod
       .enum(["any", "admin"])
@@ -1508,17 +1508,17 @@ export const RefreshAppResponse = zod
       .string()
       .nullable()
       .describe(
-        "The email address of whoever added the app, where OpenBot knows it.",
+        "The email address of whoever added the app, where Mangaba Bot knows it.",
       ),
     toolsRefreshedAt: zod.iso
       .datetime({ offset: true })
       .nullable()
-      .describe("When OpenBot last recorded what the app offers."),
+      .describe("When Mangaba Bot last recorded what the app offers."),
     lastError: zod
       .string()
       .nullable()
       .describe(
-        "Why OpenBot couldn't last ask the app what it offers, or null.",
+        "Why Mangaba Bot couldn't last ask the app what it offers, or null.",
       ),
     skippedTools: zod
       .array(zod.string())
@@ -1584,7 +1584,7 @@ export const RefreshAppResponse = zod
   );
 
 /**
- * Choose whose account an app from the directory acts in: each person's own (personal), or one account OpenBot holds for everybody in the organization (shared). Every account the switch leaves behind is ended at the app's service first. Nothing changes unless all of them ended, and the problem's problems then names each account that didn't. Switching to shared gives each Bot that uses the app an approval, the one in approvals or its default, and makes the app ask before every action that changes something. With validateOnly true nothing changes, and the answer says what the switch would end and approve. Choosing the mode an app is already in puts back anything that mode needs and is missing. Recorded on the audit trail. Only an administrator may.
+ * Choose whose account an app from the directory acts in: each person's own (personal), or one account Mangaba Bot holds for everybody in the organization (shared). Every account the switch leaves behind is ended at the app's service first. Nothing changes unless all of them ended, and the problem's problems then names each account that didn't. Switching to shared gives each Bot that uses the app an approval, the one in approvals or its default, and makes the app ask before every action that changes something. With validateOnly true nothing changes, and the answer says what the switch would end and approve. Choosing the mode an app is already in puts back anything that mode needs and is missing. Recorded on the audit trail. Only an administrator may.
  * @summary Choose whose account an app acts in
  */
 
@@ -1634,7 +1634,7 @@ export const SetAppAccountModeBody = zod.object({
   mode: zod
     .enum(["personal", "shared"])
     .describe(
-      "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+      "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
     ),
   approvals: zod
     .record(
@@ -1682,7 +1682,7 @@ export const SetAppAccountModeResponse = zod.object({
   mode: zod
     .enum(["personal", "shared"])
     .describe(
-      "Each person's own account, or one account OpenBot holds for everybody in the organization.",
+      "Each person's own account, or one account Mangaba Bot holds for everybody in the organization.",
     ),
   applied: zod
     .boolean()
@@ -1692,7 +1692,7 @@ export const SetAppAccountModeResponse = zod.object({
       holder: zod
         .enum(["person", "deployment"])
         .describe(
-          "Whose accounts they are: people's own (person), or the one OpenBot holds for everybody in the organization (deployment).",
+          "Whose accounts they are: people's own (person), or the one Mangaba Bot holds for everybody in the organization (deployment).",
         ),
       count: zod.int().min(setAppAccountModeResponseAccountsEndedCountMin),
     })
@@ -1733,7 +1733,7 @@ export const SetAppAccountModeResponse = zod.object({
 });
 
 /**
- * Set the OAuth client OpenBot signs people in to an app with, for a catalogue app whose vendor doesn't let OpenBot register one itself. Register redirectUri from getAppSetup with the vendor first. Setting a client again replaces the one before. The secret is kept in the vault and never answered. Recorded on the audit trail. Only an administrator may.
+ * Set the OAuth client Mangaba Bot signs people in to an app with, for a catalogue app whose vendor doesn't let Mangaba Bot register one itself. Register redirectUri from getAppSetup with the vendor first. Setting a client again replaces the one before. The secret is kept in the vault and never answered. Recorded on the audit trail. Only an administrator may.
  * @summary Set the OAuth client people sign in to an app with
  */
 
@@ -1797,7 +1797,7 @@ export const SetAppOAuthClientBody = zod.object({
 export const SetAppOAuthClientResponse = zod.void();
 
 /**
- * Return one page of what can be added with createApp: the apps in OpenBot's own catalogue (source catalogue) in the catalogue's own order, then apps from the wider directory (source directory) by title, ignoring case, and then by id. appId names the app an entry was added as, or is null. search narrows the list to entries whose name or description holds it, ignoring case. source narrows it to one kind. Anybody signed in may read the catalogue. Only an administrator sees the wider directory, so anybody else's list holds catalogue entries only, and asking for source=directory is refused. Where no directory is set up, the list holds the catalogue only and source=directory is unavailable. In the personal edition the catalogue leaves out entries meant for a team, unless they're already added. A missing cursor starts at the first page and nextCursor null ends the list. A cursor belongs to the search and source that made it, so changing either starts again without one.
+ * Return one page of what can be added with createApp: the apps in Mangaba Bot's own catalogue (source catalogue) in the catalogue's own order, then apps from the wider directory (source directory) by title, ignoring case, and then by id. appId names the app an entry was added as, or is null. search narrows the list to entries whose name or description holds it, ignoring case. source narrows it to one kind. Anybody signed in may read the catalogue. Only an administrator sees the wider directory, so anybody else's list holds catalogue entries only, and asking for source=directory is refused. Where no directory is set up, the list holds the catalogue only and source=directory is unavailable. In the personal edition the catalogue leaves out entries meant for a team, unless they're already added. A missing cursor starts at the first page and nextCursor null ends the list. A cursor belongs to the search and source that made it, so changing either starts again without one.
  * @summary List the apps that can be added
  */
 
@@ -1884,7 +1884,7 @@ export const ListAppDirectoryResponse = zod.object({
               auth: zod
                 .enum(["none", "deployment-bearer", "user-oauth", "builtin"])
                 .describe(
-                  "How the app is reached: needing nothing, with a key an administrator gives for everybody, as each person through their own sign-in, or inside OpenBot itself.",
+                  "How the app is reached: needing nothing, with a key an administrator gives for everybody, as each person through their own sign-in, or inside Mangaba Bot itself.",
                 ),
               perInstance: zod
                 .boolean()
@@ -1894,10 +1894,10 @@ export const ListAppDirectoryResponse = zod.object({
               oneStep: zod
                 .boolean()
                 .describe(
-                  "Whether connecting needs nothing typed first: no account at all, or a vendor OpenBot registers itself with.",
+                  "Whether connecting needs nothing typed first: no account at all, or a vendor Mangaba Bot registers itself with.",
                 ),
             })
-            .describe("An app in OpenBot's own catalogue."),
+            .describe("An app in Mangaba Bot's own catalogue."),
           zod
             .object({
               id: zod.string().describe("The entry's id, for createApp."),
@@ -1964,7 +1964,7 @@ export const ListAppDirectoryResponse = zod.object({
 });
 
 /**
- * Return how apps are set up on this OpenBot: whether the app directory is available and the service it comes from, the address an administrator registers with an app's vendor, whether a connection approves one action at a time, and whether a Bot with no key of its own can still use an app's actions. Anybody signed in may read it. It holds no secret.
+ * Return how apps are set up on this Mangaba Bot: whether the app directory is available and the service it comes from, the address an administrator registers with an app's vendor, whether a connection approves one action at a time, and whether a Bot with no key of its own can still use an app's actions. Anybody signed in may read it. It holds no secret.
  * @summary Read how apps are set up here
  */
 
@@ -1992,13 +1992,13 @@ export const GetAppSetupResponse = zod
       ])
       .nullable()
       .describe(
-        "The service the app directory comes from. The screens read it to open their own page for the directory and to name the setting an administrator sets to turn it on. Null when this OpenBot names none.",
+        "The service the app directory comes from. The screens read it to open their own page for the directory and to name the setting an administrator sets to turn it on. Null when this Mangaba Bot names none.",
       ),
     redirectUri: zod
       .string()
       .nullable()
       .describe(
-        "The address to register with a vendor for an OAuth client (setAppOAuthClient), exactly as OpenBot sends it. Null when this OpenBot has no public address, so nobody can sign in to an app through it.",
+        "The address to register with a vendor for an OAuth client (setAppOAuthClient), exactly as Mangaba Bot sends it. Null when this Mangaba Bot has no public address, so nobody can sign in to an app through it.",
       ),
     authorizesPerAction: zod
       .boolean()
@@ -2011,7 +2011,7 @@ export const GetAppSetupResponse = zod
         "Whether a Bot with no key of its own can still use an app's actions. Without it, only a Bot that holds its own key can.",
       ),
   })
-  .describe("How apps are set up on this OpenBot. Never a key.");
+  .describe("How apps are set up on this Mangaba Bot. Never a key.");
 
 /**
  * Return every app action name that was cut to fit a model's limit of 64 characters, with the whole name it stands for, so a client shows a step by the action's own name. Names only, and nothing about who may use them. Anybody signed in may read them.

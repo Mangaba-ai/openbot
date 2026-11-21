@@ -18,13 +18,13 @@ export const getListBotAgentsResponseMock = (): BotAgentPage => ({
   agents: [
     {
       id: "bag_0c51d9e3a7f24b18",
-      name: "OpenBot",
+      name: "Mangaba Bot",
       description:
-        "OpenBot's own agent, with every app and component the Bot may use.",
+        "Mangaba Bot's own agent, with every app and component the Bot may use.",
       kind: "openbot",
       visibility: "public",
       endpoint: null,
-      framework: "OpenBot",
+      framework: "Mangaba Bot",
       model: null,
       skills: [],
       hasAuth: false,
@@ -71,13 +71,13 @@ export const getCreateBotAgentResponseMock = (): BotAgentResponse => ({
 export const getGetBotAgentResponseMock = (): BotAgentResponse => ({
   agent: {
     id: "bag_0c51d9e3a7f24b18",
-    name: "OpenBot",
+    name: "Mangaba Bot",
     description:
-      "OpenBot's own agent, with every app and component the Bot may use.",
+      "Mangaba Bot's own agent, with every app and component the Bot may use.",
     kind: "openbot",
     visibility: "public",
     endpoint: null,
-    framework: "OpenBot",
+    framework: "Mangaba Bot",
     model: null,
     skills: [],
     hasAuth: false,
@@ -162,11 +162,11 @@ export const getGetBotDelegationResponseMock = (): BotDelegation => ({
   agents: [
     {
       id: "bag_0c51d9e3a7f24b18",
-      name: "OpenBot",
+      name: "Mangaba Bot",
       description:
-        "OpenBot's own agent, with every app and component the Bot may use.",
+        "Mangaba Bot's own agent, with every app and component the Bot may use.",
       kind: "openbot",
-      framework: "OpenBot",
+      framework: "Mangaba Bot",
       available: true,
     },
   ],
@@ -187,7 +187,7 @@ export const getReplaceBotDelegationResponseMock = (): BotDelegation => ({
       description:
         "Deep research on the web and in the person's apps, with sources.",
       kind: "openbot",
-      framework: "OpenBot",
+      framework: "Mangaba Bot",
       available: true,
     },
     {

@@ -4,6 +4,6 @@
 import type { AppProblem } from "./appProblem";
 
 /**
- * A server at that address is already here (appId names it), the app was added but couldn't be read back, OpenBot's own records of the app disagree, or the Idempotency-Key was used for a different request.
+ * A server at that address is already here (appId names it), the app was added but couldn't be read back, Mangaba Bot's own records of the app disagree, or the Idempotency-Key was used for a different request.
  */
 export type AppAddConflictResponse = AppProblem;

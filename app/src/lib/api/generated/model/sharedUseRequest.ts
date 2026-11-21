@@ -15,7 +15,7 @@ export interface SharedUseRequest {
   /** The Bot's name. */
   botName: string;
   /**
-   * The id of the Bot's owner. Null for a Bot that comes with OpenBot.
+   * The id of the Bot's owner. Null for a Bot that comes with Mangaba Bot.
    * @nullable
    */
   ownerUserId: string | null;

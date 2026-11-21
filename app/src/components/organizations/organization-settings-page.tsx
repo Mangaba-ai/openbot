@@ -87,7 +87,7 @@ export function OrganizationSettingsPage() {
   const organization = choices?.organizations.find(
     (one) => one.id === choices.currentId,
   );
-  // Nothing until the list has answered. Where OpenBot lists none, the route never opens this page.
+  // Nothing until the list has answered. Where Mangaba Bot lists none, the route never opens this page.
   if (!organization) return null;
   const canManage = isOrganizationAdmin(organization.role);
 
@@ -174,7 +174,7 @@ function NameRow({
 }
 
 /**
- * Where the organization stands on its plan, where this OpenBot needs one: on its free trial, on the
+ * Where the organization stands on its plan, where this Mangaba Bot needs one: on its free trial, on the
  * plan, a failed payment, or none yet. Read-only, with the way to add or update the card for an
  * owner or an admin while Bots can't run (`addCardUrl`, the server's verdict). Nothing, and no
  * divider, where no plan is needed or while it is read.
@@ -694,7 +694,7 @@ function LeaveOrganizationDialog({
 /**
  * Delete the organization, for its owner. Asked in a dialog that wants the organization's name typed,
  * because everything in it goes for everybody and can't come back. The server decides whether it can
- * go: a person's own organization and the one that comes with OpenBot stay, and its refusal is said
+ * go: a person's own organization and the one that comes with Mangaba Bot stay, and its refusal is said
  * in its own words in the dialog.
  */
 function DeleteOrganizationSection({

@@ -116,7 +116,7 @@ function DescribePermissionsPage() {
           <FieldGroup>
             <DescribeField
               action="Write changes"
-              description="Say in a sentence who may or may not do something, and your model writes the changes from this OpenBot's roles and teams. A second reading that never sees your words says what the changes do."
+              description="Say in a sentence who may or may not do something, and your model writes the changes from this Mangaba Bot's roles and teams. A second reading that never sees your words says what the changes do."
               id="permissions-english"
               label="Describe the change"
               placeholder="Contractors can't use their own computer"
@@ -141,10 +141,10 @@ function DescribePermissionsPage() {
                   // No changes says so itself, with the model's reason.
                   written.changes.length === 0
                     ? ""
-                    : "These changes don't check, so OpenBot won't save them."
+                    : "These changes don't check, so Mangaba Bot won't save them."
                 }
                 heading="What these changes do"
-                passed="Checks. Every change names a permission, role or team this OpenBot has."
+                passed="Checks. Every change names a permission, role or team this Mangaba Bot has."
                 warning={written.warning}
               />
             ) : null}

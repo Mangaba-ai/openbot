@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The body is malformed, names no Bot, app or reason, holds a character OpenBot can't keep, or names an app the Bot does not hold as a shared app.
+ * The body is malformed, names no Bot, app or reason, holds a character Mangaba Bot can't keep, or names an app the Bot does not hold as a shared app.
  */
 export type InvalidSharedUseRequestResponse = Problem;

@@ -3,7 +3,7 @@
  */
 
 /**
- * How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when OpenBot can't tell from what it recorded when the app was added.
+ * How a person connects an app from the directory: by signing in at the app, by typing a key, or with nothing at all. unreadable when Mangaba Bot can't tell from what it recorded when the app was added.
  */
 export type AppConnectsWith =
   (typeof AppConnectsWith)[keyof typeof AppConnectsWith];

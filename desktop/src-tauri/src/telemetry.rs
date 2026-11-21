@@ -930,7 +930,7 @@ impl FirstLaunch {
     }
 }
 
-/// OpenBot updating itself: the version it moves from and to, and when its download began.
+/// Mangaba Bot updating itself: the version it moves from and to, and when its download began.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(deny_unknown_fields)]
 pub struct PendingUpdate {
@@ -1178,7 +1178,7 @@ pub enum EventData {
         step: FailingStep,
         stalled_seconds: u64,
     },
-    /// OpenBot updating itself to a newer release: the download of `to_version` began, in
+    /// Mangaba Bot updating itself to a newer release: the download of `to_version` began, in
     /// `from_version`. Kept across the restart (`PersistedState::update`), so the first launch
     /// after it says how it ended.
     UpdateStarted {
@@ -1256,7 +1256,7 @@ pub enum UpdateFailureClass {
     /// The system refused to let the app be replaced, or its administrator prompt was dismissed.
     PermissionDenied,
     /// The first launch after the update was still the version it was moving from: the installer
-    /// did not finish, or OpenBot quit before it began.
+    /// did not finish, or Mangaba Bot quit before it began.
     RestartFailed,
     /// What failed could not be put back: the previous app, or the installation's previous release.
     RestoreFailed,
@@ -1278,7 +1278,7 @@ const UPDATE_FAILURE_CLASSES: &[&str] = &[
 ];
 
 /// Which journey a stalled step is part of: the back end's first setup (`local setup`), its update
-/// (`local update`), OpenBot's own start, or OpenBot updating itself.
+/// (`local update`), Mangaba Bot's own start, or Mangaba Bot updating itself.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "snake_case")]
 pub enum StallPart {
@@ -1407,7 +1407,7 @@ pub enum Step {
     Model,
     Connect,
     Ask,
-    /// Connecting to an OpenBot that runs elsewhere: the address and the sign-in. The step's name
+    /// Connecting to an Mangaba Bot that runs elsewhere: the address and the sign-in. The step's name
     /// only; the address is never part of any event.
     ConnectOpenbot,
 }
@@ -2540,7 +2540,7 @@ mod tests {
         ]
     }
 
-    /// The setup window's step for connecting to an OpenBot that runs elsewhere is one the shell
+    /// The setup window's step for connecting to an Mangaba Bot that runs elsewhere is one the shell
     /// knows, so its events are sent. They say the step and nothing about where: an event with an
     /// address, or any other property, is refused.
     #[test]
@@ -3110,7 +3110,7 @@ mod tests {
     }
 
     /// A first Windows install that needs WSL restarts Windows. Windows ends the app without a Quit
-    /// and OpenBot opens again after sign-in. That launch sends `setup_restart_required` at the
+    /// and Mangaba Bot opens again after sign-in. That launch sends `setup_restart_required` at the
     /// step, and never `setup_abandoned`; setup then goes on under the same installation id.
     #[test]
     fn a_planned_windows_restart_sends_restart_required_and_setup_goes_on_after_it() {
@@ -3444,7 +3444,7 @@ mod tests {
     }
 
     /**
-    OpenBot updating itself: `update_started` as the new version's download begins, kept across the
+    Mangaba Bot updating itself: `update_started` as the new version's download begins, kept across the
     restart, then at the next launch `update_completed` when it is the new version, or `update_failed`
     (`restart_failed`) when it is still the old one. Both versions on each, and each said once. A
     failure the old version saw itself ends the update there. With usage data off, nothing at all.
@@ -3520,7 +3520,7 @@ mod tests {
         assert!(!state_path(&dir).exists());
     }
 
-    /// The state file exactly as OpenBot 1.0.3 saved it: no record of the version that ran.
+    /// The state file exactly as Mangaba Bot 1.0.3 saved it: no record of the version that ran.
     fn saved_by_1_0_3(dir: &Path) {
         fs::create_dir_all(dir).unwrap();
         fs::write(
@@ -3580,7 +3580,7 @@ mod tests {
         assert_eq!(first_launch_completions(&again).len(), 1, "said again");
     }
 
-    /// Connected to an OpenBot that runs elsewhere there is no installation to move: the first launch
+    /// Connected to an Mangaba Bot that runs elsewhere there is no installation to move: the first launch
     /// says it straight away, from the version the saved state last ran.
     #[test]
     fn with_no_installation_the_first_launch_says_it_at_once() {

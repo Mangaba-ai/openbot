@@ -31,7 +31,7 @@ export const Route = createFileRoute("/_authed")({
       // An invitation's link is kept while they sign in, and home hands them on to it.
       rememberInvitationLink(location.pathname);
       /*
-       * Inside an OpenBot Desktop connected to an OpenBot that runs somewhere else, the desktop app
+       * Inside an Mangaba Bot Desktop connected to an Mangaba Bot that runs somewhere else, the desktop app
        * holds the sign-in and this page has none to renew: the web sign-in screen would sign in a
        * window that cannot keep it. The desktop app ends what is left of the sign-in and shows its
        * own setup, where the person signs in again. If it cannot, the sign-in screen is still there.
@@ -54,10 +54,10 @@ export const Route = createFileRoute("/_authed")({
     await learnShortenedToolNames(context.queryClient);
   },
   /*
-   * A browser opened at the address of OpenBot on one computer is refused on the first question,
-   * who is signed in: OpenBot answers only its own app there. It is told to open the app instead.
-   * Every other failure is the router's own error screen, as it was, and is told to OpenBot
-   * (lib/error-reporting.tsx). The refusal is OpenBot answering as it should, and is not.
+   * A browser opened at the address of Mangaba Bot on one computer is refused on the first question,
+   * who is signed in: Mangaba Bot answers only its own app there. It is told to open the app instead.
+   * Every other failure is the router's own error screen, as it was, and is told to Mangaba Bot
+   * (lib/error-reporting.tsx). The refusal is Mangaba Bot answering as it should, and is not.
    */
   errorComponent: (props) =>
     refusedForNotBeingItsApp(props.error) ? (
@@ -88,7 +88,7 @@ function AuthedApp() {
           <AppHotkeys />
           {/* The skin saved on the account, drawn over the browser's cached one once it loads. */}
           <SkinAccountSync />
-          {/* Opened by the personal edition's "OpenBot for Business" entry, from whichever skin draws it. */}
+          {/* Opened by the personal edition's "Mangaba Bot for Business" entry, from whichever skin draws it. */}
           <TeamFeaturesDialog />
           {/* Opened by New organization in the account menu, for somebody who may create one. */}
           <NewOrganizationDialog />

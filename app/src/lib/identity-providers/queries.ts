@@ -25,7 +25,7 @@ export type IdentityProvider = {
    */
   registeredBy: string | null;
   /**
-   * Registered for the whole OpenBot, in its first organization: it counts for this organization too, and is not this
+   * Registered for the whole Mangaba Bot, in its first organization: it counts for this organization too, and is not this
    * organization's to remove. Only ever true outside `default`.
    */
   deployment: boolean;
@@ -34,7 +34,7 @@ export type IdentityProvider = {
 /**
  * The registered providers, or that they are not this organization's to see or change.
  *
- * Signing in is to OpenBot as a whole, before any organization is known, so which providers exist
+ * Signing in is to Mangaba Bot as a whole, before any organization is known, so which providers exist
  * is the deployment's, kept by the admins of its first organization. The server refuses an admin of
  * any other organization (`PERMISSION_DENIED`), and that refusal is the answer: `managedHere` false,
  * which the page shows as a plain explanation, with nothing to press that would be refused.

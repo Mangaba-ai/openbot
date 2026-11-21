@@ -8,25 +8,25 @@
    * is CopilotKit's pale lavender, the grays lean towards its lilac, the ring is its periwinkle, and
    * the selected sidebar row is a lilac tint. Only shadcn's own tokens, so a stock shadcn theme drops in.
    */
-  --background: oklch(0.983 0.003 286.4);
-  --foreground: oklch(0.108 0.015 220.9);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.108 0.015 220.9);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.108 0.015 220.9);
-  --primary: oklch(0.108 0.015 220.9);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.956 0.005 286.3);
-  --secondary-foreground: oklch(0.108 0.015 220.9);
-  --muted: oklch(0.956 0.005 286.3);
-  --muted-foreground: oklch(0.506 0.013 285.9);
-  --accent: oklch(0.956 0.005 286.3);
-  --accent-foreground: oklch(0.108 0.015 220.9);
+  --background: #faf9f7;
+  --foreground: #1e0d01;
+  --card: #ffffff;
+  --card-foreground: #1e0d01;
+  --popover: #ffffff;
+  --popover-foreground: #1e0d01;
+  --primary: #c2410c;
+  --primary-foreground: #ffffff;
+  --secondary: #fff4ed;
+  --secondary-foreground: #1e0d01;
+  --muted: #fff4ed;
+  --muted-foreground: #6b5a4e;
+  --accent: #ffdac2;
+  --accent-foreground: #1e0d01;
   --destructive: oklch(0.504 0.178 22.9);
   --success: oklch(0.514 0.1 167.2);
-  --border: oklch(0.894 0.014 286.1);
-  --input: oklch(0.894 0.014 286.1);
-  --ring: oklch(0.644 0.167 276.1);
+  --border: #f0e2d6;
+  --input: #f0e2d6;
+  --ring: #f97518;
   --chart-1: oklch(0.869 0.022 252.894);
   --chart-2: oklch(0.554 0.046 257.417);
   --chart-3: oklch(0.446 0.043 257.281);
@@ -40,56 +40,56 @@
    * skins.css, since it is drawn for this palette.
    */
   --empty-pattern: url("./assets/patterns/dot-matrix.svg");
-  --empty-pattern-color: oklch(0.746 0.117 279.9);
+  --empty-pattern-color: #f97518;
   --empty-pattern-opacity: 0.25;
-  --sidebar: oklch(0.948 0.011 286.2);
-  --sidebar-foreground: oklch(0.108 0.015 220.9);
-  --sidebar-primary: oklch(0.108 0.015 220.9);
-  --sidebar-primary-foreground: oklch(1 0 0);
-  --sidebar-accent: oklch(0.832 0.085 281.4 / 30%);
-  --sidebar-accent-foreground: oklch(0.108 0.015 220.9);
-  --sidebar-border: oklch(0.894 0.014 286.1);
-  --sidebar-ring: oklch(0.644 0.167 276.1);
+  --sidebar: #fff8f5;
+  --sidebar-foreground: #1e0d01;
+  --sidebar-primary: #c2410c;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: rgb(249 117 24 / 15%);
+  --sidebar-accent-foreground: #1e0d01;
+  --sidebar-border: #f0e2d6;
+  --sidebar-ring: #f97518;
 }
 
 .dark {
   color-scheme: dark;
-  --empty-pattern-color: oklch(0.832 0.085 281.4);
+  --empty-pattern-color: #ff9c24;
   --empty-pattern-opacity: 0.15;
   /* The same three surfaces on a near-black plum ground: the frame darkest, the cards lightest. */
-  --background: oklch(0.182 0.023 296.6);
-  --foreground: oklch(0.956 0.005 286.3);
-  --card: oklch(0.212 0.028 297.1);
-  --card-foreground: oklch(0.956 0.005 286.3);
-  --popover: oklch(0.212 0.028 297.1);
-  --popover-foreground: oklch(0.956 0.005 286.3);
-  --primary: oklch(0.956 0.005 286.3);
-  --primary-foreground: oklch(0.108 0.015 220.9);
+  --background: #1a120c;
+  --foreground: #fff4ed;
+  --card: #241910;
+  --card-foreground: #fff4ed;
+  --popover: #241910;
+  --popover-foreground: #fff4ed;
+  --primary: #ff9c24;
+  --primary-foreground: #1e0d01;
   /* Lighter than the cards, as shadcn's dark fills are, so a button or badge never reads as a hole. */
-  --secondary: oklch(0.253 0.032 297.6);
-  --secondary-foreground: oklch(0.956 0.005 286.3);
-  --muted: oklch(0.253 0.032 297.6);
-  --muted-foreground: oklch(0.69 0.017 285.9);
-  --accent: oklch(0.28 0.037 297.7);
-  --accent-foreground: oklch(0.956 0.005 286.3);
+  --secondary: #2e2117;
+  --secondary-foreground: #fff4ed;
+  --muted: #2e2117;
+  --muted-foreground: #c9b5a5;
+  --accent: #3a2a1e;
+  --accent-foreground: #fff4ed;
   --destructive: oklch(0.792 0.121 16.4);
   --success: oklch(0.832 0.13 170.1);
-  --border: oklch(0.28 0.035 298.6);
-  --input: oklch(0.28 0.035 298.6);
-  --ring: oklch(0.713 0.151 277.7);
+  --border: #3a2a1e;
+  --input: #3a2a1e;
+  --ring: #f97518;
   --chart-1: oklch(0.869 0.022 252.894);
   --chart-2: oklch(0.554 0.046 257.417);
   --chart-3: oklch(0.446 0.043 257.281);
   --chart-4: oklch(0.372 0.044 257.287);
   --chart-5: oklch(0.279 0.041 260.031);
-  --sidebar: oklch(0.156 0.017 295.8);
-  --sidebar-foreground: oklch(0.956 0.005 286.3);
-  --sidebar-primary: oklch(0.956 0.005 286.3);
-  --sidebar-primary-foreground: oklch(0.108 0.015 220.9);
-  --sidebar-accent: oklch(0.832 0.085 281.4 / 12%);
-  --sidebar-accent-foreground: oklch(0.956 0.005 286.3);
-  --sidebar-border: oklch(0.28 0.035 298.6);
-  --sidebar-ring: oklch(0.713 0.151 277.7);
+  --sidebar: #140d08;
+  --sidebar-foreground: #fff4ed;
+  --sidebar-primary: #ff9c24;
+  --sidebar-primary-foreground: #1e0d01;
+  --sidebar-accent: rgb(249 117 24 / 12%);
+  --sidebar-accent-foreground: #fff4ed;
+  --sidebar-border: #3a2a1e;
+  --sidebar-ring: #f97518;
 }
 
 * {

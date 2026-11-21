@@ -9,7 +9,7 @@ import type { ConversationWork } from "./conversationWork";
 export interface Conversation {
   /** The conversation's id. */
   id: string;
-  /** The name OpenBot gave it from its Bots. */
+  /** The name Mangaba Bot gave it from its Bots. */
   name: string;
   /** The Bots in the conversation. */
   botIds: string[];

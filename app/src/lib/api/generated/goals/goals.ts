@@ -1793,7 +1793,7 @@ export const getCreateGoalTriggerUrl = (
 };
 
 /**
- * Register a way for an outside event to start a run of the goal: a webhook, a GitHub, Linear, Sentry or PagerDuty delivery, an email, or a Slack message. For a webhook or GitHub trigger OpenBot makes the secret and answers it once, here; for the other providers the secret is the one pasted from the provider. When the trigger makes a shared app reachable in a new way, the answer says which apps an administrator approved or still has to.
+ * Register a way for an outside event to start a run of the goal: a webhook, a GitHub, Linear, Sentry or PagerDuty delivery, an email, or a Slack message. For a webhook or GitHub trigger Mangaba Bot makes the secret and answers it once, here; for the other providers the secret is the one pasted from the provider. When the trigger makes a shared app reachable in a new way, the answer says which apps an administrator approved or still has to.
  * @summary Add a trigger to a goal
  */
 export const createGoalTrigger = async (
@@ -2832,7 +2832,7 @@ export const getReplaceGoalTriggerSecretUrl = (
 };
 
 /**
- * Replace a trigger's secret. With no secret sent, OpenBot makes a new one for a webhook or GitHub trigger and answers it once; with one, it stores the secret pasted from the provider. The old secret stops working at once.
+ * Replace a trigger's secret. With no secret sent, Mangaba Bot makes a new one for a webhook or GitHub trigger and answers it once; with one, it stores the secret pasted from the provider. The old secret stops working at once.
  * @summary Replace a trigger's secret
  */
 export const replaceGoalTriggerSecret = async (

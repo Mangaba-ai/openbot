@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot can't connect apps this way: connecting apps isn't set up here, it has no address to bring the person back to, or the app can't be used here. Trying again won't help until an administrator changes something.
+ * This Mangaba Bot can't connect apps this way: connecting apps isn't set up here, it has no address to bring the person back to, or the app can't be used here. Trying again won't help until an administrator changes something.
  */
 export type ConnectionsUnavailableResponse = Problem;

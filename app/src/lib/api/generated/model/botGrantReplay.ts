@@ -11,6 +11,6 @@ export interface BotGrantReplay {
   warning: string | null;
   /** Against what the Bot has now. */
   changes: BotGrantReplayChanges;
-  /** Null where OpenBot keeps no audit trail it can read. */
+  /** Null where Mangaba Bot keeps no audit trail it can read. */
   report: BotGrantReplayReport | null;
 }

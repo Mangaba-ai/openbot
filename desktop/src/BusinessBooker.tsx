@@ -27,7 +27,7 @@ import {
 } from "../../shared/openbot-for-business";
 import { ExternalLink } from "./ExternalLink";
 
-/** The same icons the app's OpenBot for Business dialog draws each feature with. */
+/** The same icons the app's Mangaba Bot for Business dialog draws each feature with. */
 const FEATURE_ICONS: Record<BusinessFeatureIcon, Icon> = {
   "sign-in": IconLogin2,
   people: IconUsers,
@@ -43,12 +43,12 @@ const FEATURE_ICONS: Record<BusinessFeatureIcon, Icon> = {
 };
 
 /**
- * The first screen's lower half when OpenBot for Business is picked: the app's OpenBot for Business
+ * The first screen's lower half when Mangaba Bot for Business is picked: the app's Mangaba Bot for Business
  * view, stacked for the setup card. Where it runs and what it adds, then the calendar to book a
  * call. The words and the Calendly event are the app's own (`shared/openbot-for-business`).
  *
  * A calendar that can't load (offline, blocked, silent) gives way to Book a demo, which opens the
- * OpenBot for Business page in the person's browser, as the app's does on the Desktop.
+ * Mangaba Bot for Business page in the person's browser, as the app's does on the Desktop.
  */
 export function BusinessBooker() {
   const [failed, setFailed] = useState(false);
@@ -152,7 +152,7 @@ type CalendlyMessage = {
 };
 
 /**
- * The OpenBot for Business calendar, inline in the setup card, as the app's `BookingCalendar` is in
+ * The Mangaba Bot for Business calendar, inline in the setup card, as the app's `BookingCalendar` is in
  * its dialog. The window's guard lets Calendly and the frames it embeds load in their frame, and a
  * link in it that opens a new window opens in the person's browser (`outside_links.rs`).
  *

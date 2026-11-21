@@ -46,7 +46,7 @@ const PRODUCT = appConfig.brand.productName;
  * Ready, Not checked or Needs setup.
  *
  * Drawn on Settings → Setup, where an admin checks it, and comes back to it after setting a
- * variable and restarting OpenBot. Onboarding leaves it out: none of it blocks the first task.
+ * variable and restarting Mangaba Bot. Onboarding leaves it out: none of it blocks the first task.
  *
  * The rows, their sentences and their fixes are the server's (see `lib/setup/queries.ts`): this
  * draws them, and holds the one thing only a browser can do, which is asking it to check again.
@@ -104,7 +104,7 @@ export function SetupChecklist({
           Couldn't check again. Try again.
         </p>
       ) : null}
-      {/* Nothing while the first answer is on its way: OpenBot has no loading placeholder. */}
+      {/* Nothing while the first answer is on its way: Mangaba Bot has no loading placeholder. */}
       {checklist.isPending ? null : checklist.error ? (
         <>
           <p className="text-sm text-destructive" role="alert">
@@ -148,8 +148,8 @@ export function SetupChecklist({
 /**
  * One line over the list, so the state of the whole list is said before its rows are read.
  *
- * `hosted` is a hosted OpenBot (`hostedSignIn`), whose server sends an organization admin no fix
- * for what OpenBot by CopilotKit sets up, so not every optional row says how to add it.
+ * `hosted` is a hosted Mangaba Bot (`hostedSignIn`), whose server sends an organization admin no fix
+ * for what Mangaba Bot by CopilotKit sets up, so not every optional row says how to add it.
  */
 export function summaryOf(rows: SetupRow[], hosted = false): string {
   const gaps = rows.filter((row) => row.status === "needs_setup");

@@ -80,13 +80,13 @@ import { markFor } from "@/lib/marks";
 import { queryClient } from "@/query-client";
 
 /**
- * Settings → General's AI model: the AI provider OpenBot's Bots run on and how OpenBot signs in to
- * it, with a dialog that changes it while OpenBot keeps running. Never the key itself.
+ * Settings → General's AI model: the AI provider Mangaba Bot's Bots run on and how Mangaba Bot signs in to
+ * it, with a dialog that changes it while Mangaba Bot keeps running. Never the key itself.
  *
  * Drawn where the server says an admin can change it here (getAiConnection's `editable`). Keys and
- * addresses work in any browser; a plan or a provider sign-in only inside OpenBot Desktop, which
- * holds and renews what they sign in with. An OpenBot older than this operation, or a Desktop older
- * than changing it in place, keeps the row from before: Change there stops OpenBot and opens the
+ * addresses work in any browser; a plan or a provider sign-in only inside Mangaba Bot Desktop, which
+ * holds and renews what they sign in with. An Mangaba Bot older than this operation, or a Desktop older
+ * than changing it in place, keeps the row from before: Change there stops Mangaba Bot and opens the
  * setup window.
  */
 export function AiModelSection() {
@@ -103,7 +103,7 @@ export function AiModelSection() {
   if (!connection.data.editable) return null;
   return (
     <PageSection
-      description="Choose the AI provider your Bots use and how OpenBot signs in to it."
+      description="Choose the AI provider your Bots use and how Mangaba Bot signs in to it."
       title="AI model"
     >
       <PageRows>
@@ -224,14 +224,14 @@ function AiConnectionDialog({
         <DialogTitle>AI connection</DialogTitle>
         <DialogDescription>
           {described
-            ? `Your Bots use ${described.provider}. OpenBot keeps the key or sign-in and never shows it.`
+            ? `Your Bots use ${described.provider}. Mangaba Bot keeps the key or sign-in and never shows it.`
             : "Your Bots don't have an AI provider yet."}
         </DialogDescription>
       </DialogHeader>
       <DialogBody className="mt-4 flex flex-col gap-3 text-sm">
         {described && <Details details={described.details} />}
         <p className="text-muted-foreground">
-          You can switch to another provider or key while OpenBot keeps running.
+          You can switch to another provider or key while Mangaba Bot keeps running.
           Your next message uses the new connection.
         </p>
       </DialogBody>
@@ -539,8 +539,8 @@ function ChooseConnection({
         <DialogTitle>Change AI connection</DialogTitle>
         <DialogDescription>
           {provider
-            ? "OpenBot checks the connection before it switches. Nothing changes if the check fails."
-            : "Choose the AI your Bots use. OpenBot keeps running while it switches."}
+            ? "Mangaba Bot checks the connection before it switches. Nothing changes if the check fails."
+            : "Choose the AI your Bots use. Mangaba Bot keeps running while it switches."}
         </DialogDescription>
       </DialogHeader>
       <DialogBody className="mt-4 flex flex-col gap-4 overflow-y-auto">
@@ -590,7 +590,7 @@ function ChooseConnection({
                 }
                 value={login}
               >
-                <TabsList aria-label="How OpenBot signs in" className="w-full">
+                <TabsList aria-label="How Mangaba Bot signs in" className="w-full">
                   {logins.map((option) => (
                     <TabsTrigger disabled={busy} key={option} value={option}>
                       {loginLabel(option)}
@@ -791,7 +791,7 @@ const SIGN_IN_SAYS: Record<string, string> = {
     "OpenAI opens in your browser. It finishes on its own once you approve.",
   google:
     "Authorize Gemini API access using the configured Google Cloud project and its API quota.",
-  xai: "Authorize OpenBot to use models available to your xAI account.",
+  xai: "Authorize Mangaba Bot to use models available to your xAI account.",
   unbiased:
     "Sign in or create an Unbiased AI account in your browser and approve the code shown here.",
 };
@@ -970,8 +970,8 @@ function Connected({
 }
 
 /**
- * The row from before changing the connection in place: in an OpenBot Desktop older than that, or
- * against an OpenBot server that doesn't offer it. Change there stops OpenBot and opens Desktop's
+ * The row from before changing the connection in place: in an Mangaba Bot Desktop older than that, or
+ * against an Mangaba Bot server that doesn't offer it. Change there stops Mangaba Bot and opens Desktop's
  * own setup window. Only inside Desktop; a plain browser draws nothing here.
  */
 function DesktopAiModelSection() {
@@ -979,7 +979,7 @@ function DesktopAiModelSection() {
   if (desktopShell() === null || !connection.data) return null;
   return (
     <PageSection
-      description="Choose the AI provider your Bots use and how OpenBot signs in to it."
+      description="Choose the AI provider your Bots use and how Mangaba Bot signs in to it."
       title="AI model"
     >
       <PageRows>
@@ -997,7 +997,7 @@ function DesktopAiConnectionRow({
   const [open, setOpen] = useState(false);
   const change = useMutation(changeAiConnectionMutationOptions());
   const described = describeAiConnection(connection);
-  // On success the desktop app is stopping OpenBot, and this page goes with it.
+  // On success the desktop app is stopping Mangaba Bot, and this page goes with it.
   const stopping = change.isPending || change.isSuccess;
   return (
     <>
@@ -1031,7 +1031,7 @@ function DesktopAiConnectionRow({
           <DialogBody className="mt-4 flex flex-col gap-3 text-sm">
             {described && <Details details={described.details} />}
             <p className="text-muted-foreground">
-              To change it, OpenBot stops and the setup window opens. OpenBot
+              To change it, Mangaba Bot stops and the setup window opens. Mangaba Bot
               starts again with the connection you choose there.
             </p>
             {change.error ? (
@@ -1049,7 +1049,7 @@ function DesktopAiConnectionRow({
               onClick={() => change.mutate()}
               size="sm"
             >
-              {stopping ? "Stopping OpenBot…" : "Change AI connection"}
+              {stopping ? "Stopping Mangaba Bot…" : "Change AI connection"}
             </Button>
           </DialogFooter>
         </DialogContent>

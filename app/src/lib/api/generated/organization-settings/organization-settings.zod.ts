@@ -4,8 +4,8 @@
 import * as zod from "zod";
 
 /**
- * Return what this OpenBot offers and how people sign in to it: the edition, the features the apps draw, how large an attached file may be, and the sign-in options. Anybody may read it, signed in or not, because the sign-in screen reads it first. Signed in, it is answered in an organization the caller is a member of, and an organization they are not in, the organization `default` included, answers exactly as one that does not exist. Nobody signed in reads it in the organization `default`. It names no identity provider and no build: only whether single sign-on is set up and required, and which API versions and which releases of each OpenBot app it serves. It is never refused for the app's version, so an app reads it first to learn whether it, or the OpenBot, needs an update.
- * @summary Read what this OpenBot offers
+ * Return what this Mangaba Bot offers and how people sign in to it: the edition, the features the apps draw, how large an attached file may be, and the sign-in options. Anybody may read it, signed in or not, because the sign-in screen reads it first. Signed in, it is answered in an organization the caller is a member of, and an organization they are not in, the organization `default` included, answers exactly as one that does not exist. Nobody signed in reads it in the organization `default`. It names no identity provider and no build: only whether single sign-on is set up and required, and which API versions and which releases of each Mangaba Bot app it serves. It is never refused for the app's version, so an app reads it first to learn whether it, or the Mangaba Bot, needs an update.
+ * @summary Read what this Mangaba Bot offers
  */
 
 export const GetDeploymentParams = zod.object({
@@ -48,19 +48,19 @@ export const GetDeploymentResponse = zod
     edition: zod
       .enum(["team", "personal"])
       .describe(
-        "team is OpenBot as an organization runs it; personal is one person on their own machine, with no sign-in and none of the screens that govern other people.",
+        "team is Mangaba Bot as an organization runs it; personal is one person on their own machine, with no sign-in and none of the screens that govern other people.",
       ),
     localEvaluation: zod
       .boolean()
       .describe(
-        "Whether somebody is trying OpenBot on their own machine, with nobody else able to reach it.",
+        "Whether somebody is trying Mangaba Bot on their own machine, with nobody else able to reach it.",
       ),
     generativeUi: zod
       .boolean()
       .describe("Whether a Bot may answer with an interface it wrote itself."),
     selfHostBanner: zod
       .boolean()
-      .describe("Whether to offer help self-hosting OpenBot."),
+      .describe("Whether to offer help self-hosting Mangaba Bot."),
     transcription: zod
       .boolean()
       .describe("Whether a person can dictate a message."),
@@ -75,7 +75,7 @@ export const GetDeploymentResponse = zod
       .boolean()
       .optional()
       .describe(
-        "Whether people sign in through OpenBot by CopilotKit's own sign-in, with their account there. The sign-in starts at /api/auth/hosted/sign-in. Absent or false, people sign in only the ways authProviders and ssoConfigured say.",
+        "Whether people sign in through Mangaba Bot by CopilotKit's own sign-in, with their account there. The sign-in starts at /api/auth/hosted/sign-in. Absent or false, people sign in only the ways authProviders and ssoConfigured say.",
       ),
     ssoConfigured: zod
       .boolean()
@@ -85,22 +85,22 @@ export const GetDeploymentResponse = zod
     ssoRequired: zod
       .boolean()
       .describe(
-        "Whether everybody who signs in to this OpenBot must use single sign-on, because its one organization requires it; social sign-in then stays only as the configured administrators' way in. Where this OpenBot may keep more than one organization, each one requires it of its own members in its settings, and this says false. Always false where hostedSignIn is true.",
+        "Whether everybody who signs in to this Mangaba Bot must use single sign-on, because its one organization requires it; social sign-in then stays only as the configured administrators' way in. Where this Mangaba Bot may keep more than one organization, each one requires it of its own members in its settings, and this says false. Always false where hostedSignIn is true.",
       ),
     builtInBots: zod
       .boolean()
       .describe(
-        "Whether a Bot can run inside OpenBot, with no address of its own.",
+        "Whether a Bot can run inside Mangaba Bot, with no address of its own.",
       ),
     isolatedBots: zod
       .boolean()
       .describe(
-        "Whether this OpenBot can give a Bot a computer of its own. Whether a person may is their Isolated Bots switch.",
+        "Whether this Mangaba Bot can give a Bot a computer of its own. Whether a person may is their Isolated Bots switch.",
       ),
     botComputers: zod
       .boolean()
       .describe(
-        "Whether this OpenBot has computers for Bots at all. False, a Bot has no computer, browser or sign-in to a website, and the computers answer 503 to every call. Not isolatedBots: an OpenBot whose Bots share one computer has computers (true) and cannot give a Bot one of its own (isolatedBots false).",
+        "Whether this Mangaba Bot has computers for Bots at all. False, a Bot has no computer, browser or sign-in to a website, and the computers answer 503 to every call. Not isolatedBots: an Mangaba Bot whose Bots share one computer has computers (true) and cannot give a Bot one of its own (isolatedBots false).",
       ),
     attachmentLimits: zod
       .object({
@@ -118,14 +118,14 @@ export const GetDeploymentResponse = zod
       })
       .optional()
       .describe(
-        "How large a file attached to a message may be, by kind, in bytes. An upload over its kind's limit is refused. Absent, as from an older OpenBot, the limits are 8388608 for an image or a document (a PDF, or a Word, Excel or PowerPoint file) and 1048576 for any other file. The limits can rise while OpenBot runs, so a client reads them again rather than keeping them for good. What a Bot's model is shown of a large file is a separate matter: the file is kept and can be downloaded whatever the model can read of it.",
+        "How large a file attached to a message may be, by kind, in bytes. An upload over its kind's limit is refused. Absent, as from an older Mangaba Bot, the limits are 8388608 for an image or a document (a PDF, or a Word, Excel or PowerPoint file) and 1048576 for any other file. The limits can rise while Mangaba Bot runs, so a client reads them again rather than keeping them for good. What a Bot's model is shown of a large file is a separate matter: the file is kept and can be downloaded whatever the model can read of it.",
       ),
     api: zod
       .array(zod.string().regex(getDeploymentResponseApiItemRegExp))
       .min(1)
       .optional()
       .describe(
-        "The API versions this OpenBot serves, by major, such as v2. An app that speaks none of them can't use it: when they are all newer than the app's, the app needs an update; when they are all older, this OpenBot does. Absent from a release before it was published, which serves v2.",
+        "The API versions this Mangaba Bot serves, by major, such as v2. An app that speaks none of them can't use it: when they are all newer than the app's, the app needs an update; when they are all older, this Mangaba Bot does. Absent from a release before it was published, which serves v2.",
       ),
     minimumClients: zod
       .object({
@@ -133,26 +133,26 @@ export const GetDeploymentResponse = zod
           .string()
           .regex(getDeploymentResponseMinimumClientsWebRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
         desktop: zod
           .string()
           .regex(getDeploymentResponseMinimumClientsDesktopRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
         mobile: zod
           .string()
           .regex(getDeploymentResponseMinimumClientsMobileRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
         recorder: zod
           .string()
           .regex(getDeploymentResponseMinimumClientsRecorderRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
       })
       .optional()
       .describe(
-        "The oldest release of each OpenBot app this OpenBot serves. An app names itself in the OpenBot-Client header, and one older than its minimum here is refused with CLIENT_UPDATE_REQUIRED, everywhere but this deployment answer. An app not listed has no minimum. An OpenBot serves every app released in the last 12 months, so it names one only where its administrator raised it. Absent from a release before it was published.",
+        "The oldest release of each Mangaba Bot app this Mangaba Bot serves. An app names itself in the OpenBot-Client header, and one older than its minimum here is refused with CLIENT_UPDATE_REQUIRED, everywhere but this deployment answer. An app not listed has no minimum. An Mangaba Bot serves every app released in the last 12 months, so it names one only where its administrator raised it. Absent from a release before it was published.",
       ),
     securityMinimumClients: zod
       .object({
@@ -160,22 +160,22 @@ export const GetDeploymentResponse = zod
           .string()
           .regex(getDeploymentResponseSecurityMinimumClientsWebRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
         desktop: zod
           .string()
           .regex(getDeploymentResponseSecurityMinimumClientsDesktopRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
         mobile: zod
           .string()
           .regex(getDeploymentResponseSecurityMinimumClientsMobileRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
         recorder: zod
           .string()
           .regex(getDeploymentResponseSecurityMinimumClientsRecorderRegExp)
           .optional()
-          .describe("An OpenBot release, such as 1.1.0."),
+          .describe("An Mangaba Bot release, such as 1.1.0."),
       })
       .optional()
       .describe(
@@ -186,20 +186,20 @@ export const GetDeploymentResponse = zod
       .min(1)
       .optional()
       .describe(
-        "The version of what OpenBot Desktop supplies when it starts this OpenBot on its own computer. It changes when Desktop must supply something new.",
+        "The version of what Mangaba Bot Desktop supplies when it starts this Mangaba Bot on its own computer. It changes when Desktop must supply something new.",
       ),
     extensionApi: zod
       .int()
       .min(1)
       .optional()
       .describe(
-        "The version of what the OpenBot Recorder and this OpenBot exchange.",
+        "The version of what the Mangaba Bot Recorder and this Mangaba Bot exchange.",
       ),
   })
-  .describe("What this OpenBot offers and how people sign in to it.");
+  .describe("What this Mangaba Bot offers and how people sign in to it.");
 
 /**
- * Return the settings the organization's administrators set for its members: single sign-on, recording computer actions, stopping idle computers, the model and app allowlists, sharing learned skills, check-ins a day and choosing a model. Each organization has its own, and a new one starts with OpenBot's defaults. Beside them, read only, what an administrator needs to set them: the model OpenBot runs on, the directory groups of the organization's members, the apps an allowlist can name, the hosts every computer may reach, and whether SCIM and OpenTelemetry are set up. Only an administrator of the organization may read them.
+ * Return the settings the organization's administrators set for its members: single sign-on, recording computer actions, stopping idle computers, the model and app allowlists, sharing learned skills, check-ins a day and choosing a model. Each organization has its own, and a new one starts with Mangaba Bot's defaults. Beside them, read only, what an administrator needs to set them: the model Mangaba Bot runs on, the directory groups of the organization's members, the apps an allowlist can name, the hosts every computer may reach, and whether SCIM and OpenTelemetry are set up. Only an administrator of the organization may read them.
  * @summary Read the organization's settings
  */
 
@@ -236,7 +236,7 @@ export const GetOrganizationSettingsResponse = zod
         builtInModel: zod
           .string()
           .nullable()
-          .describe("The model OpenBot's own Bots run on, when one is set."),
+          .describe("The model Mangaba Bot's own Bots run on, when one is set."),
         directoryGroups: zod
           .array(zod.string())
           .describe(
@@ -276,14 +276,14 @@ export const GetOrganizationSettingsResponse = zod
           .enum(["per-person", "shared", "none"])
           .optional()
           .describe(
-            "How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an OpenBot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it.",
+            "How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an Mangaba Bot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it.",
           ),
       })
       .describe("What an administrator needs to set the settings. Read only."),
     ssoRequired: zod
       .boolean()
       .describe(
-        "Whether people must sign in through the company's identity provider. Where this OpenBot may keep more than one organization, it holds this organization's members. Where it keeps only one, it holds everybody, and is set only in that organization. The administrators the deployment's configuration names keep social sign-in as their way in.",
+        "Whether people must sign in through the company's identity provider. Where this Mangaba Bot may keep more than one organization, it holds this organization's members. Where it keeps only one, it holds everybody, and is set only in that organization. The administrators the deployment's configuration names keep social sign-in as their way in.",
       ),
     actionRecording: zod
       .boolean()
@@ -357,7 +357,7 @@ export const GetOrganizationSettingsResponse = zod
   .and(zod.unknown());
 
 /**
- * Change the settings sent and keep the rest. Each change is recorded on the audit trail with what it was before. Requiring single sign-on needs an identity provider registered first, and signs out everybody who signed in another way, apart from the administrators the deployment's configuration names and the caller. Where this OpenBot may keep more than one organization, requiring single sign-on is each organization's own rule: its members sign in through an identity provider, and saving it signs out only this organization's members who signed in another way. Where it keeps only one organization, that organization's rule holds for everybody who signs in, and sending ssoRequired in any other organization answers 409. Only an administrator of the organization may change them. Where people sign in with their OpenBot by CopilotKit account (hostedSignIn in getDeployment), single sign-on can't be required: sending ssoRequired true answers 409 with the code HOSTED_SIGN_IN_ONLY.
+ * Change the settings sent and keep the rest. Each change is recorded on the audit trail with what it was before. Requiring single sign-on needs an identity provider registered first, and signs out everybody who signed in another way, apart from the administrators the deployment's configuration names and the caller. Where this Mangaba Bot may keep more than one organization, requiring single sign-on is each organization's own rule: its members sign in through an identity provider, and saving it signs out only this organization's members who signed in another way. Where it keeps only one organization, that organization's rule holds for everybody who signs in, and sending ssoRequired in any other organization answers 409. Only an administrator of the organization may change them. Where people sign in with their Mangaba Bot by CopilotKit account (hostedSignIn in getDeployment), single sign-on can't be required: sending ssoRequired true answers 409 with the code HOSTED_SIGN_IN_ONLY.
  * @summary Change the organization's settings
  */
 
@@ -406,7 +406,7 @@ export const UpdateOrganizationSettingsBody = zod
         builtInModel: zod
           .string()
           .nullable()
-          .describe("The model OpenBot's own Bots run on, when one is set."),
+          .describe("The model Mangaba Bot's own Bots run on, when one is set."),
         directoryGroups: zod
           .array(zod.string())
           .describe(
@@ -446,7 +446,7 @@ export const UpdateOrganizationSettingsBody = zod
           .enum(["per-person", "shared", "none"])
           .optional()
           .describe(
-            "How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an OpenBot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it.",
+            "How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an Mangaba Bot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it.",
           ),
       })
       .optional()
@@ -455,7 +455,7 @@ export const UpdateOrganizationSettingsBody = zod
       .boolean()
       .optional()
       .describe(
-        "Whether people must sign in through the company's identity provider. Where this OpenBot may keep more than one organization, it holds this organization's members. Where it keeps only one, it holds everybody, and is set only in that organization. The administrators the deployment's configuration names keep social sign-in as their way in.",
+        "Whether people must sign in through the company's identity provider. Where this Mangaba Bot may keep more than one organization, it holds this organization's members. Where it keeps only one, it holds everybody, and is set only in that organization. The administrators the deployment's configuration names keep social sign-in as their way in.",
       ),
     actionRecording: zod
       .boolean()
@@ -561,7 +561,7 @@ export const UpdateOrganizationSettingsResponse = zod
         builtInModel: zod
           .string()
           .nullable()
-          .describe("The model OpenBot's own Bots run on, when one is set."),
+          .describe("The model Mangaba Bot's own Bots run on, when one is set."),
         directoryGroups: zod
           .array(zod.string())
           .describe(
@@ -601,14 +601,14 @@ export const UpdateOrganizationSettingsResponse = zod
           .enum(["per-person", "shared", "none"])
           .optional()
           .describe(
-            "How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an OpenBot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it.",
+            "How Bots get computers here. per-person: each person has a computer of their own, and so does each isolated Bot; an Mangaba Bot only one person uses answers this too. shared: every person's Bots run on one computer, so a command one Bot runs can read another person's files there. That suits a proof of concept, not people's real work. none: Bots have no computers. Absent from a server that predates it.",
           ),
       })
       .describe("What an administrator needs to set the settings. Read only."),
     ssoRequired: zod
       .boolean()
       .describe(
-        "Whether people must sign in through the company's identity provider. Where this OpenBot may keep more than one organization, it holds this organization's members. Where it keeps only one, it holds everybody, and is set only in that organization. The administrators the deployment's configuration names keep social sign-in as their way in.",
+        "Whether people must sign in through the company's identity provider. Where this Mangaba Bot may keep more than one organization, it holds this organization's members. Where it keeps only one, it holds everybody, and is set only in that organization. The administrators the deployment's configuration names keep social sign-in as their way in.",
       ),
     actionRecording: zod
       .boolean()
@@ -846,7 +846,7 @@ export const ListComputerActionsResponse = zod.object({
 });
 
 /**
- * Return what this OpenBot has set up and what it still needs, each row with its fix. An administrator, or somebody running OpenBot on their own, reads it as the one who sets it up; anybody else reads which parts work, and that an administrator sets the rest up.
+ * Return what this Mangaba Bot has set up and what it still needs, each row with its fix. An administrator, or somebody running Mangaba Bot on their own, reads it as the one who sets it up; anybody else reads which parts work, and that an administrator sets the rest up.
  * @summary Read the setup checklist
  */
 

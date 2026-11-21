@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 /**
  * A person's picture, or their initials on the tint the account row uses, or a person's mark for
- * somebody OpenBot knows neither a name nor an address for: how a member is drawn wherever people
+ * somebody Mangaba Bot knows neither a name nor an address for: how a member is drawn wherever people
  * are listed (an organization's members, the people offered to a team).
  */
 export function PersonAvatar({

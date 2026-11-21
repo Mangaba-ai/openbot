@@ -6,7 +6,7 @@ import type { BrowserProduct } from "./browserProduct";
 import type { BrowserWindow } from "./browserWindow";
 
 /**
- * The person's OpenBot browser opened, or came forward.
+ * The person's Mangaba Bot browser opened, or came forward.
  */
 export interface PersonBrowserWindowOpened {
   ok: true;

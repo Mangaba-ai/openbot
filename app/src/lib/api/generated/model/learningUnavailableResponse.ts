@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * OpenBot couldn't read Learning from the backend just now. Asking again may work.
+ * Mangaba Bot couldn't read Learning from the backend just now. Asking again may work.
  */
 export type LearningUnavailableResponse = Problem;

@@ -42,13 +42,13 @@ export type DeploymentCapabilities = {
    */
   generativeUi: boolean;
   /**
-   * Whether to show the banner offering help self-hosting OpenBot. A fork that runs OpenBot for its
+   * Whether to show the banner offering help self-hosting Mangaba Bot. A fork that runs Mangaba Bot for its
    * own organization turns it off with OPENBOT_SELF_HOST_BANNER=false, and the server answers false
    * for a deployment on a paid Intelligence plan.
    */
   selfHostBanner: boolean;
   /**
-   * Whether this is somebody trying OpenBot on their own machine rather than an organization's
+   * Whether this is somebody trying Mangaba Bot on their own machine rather than an organization's
    * deployment: single-user mode on the server, which only a local, unreachable install can be in.
    */
   localEvaluation: boolean;
@@ -59,10 +59,10 @@ export type DeploymentCapabilities = {
   edition: "team" | "personal";
   transcription?: boolean;
   voice?: boolean;
-  /** Whether a Bot can run inside OpenBot, with no address of its own. */
+  /** Whether a Bot can run inside Mangaba Bot, with no address of its own. */
   builtInBots?: boolean;
   /**
-   * Whether this OpenBot can give a Bot a computer of its own at all.
+   * Whether this Mangaba Bot can give a Bot a computer of its own at all.
    *
    * Only where its computers are made one at a time (the supervisor, or a cluster's sandboxes).
    * Whether the signed-in person may is a different question, answered by the "Isolated Bots"
@@ -70,24 +70,24 @@ export type DeploymentCapabilities = {
    */
   isolatedBots?: boolean;
   /**
-   * Whether this OpenBot has computers for Bots at all.
+   * Whether this Mangaba Bot has computers for Bots at all.
    *
-   * Not `isolatedBots`: an OpenBot whose Bots share one computer has computers and gives no Bot one
+   * Not `isolatedBots`: an Mangaba Bot whose Bots share one computer has computers and gives no Bot one
    * of its own. False only when the server says so. Without computers a Bot has no screen, terminal
    * or sign-in to a website, and the server refuses every call about one, so a screen reads this
    * and says so in place of asking.
    */
   botComputers?: boolean;
   /**
-   * Whether people sign in through the hosted sign-in, with their account with OpenBot by
-   * CopilotKit: a hosted OpenBot. There an invitation is an email from OpenBot by CopilotKit, accepted
-   * from that email, with no OpenBot link that accepts it.
+   * Whether people sign in through the hosted sign-in, with their account with Mangaba Bot by
+   * CopilotKit: a hosted Mangaba Bot. There an invitation is an email from Mangaba Bot by CopilotKit, accepted
+   * from that email, with no Mangaba Bot link that accepts it.
    */
   hostedSignIn?: boolean;
 };
 
 /**
- * Whether this page shows the OpenBot on this computer inside OpenBot Desktop. There a request is admitted by the
+ * Whether this page shows the Mangaba Bot on this computer inside Mangaba Bot Desktop. There a request is admitted by the
  * install's cookie (the personal edition admits nothing without it), so nothing is asked without the page's cookies.
  * Asked of the desktop app once: it doesn't change while the page shows.
  */
@@ -117,8 +117,8 @@ function showsOpenBotOnThisComputer(): Promise<boolean> {
  * member of `default` is never told "not found" on the way in. The facts are the deployment's, the
  * same asked as anybody or in any organization.
  *
- * Inside OpenBot Desktop, on the OpenBot on this computer, it is asked with the page's cookies,
- * which that OpenBot needs; the person is in `default` there. Told "not found" all the same, it is
+ * Inside Mangaba Bot Desktop, on the Mangaba Bot on this computer, it is asked with the page's cookies,
+ * which that Mangaba Bot needs; the person is in `default` there. Told "not found" all the same, it is
  * asked in one of their own.
  */
 export async function readDeployment(options: {
@@ -138,7 +138,7 @@ export async function readDeployment(options: {
     if (!(error instanceof ClientError) || error.status !== 404) throw error;
     const own = (await listOrganizations({ limit: 1 }, undefined, options))
       .organizations[0];
-    // In no organization (removed from the last one): what this OpenBot offers anybody, asked as nobody, so the
+    // In no organization (removed from the last one): what this Mangaba Bot offers anybody, asked as nobody, so the
     // sign-in screen and the page for somebody in no organization can still offer a way back in.
     if (!own)
       return getDeployment(DEPLOYMENT_ORGANIZATION, {
@@ -172,14 +172,14 @@ export const deploymentKeys = {
 };
 
 /**
- * Whether this app and the OpenBot it talks to can work together, as that OpenBot's `deployment`
+ * Whether this app and the Mangaba Bot it talks to can work together, as that Mangaba Bot's `deployment`
  * says: the API versions it serves and the oldest release of each app it serves
- * (`compatibility` in shared/client-version.ts, which every OpenBot app decides by).
+ * (`compatibility` in shared/client-version.ts, which every Mangaba Bot app decides by).
  *
- * `deployment` is the one read an OpenBot never refuses for the app's version, so this is how a page
+ * `deployment` is the one read an Mangaba Bot never refuses for the app's version, so this is how a page
  * finds out before anything else fails. Read again every so often and when the tab is looked at
- * again, like the attachment limits, because the OpenBot can be upgraded while the tab stays open.
- * Not answered (an OpenBot from before the v2 API, or one that failed to answer) is not a verdict:
+ * again, like the attachment limits, because the Mangaba Bot can be upgraded while the tab stays open.
+ * Not answered (an Mangaba Bot from before the v2 API, or one that failed to answer) is not a verdict:
  * the screens say their own failures as they always did.
  *
  * `app` is this app; a test names another to see the other verdicts drawn.
@@ -195,7 +195,7 @@ export function deploymentCompatibilityQueryOptions(
       compatibility(
         await readDeployment({
           signal,
-          fallback: "Couldn't load which apps OpenBot serves.",
+          fallback: "Couldn't load which apps Mangaba Bot serves.",
         }),
         app,
       ),
@@ -273,7 +273,7 @@ export function deploymentCapabilitiesQueryOptions() {
     queryFn: async ({ signal }): Promise<DeploymentCapabilities> => {
       const body = await readDeployment({
         signal,
-        fallback: "Couldn't load what OpenBot can do.",
+        fallback: "Couldn't load what Mangaba Bot can do.",
       });
       return {
         generativeUi: body.generativeUi === true,
@@ -293,13 +293,13 @@ export function deploymentCapabilitiesQueryOptions() {
 }
 
 /**
- * Asks OpenBot the cheapest thing it answers, to find out whether it answers at all. A verdict about
+ * Asks Mangaba Bot the cheapest thing it answers, to find out whether it answers at all. A verdict about
  * this moment, so no cache key: the answer reaches `lib/desktop/reachability.ts` through the client
  * like every other, and that is what the connection line reads.
  */
 export async function askWhetherOpenBotAnswers(): Promise<void> {
   // Where the deployment is answered for this person, so the question is never refused as "not found".
-  await readDeployment({ fallback: "Couldn't reach OpenBot." }).catch(
+  await readDeployment({ fallback: "Couldn't reach Mangaba Bot." }).catch(
     () => undefined,
   );
 }
@@ -308,10 +308,10 @@ export async function askWhetherOpenBotAnswers(): Promise<void> {
  * Whether this deployment offers memory: what a person's Bots remember about them, and the apps a
  * Bot learns it from. Every memory screen, row and link reads this.
  *
- * NOT IN THE PERSONAL EDITION. OpenBot Desktop runs a local Intelligence whose licence leaves memory
+ * NOT IN THE PERSONAL EDITION. Mangaba Bot Desktop runs a local Intelligence whose licence leaves memory
  * out, so the personal edition has no memory to show. Read from the edition, not from Intelligence's
  * entitlement: the server's entitlement read only chooses where memory is kept (Intelligence, or
- * OpenBot's own tables when Intelligence is unlicensed or unreachable), and it changes from one
+ * Mangaba Bot's own tables when Intelligence is unlicensed or unreachable), and it changes from one
  * minute to the next while Intelligence starts. A screen gated on it would come and go, and a team
  * deployment that keeps memory in its own tables would lose screens that work.
  *
@@ -333,13 +333,13 @@ export function useOffersMemory(): boolean {
 }
 
 /**
- * Whether this OpenBot has no computers for Bots: true only once the server has said so.
+ * Whether this Mangaba Bot has no computers for Bots: true only once the server has said so.
  *
  * `undefined` while the answer is on its way. A screen about a computer waits for it before it asks
  * the server about one, because where there are none every such call is refused, and the refusal
  * would be on screen as a failure before the reason was known. An answer that could not be read is
  * false: the screen behaves as it does where there are computers, and never says "no computers"
- * about an OpenBot that may have them.
+ * about an Mangaba Bot that may have them.
  */
 export function useNoBotComputers(): boolean | undefined {
   const capabilities = useQuery(deploymentCapabilitiesQueryOptions());

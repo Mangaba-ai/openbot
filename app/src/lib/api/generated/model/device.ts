@@ -7,9 +7,9 @@ import type { DevicePlatform } from "./devicePlatform";
  * A phone that gets push notifications for the person, from every one of their Bots in the organization it is registered in. Never its push token.
  */
 export interface Device {
-  /** The id the OpenBot app made for the phone. */
+  /** The id the Mangaba Bot app made for the phone. */
   id: string;
   platform: DevicePlatform;
-  /** When OpenBot first registered the phone. */
+  /** When Mangaba Bot first registered the phone. */
   createdAt: string;
 }

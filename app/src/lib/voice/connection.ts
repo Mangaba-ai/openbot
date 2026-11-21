@@ -23,12 +23,12 @@ export const connectVoice: ConnectVoice = async (options) => {
     if (error instanceof DOMException && error.name === "AbortError")
       throw error;
     throw new Error(
-      "Voice calls are unavailable. Check OpenBot's voice configuration.",
+      "Voice calls are unavailable. Check Mangaba Bot's voice configuration.",
     );
   });
   if (config && typeof config === "object" && "transport" in config) {
     if (config.transport === "webrtc") return connectWebRtc(options);
     if (config.transport === "websocket") return connectWebSocket(options);
   }
-  throw new Error("OpenBot uses a voice connection this app doesn't support.");
+  throw new Error("Mangaba Bot uses a voice connection this app doesn't support.");
 };

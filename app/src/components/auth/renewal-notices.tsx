@@ -12,7 +12,7 @@ const RENEWAL_TOAST = "hosted-sign-in-renewal";
 const SIGN_IN_AGAIN_TOAST = "hosted-sign-in-renewal-click";
 
 /**
- * What a hosted OpenBot's sign-in renewal does on the page (lib/auth/renewal.ts). Back from a round
+ * What a hosted Mangaba Bot's sign-in renewal does on the page (lib/auth/renewal.ts). Back from a round
  * trip, the write the renewal interrupted is sent again, once, with its own Idempotency-Key, and the
  * page says how it went; where it couldn't renew by itself, it offers "Sign in again". Draws nothing
  * of its own: the toasts do.

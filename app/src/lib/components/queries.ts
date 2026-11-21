@@ -312,7 +312,7 @@ export async function callComponentFunction(
       reason:
         error instanceof ClientError
           ? error.message
-          : "OpenBot couldn't be reached to read that data.",
+          : "Mangaba Bot couldn't be reached to read that data.",
     };
   }
 }
@@ -344,8 +344,8 @@ export async function decideComponent(
       allowed: false,
       reason:
         error instanceof ClientError
-          ? "OpenBot couldn't be asked whether that component is allowed, so it wasn't shown."
-          : "OpenBot couldn't be reached to check whether that component is allowed, so it wasn't shown.",
+          ? "Mangaba Bot couldn't be asked whether that component is allowed, so it wasn't shown."
+          : "Mangaba Bot couldn't be reached to check whether that component is allowed, so it wasn't shown.",
     };
   }
 }

@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot keeps no vault.
+ * This Mangaba Bot keeps no vault.
  */
 export type CredentialsUnavailableResponse = Problem;

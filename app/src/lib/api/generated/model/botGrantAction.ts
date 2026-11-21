@@ -11,7 +11,7 @@ export interface BotGrantAction {
   /** @minLength 1 */
   name: string;
   description: string;
-  /** The app warns that it destroys something. OpenBot always asks first. */
+  /** The app warns that it destroys something. Mangaba Bot always asks first. */
   destructive: boolean;
   /** It only reads. Anything else is treated as a change. */
   read: boolean;

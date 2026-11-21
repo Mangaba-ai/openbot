@@ -3,18 +3,18 @@ The big downloads, started when the first setup screen shows, before anybody cli
 
 Nothing used to download until Install was clicked, and then one item after another. On a new Mac
 that was Podman's package, the password, then the 937 MB engine machine image from quay.io with no
-progress shown, then 1.1 GB of OpenBot's images. None of those bytes needs an engine, a password, a
+progress shown, then 1.1 GB of Mangaba Bot's images. None of those bytes needs an engine, a password, a
 sign-in or the licence to download, only to be used. So when Welcome shows, this starts them all at
 once, into a cache on disk, and Install finds them there:
 
 - **The engine machine image.** Podman's own `machine init` pulls it from quay.io itself, silently.
-  Here it is downloaded by OpenBot, with progress, and the machine is built from the local file
+  Here it is downloaded by Mangaba Bot, with progress, and the machine is built from the local file
   (`podman machine init --image <path>`, which takes a local path and unpacks a `.zst` itself:
   podman `pkg/machine/shim/diskpull` and `pkg/machine/compression`). Only for an installation that
-  will create OpenBot's machine with the Podman 6.1 the pins below belong to.
+  will create Mangaba Bot's machine with the Podman 6.1 the pins below belong to.
 - **Podman's installer and Compose**, the files `install.rs` installs, through the same `fetch`.
 - **The deployment** (`docker-compose.yml` and the image list), laid out as Install lays it out.
-- **OpenBot's images**, pulled into an engine that already answers (Docker Desktop, or a Podman
+- **Mangaba Bot's images**, pulled into an engine that already answers (Docker Desktop, or a Podman
   machine that is running), with Install's own pull. With no engine answering yet, they download
   into the cache instead, and Install loads them into the engine once it does (`early_images`).
 
@@ -80,7 +80,7 @@ pub struct MachineImage {
 /// The repository the machine images are in, on quay.io and in downloads.copilotkit.ai's copy.
 pub const MACHINE_OS_REPOSITORY: &str = "podman/machine-os";
 
-/// The machine image Podman would pull on this kind of computer, or `None` where OpenBot never
+/// The machine image Podman would pull on this kind of computer, or `None` where Mangaba Bot never
 /// creates a machine from one: Linux has no machine, and machine-os has no `applehv` disk for an
 /// Intel Mac. Windows machines are WSL distributions, so theirs is the WSL root file system.
 pub fn machine_image_for(os: &str, arch: &str) -> Option<MachineImage> {
@@ -411,7 +411,7 @@ fn attempt(
         if response.status() == reqwest::StatusCode::UNAUTHORIZED && token.is_none() {
             token = Some(anonymous_token(&client, &response).ok_or_else(|| {
                 Failed::ForGood(format!(
-                    "{source} asked for credentials OpenBot does not have"
+                    "{source} asked for credentials Mangaba Bot does not have"
                 ))
             })?);
             continue;
@@ -523,7 +523,7 @@ fn attempt(
     if got != pinned.sha256 {
         have.restart().map_err(Failed::ForGood)?;
         return Err(Failed::ForGood(format!(
-            "{} from {source} is not what OpenBot expected: sha256 {got}, expected {}",
+            "{} from {source} is not what Mangaba Bot expected: sha256 {got}, expected {}",
             pinned.name, pinned.sha256
         )));
     }
@@ -571,7 +571,7 @@ pub struct Summary {
     pub size: Option<u64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bytes_per_second: Option<u64>,
-    /// When the disk is short: free on the drive of the engine's disk (`disk_place`), what OpenBot
+    /// When the disk is short: free on the drive of the engine's disk (`disk_place`), what Mangaba Bot
     /// needs free to run (the back end's 40 GiB, the figure the account step's check says too), and
     /// what the downloads add to the disk on top of it (`Needed`).
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -620,7 +620,7 @@ struct Entry {
 struct Table {
     state: State,
     entries: BTreeMap<&'static str, Entry>,
-    /// What OpenBot's image pulls report: Install shows the same while it waits for them.
+    /// What Mangaba Bot's image pulls report: Install shows the same while it waits for them.
     images: Option<crate::pull_metrics::Downloads>,
     free: Option<u64>,
     needed: Option<Needed>,
@@ -712,7 +712,7 @@ pub fn summary() -> Summary {
 
 /// Where the early downloads are once they have looked at the free disk, waiting up to `limit` for
 /// that, for Install: an Install clicked in the seconds before they have is not let through on a
-/// disk too full for OpenBot. At once when they were never started.
+/// disk too full for Mangaba Bot. At once when they were never started.
 pub fn measured(limit: Duration) -> Summary {
     let since = Instant::now();
     while STARTED.load(std::sync::atomic::Ordering::SeqCst)
@@ -850,7 +850,7 @@ pub struct Facts {
     pub choice: crate::install::Choice,
     /// The Podman on this computer answers `--version` with this, when there is one.
     pub podman_version: Option<String>,
-    /// OpenBot's Podman machine is already there.
+    /// Mangaba Bot's Podman machine is already there.
     pub machine_exists: bool,
     /// An engine answers now, so images can go straight into it.
     pub answering: Option<Address>,
@@ -866,9 +866,9 @@ pub struct Plan {
     pub podman: bool,
     pub compose: bool,
     pub deployment: bool,
-    /// The engine to pull OpenBot's images into.
+    /// The engine to pull Mangaba Bot's images into.
     pub images: Option<Address>,
-    /// With no engine answering, OpenBot's images downloaded into the cache, to load once one
+    /// With no engine answering, Mangaba Bot's images downloaded into the cache, to load once one
     /// does (`early_images`).
     pub offline_images: bool,
 }
@@ -901,17 +901,17 @@ impl Plan {
 ///
 /// - Podman's installer and Compose when Install will install Podman (macOS and Windows; Linux's
 ///   Podman comes from its own packages);
-/// - the machine image when Install will create OpenBot's machine with a Podman that pulls the
+/// - the machine image when Install will create Mangaba Bot's machine with a Podman that pulls the
 ///   pinned machine-os release;
-/// - OpenBot's images: into an engine that answers already, or into the cache to load once one
-///   does. Their list comes from OpenBot's own Compose, so that downloads too (`named_images`).
+/// - Mangaba Bot's images: into an engine that answers already, or into the cache to load once one
+///   does. Their list comes from Mangaba Bot's own Compose, so that downloads too (`named_images`).
 pub fn plan(facts: &Facts) -> Plan {
     use crate::install::Choice;
     if facts.installed_before {
         return Plan::default();
     }
     let desktop = matches!(facts.os, "macos" | "windows");
-    // A Podman too old for OpenBot is updated with the same installer (`engine_versions::ensure`).
+    // A Podman too old for Mangaba Bot is updated with the same installer (`engine_versions::ensure`).
     let too_old = facts
         .podman_version
         .as_deref()
@@ -932,7 +932,7 @@ pub fn plan(facts: &Facts) -> Plan {
             }
             _ => false,
         };
-    // No engine answers: OpenBot's images download now, to load once one does.
+    // No engine answers: Mangaba Bot's images download now, to load once one does.
     let offline_images = desktop
         && facts.answering.is_none()
         && matches!(
@@ -943,7 +943,7 @@ pub fn plan(facts: &Facts) -> Plan {
     Plan {
         machine_image: facts.machine_image.filter(|_| creates_machine),
         podman: installs_podman,
-        // Install's Compose for a new Podman, and the one that names OpenBot's images either way.
+        // Install's Compose for a new Podman, and the one that names Mangaba Bot's images either way.
         compose: installs_podman || images.is_some() || offline_images,
         deployment: true,
         images,
@@ -1004,7 +1004,7 @@ pub fn hold_deployment() -> MutexGuard<'static, ()> {
     hold(&DEPLOYMENT)
 }
 
-/// Held while OpenBot's images are pulled early.
+/// Held while Mangaba Bot's images are pulled early.
 fn images_lock() -> &'static Mutex<()> {
     static IMAGES: Mutex<()> = Mutex::new(());
     &IMAGES
@@ -1152,7 +1152,7 @@ fn move_offer(
     (is_other_drive && home_has_room && can_move).then(|| home_drive.to_string())
 }
 
-/// The free disk OpenBot needs before the downloads start, as two figures the window says apart.
+/// The free disk Mangaba Bot needs before the downloads start, as two figures the window says apart.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct Needed {
     /// What the back end needs free to run: the 40 GiB the account step's check also asks for.
@@ -1167,7 +1167,7 @@ impl Needed {
     }
 }
 
-/// The free disk OpenBot needs for `plan`: the back end's 40 GiB, and the downloads themselves.
+/// The free disk Mangaba Bot needs for `plan`: the back end's 40 GiB, and the downloads themselves.
 pub fn needed_for(plan: &Plan) -> Needed {
     Needed {
         back_end: crate::local_eval::MIN_ENGINE_FREE_DISK_BYTES,
@@ -1454,13 +1454,13 @@ pub fn default_bot_images(engine: &Address, root: &Path) -> Result<Vec<String>, 
 
 /**
 The images Install pulls for the default Bot, from the deployment laid out in `root`, named by
-OpenBot's own Compose: `compose` gives its path, waiting for its download when the first screen is
+Mangaba Bot's own Compose: `compose` gives its path, waiting for its download when the first screen is
 still downloading it.
 
 Never the engine's Compose. On Windows D a person's Podman 5.8.9 answered with no Compose installed,
-and `podman compose` failed looking up a provider before OpenBot's own was in place, so the first
+and `podman compose` failed looking up a provider before Mangaba Bot's own was in place, so the first
 screen said its downloads didn't finish. A Docker Desktop's Compose can be one too old to read the
-project (`engine_versions`). OpenBot's own is the pinned one Install uses, and `config --images`
+project (`engine_versions`). Mangaba Bot's own is the pinned one Install uses, and `config --images`
 needs no engine.
 */
 pub fn named_images(
@@ -1491,12 +1491,12 @@ pub fn named_images(
     })
 }
 
-/// OpenBot's own Compose, from the cache, waiting for the first screen's download of it.
+/// Mangaba Bot's own Compose, from the cache, waiting for the first screen's download of it.
 fn own_compose(cache: &Path) -> impl FnOnce() -> Result<PathBuf, String> + '_ {
     move || crate::install::runnable_compose(cache, &())
 }
 
-/// OpenBot's images for the default Bot, downloaded into the cache for Install to load once the
+/// Mangaba Bot's images for the default Bot, downloaded into the cache for Install to load once the
 /// engine answers (`early_images`).
 fn download_offline_images(root: &Path, cache: &Path) -> Result<(), String> {
     let images = named_images(root, own_compose(cache))?;
@@ -1525,7 +1525,7 @@ pub fn load_offline_images(engine: &Address, said: impl Fn(crate::pull_metrics::
     }
 }
 
-/// OpenBot's images for the default Bot, pulled into `engine` with Install's own pull.
+/// Mangaba Bot's images for the default Bot, pulled into `engine` with Install's own pull.
 fn pull_images(engine: &Address, root: &Path, cache: &Path, hooks: &Hooks) -> Result<(), String> {
     let images = named_images(root, own_compose(cache))?;
     let present = {
@@ -1555,7 +1555,7 @@ fn pull_images(engine: &Address, root: &Path, cache: &Path, hooks: &Hooks) -> Re
     .map_err(|problem| problem.said)
 }
 
-/// Wait for OpenBot's images to finish pulling early, if they are, saying where they are while it
+/// Wait for Mangaba Bot's images to finish pulling early, if they are, saying where they are while it
 /// waits, or `holding` once while they hold for room. Install's own pull then finds them there.
 pub fn wait_for_images(said: impl Fn(&crate::pull_metrics::Downloads), holding: impl Fn()) {
     let lock = images_lock();

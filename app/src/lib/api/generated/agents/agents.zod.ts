@@ -86,7 +86,7 @@ export const ListBotAgentsResponse = zod.object({
         kind: zod
           .enum(["openbot", "address"])
           .describe(
-            "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+            "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
           ),
         visibility: zod
           .enum(["public", "private"])
@@ -97,19 +97,19 @@ export const ListBotAgentsResponse = zod.object({
           .string()
           .nullable()
           .describe(
-            "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside OpenBot.",
+            "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside Mangaba Bot.",
           ),
         framework: zod
           .string()
           .optional()
           .describe(
-            'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+            'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
           ),
         model: zod
           .string()
           .nullable()
           .describe(
-            "The model it runs on, for an agent whose model is OpenBot's to choose. Null for the organization's default, or for an agent that picks its own.",
+            "The model it runs on, for an agent whose model is Mangaba Bot's to choose. Null for the organization's default, or for an agent that picks its own.",
           ),
         skills: zod.array(
           zod
@@ -156,12 +156,12 @@ export const ListBotAgentsResponse = zod.object({
         hasCallbackToken: zod
           .boolean()
           .describe(
-            "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+            "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
           ),
         builtIn: zod
           .boolean()
           .describe(
-            "Whether OpenBot runs it, inside OpenBot or at an address OpenBot started, so it needs no callback token of its own.",
+            "Whether Mangaba Bot runs it, inside Mangaba Bot or at an address Mangaba Bot started, so it needs no callback token of its own.",
           ),
         canManage: zod
           .boolean()
@@ -195,7 +195,7 @@ export const ListBotAgentsResponse = zod.object({
 });
 
 /**
- * Add an agent for Bots to hand work to. kind openbot runs inside OpenBot, on the model given or the organization's default. kind address runs at an AG-UI address, which the server checks before saving; a key, when given, is stored encrypted and never returned. Anybody may add a private agent, for their own Bots; only an admin of the organization may add a public one, which every member's Bots may use. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Add an agent for Bots to hand work to. kind openbot runs inside Mangaba Bot, on the model given or the organization's default. kind address runs at an AG-UI address, which the server checks before saving; a key, when given, is stored encrypted and never returned. Anybody may add a private agent, for their own Bots; only an admin of the organization may add a public one, which every member's Bots may use. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Add an agent
  */
 
@@ -276,7 +276,7 @@ export const CreateBotAgentBody = zod
     kind: zod
       .enum(["openbot", "address"])
       .describe(
-        "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+        "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
       ),
     endpoint: zod
       .url()
@@ -325,7 +325,7 @@ export const CreateBotAgentBody = zod
       ])
       .optional()
       .describe(
-        "The framework an agent at an address is built on, by its id in OpenBot's harness list (shared/harnesses.json). Empty means none was named. Kept only for kind address.",
+        "The framework an agent at an address is built on, by its id in Mangaba Bot's harness list (shared/harnesses.json). Empty means none was named. Kept only for kind address.",
       ),
     model: zod
       .string()
@@ -334,7 +334,7 @@ export const CreateBotAgentBody = zod
       .regex(createBotAgentBodyModelRegExp)
       .nullish()
       .describe(
-        "A model the catalogue offers, or null for the organization's default. Read only for an agent whose model is OpenBot's to choose.",
+        "A model the catalogue offers, or null for the organization's default. Read only for an agent whose model is Mangaba Bot's to choose.",
       ),
     skills: zod
       .array(
@@ -410,7 +410,7 @@ export const CreateBotAgentResponse = zod.object({
       kind: zod
         .enum(["openbot", "address"])
         .describe(
-          "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+          "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
         ),
       visibility: zod
         .enum(["public", "private"])
@@ -421,19 +421,19 @@ export const CreateBotAgentResponse = zod.object({
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside OpenBot.",
+          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside Mangaba Bot.",
         ),
       framework: zod
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       model: zod
         .string()
         .nullable()
         .describe(
-          "The model it runs on, for an agent whose model is OpenBot's to choose. Null for the organization's default, or for an agent that picks its own.",
+          "The model it runs on, for an agent whose model is Mangaba Bot's to choose. Null for the organization's default, or for an agent that picks its own.",
         ),
       skills: zod.array(
         zod
@@ -476,12 +476,12 @@ export const CreateBotAgentResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       builtIn: zod
         .boolean()
         .describe(
-          "Whether OpenBot runs it, inside OpenBot or at an address OpenBot started, so it needs no callback token of its own.",
+          "Whether Mangaba Bot runs it, inside Mangaba Bot or at an address Mangaba Bot started, so it needs no callback token of its own.",
         ),
       canManage: zod
         .boolean()
@@ -559,7 +559,7 @@ export const GetBotAgentResponse = zod.object({
       kind: zod
         .enum(["openbot", "address"])
         .describe(
-          "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+          "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
         ),
       visibility: zod
         .enum(["public", "private"])
@@ -570,19 +570,19 @@ export const GetBotAgentResponse = zod.object({
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside OpenBot.",
+          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside Mangaba Bot.",
         ),
       framework: zod
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       model: zod
         .string()
         .nullable()
         .describe(
-          "The model it runs on, for an agent whose model is OpenBot's to choose. Null for the organization's default, or for an agent that picks its own.",
+          "The model it runs on, for an agent whose model is Mangaba Bot's to choose. Null for the organization's default, or for an agent that picks its own.",
         ),
       skills: zod.array(
         zod
@@ -623,12 +623,12 @@ export const GetBotAgentResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       builtIn: zod
         .boolean()
         .describe(
-          "Whether OpenBot runs it, inside OpenBot or at an address OpenBot started, so it needs no callback token of its own.",
+          "Whether Mangaba Bot runs it, inside Mangaba Bot or at an address Mangaba Bot started, so it needs no callback token of its own.",
         ),
       canManage: zod
         .boolean()
@@ -775,7 +775,7 @@ export const UpdateBotAgentBody = zod
       .regex(updateBotAgentBodyModelRegExp)
       .nullish()
       .describe(
-        "A model the catalogue offers, or null for the organization's default. Read only for an agent whose model is OpenBot's to choose.",
+        "A model the catalogue offers, or null for the organization's default. Read only for an agent whose model is Mangaba Bot's to choose.",
       ),
     skills: zod
       .array(
@@ -851,7 +851,7 @@ export const UpdateBotAgentResponse = zod.object({
       kind: zod
         .enum(["openbot", "address"])
         .describe(
-          "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+          "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
         ),
       visibility: zod
         .enum(["public", "private"])
@@ -862,19 +862,19 @@ export const UpdateBotAgentResponse = zod.object({
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside OpenBot.",
+          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside Mangaba Bot.",
         ),
       framework: zod
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       model: zod
         .string()
         .nullable()
         .describe(
-          "The model it runs on, for an agent whose model is OpenBot's to choose. Null for the organization's default, or for an agent that picks its own.",
+          "The model it runs on, for an agent whose model is Mangaba Bot's to choose. Null for the organization's default, or for an agent that picks its own.",
         ),
       skills: zod.array(
         zod
@@ -917,12 +917,12 @@ export const UpdateBotAgentResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       builtIn: zod
         .boolean()
         .describe(
-          "Whether OpenBot runs it, inside OpenBot or at an address OpenBot started, so it needs no callback token of its own.",
+          "Whether Mangaba Bot runs it, inside Mangaba Bot or at an address Mangaba Bot started, so it needs no callback token of its own.",
         ),
       canManage: zod
         .boolean()
@@ -985,7 +985,7 @@ export const DeleteBotAgentHeader = zod.object({
 export const DeleteBotAgentResponse = zod.void();
 
 /**
- * Give an agent at an address a new credential for calling OpenBot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for an agent that has one replaces it, which is how a leaked token is retired. A call made with it is allowed only for a run of a Bot that may use this agent, as the person that run is for. Only whoever may manage the agent may issue one. An agent that runs inside OpenBot, or at an address OpenBot runs itself, needs none and is refused.
+ * Give an agent at an address a new credential for calling Mangaba Bot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for an agent that has one replaces it, which is how a leaked token is retired. A call made with it is allowed only for a run of a Bot that may use this agent, as the person that run is for. Only whoever may manage the agent may issue one. An agent that runs inside Mangaba Bot, or at an address Mangaba Bot runs itself, needs none and is refused.
  * @summary Issue an agent's callback token
  */
 
@@ -1025,12 +1025,12 @@ export const IssueBotAgentCallbackTokenResponse = zod.object({
     .string()
     .min(1)
     .describe(
-      "The agent's credential for calling OpenBot's tools back. Returned this once and never again.",
+      "The agent's credential for calling Mangaba Bot's tools back. Returned this once and never again.",
     ),
 });
 
 /**
- * Take away an agent's credential for calling OpenBot's tools back. It still answers in a conversation; it can't reach anything outside one. Only whoever may manage the agent may revoke it. Revoking a token that is not there changes nothing.
+ * Take away an agent's credential for calling Mangaba Bot's tools back. It still answers in a conversation; it can't reach anything outside one. Only whoever may manage the agent may revoke it. Revoking a token that is not there changes nothing.
  * @summary Revoke an agent's callback token
  */
 
@@ -1096,7 +1096,7 @@ export const RevokeBotAgentCallbackTokenResponse = zod.object({
       kind: zod
         .enum(["openbot", "address"])
         .describe(
-          "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+          "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
         ),
       visibility: zod
         .enum(["public", "private"])
@@ -1107,19 +1107,19 @@ export const RevokeBotAgentCallbackTokenResponse = zod.object({
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside OpenBot.",
+          "The AG-UI address it runs at, as it was stored. Null for an agent that runs inside Mangaba Bot.",
         ),
       framework: zod
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       model: zod
         .string()
         .nullable()
         .describe(
-          "The model it runs on, for an agent whose model is OpenBot's to choose. Null for the organization's default, or for an agent that picks its own.",
+          "The model it runs on, for an agent whose model is Mangaba Bot's to choose. Null for the organization's default, or for an agent that picks its own.",
         ),
       skills: zod.array(
         zod
@@ -1172,12 +1172,12 @@ export const RevokeBotAgentCallbackTokenResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       builtIn: zod
         .boolean()
         .describe(
-          "Whether OpenBot runs it, inside OpenBot or at an address OpenBot started, so it needs no callback token of its own.",
+          "Whether Mangaba Bot runs it, inside Mangaba Bot or at an address Mangaba Bot started, so it needs no callback token of its own.",
         ),
       canManage: zod
         .boolean()
@@ -1265,13 +1265,13 @@ export const GetBotDelegationResponse = zod
             kind: zod
               .enum(["openbot", "address"])
               .describe(
-                "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+                "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
               ),
             framework: zod
               .string()
               .optional()
               .describe(
-                "What runs it, by the name a person reads. Absent when OpenBot doesn't know.",
+                "What runs it, by the name a person reads. Absent when Mangaba Bot doesn't know.",
               ),
             available: zod
               .boolean()
@@ -1289,7 +1289,7 @@ export const GetBotDelegationResponse = zod
   );
 
 /**
- * Replace how a Bot works. Mode self takes exactly one agent, which the Bot runs on with its apps, as every Bot did before agents were a list. Mode orchestrate takes one to twenty agents, in order, the first being the default: the Bot then answers on its own model with only the tools for replying, reacting, finding a task's thread and handing work to an agent, plus reading the person's memory, and each agent works with the Bot's apps as the person who asked. model and effort are the Bot's own when it orchestrates, one the model catalogue offers, or null for the organization's default; they are ignored in mode self. instructions steer how it hands work out and answers, and are read only in mode orchestrate. Every agent named must be one the caller can see, or one the Bot already has. Only whoever may manage the Bot may change it, and a Bot that comes with OpenBot cannot be changed.
+ * Replace how a Bot works. Mode self takes exactly one agent, which the Bot runs on with its apps, as every Bot did before agents were a list. Mode orchestrate takes one to twenty agents, in order, the first being the default: the Bot then answers on its own model with only the tools for replying, reacting, finding a task's thread and handing work to an agent, plus reading the person's memory, and each agent works with the Bot's apps as the person who asked. model and effort are the Bot's own when it orchestrates, one the model catalogue offers, or null for the organization's default; they are ignored in mode self. instructions steer how it hands work out and answers, and are read only in mode orchestrate. Every agent named must be one the caller can see, or one the Bot already has. Only whoever may manage the Bot may change it, and a Bot that comes with Mangaba Bot cannot be changed.
  * @summary Set a Bot's delegation
  */
 
@@ -1422,13 +1422,13 @@ export const ReplaceBotDelegationResponse = zod
             kind: zod
               .enum(["openbot", "address"])
               .describe(
-                "openbot: runs inside OpenBot. address: runs at an AG-UI address, somebody's own or a framework OpenBot runs itself.",
+                "openbot: runs inside Mangaba Bot. address: runs at an AG-UI address, somebody's own or a framework Mangaba Bot runs itself.",
               ),
             framework: zod
               .string()
               .optional()
               .describe(
-                "What runs it, by the name a person reads. Absent when OpenBot doesn't know.",
+                "What runs it, by the name a person reads. Absent when Mangaba Bot doesn't know.",
               ),
             available: zod
               .boolean()

@@ -386,7 +386,7 @@ export function myCapabilitiesQueryOptions() {
     queryFn: ({ signal }): Promise<MyCapabilities> =>
       getPersonCapabilities(organizationId(), "me", {
         signal,
-        fallback: "Couldn't load what OpenBot allows.",
+        fallback: "Couldn't load what Mangaba Bot allows.",
       }),
   });
 }

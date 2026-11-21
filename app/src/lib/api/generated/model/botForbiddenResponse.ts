@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The caller may not manage this Bot, the Bot comes with OpenBot, or the caller may not give it a computer of its own.
+ * The caller may not manage this Bot, the Bot comes with Mangaba Bot, or the caller may not give it a computer of its own.
  */
 export type BotForbiddenResponse = Problem;

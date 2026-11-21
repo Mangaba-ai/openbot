@@ -134,7 +134,7 @@ export const ADMIN_SECTIONS: readonly AdminSection[] = [
         /* Which of the two above, or Permissions, decides an action: they are what it asks about. */
         title: "What would happen",
         description:
-          "Ask what OpenBot would do if a Bot took an action, and see which control decides.",
+          "Ask what Mangaba Bot would do if a Bot took an action, and see which control decides.",
         icon: IconZoomQuestion,
         linkOptions: { to: "/admin/what-if" },
       },
@@ -146,7 +146,7 @@ export const ADMIN_SECTIONS: readonly AdminSection[] = [
       {
         title: team.auditLabel,
         description:
-          "Review actions taken in OpenBot and who took them, and record Bots' commands.",
+          "Review actions taken in Mangaba Bot and who took them, and record Bots' commands.",
         icon: primitive("activity").icon,
         linkOptions: team.audit(),
       },
@@ -208,7 +208,7 @@ export const ADMIN_SECTIONS: readonly AdminSection[] = [
 ];
 
 /**
-^ * Managed updates: connecting a self-hosted OpenBot to CopilotKit's management service. Not in
+^ * Managed updates: connecting a self-hosted Mangaba Bot to CopilotKit's management service. Not in
  * {@link ADMIN_SECTIONS}, because it applies only where the server says so (the team edition a
  * company runs itself, in the organization `default`); {@link adminSections} adds it there.
  */
@@ -221,7 +221,7 @@ export const MANAGEMENT_ENTRY: AdminEntry = {
 
 /**
  * Admin's pages, with Managed updates at the end of the organization's when it applies, and without
- * Identity providers on OpenBot by CopilotKit (`hostedSignIn`): people sign in there with their
+ * Identity providers on Mangaba Bot by CopilotKit (`hostedSignIn`): people sign in there with their
  * CopilotKit account, so an organization has no identity provider of its own to set up.
  */
 export function adminSections(
@@ -248,7 +248,7 @@ export function adminSections(
 /**
  * The sections the rail and the overview draw. Management is left out while its answer is loading
  * or failed, and wherever the server answers that it doesn't apply. Identity providers is left out
- * where the server says people sign in through OpenBot by CopilotKit; Admin's route has read that
+ * where the server says people sign in through Mangaba Bot by CopilotKit; Admin's route has read that
  * answer before any of its pages draws (`admin/route.tsx`).
  */
 export function useAdminSections(): readonly AdminSection[] {

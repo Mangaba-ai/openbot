@@ -7,7 +7,7 @@ export interface PersonLearningReview {
   /** Whether the person decides on proposals themselves. */
   canReview: boolean;
   /**
-   * In a single-person OpenBot, whether proposals are approved without a review. Null elsewhere.
+   * In a single-person Mangaba Bot, whether proposals are approved without a review. Null elsewhere.
    * @nullable
    */
   autoApprove: boolean | null;

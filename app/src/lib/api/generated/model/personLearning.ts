@@ -10,7 +10,7 @@ export interface PersonLearning {
   /** Whether an administrator lets people open skills to every Bot. While it is false only closed takes effect. */
   sharingAllowed: boolean;
   /**
-   * In a single-person OpenBot, whether proposals are approved without a review. Null elsewhere.
+   * In a single-person Mangaba Bot, whether proposals are approved without a review. Null elsewhere.
    * @nullable
    */
   autoApprove: boolean | null;

@@ -3,7 +3,7 @@
  */
 
 /**
- * Why the app is turned off, when state is disabled: nobody turned it on, the directory isn't set up here, OpenBot can't read how it connects, or it is missing the OAuth client or the key an administrator adds. Null otherwise.
+ * Why the app is turned off, when state is disabled: nobody turned it on, the directory isn't set up here, Mangaba Bot can't read how it connects, or it is missing the OAuth client or the key an administrator adds. Null otherwise.
  */
 export type BotAppUnavailable =
   | (typeof BotAppUnavailable)[keyof typeof BotAppUnavailable]

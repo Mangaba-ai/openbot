@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "OpenBot",
+  "productName": "Mangaba Bot",
   "version": "../../package.json",
-  "identifier": "ai.copilotkit.openbot.desktop",
+  "identifier": "ai.mangaba.bot.desktop",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3020",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "OpenBot",
+        "title": "Mangaba Bot",
         "width": 1000,
         "height": 800,
         "minWidth": 720,

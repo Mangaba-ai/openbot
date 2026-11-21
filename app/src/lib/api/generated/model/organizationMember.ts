@@ -7,7 +7,7 @@ import type { PersonRoleAnswer } from "./personRoleAnswer";
  * One member of an organization.
  */
 export interface OrganizationMember {
-  /** Whether this membership can end: an admin can remove them and they can leave. The server's verdict. False for the organization's last owner, who stays in it, for the owner of their own organization, and for somebody this OpenBot's settings keep as an admin of the organization. */
+  /** Whether this membership can end: an admin can remove them and they can leave. The server's verdict. False for the organization's last owner, who stays in it, for the owner of their own organization, and for somebody this Mangaba Bot's settings keep as an admin of the organization. */
   removable: boolean;
   /** The roles the caller may give this member, their current one left out. The server's verdict. Empty when the caller may not change this member's role. */
   assignableRoles: PersonRoleAnswer[];
@@ -16,7 +16,7 @@ export interface OrganizationMember {
   /** Their address. */
   email: string;
   /**
-   * What OpenBot calls them. Null until they choose.
+   * What Mangaba Bot calls them. Null until they choose.
    * @nullable
    */
   name: string | null;
@@ -28,6 +28,6 @@ export interface OrganizationMember {
   role: PersonRoleAnswer;
   /** When they became a member. */
   joinedAt: string;
-  /** True for somebody who is a member of the organization where it is kept, at OpenBot by CopilotKit on a hosted OpenBot, and hasn't opened OpenBot yet. Until they do, they have no OpenBot account: id is their id there, and email is empty when none is known. An owner or an admin removes them by that id, as any member (removable says whether they can be). They can't be given another role here until they open OpenBot (assignableRoles is empty). Absent for everybody else. */
+  /** True for somebody who is a member of the organization where it is kept, at Mangaba Bot by CopilotKit on a hosted Mangaba Bot, and hasn't opened Mangaba Bot yet. Until they do, they have no Mangaba Bot account: id is their id there, and email is empty when none is known. An owner or an admin removes them by that id, as any member (removable says whether they can be). They can't be given another role here until they open Mangaba Bot (assignableRoles is empty). Absent for everybody else. */
   notOpenedYet?: boolean;
 }

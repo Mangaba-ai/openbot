@@ -11,8 +11,8 @@ import { type AppUpdate, describe } from "./UpdateOffer";
 
 /**
  * What the shell says of the security floor (`security_floor.rs`): whether this version is below
- * it here. The shell decides, from the last floor it verified, and stops OpenBot on this computer
- * while it is. Connected to a company's own OpenBot, it never is.
+ * it here. The shell decides, from the last floor it verified, and stops Mangaba Bot on this computer
+ * while it is. Connected to a company's own Mangaba Bot, it never is.
  */
 export type FloorStatus = { blocked: boolean };
 
@@ -67,7 +67,7 @@ export function SecurityFloorGate({ children }: { children: ReactNode }) {
 }
 
 /**
- * The one screen below the security floor. OpenBot on this computer is stopped and nothing else can
+ * The one screen below the security floor. Mangaba Bot on this computer is stopped and nothing else can
  * be done here, so the only way on is Update and restart. A build that never updates itself says
  * how to get one that does.
  */
@@ -130,7 +130,7 @@ export function SecurityFloorNotice() {
         )}
         {failure && (
           <p className="caution" role="alert">
-            OpenBot could not install the update: {failure}
+            Mangaba Bot could not install the update: {failure}
           </p>
         )}
       </div>

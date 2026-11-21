@@ -15,14 +15,14 @@ export const apiKeyKeys = {
 
 const LOAD_FALLBACK = "Couldn't load your API keys.";
 
-/** The API's code for "this OpenBot signs nobody in", which is OpenBot on one computer for one person. */
+/** The API's code for "this Mangaba Bot signs nobody in", which is Mangaba Bot on one computer for one person. */
 export const SIGN_IN_UNAVAILABLE = "SIGN_IN_UNAVAILABLE";
 
 /** The API's code for a refusal by who is asking. */
 export const PERMISSION_DENIED = "PERMISSION_DENIED";
 
 /**
- * Whether a refusal is this OpenBot saying it has no sign-in, and so no API keys: the API's 503 with
+ * Whether a refusal is this Mangaba Bot saying it has no sign-in, and so no API keys: the API's 503 with
  * `SIGN_IN_UNAVAILABLE`. That is the feature being absent, not the server breaking. Any other
  * failure, a 503 from a proxy included, is shown as a failure.
  */
@@ -35,9 +35,9 @@ export function apiKeysAbsent(error: unknown): boolean {
 }
 
 /**
- * Whether a refusal is the API saying keys are managed only by a person signed in to OpenBot on the
+ * Whether a refusal is the API saying keys are managed only by a person signed in to Mangaba Bot on the
  * web: its 403 with `PERMISSION_DENIED`. The list is always the person's own (`me`), so the only way
- * to be refused is to have signed in as an app, which is what OpenBot Desktop connected to an OpenBot
+ * to be refused is to have signed in as an app, which is what Mangaba Bot Desktop connected to an Mangaba Bot
  * elsewhere does.
  */
 export function apiKeysNeedBrowser(error: unknown): boolean {
@@ -54,9 +54,9 @@ export function apiKeysNeedBrowser(error: unknown): boolean {
  */
 export type ApiKeyList =
   | { state: "ready"; apiKeys: ApiKey[] }
-  /** This OpenBot has no sign-in, so it has no keys. */
+  /** This Mangaba Bot has no sign-in, so it has no keys. */
   | { state: "unavailable" }
-  /** Keys are managed from OpenBot in a browser, not from here. */
+  /** Keys are managed from Mangaba Bot in a browser, not from here. */
   | { state: "browser-only" };
 
 /** Every page of the person's API keys, newest first. A handful at most, so the screen reads them all. */

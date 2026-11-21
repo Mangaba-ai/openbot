@@ -21,10 +21,10 @@ import {
 import { queryClient } from "@/query-client";
 
 /**
- * Settings → General's permanent way to star OpenBot on GitHub: the quiet half of the ask whose
+ * Settings → General's permanent way to star Mangaba Bot on GitHub: the quiet half of the ask whose
  * active half is the card above the message box (`components/star-prompt/star-prompt.tsx`).
  *
- * Only in the personal edition, like the card: a team's or a company's OpenBot never asks its
+ * Only in the personal edition, like the card: a team's or a company's Mangaba Bot never asks its
  * people for a star. Unlike the card it stays after an answer, because somebody who said Not now
  * may want it later and this is where they would look. Pressing it is counted under `settings`, and
  * answers the card, so somebody who starred from here is not asked again.
@@ -38,16 +38,16 @@ export function StarOnGitHubSection() {
   if (capabilities?.edition !== "personal") return null;
 
   return (
-    <PageSection title="OpenBot">
+    <PageSection title="Mangaba Bot">
       <PageRows>
         <Item size="sm">
           <ItemMedia variant="icon">
             <IconStar />
           </ItemMedia>
           <ItemContent>
-            <ItemTitle>Star OpenBot on GitHub</ItemTitle>
+            <ItemTitle>Star Mangaba Bot on GitHub</ItemTitle>
             <ItemDescription>
-              OpenBot is open source. A star helps us keep making it better.
+              Mangaba Bot is open source. A star helps us keep making it better.
             </ItemDescription>
           </ItemContent>
           <ItemActions>

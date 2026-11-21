@@ -108,7 +108,7 @@ function OtherOrganizations() {
     /*
      * Once the server works in the one they picked, the app is loaded afresh at home there. Not navigated in place: this
      * page stands in for the sign-in gate's refusal, which the router kept showing after the gate let them through in
-     * the new organization (seen on a real OpenBot, while the same steps passed against a fake). Loaded afresh, nothing
+     * the new organization (seen on a real Mangaba Bot, while the same steps passed against a fake). Loaded afresh, nothing
      * of the held organization is left to show. Here rather than on the call, whose callbacks are lost when the
      * refusal draws this page afresh.
      */

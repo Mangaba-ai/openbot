@@ -49,13 +49,13 @@ export const GetNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(getNotificationSettingsResponseRoutingProgressTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
         decision: zod
           .union([
@@ -65,13 +65,13 @@ export const GetNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(getNotificationSettingsResponseRoutingDecisionTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
         question: zod
           .union([
@@ -81,13 +81,13 @@ export const GetNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(getNotificationSettingsResponseRoutingQuestionTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
         attention: zod
           .union([
@@ -97,13 +97,13 @@ export const GetNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(getNotificationSettingsResponseRoutingAttentionTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
       })
       .describe("Where each kind of update may go."),
@@ -169,14 +169,14 @@ export const UpdateNotificationSettingsBody = zod.object({
               zod
                 .enum(["push", "slack", "teams", "sms"])
                 .describe(
-                  "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                  "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                 ),
             )
             .max(updateNotificationSettingsBodyRoutingProgressTwoMax),
         ])
         .optional()
         .describe(
-          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
         ),
       decision: zod
         .union([
@@ -186,14 +186,14 @@ export const UpdateNotificationSettingsBody = zod.object({
               zod
                 .enum(["push", "slack", "teams", "sms"])
                 .describe(
-                  "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                  "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                 ),
             )
             .max(updateNotificationSettingsBodyRoutingDecisionTwoMax),
         ])
         .optional()
         .describe(
-          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
         ),
       question: zod
         .union([
@@ -203,14 +203,14 @@ export const UpdateNotificationSettingsBody = zod.object({
               zod
                 .enum(["push", "slack", "teams", "sms"])
                 .describe(
-                  "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                  "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                 ),
             )
             .max(updateNotificationSettingsBodyRoutingQuestionTwoMax),
         ])
         .optional()
         .describe(
-          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
         ),
       attention: zod
         .union([
@@ -220,14 +220,14 @@ export const UpdateNotificationSettingsBody = zod.object({
               zod
                 .enum(["push", "slack", "teams", "sms"])
                 .describe(
-                  "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                  "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                 ),
             )
             .max(updateNotificationSettingsBodyRoutingAttentionTwoMax),
         ])
         .optional()
         .describe(
-          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+          "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
         ),
     })
     .describe("The kinds of update to change. At least one."),
@@ -253,13 +253,13 @@ export const UpdateNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(updateNotificationSettingsResponseRoutingProgressTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
         decision: zod
           .union([
@@ -269,13 +269,13 @@ export const UpdateNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(updateNotificationSettingsResponseRoutingDecisionTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
         question: zod
           .union([
@@ -285,13 +285,13 @@ export const UpdateNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(updateNotificationSettingsResponseRoutingQuestionTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
         attention: zod
           .union([
@@ -301,13 +301,13 @@ export const UpdateNotificationSettingsResponse = zod
                 zod
                   .enum(["push", "slack", "teams", "sms"])
                   .describe(
-                    "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+                    "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
                   ),
               )
               .max(updateNotificationSettingsResponseRoutingAttentionTwoMax),
           ])
           .describe(
-            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in OpenBot.",
+            "Where one kind of update may go. all: every way the person can be reached, now and any set up later. A list: only those ways; an empty list keeps that kind in Mangaba Bot.",
           ),
       })
       .describe("Where each kind of update may go."),
@@ -317,7 +317,7 @@ export const UpdateNotificationSettingsResponse = zod
   );
 
 /**
- * Return how much one Bot may reach the person outside OpenBot: everything, only what needs them, or nothing. A Bot they never set may send everything. Badges in OpenBot always show. Only the person themselves may read it, about a Bot they can see.
+ * Return how much one Bot may reach the person outside Mangaba Bot: everything, only what needs them, or nothing. A Bot they never set may send everything. Badges in Mangaba Bot always show. Only the person themselves may read it, about a Bot they can see.
  * @summary Read how much one Bot may reach a person
  */
 
@@ -354,12 +354,12 @@ export const GetBotNotificationSettingsResponse = zod.object({
   notify: zod
     .enum(["all", "needs_input", "none"])
     .describe(
-      "How much one Bot may reach the person outside OpenBot: all of it, only what needs them (its questions and approvals), or nothing.",
+      "How much one Bot may reach the person outside Mangaba Bot: all of it, only what needs them (its questions and approvals), or nothing.",
     ),
 });
 
 /**
- * Set how much one Bot may reach the person outside OpenBot. The audit trail records the change. Only the person themselves may change it, about a Bot they can see.
+ * Set how much one Bot may reach the person outside Mangaba Bot. The audit trail records the change. Only the person themselves may change it, about a Bot they can see.
  * @summary Change how much one Bot may reach a person
  */
 
@@ -409,7 +409,7 @@ export const UpdateBotNotificationSettingsBody = zod.object({
   notify: zod
     .enum(["all", "needs_input", "none"])
     .describe(
-      "How much one Bot may reach the person outside OpenBot: all of it, only what needs them (its questions and approvals), or nothing.",
+      "How much one Bot may reach the person outside Mangaba Bot: all of it, only what needs them (its questions and approvals), or nothing.",
     ),
 });
 
@@ -418,13 +418,13 @@ export const UpdateBotNotificationSettingsResponse = zod.object({
   notify: zod
     .enum(["all", "needs_input", "none"])
     .describe(
-      "How much one Bot may reach the person outside OpenBot: all of it, only what needs them (its questions and approvals), or nothing.",
+      "How much one Bot may reach the person outside Mangaba Bot: all of it, only what needs them (its questions and approvals), or nothing.",
     ),
 });
 
 /**
- * Return the ways this deployment can reach a person outside OpenBot. One appears only once it is set up where OpenBot runs: push needs the OpenBot phone app's project, Slack and Microsoft Teams need the OpenTag pairing, and text messages need Twilio. A person's settings keep their choice for one that is not, for when it is. A missing cursor starts at the first page and nextCursor null ends the list.
- * @summary List the ways OpenBot can reach people here
+ * Return the ways this deployment can reach a person outside Mangaba Bot. One appears only once it is set up where Mangaba Bot runs: push needs the Mangaba Bot phone app's project, Slack and Microsoft Teams need the OpenTag pairing, and text messages need Twilio. A person's settings keep their choice for one that is not, for when it is. A missing cursor starts at the first page and nextCursor null ends the list.
+ * @summary List the ways Mangaba Bot can reach people here
  */
 
 export const ListNotificationTransportsParams = zod.object({
@@ -476,7 +476,7 @@ export const ListNotificationTransportsResponse = zod.object({
         id: zod
           .enum(["push", "slack", "teams", "sms"])
           .describe(
-            "A way OpenBot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
+            "A way Mangaba Bot reaches a person outside it: push notifications to their phones, Slack, Microsoft Teams, or text messages.",
           ),
         title: zod.string().describe("Its name, as a person reads it."),
       }),

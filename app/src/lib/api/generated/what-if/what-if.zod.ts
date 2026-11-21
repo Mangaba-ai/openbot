@@ -203,7 +203,7 @@ export const AskWhatIfResponse = zod
   .describe("A question read as one action, or why it names none.");
 
 /**
- * Put one action to the controls a real action passes through, in the order OpenBot applies them, and return what each one decides and which one settles it. No model is asked and nothing is carried out. The audit trail records the check. Only an administrator may ask.
+ * Put one action to the controls a real action passes through, in the order Mangaba Bot applies them, and return what each one decides and which one settles it. No model is asked and nothing is carried out. The audit trail records the check. Only an administrator may ask.
  * @summary Say what every control decides about an action
  */
 
@@ -364,7 +364,7 @@ export const CheckWhatIfResponse = zod.object({
             "safety",
             "approvals",
           ])
-          .describe("One of OpenBot's controls."),
+          .describe("One of Mangaba Bot's controls."),
         zod.null(),
       ])
       .describe(
@@ -387,7 +387,7 @@ export const CheckWhatIfResponse = zod.object({
                 "safety",
                 "approvals",
               ])
-              .describe("One of OpenBot's controls."),
+              .describe("One of Mangaba Bot's controls."),
             title: zod.string(),
             verdict: zod
               .enum(["allows", "refuses", "asks", "hands_off", "trial"])
@@ -434,7 +434,7 @@ export const CheckWhatIfResponse = zod.object({
           })
           .describe("What one control says about the action."),
       )
-      .describe("The controls that apply, in the order OpenBot applies them."),
+      .describe("The controls that apply, in the order Mangaba Bot applies them."),
     notApplicable: zod
       .array(zod.string())
       .describe(
@@ -541,7 +541,7 @@ export const ExplainAuditEventResponse = zod.object({
             "safety",
             "approvals",
           ])
-          .describe("One of OpenBot's controls."),
+          .describe("One of Mangaba Bot's controls."),
         zod.null(),
       ])
       .describe(
@@ -564,7 +564,7 @@ export const ExplainAuditEventResponse = zod.object({
                 "safety",
                 "approvals",
               ])
-              .describe("One of OpenBot's controls."),
+              .describe("One of Mangaba Bot's controls."),
             title: zod.string(),
             verdict: zod
               .enum(["allows", "refuses", "asks", "hands_off", "trial"])
@@ -611,7 +611,7 @@ export const ExplainAuditEventResponse = zod.object({
           })
           .describe("What one control says about the action."),
       )
-      .describe("The controls that apply, in the order OpenBot applies them."),
+      .describe("The controls that apply, in the order Mangaba Bot applies them."),
     notApplicable: zod
       .array(zod.string())
       .describe(
@@ -642,7 +642,7 @@ export const ExplainAuditEventResponse = zod.object({
               "safety",
               "approvals",
             ])
-            .describe("One of OpenBot's controls."),
+            .describe("One of Mangaba Bot's controls."),
           zod.null(),
         ])
         .describe("The control the event says stopped it, where it says."),

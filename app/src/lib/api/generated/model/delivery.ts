@@ -6,7 +6,7 @@ import type { DeliveryState } from "./deliveryState";
 import type { NotificationTransport } from "./notificationTransport";
 
 /**
- * One update a Bot sent a person outside OpenBot.
+ * One update a Bot sent a person outside Mangaba Bot.
  */
 export interface Delivery {
   /** The delivery's id. */

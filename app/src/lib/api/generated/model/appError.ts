@@ -5,7 +5,7 @@ import type { AppErrorSource } from "./appErrorSource";
 import type { AppErrorSurface } from "./appErrorSurface";
 
 /**
- * An error the app hit and did not handle, as the app saw it. OpenBot scrubs and bounds it again before it is sent anywhere.
+ * An error the app hit and did not handle, as the app saw it. Mangaba Bot scrubs and bounds it again before it is sent anywhere.
  */
 export interface AppError {
   /** How the app caught it. error_boundary when its error screen was shown, window_error for an error the page threw, and unhandled_rejection for a promise nobody handled. */

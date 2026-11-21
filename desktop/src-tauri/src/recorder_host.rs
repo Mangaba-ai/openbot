@@ -1,6 +1,6 @@
 //! The native messaging host the Recorder extension talks to.
 //!
-//! Chrome, Edge and Chromium start OpenBot Desktop's own binary as the host. Its first argument is
+//! Chrome, Edge and Chromium start Mangaba Bot Desktop's own binary as the host. Its first argument is
 //! the caller's origin, and on Windows a `--parent-window=<n>` argument follows. Each message, both
 //! ways, is UTF-8 JSON preceded by its length as a 32-bit integer in native byte order; a message
 //! from the host may be at most 1 MB. The browser closes the host's stdin when it is done with it.
@@ -9,21 +9,21 @@
 //! The host answers four messages, each within its own deadline ([`DEADLINES`]), which sits below the time the
 //! extension waits for the answer, so the extension always hears why instead of giving up.
 //!
-//! `ping` says, cheaply, whether a connect would work now: an OpenBot is installed and its app answers on its port. It
+//! `ping` says, cheaply, whether a connect would work now: an Mangaba Bot is installed and its app answers on its port. It
 //! reads two files and asks the app one question. It does not prove which process answers, sends nothing secret and
 //! mints nothing.
 //!
-//! `handoff` makes sure the deployment's own processes hold its ports, asks that OpenBot for a one-time connect code and
-//! returns it with the OpenBot's address, so the Recorder can connect without the person typing either.
+//! `handoff` makes sure the deployment's own processes hold its ports, asks that Mangaba Bot for a one-time connect code and
+//! returns it with the Mangaba Bot's address, so the Recorder can connect without the person typing either.
 //!
-//! `address` says which address this computer's OpenBot answers on, after the same ownership checks a handoff makes, and
+//! `address` says which address this computer's Mangaba Bot answers on, after the same ownership checks a handoff makes, and
 //! mints nothing. The Recorder takes a connect from a page with no Connect click only when the page's origin is exactly
 //! this address: any other program on this computer can serve a page on a loopback port, and only the host knows which
-//! one is OpenBot Desktop's.
+//! one is Mangaba Bot Desktop's.
 //!
-//! `entry` says where the Recorder opens a page of this computer's OpenBot in the person's own browser: the personal
+//! `entry` says where the Recorder opens a page of this computer's Mangaba Bot in the person's own browser: the personal
 //! edition only admits requests carrying its install's token, so it is the entry address for that page, which carries
-//! it, after the same ownership checks an address makes. It takes only a path on that OpenBot's own origin. A server
+//! it, after the same ownership checks an address makes. It takes only a path on that Mangaba Bot's own origin. A server
 //! from a release before the token has none, and the page's own address comes back. The token is never logged.
 //!
 //! Every reply carries `ok`. `ok: false` comes with `error`, one of the stable codes of [`Refusal`]. A code is never
@@ -38,13 +38,13 @@ use std::sync::mpsc::{self, RecvTimeoutError};
 use std::sync::Arc;
 use std::time::Duration;
 
-/// Tauri's bundle identifier for OpenBot Desktop (`tauri.conf.json` `identifier`).
-const APP_IDENTIFIER: &str = "ai.copilotkit.openbot.desktop";
+/// Tauri's bundle identifier for Mangaba Bot Desktop (`tauri.conf.json` `identifier`).
+const APP_IDENTIFIER: &str = "ai.mangaba.bot.desktop";
 
 /// The largest message either way. Chrome refuses a host message over 1 MB, and the extension sends
 /// only a few bytes, so a longer length prefix is a broken or hostile pipe.
 const MESSAGE_LIMIT: usize = 1024 * 1024;
-/// Where the local OpenBot makes a connect code for the person signed in to it (the API's
+/// Where the local Mangaba Bot makes a connect code for the person signed in to it (the API's
 /// createRecorderConnectCode, in its one organization, for `me`).
 const CONNECT_CODES_PATH: &str = "/api/v2/organizations/default/people/me/recorder-connect-codes";
 
@@ -54,22 +54,22 @@ const CONNECT_CODES_PATH: &str = "/api/v2/organizations/default/people/me/record
 pub enum Refusal {
     /// `origin-not-allowed`: the caller is not the Recorder's own extension, under its fixed id or a store's.
     OriginNotAllowed,
-    /// `not-installed`: OpenBot Desktop has not set up an OpenBot on this computer.
+    /// `not-installed`: Mangaba Bot Desktop has not set up an Mangaba Bot on this computer.
     NotInstalled,
-    /// `not-running`: this computer's OpenBot is not running, its app does not answer, or a process that is not this
-    /// OpenBot's holds its port.
+    /// `not-running`: this computer's Mangaba Bot is not running, its app does not answer, or a process that is not this
+    /// Mangaba Bot's holds its port.
     NotRunning,
-    /// `not-signed-in`: the local OpenBot refused to give Desktop a connect code.
+    /// `not-signed-in`: the local Mangaba Bot refused to give Desktop a connect code.
     NotSignedIn,
-    /// `handoff-failed`: the local OpenBot answered the request for a connect code without one.
+    /// `handoff-failed`: the local Mangaba Bot answered the request for a connect code without one.
     HandoffFailed,
     /// `timed-out`: the host did not finish within its deadline.
     TimedOut,
-    /// `host-failed`: the host stopped before it could answer. A bug in OpenBot Desktop.
+    /// `host-failed`: the host stopped before it could answer. A bug in Mangaba Bot Desktop.
     HostFailed,
     /// `unknown-message`: a message the host does not know.
     UnknownMessage,
-    /// `bad-path`: an entry asked for something other than a path on the OpenBot's own origin.
+    /// `bad-path`: an entry asked for something other than a path on the Mangaba Bot's own origin.
     BadPath,
 }
 
@@ -89,10 +89,10 @@ impl Refusal {
     }
 }
 
-/// One question main.rs answers about this computer's OpenBot. Asked from the host's worker thread.
+/// One question main.rs answers about this computer's Mangaba Bot. Asked from the host's worker thread.
 pub type Check<T> = Box<dyn Fn() -> T + Send + Sync>;
 
-/// What main.rs knows about this computer's OpenBot.
+/// What main.rs knows about this computer's Mangaba Bot.
 pub struct HostEnvironment {
     /// A selected root exists.
     pub installed: Check<bool>,
@@ -211,7 +211,7 @@ pub fn write_message(output: &mut impl Write, value: &Value) -> io::Result<()> {
     output.flush()
 }
 
-/// Tauri 2's app_config_dir for ai.copilotkit.openbot.desktop, derived without an AppHandle:
+/// Tauri 2's app_config_dir for ai.mangaba.bot.desktop, derived without an AppHandle:
 /// macOS ~/Library/Application Support/<id>, Linux $XDG_CONFIG_HOME/<id> or ~/.config/<id>, Windows %APPDATA%\<id>.
 ///
 /// Tauri joins its identifier to the `dirs` crate's `config_dir`, which on Linux takes
@@ -256,7 +256,7 @@ fn ping(origin_allowed: bool, env: &HostEnvironment) -> Result<(), Refusal> {
     Ok(())
 }
 
-/// The address this computer's OpenBot answers on, once its own processes are proved to hold its ports (`app_url`). It
+/// The address this computer's Mangaba Bot answers on, once its own processes are proved to hold its ports (`app_url`). It
 /// sends nothing to the app beyond those checks, and mints nothing.
 fn address(origin_allowed: bool, env: &HostEnvironment) -> Result<String, Refusal> {
     if !origin_allowed {
@@ -268,7 +268,7 @@ fn address(origin_allowed: bool, env: &HostEnvironment) -> Result<String, Refusa
     (env.app_url)().ok_or(Refusal::NotRunning)
 }
 
-/// A path on the OpenBot's own origin, which the entry address may send the browser on to: it starts with one `/`, and
+/// A path on the Mangaba Bot's own origin, which the entry address may send the browser on to: it starts with one `/`, and
 /// has no backslash or control character, any of which a browser can read as another host (`//host`, `/\host`, or a
 /// tab or newline it drops first).
 fn own_origin_path(path: &str) -> bool {
@@ -278,8 +278,8 @@ fn own_origin_path(path: &str) -> bool {
         && !path.chars().any(char::is_control)
 }
 
-/// Where the Recorder opens `path` of this computer's OpenBot in the person's own browser: the entry address for it
-/// once the app is proved to be this OpenBot's and its server was given a token (`install_token::entry`), else the
+/// Where the Recorder opens `path` of this computer's Mangaba Bot in the person's own browser: the entry address for it
+/// once the app is proved to be this Mangaba Bot's and its server was given a token (`install_token::entry`), else the
 /// page's own address.
 fn entry(
     origin_allowed: bool,
@@ -299,10 +299,10 @@ fn entry(
     let page = reqwest::Url::parse(&app_url)
         .and_then(|app| app.join(path))
         .map_err(|_| {
-            eprintln!("[recorder-host] the local OpenBot's address and the path asked for make no address");
+            eprintln!("[recorder-host] the local Mangaba Bot's address and the path asked for make no address");
             Refusal::HostFailed
         })?;
-    // Asked only now, once the app is proved to be this OpenBot's: the token goes to nobody else.
+    // Asked only now, once the app is proved to be this Mangaba Bot's: the token goes to nobody else.
     let token = (env.install_token)();
     Ok(crate::install_token::entry(&page, token.as_deref()).into())
 }
@@ -331,7 +331,7 @@ fn handoff(
             format!("{:032x}", rand::random::<u128>()),
         );
     // The personal edition only admits requests carrying its install's token. Asked only now, once
-    // the app is proved to be this OpenBot's: the token goes to nobody else.
+    // the app is proved to be this Mangaba Bot's: the token goes to nobody else.
     if let Some(token) = (env.install_token)().filter(|token| !token.trim().is_empty()) {
         request = request.header(crate::install_token::HEADER, token);
     }
@@ -339,7 +339,7 @@ fn handoff(
         .json(&json!({ "via": "desktop" }))
         .send()
         .map_err(|error| {
-            eprintln!("[recorder-host] the local OpenBot did not answer the handoff");
+            eprintln!("[recorder-host] the local Mangaba Bot did not answer the handoff");
             if error.is_timeout() {
                 Refusal::TimedOut
             } else {
@@ -348,7 +348,7 @@ fn handoff(
         })?;
     let status = response.status();
     if status != reqwest::StatusCode::CREATED {
-        eprintln!("[recorder-host] the local OpenBot answered the handoff with {status}");
+        eprintln!("[recorder-host] the local Mangaba Bot answered the handoff with {status}");
         return Err(
             if status == reqwest::StatusCode::UNAUTHORIZED
                 || status == reqwest::StatusCode::FORBIDDEN
@@ -366,7 +366,7 @@ fn handoff(
     {
         Some(code) if !code.is_empty() => Ok((app_url, code)),
         _ => {
-            eprintln!("[recorder-host] the local OpenBot answered the handoff without a code");
+            eprintln!("[recorder-host] the local Mangaba Bot answered the handoff without a code");
             Err(Refusal::HandoffFailed)
         }
     }
@@ -442,7 +442,7 @@ fn answer(
     }
 }
 
-/// The handoff's request for a connect code. The local OpenBot is on this computer; the deadline answers first if it
+/// The handoff's request for a connect code. The local Mangaba Bot is on this computer; the deadline answers first if it
 /// is slow, and this only stops the abandoned request.
 fn client() -> reqwest::Result<Client> {
     Client::builder()
@@ -510,7 +510,7 @@ mod tests {
     use std::sync::atomic::{AtomicUsize, Ordering};
 
     const ID: &str = "icpcnhgjghecmklnjbccdgdicklblcgd";
-    const DESKTOP: &str = "ai.copilotkit.openbot.desktop";
+    const DESKTOP: &str = "ai.mangaba.bot.desktop";
 
     fn args(list: &[&str]) -> Vec<OsString> {
         list.iter().map(OsString::from).collect()
@@ -751,7 +751,7 @@ mod tests {
         install_token: AtomicUsize,
     }
 
-    /// A computer's OpenBot as a test describes it.
+    /// A computer's Mangaba Bot as a test describes it.
     struct Computer {
         installed: bool,
         app_url: Option<String>,
@@ -996,7 +996,7 @@ mod tests {
         assert_eq!(asked.install_token.load(Ordering::SeqCst), 1);
     }
 
-    /// Asked only for a handoff or an entry, and only once the app is proved to be this OpenBot's.
+    /// Asked only for a handoff or an entry, and only once the app is proved to be this Mangaba Bot's.
     #[test]
     fn the_install_token_is_asked_for_by_a_handoff_or_an_entry_alone() {
         let (url, listener) = fake_app();
@@ -1176,7 +1176,7 @@ mod tests {
     }
 
     /// The personal edition only admits requests carrying its install's token, so a page the Recorder opens at its
-    /// OpenBot in the person's own browser goes through the entry address, which carries it.
+    /// Mangaba Bot in the person's own browser goes through the entry address, which carries it.
     #[test]
     fn entry_answers_the_entry_address_for_the_path_the_recorder_asked() {
         let (url, listener) = fake_app();
@@ -1223,7 +1223,7 @@ mod tests {
         assert_untouched(&listener);
     }
 
-    /// Only a path on the OpenBot's own origin: the entry address sends the browser on to it, carrying the cookie.
+    /// Only a path on the Mangaba Bot's own origin: the entry address sends the browser on to it, carrying the cookie.
     #[test]
     fn entry_refuses_a_path_that_is_not_on_the_openbots_own_origin() {
         let (url, listener) = fake_app();

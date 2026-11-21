@@ -10,13 +10,13 @@ import type { BrowserRecorderReportVoice } from "./browserRecorderReportVoice";
  * The Recorder's own report from inside a browser.
  */
 export interface BrowserRecorderReport {
-  /** Whether the Recorder is connected to OpenBot as a person. */
+  /** Whether the Recorder is connected to Mangaba Bot as a person. */
   connected: boolean;
   /** The connected person's id. */
   userId?: string;
   /** The id of the connection it holds. Never its token. */
   connectionId?: string;
-  /** The address it reaches OpenBot at. */
+  /** The address it reaches Mangaba Bot at. */
   openbotUrl?: string;
   phase: BrowserRecorderPhase;
   recordingId?: string;

@@ -97,7 +97,7 @@ function learningInProgress(
  */
 function staleSentence(error: Error): string {
   return error instanceof ClientError && error.status === 429
-    ? "The backend is busy, so this may be out of date. OpenBot checks again in a minute."
+    ? "The backend is busy, so this may be out of date. Mangaba Bot checks again in a minute."
     : error.message;
 }
 

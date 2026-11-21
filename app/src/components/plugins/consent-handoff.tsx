@@ -224,7 +224,7 @@ export function ConsentHandoffPage({
             </h1>
             <p className="text-muted-foreground text-sm">
               This sign-in has expired or was already used. Close this tab and
-              press Connect again in OpenBot.
+              press Connect again in Mangaba Bot.
             </p>
           </>
         )}

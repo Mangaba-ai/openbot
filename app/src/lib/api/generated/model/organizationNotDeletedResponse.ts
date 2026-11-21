@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot could not finish deleting the organization, so it was not deleted. Asking again may work.
+ * This Mangaba Bot could not finish deleting the organization, so it was not deleted. Asking again may work.
  */
 export type OrganizationNotDeletedResponse = Problem;

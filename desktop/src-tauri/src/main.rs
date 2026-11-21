@@ -32,9 +32,9 @@ use openbot_desktop_lib::{
 };
 
 const QUIT_CLEANUP_NOTICE_FILE: &str = ".openbot-quit-cleanup-notice";
-/// Kept apart from the quit cleanup notice, whose presence alone means OpenBot needs recovery.
+/// Kept apart from the quit cleanup notice, whose presence alone means Mangaba Bot needs recovery.
 const LOCAL_EVAL_STOP_NOTICE_FILE: &str = ".openbot-local-eval-stop-notice";
-/// How an Intelligence failure starts, so Stop and Quit can tell it from OpenBot's own.
+/// How an Intelligence failure starts, so Stop and Quit can tell it from Mangaba Bot's own.
 const INTELLIGENCE_STOP_FAILED: &str = "Backend stop failed: ";
 const QUIT_MENU_ACCELERATOR: &str = "CmdOrCtrl+KeyQ";
 const QUIT_CLEANUP_NOTICE_LIMIT: usize = 16 * 1024;
@@ -70,7 +70,7 @@ struct Shell {
     /// Settings asked to change the AI connection, and the Stop it asked for finished: the setup
     /// page opens at its AI screen, once, instead of at Start.
     change_ai_connection: std::sync::atomic::AtomicBool,
-    /// Start was chosen in the Status window: the setup page runs its own Start OpenBot, once
+    /// Start was chosen in the Status window: the setup page runs its own Start Mangaba Bot, once
     /// (`start_openbot_from_status`).
     start_asked: std::sync::atomic::AtomicBool,
     /// Quit keeps the event loop alive until one background cleanup attempt finishes.
@@ -116,10 +116,10 @@ struct Shell {
     intelligence_opening: std::sync::Arc<std::sync::atomic::AtomicBool>,
     /// Dashboard addresses and this session's sign-ins, so a later opening needs no CLI call.
     dashboards: Dashboards,
-    /// The OpenBot app page's sidebar row, and the app origins allowed to reach it.
+    /// The Mangaba Bot app page's sidebar row, and the app origins allowed to reach it.
     intelligence_bridge: intelligence_bridge::Bridge,
-    /// The origins of the OpenBot app this shell verified it owns (`trust_owned_app`). Only a page
-    /// from one of these is treated as OpenBot and gets the window's controls; any other page on
+    /// The origins of the Mangaba Bot app this shell verified it owns (`trust_owned_app`). Only a page
+    /// from one of these is treated as Mangaba Bot and gets the window's controls; any other page on
     /// a loopback port is someone else's.
     owned_app_origins: Mutex<Vec<String>>,
     /// The origins already given the window's controls (`allow_app_page`).
@@ -128,18 +128,18 @@ struct Shell {
     /// so `trust_owned_app` can grant them ahead of the page. Tauri panics on a grant of a
     /// permission it does not know, as in a test app built from a mock context.
     app_page_grants_known: std::sync::atomic::AtomicBool,
-    /// The page a click on a notification asked for while OpenBot's page was not there yet.
+    /// The page a click on a notification asked for while Mangaba Bot's page was not there yet.
     waiting_notice_page: Mutex<Option<String>>,
-    /// A newer OpenBot Desktop, as the feed last said, and an install of it under way.
+    /// A newer Mangaba Bot Desktop, as the feed last said, and an install of it under way.
     app_update: app_update::Known,
     /// Wakes the thread that gets a newer version ready when the feed names one.
     update_ready: update_ready::Nudge,
-    /// The app connected to an OpenBot that runs somewhere else: its relay and sign-in while the
+    /// The app connected to an Mangaba Bot that runs somewhere else: its relay and sign-in while the
     /// window shows it. See `desktop_connected`.
     connected: desktop_connected::State,
     /// The last security floor this app verified (`security_floor`).
     security_floor: security_floor::Known,
-    /// This run already stopped OpenBot here for the security floor and showed its notice.
+    /// This run already stopped Mangaba Bot here for the security floor and showed its notice.
     security_floor_held: std::sync::atomic::AtomicBool,
     /// The floor kept in the config folder has been read in this run (`know_kept_security_floor`).
     security_floor_read: std::sync::atomic::AtomicBool,
@@ -220,7 +220,7 @@ impl<'a> StartAttempt<'a> {
             return Err(Self::cancelled());
         }
         shell.starting.compare_exchange(false, true, SeqCst, SeqCst).map_err(|_| {
-            Problem::plain("OpenBot is already starting or finishing a cancelled startup. Wait for it to finish, then try again.")
+            Problem::plain("Mangaba Bot is already starting or finishing a cancelled startup. Wait for it to finish, then try again.")
         })?;
         Ok(Self {
             shell,
@@ -248,7 +248,7 @@ impl<'a> StartAttempt<'a> {
     }
 
     fn cancelled() -> Problem {
-        Problem::plain("OpenBot startup was cancelled by Stop. Start again when you are ready.")
+        Problem::plain("Mangaba Bot startup was cancelled by Stop. Start again when you are ready.")
     }
 }
 
@@ -363,7 +363,7 @@ struct ReadyRespondingEngine {
 /// answering", which nobody this app is for can act on. Now the saved engine is brought up:
 ///
 /// - Docker: a stopped Docker Desktop is opened. It answered for this installation before.
-/// - Podman, or an installation from before engines were saved: OpenBot's own machine is
+/// - Podman, or an installation from before engines were saved: Mangaba Bot's own machine is
 ///   started, when it exists. A machine is never created here, and nobody else's is started.
 ///
 /// An engine that still does not answer is reported by the check after this one. An older
@@ -393,12 +393,12 @@ fn wake_saved_engine(
 }
 
 /// What Start does to the engine before Compose reads the project, in this order: bring the
-/// installation's engine up (`wake_saved_engine`), then make sure it is new enough to run OpenBot,
+/// installation's engine up (`wake_saved_engine`), then make sure it is new enough to run Mangaba Bot,
 /// updating it for the person when it is not (`engine_new_enough`).
 ///
 /// Before Compose, because an old Compose stops at its first look at the project ("Compose config
-/// exited with exit status: 15"). Not while OpenBot's own containers are up: the caller skips this,
-/// so Docker Desktop is never quit from under a running OpenBot. An engine still not answering is
+/// exited with exit status: 15"). Not while Mangaba Bot's own containers are up: the caller skips this,
+/// so Docker Desktop is never quit from under a running Mangaba Bot. An engine still not answering is
 /// left to the check after this one, which says so.
 async fn engine_before_compose(
     wake: impl AsyncFnOnce() -> Result<(), Problem>,
@@ -413,7 +413,7 @@ async fn engine_before_compose(
 }
 
 /// `wake_saved_engine` on this machine, each line said on the setup window's rows. Opening Docker
-/// Desktop says the hand-off and brings OpenBot back once Docker answers: see
+/// Desktop says the hand-off and brings Mangaba Bot back once Docker answers: see
 /// `docker_desktop::start`.
 async fn wake_installation_engine<R: tauri::Runtime>(
     app: &tauri::AppHandle<R>,
@@ -482,7 +482,7 @@ async fn wake_installation_engine<R: tauri::Runtime>(
     .await
     .map_err(|error| {
         Problem::with(
-            "OpenBot could not start the software it runs on. Try again.",
+            "Mangaba Bot could not start the software it runs on. Try again.",
             error.to_string(),
         )
     })?
@@ -491,10 +491,10 @@ async fn wake_installation_engine<R: tauri::Runtime>(
 /**
 The installation's engine, brought up before the back end is set up, connected or waited on.
 
-A relaunch after a restart finds Docker Desktop quit, or OpenBot's Podman machine stopped, and every
+A relaunch after a restart finds Docker Desktop quit, or Mangaba Bot's Podman machine stopped, and every
 Intelligence CLI call needs the engine. The window's relaunch sequence starts with the CLI, so
 before this, the CLI answered "docker-unavailable" and setup stopped at "Waiting for the back end",
-never reaching Start, which is where the engine used to be woken. Nothing is done while OpenBot's
+never reaching Start, which is where the engine used to be woken. Nothing is done while Mangaba Bot's
 own containers are up on an engine that answers (`own_containers_up`), or when the engine already
 answers.
 */
@@ -524,7 +524,7 @@ async fn wake_engine(app: tauri::AppHandle, root: String) -> Result<(), Problem>
     .await
     .unwrap_or(false);
     let woken = if gone {
-        log::info!("[wake engine] OpenBot's Podman machine is gone; making it again as setup does");
+        log::info!("[wake engine] Mangaba Bot's Podman machine is gone; making it again as setup does");
         match engine_ready(&app, saved).await {
             Ok(_) => machine_before_back_end(&app, saved).await,
             Err(problem) => Err(problem),
@@ -542,12 +542,12 @@ async fn wake_engine(app: tauri::AppHandle, root: String) -> Result<(), Problem>
 }
 
 /**
-Whether `wake_engine` leaves the engine alone because OpenBot's own containers are up on it.
+Whether `wake_engine` leaves the engine alone because Mangaba Bot's own containers are up on it.
 
-Held containers are up only while their engine answers. OpenBot's Podman machine stopped under a
-running OpenBot leaves this session holding them, and the window's Retry then skipped the engine as
+Held containers are up only while their engine answers. Mangaba Bot's Podman machine stopped under a
+running Mangaba Bot leaves this session holding them, and the window's Retry then skipped the engine as
 if they ran: the back end's check said "docker_unavailable" at once, and only Quit and a relaunch
-started the machine. Docker Desktop quit under a running OpenBot is the same.
+started the machine. Docker Desktop quit under a running Mangaba Bot is the same.
 */
 fn own_containers_up(shell: &Shell, answers: impl FnOnce(&engine::Address) -> bool) -> bool {
     let held = shell
@@ -559,7 +559,7 @@ fn own_containers_up(shell: &Shell, answers: impl FnOnce(&engine::Address) -> bo
     held.is_some_and(|address| answers(&address))
 }
 
-/// The engine woken, then healed, then OpenBot's own machine made ready for the back end, in that
+/// The engine woken, then healed, then Mangaba Bot's own machine made ready for the back end, in that
 /// order: the machine has to be up before it can be prepared, and the window asks the CLI to set up,
 /// update or start the back end only after all three.
 async fn engine_then_machine(
@@ -573,14 +573,14 @@ async fn engine_then_machine(
 }
 
 /**
-OpenBot's own Podman machine on Windows, made ready before the back end starts in it. The one place
+Mangaba Bot's own Podman machine on Windows, made ready before the back end starts in it. The one place
 for that: the window wakes the engine (`wake_engine`) before every run that sets up, updates or
 starts the back end, so whatever runs here runs before the back end does.
 
 First its network, checked and set up again when it is down (`acquire::machine_before_back_end`),
 said on the machine's row while it waits. Setting it up again restarts the machine, which stops
 whatever runs in it: run only at Start, after the back end had started, it stopped the back end's
-cluster on a live Windows run, and OpenBot then couldn't reach its backend. Anything else the
+cluster on a live Windows run, and Mangaba Bot then couldn't reach its backend. Anything else the
 machine needs before the back end goes after the network, which it may need.
 */
 async fn machine_before_back_end<R: tauri::Runtime>(
@@ -609,7 +609,7 @@ async fn machine_before_back_end<R: tauri::Runtime>(
     .await
     .map_err(|error| {
         Problem::with(
-            "OpenBot could not start the software it runs on. Try again.",
+            "Mangaba Bot could not start the software it runs on. Try again.",
             error.to_string(),
         )
     })?
@@ -633,11 +633,11 @@ fn remember_own_ports(ports: &openbot_env::Ports) {
     );
 }
 
-/// Start's network check, then the back end started again when that check restarted OpenBot's
+/// Start's network check, then the back end started again when that check restarted Mangaba Bot's
 /// machine under it. In this order, before Compose: a restart stops the back end's cluster, and
-/// OpenBot's services connect to the back end as they start.
+/// Mangaba Bot's services connect to the back end as they start.
 ///
-/// The window makes OpenBot's machine ready before it starts the back end (`machine_before_back_end`), so a
+/// The window makes Mangaba Bot's machine ready before it starts the back end (`machine_before_back_end`), so a
 /// restart here is rare: a network that went down after that, or a back end that was already
 /// running when Start was asked.
 fn network_then_back_end(
@@ -651,13 +651,13 @@ fn network_then_back_end(
     Ok(())
 }
 
-/// How often, and how many times, Start asks whether the back end is ready again after OpenBot's
+/// How often, and how many times, Start asks whether the back end is ready again after Mangaba Bot's
 /// machine restarted under it: five minutes, as the window waits for it.
 const BACK_END_AGAIN_EVERY: std::time::Duration = std::time::Duration::from_secs(3);
 const BACK_END_AGAIN_POLLS: usize = 100;
 
-/// The back end OpenBot set up, started again and waited for. Nothing for a back end that is not
-/// OpenBot's: OpenBot never starts one it didn't set up.
+/// The back end Mangaba Bot set up, started again and waited for. Nothing for a back end that is not
+/// Mangaba Bot's: Mangaba Bot never starts one it didn't set up.
 fn back_end_after_machine_restart(root: &Path) -> Result<(), Problem> {
     let Some(stack) = local_eval_state::read(root, None)
         .filter(|state| state.tied_to_openbot())
@@ -682,7 +682,7 @@ fn back_end_started_again(
 ) -> Result<(), Problem> {
     let failed = |detail: String| {
         Problem::with(
-            "OpenBot couldn't start again after reconnecting to the internet. Try Start again.",
+            "Mangaba Bot couldn't start again after reconnecting to the internet. Try Start again.",
             detail,
         )
     };
@@ -715,10 +715,10 @@ fn back_end_started_again(
 /**
 Whether this installation's own Podman machine is gone, so a relaunch makes it again (`wake_engine`).
 
-On Windows OpenBot's engine is only ever its own machine (`engine::own_machine_only`). Uninstalled
-with OpenBot's data, or removed by hand, the machine goes while the installation folder may stay.
+On Windows Mangaba Bot's engine is only ever its own machine (`engine::own_machine_only`). Uninstalled
+with Mangaba Bot's data, or removed by hand, the machine goes while the installation folder may stay.
 Nothing then answered, the relaunch went on to the backend's check, and the CLI, told no engine,
-took Podman's default connection: on box I that was the person's rootless machine, and OpenBot
+took Podman's default connection: on box I that was the person's rootless machine, and Mangaba Bot
 said it couldn't run on this computer, with no way on. Now the machine is made again through
 setup's own engine step, with setup's rows. Never on a Mac, where the installation may have run on
 a rootful machine of the person's.
@@ -792,7 +792,7 @@ async fn heal_installation_engine<R: tauri::Runtime>(
     .await
     .map_err(|error| {
         Problem::with(
-            "OpenBot could not start the software it runs on. Try again.",
+            "Mangaba Bot could not start the software it runs on. Try again.",
             error.to_string(),
         )
     })?
@@ -823,9 +823,9 @@ fn ready_responding_engine_after_compose_repair(
     let Some(address) = ready.address.clone().filter(|_| ready.responding) else {
         return Err(Problem::with(
             if install_missing_native {
-                "OpenBot installed the software it runs on, but it isn't answering yet. Try again."
+                "Mangaba Bot installed the software it runs on, but it isn't answering yet. Try again."
             } else {
-                "OpenBot installed a piece it needs, but the software it runs on isn't answering yet. \
+                "Mangaba Bot installed a piece it needs, but the software it runs on isn't answering yet. \
                  Try again."
             },
             ready.detail,
@@ -870,7 +870,7 @@ const ROW_STEPS: [&str; 17] = [
 What a row says in the window when its step gives no plain line of its own: by the step, and
 whether it is running, done or stopped. The text it was given goes to the log only.
 
-Found on Windows F: "Downloading OpenBot internal-d2df1b062ac0." reached the Account step's
+Found on Windows F: "Downloading Mangaba Bot internal-d2df1b062ac0." reached the Account step's
 background row, because the deployment step's line was sent as it was, a release name and all. A
 row's raw text can be a release, an engine's output or an error, so it is never what the window
 says unless it comes as a plain line (`report_line`, `report_running_line`).
@@ -882,32 +882,32 @@ fn plain_row(step: &str, ok: bool, running: bool) -> &'static str {
     if running {
         return match step {
             "engine" | "install-engine" | "create-machine" | "start-machine" | "health-gate" => {
-                "Preparing this computer to run OpenBot."
+                "Preparing this computer to run Mangaba Bot."
             }
-            "deployment" | "images" => "Downloading OpenBot.",
+            "deployment" | "images" => "Downloading Mangaba Bot.",
             "installation" => "Finishing the installation.",
             "env" => "Saving your settings.",
-            "services" => "Starting OpenBot's services.",
+            "services" => "Starting Mangaba Bot's services.",
             "carry-over" => "Bringing your Bots' files and sign-ins across.",
-            "answering" => "Waiting for OpenBot to respond.",
-            "release" => "Updating OpenBot.",
-            "cleanup" | "stopped" | "quit" => "Stopping OpenBot.",
-            "open" => "Opening OpenBot.",
+            "answering" => "Waiting for Mangaba Bot to respond.",
+            "release" => "Updating Mangaba Bot.",
+            "cleanup" | "stopped" | "quit" => "Stopping Mangaba Bot.",
+            "open" => "Opening Mangaba Bot.",
             _ => "Working on it.",
         };
     }
     match step {
         "engine" | "install-engine" | "create-machine" | "start-machine" | "health-gate" => {
-            "This computer is ready to run OpenBot."
+            "This computer is ready to run Mangaba Bot."
         }
-        "deployment" | "images" => "OpenBot is downloaded.",
-        "installation" => "OpenBot is installed.",
+        "deployment" | "images" => "Mangaba Bot is downloaded.",
+        "installation" => "Mangaba Bot is installed.",
         "env" => "Your settings are saved.",
-        "services" => "OpenBot's services are running.",
+        "services" => "Mangaba Bot's services are running.",
         "carry-over" => "Your Bots' files and sign-ins are in place.",
-        "answering" | "open" => "OpenBot is ready.",
-        "release" => "OpenBot is updated.",
-        "cleanup" | "stopped" | "quit" => "OpenBot has stopped.",
+        "answering" | "open" => "Mangaba Bot is ready.",
+        "release" => "Mangaba Bot is updated.",
+        "cleanup" | "stopped" | "quit" => "Mangaba Bot has stopped.",
         _ => "Done.",
     }
 }
@@ -996,7 +996,7 @@ fn emit_progress<R: tauri::Runtime>(app: &tauri::AppHandle<R>, progress: Progres
 /// has just loaded. Off the main thread, and it waits on nothing.
 #[tauri::command]
 async fn setup_heartbeat(app: tauri::AppHandle, seen: u64, fresh: bool) {
-    // The setup page has painted: "Getting OpenBot ready" comes off the window (`first_paint`).
+    // The setup page has painted: "Getting Mangaba Bot ready" comes off the window (`first_paint`).
     if let Some(up) = first_paint::page_painted() {
         log::info!(
             "[window] the setup page painted; the window said {} for {:.1}s",
@@ -1032,8 +1032,8 @@ fn current_setup_phase() -> telemetry::FailingStep {
 /// update in progress. None of them is recorded as `setup_failed`.
 fn refused_not_failed(problem: &Problem) -> bool {
     problem.said == StartAttempt::cancelled().said
-        || problem.said.starts_with("OpenBot is already starting")
-        || problem.said.starts_with("OpenBot is updating.")
+        || problem.said.starts_with("Mangaba Bot is already starting")
+        || problem.said.starts_with("Mangaba Bot is updating.")
 }
 
 fn forget_running_logged() {
@@ -1151,9 +1151,9 @@ fn report_running_row<R: tauri::Runtime>(
     );
 }
 
-/// OpenBot's window in front of whatever is there, at a moment setup needs the person: Docker
+/// Mangaba Bot's window in front of whatever is there, at a moment setup needs the person: Docker
 /// Desktop has answered, the system's password prompt has closed, the installation failed or is
-/// done, OpenBot has started, a launch the installer started first shows (`forward_at_first_show`).
+/// done, Mangaba Bot has started, a launch the installer started first shows (`forward_at_first_show`).
 /// `why` goes in the log.
 ///
 /// On macOS that means activating the app, not only ordering its window to the front. A window an
@@ -1190,7 +1190,7 @@ fn bring_to_front<R: tauri::Runtime>(app: &tauri::AppHandle<R>, why: &str) {
 /**
 Activates `window`, already shown and not minimised, without tao's `set_focus` on Windows: past a
 refusal that presses and releases Alt (`force_window_active`), and a lone Alt puts the window into
-menu mode, where the page and OpenBot stop hearing each other until a click (`key_menu`). On
+menu mode, where the page and Mangaba Bot stop hearing each other until a click (`key_menu`). On
 Windows it is `SetForegroundWindow`, and when Windows refuses, the taskbar button flashes; `why`
 goes in the log then. Everywhere else, `set_focus`.
 */
@@ -1254,10 +1254,10 @@ fn ignore_lone_menu_key(label: &str, hwnd: isize) {
 static SIGN_IN_OPEN: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
 
 /**
-Whether `bring_to_front` holds OpenBot back, and says so in the log: while the browser sign-in is
+Whether `bring_to_front` holds Mangaba Bot back, and says so in the log: while the browser sign-in is
 open, nothing setup does is the person's next step. On Windows F, "[front] the engine machine is
-prepared" brought OpenBot in front of the browser while the person typed their email to sign in.
-When the sign-in ends, OpenBot comes forward once (`while_signing_in`): the license agreement is
+prepared" brought Mangaba Bot in front of the browser while the person typed their email to sign in.
+When the sign-in ends, Mangaba Bot comes forward once (`while_signing_in`): the license agreement is
 the person's next step then.
 */
 fn held_back(why: &str) -> bool {
@@ -1285,7 +1285,7 @@ impl Drop for SignInOpen {
     }
 }
 
-/// Run the browser sign-in, with OpenBot held back from the front meanwhile, then bring it forward
+/// Run the browser sign-in, with Mangaba Bot held back from the front meanwhile, then bring it forward
 /// once, whatever the sign-in's outcome: what comes next is the person's.
 fn while_signing_in<T>(sign_in: impl FnOnce() -> T, come_forward: impl FnOnce()) -> T {
     let open = SignInOpen::begin();
@@ -1295,7 +1295,7 @@ fn while_signing_in<T>(sign_in: impl FnOnce() -> T, come_forward: impl FnOnce())
     ended
 }
 
-/// How OpenBot's window came forward on Windows (`bring_to_front`).
+/// How Mangaba Bot's window came forward on Windows (`bring_to_front`).
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[cfg_attr(not(windows), allow(dead_code))]
 enum Front {
@@ -1316,7 +1316,7 @@ it, received the last input event, or the foreground lock time-out has passed ("
 function", Remarks, Microsoft Learn). After Allow in the browser, the browser is the foreground
 process and took the last input, and the request it then sends this app's loopback listener passes
 none of that on. A refusal there is Windows' rule, so the browser tab tells the person to go back
-to OpenBot (`sign_in::SIGNED_IN_PAGE`).
+to Mangaba Bot (`sign_in::SIGNED_IN_PAGE`).
 */
 #[cfg_attr(not(windows), allow(dead_code))]
 fn come_forward(
@@ -1340,23 +1340,23 @@ fn bring_setup_to_front(app: tauri::AppHandle, why: String) {
     bring_to_front(&app, &why);
 }
 
-/// The argument OpenBot's installer starts it with, after an in-app update and from the installer's
+/// The argument Mangaba Bot's installer starts it with, after an in-app update and from the installer's
 /// last page (`OPENBOT_RUN_AFTER_INSTALL` in `windows/hooks.nsh`).
 const STARTED_BY_INSTALLER: &str = "--started-by-installer";
 
-/// Whether OpenBot's installer started this launch, from the program's arguments (the program
+/// Whether Mangaba Bot's installer started this launch, from the program's arguments (the program
 /// first).
 fn started_by_installer(args: &[std::ffi::OsString]) -> bool {
     args.iter().skip(1).any(|arg| arg == STARTED_BY_INSTALLER)
 }
 
 /**
-The window's first show, for a launch OpenBot's installer started (`started_by_installer`): after an
-in-app update, or from the installer's last page. OpenBot comes in front once (`come_forward`, which
-is `bring_to_front`), so the person sees Starting OpenBot and its progress. On box H (Windows Server
+The window's first show, for a launch Mangaba Bot's installer started (`started_by_installer`): after an
+in-app update, or from the installer's last page. Mangaba Bot comes in front once (`come_forward`, which
+is `bring_to_front`), so the person sees Starting Mangaba Bot and its progress. On box H (Windows Server
 2022, an in-app update from 1.0.1 to 1.0.2) Windows put the maximised Edge in front as 1.0.1 closed,
-1.0.2 opened behind it, and the person saw only Edge for the four minutes of Starting OpenBot, until
-"[front] OpenBot is showing" at home. That one came forward because it came four and a half minutes
+1.0.2 opened behind it, and the person saw only Edge for the four minutes of Starting Mangaba Bot, until
+"[front] Mangaba Bot is showing" at home. That one came forward because it came four and a half minutes
 after the person's last input, the click on Update and restart: past the foreground lock time-out,
 the time after input during which Windows keeps apps from coming forward
 (`SPI_GETFOREGROUNDLOCKTIMEOUT`, 200 seconds by default).
@@ -1364,7 +1364,7 @@ the time after input during which Windows keeps apps from coming forward
 Windows lets a window come to the front only from a process it allows ("SetForegroundWindow
 function", Remarks, Microsoft Learn). The right comes from the updating version, which passes it on
 while its window is still up (`pass_the_foreground_on`), and the installer, which passes it on again
-before it starts OpenBot. Where Windows still refuses, as after an update from a version before
+before it starts Mangaba Bot. Where Windows still refuses, as after an update from a version before
 this or once the person has typed or clicked elsewhere, `bring_to_front` flashes the taskbar button.
 
 Any other launch is left to Windows: from the Start menu or the taskbar it is in front already. Held
@@ -1372,15 +1372,15 @@ back, as every moment is, while the browser sign-in is open (`held_back`).
 */
 fn forward_at_first_show(started_by_installer: bool, come_forward: impl FnOnce(&str)) {
     if started_by_installer {
-        come_forward("the installer started OpenBot");
+        come_forward("the installer started Mangaba Bot");
     }
 }
 
 /**
-Windows, as the updater is about to start the installer: pass OpenBot's right to set the foreground
+Windows, as the updater is about to start the installer: pass Mangaba Bot's right to set the foreground
 window on to every process, so the installer and the new version it starts may come to the front
-(`forward_at_first_show`). Called while OpenBot's window is still up, just before the updater's
-cleanup takes it down: until then OpenBot holds the foreground, from the person's click on Update and
+(`forward_at_first_show`). Called while Mangaba Bot's window is still up, just before the updater's
+cleanup takes it down: until then Mangaba Bot holds the foreground, from the person's click on Update and
 restart. Once the window is gone, Windows activates the one behind it, and nothing started after that
 may take the foreground from it by itself.
 
@@ -1399,16 +1399,16 @@ fn pass_the_foreground_on() {
             "[app update] passed the foreground on, for the installer and the new version"
         ),
         Err(error) => log::info!(
-            "[app update] could not pass the foreground on ({error}); OpenBot was no longer in front"
+            "[app update] could not pass the foreground on ({error}); Mangaba Bot was no longer in front"
         ),
     }
 }
 
 /**
-The OpenBot already running, as the single-instance plugin finds it: the plugin's hidden window,
+The Mangaba Bot already running, as the single-instance plugin finds it: the plugin's hidden window,
 whose class and title are the app's identifier followed by `-sic` and `-siw`
 (`tauri-plugin-single-instance`, `platform_impl/windows.rs`). That window's process, or None when
-no OpenBot runs.
+no Mangaba Bot runs.
 */
 #[cfg(windows)]
 fn running_openbot(identifier: &str) -> Option<u32> {
@@ -1425,23 +1425,23 @@ fn running_openbot(identifier: &str) -> Option<u32> {
 }
 
 /**
-Windows, as a launch starts and before the single-instance plugin hands it to an OpenBot already
-running and ends it: this launch's right to the foreground, passed to that OpenBot.
+Windows, as a launch starts and before the single-instance plugin hands it to an Mangaba Bot already
+running and ends it: this launch's right to the foreground, passed to that Mangaba Bot.
 
 Windows lets a process set the foreground window only if, among others, it "was started by the
 foreground process" or "received the last input event" ("SetForegroundWindow function", Remarks,
-Microsoft Learn). A launch from the Start menu, the taskbar or the desktop was; the OpenBot it is
-handed to was not. When that OpenBot was quitting, with the tray's flyout still open from its Quit,
-it could neither bring its Shutting down screen forward nor give the OpenBot it opens next the
+Microsoft Learn). A launch from the Start menu, the taskbar or the desktop was; the Mangaba Bot it is
+handed to was not. When that Mangaba Bot was quitting, with the tray's flyout still open from its Quit,
+it could neither bring its Shutting down screen forward nor give the Mangaba Bot it opens next the
 right, and that one opened behind with its taskbar button flashing.
 
 "A process that can set the foreground window can enable another process to set the foreground
 window by calling AllowSetForegroundWindow", until "the user generates input, unless the input is
-directed at that process" ("AllowSetForegroundWindow function", Microsoft Learn). So the OpenBot
+directed at that process" ("AllowSetForegroundWindow function", Microsoft Learn). So the Mangaba Bot
 that gets the launch can come forward with it (`kept_for_after_quit`, `restore_window_on`), and,
-once in front, start the next OpenBot with the right (`open_again_after_quit`). A launch Windows
-gave no right passes none, and that OpenBot flashes its taskbar button as before. Nothing when no
-OpenBot runs.
+once in front, start the next Mangaba Bot with the right (`open_again_after_quit`). A launch Windows
+gave no right passes none, and that Mangaba Bot flashes its taskbar button as before. Nothing when no
+Mangaba Bot runs.
 */
 #[cfg(windows)]
 fn pass_the_launch_on(identifier: &str) {
@@ -1450,11 +1450,11 @@ fn pass_the_launch_on(identifier: &str) {
         return;
     };
     // SAFETY: takes no pointers; it only widens which process may set the foreground window. It
-    // fails when this launch has no right to pass, and the running OpenBot then flashes instead.
+    // fails when this launch has no right to pass, and the running Mangaba Bot then flashes instead.
     let _ = unsafe { AllowSetForegroundWindow(running) };
 }
 
-/// The person said yes to pausing their Podman while OpenBot runs. See `own_machine`. False when
+/// The person said yes to pausing their Podman while Mangaba Bot runs. See `own_machine`. False when
 /// nothing was waiting for it.
 #[tauri::command]
 fn allow_pause_podman() -> bool {
@@ -1471,7 +1471,7 @@ fn allow_pause_podman() -> bool {
 }
 
 /**
-OpenBot's own machine started, as setup and a relaunch start it, each line said on the window's rows.
+Mangaba Bot's own machine started, as setup and a relaunch start it, each line said on the window's rows.
 
 On a Mac, where Podman runs one machine at a time, a machine of the person's that is running keeps
 it from starting. The window then says why on its `own_machine::PAUSE_STEP` row and waits for the
@@ -1493,7 +1493,7 @@ fn start_own_machine<R: tauri::Runtime>(
             let given = own_machine::PAUSE_GATE.wait(
                 || {
                     report_running_line(app, own_machine::PAUSE_STEP, offer, None);
-                    bring_to_front(app, "OpenBot asks to pause the person's Podman");
+                    bring_to_front(app, "Mangaba Bot asks to pause the person's Podman");
                 },
                 cancelled,
             );
@@ -1523,9 +1523,9 @@ fn start_own_machine<R: tauri::Runtime>(
     started
 }
 
-/// Quit's last part on a Mac whose Podman OpenBot paused: OpenBot's machine stopped, and the
+/// Quit's last part on a Mac whose Podman Mangaba Bot paused: Mangaba Bot's machine stopped, and the
 /// person's started again with its containers. See `own_machine::give_back_with`. Nothing at all
-/// when OpenBot paused nothing.
+/// when Mangaba Bot paused nothing.
 fn give_back_paused_podman(progress: &mut dyn FnMut(QuitStep, QuitStepState)) {
     let record = own_machine::record_path();
     if !own_machine::has_paused(&record) {
@@ -1541,18 +1541,18 @@ fn give_back_paused_podman(progress: &mut dyn FnMut(QuitStep, QuitStepState)) {
 }
 
 /**
-Stop's and Quit's last part, once OpenBot's containers and its services have stopped: OpenBot's own
+Stop's and Quit's last part, once Mangaba Bot's containers and its services have stopped: Mangaba Bot's own
 Podman machine (`acquire::MACHINE`) stopped with them. Left running, it kept holding the computer's
-memory after the person pressed Stop: on a Windows test machine OpenBot's WSL distro stayed up after
+memory after the person pressed Stop: on a Windows test machine Mangaba Bot's WSL distro stayed up after
 Stop and after Quit. Start starts it again, as it does after a restart.
 
-Only when the installation runs on Podman (`on_podman`), and only OpenBot's own machine, never one
+Only when the installation runs on Podman (`on_podman`), and only Mangaba Bot's own machine, never one
 of the person's (`own_machine::stop_own_with`). Nothing when the engine's machine was found stopped
 already. Not an update's stop: the restart that follows it needs the machine.
 
 `stopping` is told just before the machine stops. None when there was nothing to stop. A machine
 that would not stop is said in the log, as the person's Podman not starting again is: everything of
-OpenBot's in it has stopped, so there is nothing for the next launch to recover.
+Mangaba Bot's in it has stopped, so there is nothing for the next launch to recover.
 */
 fn stop_own_machine(
     engine: EngineAtStop,
@@ -1580,7 +1580,7 @@ fn stop_own_machine(
 }
 
 /// Whether the installation Stop or Quit stops runs on Podman on a Mac or a PC, where Podman runs in
-/// a machine: OpenBot's own containers' engine while they run, otherwise the one it was set up on.
+/// a machine: Mangaba Bot's own containers' engine while they run, otherwise the one it was set up on.
 /// Asked before anything stops, since the stop lets go of the containers.
 fn on_podman_at_stop(shell: &Shell, root: &Path) -> bool {
     if !cfg!(any(target_os = "macos", target_os = "windows")) {
@@ -1668,7 +1668,7 @@ fn report_downloads<R: tauri::Runtime>(
         Progress {
             step: "images".into(),
             ok: true,
-            detail: "Downloading OpenBot.".into(),
+            detail: "Downloading Mangaba Bot.".into(),
             running: true,
             download_bytes: (downloads.bytes > 0).then_some(downloads.bytes),
             downloads: Some(downloads),
@@ -1716,7 +1716,7 @@ fn detect_engine<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> engine::EngineS
 }
 
 /**
-What on this computer is in the way of OpenBot, for the setup window.
+What on this computer is in the way of Mangaba Bot, for the setup window.
 
 Async, with the probes on a blocking thread. Tauri runs a command without `async` on the main
 thread (https://v2.tauri.app/develop/calling-rust/#async-commands), which on Windows is the
@@ -1813,7 +1813,7 @@ async fn windows_blocker_from<R: tauri::Runtime>(
     .await
     .unwrap_or_else(|error| {
         Err(Problem::with(
-            "OpenBot could not check Windows setup. Close and reopen OpenBot to try again.",
+            "Mangaba Bot could not check Windows setup. Close and reopen Mangaba Bot to try again.",
             error.to_string(),
         ))
     });
@@ -1864,13 +1864,13 @@ fn windows_blocker_instruction(blocker: win::Blocker) -> String {
 async fn windows_fix(app: tauri::AppHandle, blocker: win::Blocker) -> Result<win::Fixed, Problem> {
     let failed = |detail: String| {
         Problem::with(
-            "OpenBot could not set up Windows Subsystem for Linux. Try again, or run the commands \
+            "Mangaba Bot could not set up Windows Subsystem for Linux. Try again, or run the commands \
              yourself.",
             detail,
         )
     };
     let fix = blocker.fix().ok_or_else(|| {
-        Problem::plain("OpenBot cannot change this setting. Follow the steps on this screen.")
+        Problem::plain("Mangaba Bot cannot change this setting. Follow the steps on this screen.")
     })?;
     let data = app
         .path()
@@ -1905,11 +1905,11 @@ async fn windows_restart_pending(app: tauri::AppHandle) -> Result<bool, Problem>
     tauri::async_runtime::spawn_blocking(move || Ok(win::restart_pending(&data, &win::boot()?)))
         .await
         .map_err(|error| {
-            Problem::with("OpenBot could not check Windows setup.", error.to_string())
+            Problem::with("Mangaba Bot could not check Windows setup.", error.to_string())
         })?
 }
 
-/// Restart Windows to finish a fix, with OpenBot set to open again afterwards.
+/// Restart Windows to finish a fix, with Mangaba Bot set to open again afterwards.
 ///
 /// Setup goes on after the restart, so the exit it brings is not an abandonment: that is saved
 /// first, before Windows ends the app.
@@ -1953,7 +1953,7 @@ impl<R: tauri::Runtime> RuntimeUpdateGuard<R> {
                 std::sync::atomic::Ordering::SeqCst,
                 std::sync::atomic::Ordering::SeqCst,
             )
-            .map_err(|_| Problem::plain("OpenBot is already updating."))?;
+            .map_err(|_| Problem::plain("Mangaba Bot is already updating."))?;
         shell
             .update_cancelled
             .store(false, std::sync::atomic::Ordering::SeqCst);
@@ -1995,16 +1995,16 @@ fn require_update_root(shell: &Shell, root: &Path) -> Result<(), Problem> {
 /// the screen a failed Start leaves, whose Retry runs Start again: `upgrade_due` sends it to
 /// `upgrade_and_start`, which puts the previous version back first.
 const UPGRADE_INTERRUPTED: &str =
-    "OpenBot's last update did not finish. Choose Retry to put the previous version back.";
+    "Mangaba Bot's last update did not finish. Choose Retry to put the previous version back.";
 
 /// The same, on the installation screen a failed Install or Repair leaves, whose button installs
 /// again, which puts the previous version back first (`put_back_interrupted_upgrade`).
 const UPGRADE_INTERRUPTED_INSTALL: &str =
-    "OpenBot's last update did not finish. Choose Retry installation to put the previous version back.";
+    "Mangaba Bot's last update did not finish. Choose Retry installation to put the previous version back.";
 
-/// The same, on the running screen, where Show OpenBot is refused and Stop OpenBot leads to Start.
+/// The same, on the running screen, where Show Mangaba Bot is refused and Stop Mangaba Bot leads to Start.
 const UPGRADE_INTERRUPTED_SHOWING: &str =
-    "OpenBot's last update did not finish. Choose Stop OpenBot, then Start OpenBot, to put the previous version back.";
+    "Mangaba Bot's last update did not finish. Choose Stop Mangaba Bot, then Start Mangaba Bot, to put the previous version back.";
 
 /// What Start is given, for an upgrade to start the version it leaves in place.
 struct StartWith {
@@ -2085,7 +2085,7 @@ impl upgrade::Steps for DesktopSteps {
     fn stop(&mut self) -> Result<(), Problem> {
         self.own_containers();
         stop_for_update(&self.app, &self.root)
-            .map_err(|error| Problem::with("OpenBot could not stop to update.", error))
+            .map_err(|error| Problem::with("Mangaba Bot could not stop to update.", error))
     }
 
     fn has_database(&mut self) -> Result<bool, Problem> {
@@ -2103,7 +2103,7 @@ impl upgrade::Steps for DesktopSteps {
         })
         .map_err(|error| {
             Problem::with(
-                "OpenBot could not back up its database, so it did not update.",
+                "Mangaba Bot could not back up its database, so it did not update.",
                 error,
             )
         })
@@ -2118,7 +2118,7 @@ impl upgrade::Steps for DesktopSteps {
         .map_err(|error| {
             report(&self.app, "deployment", false, error.clone());
             Problem::with(
-                "OpenBot could not download its new version. Check the internet connection and \
+                "Mangaba Bot could not download its new version. Check the internet connection and \
                  try again.",
                 error,
             )
@@ -2153,7 +2153,7 @@ impl upgrade::Steps for DesktopSteps {
             stack::start_runtime_database(engine, root, secrets)?;
             stack::restore_runtime_database(engine, root, secrets, from)
         })
-        .map_err(|error| Problem::with("OpenBot could not put its database back.", error))
+        .map_err(|error| Problem::with("Mangaba Bot could not put its database back.", error))
     }
 }
 
@@ -2236,7 +2236,7 @@ async fn upgrade_and_start_now(
         .load(std::sync::atomic::Ordering::SeqCst)
     {
         return Err(Problem::plain(
-            "OpenBot is already updating. Wait for it to finish before starting.",
+            "Mangaba Bot is already updating. Wait for it to finish before starting.",
         ));
     }
     let ran = {
@@ -2265,7 +2265,7 @@ async fn upgrade_and_start_now(
                 report_running_plain(
                     &handle,
                     "release",
-                    "Putting back the version OpenBot was updating from.",
+                    "Putting back the version Mangaba Bot was updating from.",
                 );
                 let previous = upgrade::previous_version(&target);
                 upgrade::recover(&target, &mut steps).map_err(|problem| {
@@ -2326,8 +2326,8 @@ async fn upgrade_and_start_now(
                 &app,
                 "release",
                 true,
-                engine::StepLine::here("OpenBot is updated.")
-                    .logged(format!("OpenBot is on {}.", planned.to)),
+                engine::StepLine::here("Mangaba Bot is updated.")
+                    .logged(format!("Mangaba Bot is on {}.", planned.to)),
             );
             remove_superseded_images(&app, &selected);
             desktop_telemetry::installation_settled(&app);
@@ -2349,7 +2349,7 @@ async fn upgrade_and_start_now(
         upgrade::Ran::Back { failed, .. } if cancelled => {
             desktop_telemetry::update_restored(&app, &planned.from, &planned.to);
             Err(Problem::with(
-                "OpenBot stopped before it finished updating, and the version it had is back in place.",
+                "Mangaba Bot stopped before it finished updating, and the version it had is back in place.",
                 format!(
                     "{}: {}",
                     upgrade::moved_log(&planned),
@@ -2525,7 +2525,7 @@ fn know_kept_security_floor<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     }
 }
 
-/// Where this app is, for the floor: on this computer, or connected to an OpenBot at an address.
+/// Where this app is, for the floor: on this computer, or connected to an Mangaba Bot at an address.
 fn security_floor_place<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> security_floor::Place {
     if !desktop_connected::is_connected(app) {
         return security_floor::Place::Contained;
@@ -2537,7 +2537,7 @@ fn security_floor_place<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> securit
 }
 
 /// The release this app has to update to before it can be used here, when it is below the
-/// security floor. None otherwise, and always None connected to a company's own OpenBot.
+/// security floor. None otherwise, and always None connected to a company's own Mangaba Bot.
 fn security_floor_block<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Option<semver::Version> {
     know_kept_security_floor(app);
     let floor = app.state::<Shell>().security_floor.get();
@@ -2561,7 +2561,7 @@ fn security_floor_backend_due<R: tauri::Runtime>(app: &tauri::AppHandle<R>, root
 
 /// What Start says below the security floor, the notice's own words.
 const SECURITY_FLOOR_SAID: &str =
-    "This version of OpenBot has a security problem. Update to keep using it.";
+    "This version of Mangaba Bot has a security problem. Update to keep using it.";
 
 /// Whether this version is below the security floor here. The window shows the notice alone while
 /// it is (`desktop/src/SecurityFloor.tsx`).
@@ -2573,10 +2573,10 @@ fn security_floor<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> security_floor
 }
 
 /**
-Below the security floor here: stop OpenBot on this computer, as Stop does (no Bot runs, routines
+Below the security floor here: stop Mangaba Bot on this computer, as Stop does (no Bot runs, routines
 pause, nothing is deleted), and show the notice alone. Start refuses until the app is updated, and
 the updated app upgrades the back end at its next Start, as every update does. Connected to an
-OpenBot Cloud address the floor lists, only the notice: nothing runs here. Once per run.
+Mangaba Bot Cloud address the floor lists, only the notice: nothing runs here. Once per run.
 */
 fn hold_below_security_floor<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     let Some(minimum) = security_floor_block(app) else {
@@ -2590,12 +2590,12 @@ fn hold_below_security_floor<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
         return;
     }
     log::warn!(
-        "[security floor] {} is below the security floor {minimum}; OpenBot stays stopped here until it is updated",
+        "[security floor] {} is below the security floor {minimum}; Mangaba Bot stays stopped here until it is updated",
         app.package_info().version
     );
     let app = app.clone();
     std::thread::spawn(move || {
-        // The notice first: nothing of OpenBot's page stays in use while the stop runs.
+        // The notice first: nothing of Mangaba Bot's page stays in use while the stop runs.
         show_security_floor_notice(&app);
         if !desktop_connected::is_connected(&app) {
             let root = selected_root_or_default(&app);
@@ -2658,7 +2658,7 @@ fn show_security_floor_notice<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
 }
 
 /// Read the security floor at launch and every six hours, on a thread of its own, keep a newer one
-/// that verifies, and hold OpenBot here below it. Every build reads it: a build that can't update
+/// that verifies, and hold Mangaba Bot here below it. Every build reads it: a build that can't update
 /// itself is told how to get one that can.
 fn watch_security_floor<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     let handle = app.clone();
@@ -2680,7 +2680,7 @@ fn watch_security_floor<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     }
 }
 
-/// Read the security floor now, keep a newer one that verifies, and hold OpenBot here below it.
+/// Read the security floor now, keep a newer one that verifies, and hold Mangaba Bot here below it.
 /// Blocking: the schedule's thread, or one of its own when somebody checks for updates.
 fn read_security_floor<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     let (sources, keys) = security_floor_sources(app);
@@ -2709,7 +2709,7 @@ fn read_security_floor<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
 /**
 Get the newer version the feed names ready while this one runs (`update_ready`), on a thread of its
 own: a try as soon as the feed names one, and every `app_update::TICK` after, until it is ready. A
-try waits while OpenBot is not running, or while something the person started needs the engine
+try waits while Mangaba Bot is not running, or while something the person started needs the engine
 (`update_ready_paused`), so the first one after a launch comes once Start is done. Once ready, each
 try only checks that it still is. A build that is offered no updates makes no such try.
 
@@ -2733,7 +2733,7 @@ fn get_updates_ready<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
             let mut next = BEHIND_TICK;
             loop {
                 handle.state::<Shell>().update_ready.wait(next);
-                // Connected to an OpenBot that runs elsewhere: nothing is downloaded for an
+                // Connected to an Mangaba Bot that runs elsewhere: nothing is downloaded for an
                 // installation here. The app's own update is not this thread's.
                 if desktop_connected::is_connected(&handle) {
                     next = app_update::TICK;
@@ -2751,7 +2751,7 @@ fn get_updates_ready<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     }
 }
 
-/// Whether a try at getting an update ready waits, or stops before its next image: OpenBot is not
+/// Whether a try at getting an update ready waits, or stops before its next image: Mangaba Bot is not
 /// running, or is starting, stopping, updating or quitting.
 fn update_ready_paused<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> bool {
     use std::sync::atomic::Ordering::SeqCst;
@@ -2774,8 +2774,8 @@ const BEHIND_TICK: std::time::Duration = std::time::Duration::from_secs(15);
 const BEHIND_RETRY: std::time::Duration = std::time::Duration::from_secs(60);
 
 /// Whether a try at getting this app's own release ready waits, or stops before its next image:
-/// OpenBot is starting, updating (the update pulls the rest itself), or quitting, or the app is
-/// installing its own update. Unlike `update_ready_paused`, it goes on while OpenBot is not
+/// Mangaba Bot is starting, updating (the update pulls the rest itself), or quitting, or the app is
+/// installing its own update. Unlike `update_ready_paused`, it goes on while Mangaba Bot is not
 /// running: that is when it is needed.
 fn own_release_paused<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> bool {
     use std::sync::atomic::Ordering::SeqCst;
@@ -2788,7 +2788,7 @@ fn own_release_paused<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> bool {
 
 /**
 One try at getting this app's own release ready for the installation in the selected folder when it
-is behind the app (`update_ready::behind`): OpenBot's images for it, into the engine the
+is behind the app (`update_ready::behind`): Mangaba Bot's images for it, into the engine the
 installation was set up on, once that engine answers, so the Start that moves it finds them there.
 Never started by itself: an engine that does not answer is left alone. The download keeps the back
 end's 40 GiB free (`update_ready::keeps_free`). Said in the log once per change of outcome. When the
@@ -2966,10 +2966,10 @@ fn try_getting_update_ready<R: tauri::Runtime>(
         disk: &|| local_eval::engine_disk(&address),
         computer_free: &|| update_ready::computer_free(&address),
         limits: openbot_desktop_lib::local_images::Limits::standard(),
-        // OpenBot runs, so its back end is set up already.
+        // Mangaba Bot runs, so its back end is set up already.
         keep_free: 0,
     };
-    // Stopped when OpenBot needs the engine, or the feed names another version meanwhile.
+    // Stopped when Mangaba Bot needs the engine, or the feed names another version meanwhile.
     let stop = || update_ready_paused(app) || shell.app_update.newer().as_ref() != Some(&version);
     let outcome = update_ready::get_ready(&ahead, &stop, &mut |done, total| {
         shell
@@ -3104,13 +3104,13 @@ async fn check_app_update_for_page<R: tauri::Runtime>(
     check_app_update_now(app).await.map_err(|error| {
         log::warn!("[app update] could not read the update feed: {error}");
         Problem::with(
-            "OpenBot couldn't check for updates. Check your internet connection and try again.",
+            "Mangaba Bot couldn't check for updates. Check your internet connection and try again.",
             error,
         )
     })
 }
 
-/// Check for Updates… in the tray or the OpenBot menu. Always answers, in a native dialog: the
+/// Check for Updates… in the tray or the Mangaba Bot menu. Always answers, in a native dialog: the
 /// offer with Update and restart, up to date, or couldn't check. Not now closes the offer on that
 /// version, as it does in the windows.
 fn check_for_updates_from_menu(app: tauri::AppHandle) {
@@ -3151,7 +3151,7 @@ fn check_for_updates_from_menu(app: tauri::AppHandle) {
 /// A Check for Updates… answer, in a native alert. `answered` hears whether the first button was
 /// chosen, off the main thread.
 ///
-/// On macOS, OpenBot's own alert, with OpenBot's icon (`native_alert`): the dialog plugin shows a
+/// On macOS, Mangaba Bot's own alert, with Mangaba Bot's icon (`native_alert`): the dialog plugin shows a
 /// message with no parent window in an alert the system draws, with its grey note icon. Elsewhere,
 /// the dialog plugin's message, which on Windows carries the information icon a message box should.
 fn show_prompt(
@@ -3209,28 +3209,28 @@ fn dismiss_app_update_for<R: tauri::Runtime>(
     version: &str,
 ) -> Result<(), Problem> {
     let version = semver::Version::parse(version)
-        .map_err(|_| Problem::plain("That isn't a version of OpenBot."))?;
+        .map_err(|_| Problem::plain("That isn't a version of Mangaba Bot."))?;
     let config = app
         .path()
         .app_config_dir()
         .map_err(|e| Problem::from(e.to_string()))?;
     app_update::dismiss(&config, &version)
-        .map_err(|e| Problem::from(format!("OpenBot couldn't remember that: {e}")))
+        .map_err(|e| Problem::from(format!("Mangaba Bot couldn't remember that: {e}")))
 }
 
 /**
-Install the newer OpenBot that the banner or the setup window offered, then restart into it.
+Install the newer Mangaba Bot that the banner or the setup window offered, then restart into it.
 
-The archive is downloaded, and its signature verified by the updater, while OpenBot keeps running,
-then installed over this app. Only then is OpenBot stopped, as for an upgrade (the local
+The archive is downloaded, and its signature verified by the updater, while Mangaba Bot keeps running,
+then installed over this app. Only then is Mangaba Bot stopped, as for an upgrade (the local
 Intelligence keeps running), so a download or install that fails leaves everything as it was. The
-restart starts OpenBot again, and that Start upgrades the installation to the new app's release
+restart starts Mangaba Bot again, and that Start upgrades the installation to the new app's release
 (`upgrade_due`, then `upgrade_and_start`: `upgrade::run`, with its backup and its way back). Not
 while an upgrade or a Start is under way (`RuntimeUpdateGuard`).
 
 On Windows the order differs, because Windows will not replace a running app: the updater starts
 the downloaded NSIS installer in update mode and exits this process at once, and the installer
-starts the new version when it is done. Nothing after `install` runs there, so OpenBot is stopped
+starts the new version when it is done. Nothing after `install` runs there, so Mangaba Bot is stopped
 just before the installer starts (`stop_before_installer`), once the download is verified and
 written out. A download that fails still leaves everything as it was.
 
@@ -3258,7 +3258,7 @@ async fn install_app_update_steps<R: tauri::Runtime>(
     use tauri_plugin_updater::UpdaterExt;
     // The one condition the updater plugin is registered on (see `setup`).
     if !app.config().plugins.0.contains_key("updater") {
-        return Err(Problem::plain("This build of OpenBot can't update itself."));
+        return Err(Problem::plain("This build of Mangaba Bot can't update itself."));
     }
     let _update = RuntimeUpdateGuard::begin(&app)?;
     let stopped = std::sync::Arc::new(std::sync::atomic::AtomicBool::new(false));
@@ -3291,7 +3291,7 @@ async fn install_app_update_steps<R: tauri::Runtime>(
         {
             attempt.failed(&app, telemetry::UpdateFailureClass::Cancelled);
             return Err(Problem::plain(
-                "OpenBot was stopped before the update was installed.",
+                "Mangaba Bot was stopped before the update was installed.",
             ));
         }
         app.state::<Shell>().app_update.restarting();
@@ -3310,9 +3310,9 @@ async fn install_app_update_steps<R: tauri::Runtime>(
     .await;
     if let Err(problem) = installed {
         if stopped.load(std::sync::atomic::Ordering::SeqCst) {
-            // Windows could not start the installer after OpenBot was stopped and the app's
+            // Windows could not start the installer after Mangaba Bot was stopped and the app's
             // windows and tray were taken down for the exit. Tauri allows nothing after that but
-            // an exit, so start this same version again; its Start brings OpenBot back, and the
+            // an exit, so start this same version again; its Start brings Mangaba Bot back, and the
             // offer stays.
             log::error!(
                 "[app update] the installer did not start: {}",
@@ -3332,15 +3332,15 @@ async fn install_app_update_steps<R: tauri::Runtime>(
         Ok(Ok(())) => {}
         // The new version is already installed, and restarting into it is still right: its Start
         // finds whatever is left running.
-        Ok(Err(error)) => log::warn!("[app update] stopping OpenBot before the restart: {error}"),
-        Err(error) => log::warn!("[app update] stopping OpenBot before the restart: {error}"),
+        Ok(Err(error)) => log::warn!("[app update] stopping Mangaba Bot before the restart: {error}"),
+        Err(error) => log::warn!("[app update] stopping Mangaba Bot before the restart: {error}"),
     }
     log::info!("[app update] installed; restarting into it");
     restart_into_update(&app)
 }
 
 /**
-Check for the newer OpenBot and download it, verified, from the feeds `updater(None)` reads; then,
+Check for the newer Mangaba Bot and download it, verified, from the feeds `updater(None)` reads; then,
 when that download fails and a later feed in `feeds` is on another host (`app_update::feed_after`),
 once more from that feed alone, built by `updater(Some(feed))`.
 
@@ -3373,7 +3373,7 @@ async fn download_app_update(
                 .await
                 .map_err(failed)?
                 .ok_or_else(|| DownloadFailed {
-                    problem: Problem::plain("OpenBot is already up to date."),
+                    problem: Problem::plain("Mangaba Bot is already up to date."),
                     class: telemetry::UpdateFailureClass::Unknown,
                 })
         }
@@ -3452,7 +3452,7 @@ async fn download_app_update_recorded<R: tauri::Runtime>(
 }
 
 /**
-What Windows needs done before the updater starts the installer and exits the process: OpenBot
+What Windows needs done before the updater starts the installer and exits the process: Mangaba Bot
 stopped, as on a Mac after the install (the local Intelligence keeps running), then the cleanup the
 updater does by default, which takes down the windows and the tray icon so none is left behind.
 
@@ -3463,7 +3463,7 @@ starts the new version, whose Start moves the installation to its release (`foll
 fn stop_before_installer<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     if let Err(error) = stop_for_update(app, &stack::default_root()) {
         // The installer runs either way: the new version's Start finds whatever is left running.
-        log::warn!("[app update] stopping OpenBot before the installer: {error}");
+        log::warn!("[app update] stopping Mangaba Bot before the installer: {error}");
     }
     // While the window is still up and in front: the new version comes forward as it first shows.
     #[cfg(windows)]
@@ -3474,7 +3474,7 @@ fn stop_before_installer<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
 /**
 Restart into the version just installed, without Quit's cleanup.
 
-OpenBot was already stopped for the update, and the local Intelligence is meant to keep running
+Mangaba Bot was already stopped for the update, and the local Intelligence is meant to keep running
 (`stop_for_update`). Tauri ignores `prevent_exit` for a restart, so a cleanup started by the exit it
 sends would be cut off halfway, possibly in the middle of stopping Intelligence. Marking Quit done
 for the restart's exit code makes the exit handler let it through untouched.
@@ -3488,7 +3488,7 @@ fn quit_done_for_restart(quit: &QuitState) {
     *quit.phase.lock().unwrap() = QuitPhase::Complete(tauri::RESTART_EXIT_CODE);
 }
 
-/// The setup window's update offer: the same answer the banner in OpenBot's page reads.
+/// The setup window's update offer: the same answer the banner in Mangaba Bot's page reads.
 #[tauri::command]
 async fn app_update_offer(app: tauri::AppHandle) -> app_update::Status {
     app_update_status(&app)
@@ -3530,7 +3530,7 @@ async fn prepare_engine(app: tauri::AppHandle) -> Result<engine::EngineStatus, P
 /// the installation in `root`. Once per run of the app. See `early_downloads`.
 #[tauri::command]
 fn start_early_downloads(app: tauri::AppHandle, root: String) {
-    // Nothing is downloaded for this computer while the app is connected to another OpenBot.
+    // Nothing is downloaded for this computer while the app is connected to another Mangaba Bot.
     if desktop_connected::is_connected(&app) {
         return;
     }
@@ -3555,7 +3555,7 @@ fn early_downloads_now() -> early_downloads::Summary {
 }
 
 /// Where the early downloads are once they have looked at the free disk, for Install: nothing is
-/// built on a disk too full for OpenBot, even by an Install clicked before they had looked.
+/// built on a disk too full for Mangaba Bot, even by an Install clicked before they had looked.
 #[tauri::command]
 async fn early_downloads_measured() -> early_downloads::Summary {
     tauri::async_runtime::spawn_blocking(|| {
@@ -3566,7 +3566,7 @@ async fn early_downloads_measured() -> early_downloads::Summary {
 }
 
 /**
-The person clicked "Move OpenBot's storage to F:" on the space message: the disk of OpenBot's Podman
+The person clicked "Move Mangaba Bot's storage to F:" on the space message: the disk of Mangaba Bot's Podman
 machine moves into the install folder (`engine::machine_home`), and the machine starts again.
 Windows only. Every WSL distribution on this computer stops for a moment (`win::move_distribution`).
 
@@ -3577,10 +3577,10 @@ machine's drive again every few seconds and send `setup:downloads`.
 async fn move_engine_here(app: tauri::AppHandle) -> Result<(), Problem> {
     desktop_connected::local_only(&app)?;
     if !cfg!(target_os = "windows") {
-        return Err(Problem::plain("OpenBot moves its storage only on Windows."));
+        return Err(Problem::plain("Mangaba Bot moves its storage only on Windows."));
     }
     let home = engine::machine_home()
-        .ok_or_else(|| Problem::plain("OpenBot has no folder to move its storage to."))?;
+        .ok_or_else(|| Problem::plain("Mangaba Bot has no folder to move its storage to."))?;
     let target = home
         .join("containers")
         .join("podman")
@@ -3673,16 +3673,16 @@ fn move_steps(
 fn move_engine_failed_line(to: Option<&str>, now_on: Option<&str>) -> String {
     match (to, now_on) {
         (Some(to), Some(now_on)) if to == now_on => {
-            format!("OpenBot moved its storage to {to}, but couldn't start it again.")
+            format!("Mangaba Bot moved its storage to {to}, but couldn't start it again.")
         }
         (Some(to), Some(now_on)) => {
-            format!("OpenBot couldn't move its storage to {to}. It is still on {now_on}.")
+            format!("Mangaba Bot couldn't move its storage to {to}. It is still on {now_on}.")
         }
-        (Some(to), None) => format!("OpenBot couldn't move its storage to {to}."),
+        (Some(to), None) => format!("Mangaba Bot couldn't move its storage to {to}."),
         (None, Some(now_on)) => {
-            format!("OpenBot couldn't move its storage. It is still on {now_on}.")
+            format!("Mangaba Bot couldn't move its storage. It is still on {now_on}.")
         }
-        (None, None) => "OpenBot couldn't move its storage.".to_string(),
+        (None, None) => "Mangaba Bot couldn't move its storage.".to_string(),
     }
 }
 
@@ -3704,7 +3704,7 @@ async fn prepare_installation(
         .load(std::sync::atomic::Ordering::SeqCst)
     {
         return Err(Problem::plain(
-            "OpenBot is updating. Wait for it to finish before repairing.",
+            "Mangaba Bot is updating. Wait for it to finish before repairing.",
         ));
     }
     let asked = std::time::Instant::now();
@@ -3769,7 +3769,7 @@ async fn prepare_installation_inner(
             let _startup = attempt.lock_current()?;
             if shell.containers.lock().unwrap().is_some() || shell.root.lock().unwrap().is_some() {
                 return Err(Problem::plain(
-                    "Stop OpenBot before changing its local installation.",
+                    "Stop Mangaba Bot before changing its local installation.",
                 ));
             }
             remember_selected_root(&shell, &root);
@@ -3810,7 +3810,7 @@ async fn prepare_installation_inner(
                 &handle,
                 "installation",
                 true,
-                "OpenBot is already installed.",
+                "Mangaba Bot is already installed.",
             );
             return Ok(harness);
         }
@@ -3823,7 +3823,7 @@ async fn prepare_installation_inner(
          * NO BUN, NO `bun install`, NO APP BUILD.
          *
          * The server and the app it serves run from the published server image, so installing
-         * OpenBot is pulling images and nothing else. This step used to download Bun and install
+         * Mangaba Bot is pulling images and nothing else. This step used to download Bun and install
          * the app's packages here, on every machine, and on a fresh Windows machine that took longer
          * than everything else in the install together: Defender scans each of the thousands of
          * small files it writes. Nothing on the host needs them now: the person's own browser runs
@@ -3832,9 +3832,9 @@ async fn prepare_installation_inner(
         report_running_plain(
             &handle,
             "images",
-            "Checking what OpenBot needs to download.",
+            "Checking what Mangaba Bot needs to download.",
         );
-        // On OpenBot's own machine on Windows the downloads go through the machine's network, which
+        // On Mangaba Bot's own machine on Windows the downloads go through the machine's network, which
         // a Retry reaches without starting the machine again: checked, and set up again, first.
         acquire::prepare_for_compose(&address)?;
         // The first screen may have started pulling these already: wait for it, showing its
@@ -3892,7 +3892,7 @@ async fn prepare_installation_inner(
             &handle,
             "images",
             true,
-            engine::StepLine::here("OpenBot is downloaded.").logged(format!(
+            engine::StepLine::here("Mangaba Bot is downloaded.").logged(format!(
                 "Local software is downloaded ({}/{}).",
                 images.len(),
                 images.len()
@@ -3907,7 +3907,7 @@ async fn prepare_installation_inner(
                 .map_err(|e| Problem::from(e.to_string()))?,
             &root,
         )?;
-        report_plain(&handle, "installation", true, "OpenBot is installed.");
+        report_plain(&handle, "installation", true, "Mangaba Bot is installed.");
         Ok::<Option<harness::HarnessChoice>, Problem>(harness)
     })
     .await
@@ -3929,7 +3929,7 @@ async fn prepare_installation_inner(
 /// `saved` is the engine the installation was set up on: only that one is looked at, started or
 /// installed. With none saved, `install::install_engine_with` chooses.
 ///
-/// Answering is not enough: the engine is then checked for versions new enough to run OpenBot,
+/// Answering is not enough: the engine is then checked for versions new enough to run Mangaba Bot,
 /// and updated for the person when it is not (`engine_new_enough`).
 async fn engine_ready(
     app: &tauri::AppHandle,
@@ -3940,7 +3940,7 @@ async fn engine_ready(
     // window starts the account's licence check and Intelligence's setup on it, and an engine about
     // to be updated refuses both: Docker Desktop 4.31 calls itself "Docker Desktop (containerized)",
     // which the CLI does not run on, and a Windows tester was told to switch to Docker Desktop
-    // while OpenBot was updating it.
+    // while Mangaba Bot was updating it.
     if !engine_new_enough(app, address.clone()).await? {
         report_line(app, "engine", true, answering);
     }
@@ -3948,10 +3948,10 @@ async fn engine_ready(
 }
 
 /**
-The engine at `address` new enough to run OpenBot, updated for the person when it is not.
+The engine at `address` new enough to run Mangaba Bot, updated for the person when it is not.
 
 At setup and at every Start, before Compose reads the project: an older Compose stops there with
-"Compose config exited with exit status: 15", which nobody can act on. Docker Desktop and OpenBot's
+"Compose config exited with exit status: 15", which nobody can act on. Docker Desktop and Mangaba Bot's
 Podman are updated here; only what cannot be updated for them is one plain step on the row. Said on
 the `engine` row, and nothing is said when nothing needed doing: whether the row was said, which
 `engine_ready` needs to know. See `engine_versions`.
@@ -4000,7 +4000,7 @@ async fn engine_new_enough<R: tauri::Runtime>(
     .await
     .map_err(|error| {
         Problem::with(
-            "OpenBot could not check the software it runs on. Try again.",
+            "Mangaba Bot could not check the software it runs on. Try again.",
             format!("the engine version check did not run: {error}"),
         )
     })?;
@@ -4035,7 +4035,7 @@ async fn engine_answering(
     app: &tauri::AppHandle,
     saved: Option<engine::Engine>,
 ) -> Result<(engine::Address, engine::StepLine), Problem> {
-    report_running_plain(app, "engine", "Checking the software OpenBot needs.");
+    report_running_plain(app, "engine", "Checking the software Mangaba Bot needs.");
     let found = engine::detect_saved(saved);
     desktop_telemetry::observe_engine(app, &found);
     let root = stack::default_root();
@@ -4051,7 +4051,7 @@ async fn engine_answering(
     .await
     .map_err(|error| {
         Problem::with(
-            "OpenBot could not check the software it runs on. Try again.",
+            "Mangaba Bot could not check the software it runs on. Try again.",
             format!("the engine check did not run: {error}"),
         )
     })?;
@@ -4072,7 +4072,7 @@ async fn engine_answering(
                 .await
                 .map_err(|error| {
                     Problem::with(
-                        "OpenBot couldn't start the software it runs on. Try again.",
+                        "Mangaba Bot couldn't start the software it runs on. Try again.",
                         error.to_string(),
                     )
                 })??;
@@ -4097,7 +4097,7 @@ async fn engine_answering(
     report_running(
         app,
         "install-engine",
-        "Looking for the software OpenBot runs on.",
+        "Looking for the software Mangaba Bot runs on.",
         None,
     );
     let telemetry_app = app.clone();
@@ -4131,7 +4131,7 @@ async fn engine_answering(
             },
             // Installing Podman or starting Docker Desktop can take minutes; each line says where it is.
             &mut |line| report_running_line(&progress_app, "install-engine", line, None),
-            // Docker Desktop's window, or the password prompt, came to the front over OpenBot's.
+            // Docker Desktop's window, or the password prompt, came to the front over Mangaba Bot's.
             &|| bring_to_front(&back_app, "the engine no longer needs another app's window"),
             &|| {
                 watching
@@ -4145,7 +4145,7 @@ async fn engine_answering(
     .await
     .map_err(|error| {
         Problem::with(
-            "OpenBot could not install the software it needs. Try again.",
+            "Mangaba Bot could not install the software it needs. Try again.",
             format!("the install task did not run: {error}"),
         )
     })?;
@@ -4254,7 +4254,7 @@ async fn engine_answering(
     .await
     .map_err(|error| {
         Problem::with(
-            "OpenBot couldn't start the software it runs on. Try again.",
+            "Mangaba Bot couldn't start the software it runs on. Try again.",
             format!("the machine start did not run: {error}"),
         )
     })??;
@@ -4278,7 +4278,7 @@ async fn engine_answering(
         .filter(|_| ready.responding)
         .ok_or_else(|| {
             Problem::with(
-                "OpenBot set up the software it runs on, but it is still not answering. Try again.",
+                "Mangaba Bot set up the software it runs on, but it is still not answering. Try again.",
                 ready.detail,
             )
         })?;
@@ -4291,7 +4291,7 @@ async fn engine_answering(
 fn ensure_linux_podman_api(shell: &Shell, address: &engine::Address) -> Result<(), Problem> {
     if !matches!(*shell.quit.phase.lock().unwrap(), QuitPhase::Idle) {
         return Err(Problem::plain(
-            "OpenBot is quitting. Start it again to continue.",
+            "Mangaba Bot is quitting. Start it again to continue.",
         ));
     }
     shell
@@ -4342,8 +4342,8 @@ async fn deployment_ready<R: tauri::Runtime>(
     report_running_line(
         app,
         "deployment",
-        engine::StepLine::here("Checking which version of OpenBot to download.")
-            .logged("Checking the OpenBot release."),
+        engine::StepLine::here("Checking which version of Mangaba Bot to download.")
+            .logged("Checking the Mangaba Bot release."),
         None,
     );
     // Both release discovery and downloading use blocking HTTP. Keeping them in a blocking task
@@ -4358,8 +4358,8 @@ async fn deployment_ready<R: tauri::Runtime>(
             report_running_line(
                 &handle,
                 "deployment",
-                engine::StepLine::here("Downloading OpenBot.")
-                    .logged(format!("Downloading OpenBot {version}.")),
+                engine::StepLine::here("Downloading Mangaba Bot.")
+                    .logged(format!("Downloading Mangaba Bot {version}.")),
                 None,
             );
             // A pinned build lays out the commit it was cut from; any other release is a tag.
@@ -4376,7 +4376,7 @@ async fn deployment_ready<R: tauri::Runtime>(
     .map_err(|error| {
         report(app, "deployment", false, error.clone());
         Problem::with(
-            "OpenBot could not download what it needs to run. Check the internet \
+            "Mangaba Bot could not download what it needs to run. Check the internet \
              connection and try again.",
             error,
         )
@@ -4385,11 +4385,11 @@ async fn deployment_ready<R: tauri::Runtime>(
     // app published ahead of the release it needs. Saying so beats the Compose error that follows.
     if deployment::predates_containers(root) {
         let detail = format!(
-            "OpenBot {version} runs its server on the host; this app runs it in a container."
+            "Mangaba Bot {version} runs its server on the host; this app runs it in a container."
         );
         report(app, "deployment", false, detail.clone());
         return Err(Problem::with(
-            "This OpenBot app needs a newer OpenBot release than the latest one. Try again \
+            "This Mangaba Bot app needs a newer Mangaba Bot release than the latest one. Try again \
              once it is published.",
             detail,
         ));
@@ -4453,7 +4453,7 @@ fn download_missing<R: tauri::Runtime>(
         "[images] downloading {}, which this needs and the engine does not have",
         missing.join(", ")
     );
-    report_running_plain(app, "images", "Downloading OpenBot.");
+    report_running_plain(app, "images", "Downloading Mangaba Bot.");
     let pacer = Mutex::new(pull_metrics::Pacer::default());
     let sizes = {
         let address = address.clone();
@@ -4482,7 +4482,7 @@ fn download_missing<R: tauri::Runtime>(
             }
         },
     )?;
-    report_plain(app, "images", true, "OpenBot is downloaded.");
+    report_plain(app, "images", true, "Mangaba Bot is downloaded.");
     Ok(())
 }
 
@@ -4493,8 +4493,8 @@ fn sign_in_reference(
 ) -> Result<String, Problem> {
     reference(root, published).map_err(|error| {
         Problem::with(
-            "This version of OpenBot cannot sign in to that plan. Use an API key instead, or \
-             update OpenBot.",
+            "This version of Mangaba Bot cannot sign in to that plan. Use an API key instead, or \
+             update Mangaba Bot.",
             error,
         )
     })
@@ -4534,7 +4534,7 @@ impl ChosenModel {
         let saved = self.saved.unwrap_or(false);
         /*
          * A KEY OR ADDRESS OPENBOT KEEPS. The connection was last changed in the app, where the key
-         * went to OpenBot's server and never to this app, and the window resumes it as a saved one.
+         * went to Mangaba Bot's server and never to this app, and the window resumes it as a saved one.
          * Start writes no key for it, so the server keeps the one it holds (the setup window made
          * no newer choice: `ai_connection::CHOSEN_AT_ENV`). Plans and sign-ins are kept here, and
          * resolve below as ever.
@@ -4624,7 +4624,7 @@ impl ChosenModel {
                     openbot_env::read_plan_store(root)
                         .map_err(|error| {
                             Problem::with(
-                                "OpenBot could not read the saved ChatGPT sign-in.",
+                                "Mangaba Bot could not read the saved ChatGPT sign-in.",
                                 format!("{}: {error}", root.join(openbot_env::CHATGPT_STORE_FILE).display()),
                             )
                         })?
@@ -4712,7 +4712,7 @@ fn saved_secret(root: &Path, key: &str) -> Result<String, Problem> {
         .map(|found| found.get(key).cloned().unwrap_or_default())
 }
 
-/// The key `local connect` gave OpenBot for its local Intelligence stack, from the credential store.
+/// The key `local connect` gave Mangaba Bot for its local Intelligence stack, from the credential store.
 fn intelligence_key_for_start(
     root: &Path,
     mut resolve: impl FnMut(&Path, &str) -> Result<String, Problem>,
@@ -4722,7 +4722,7 @@ fn intelligence_key_for_start(
     })?;
     if key.trim().is_empty() {
         return Err(Problem::plain(
-            "OpenBot's connection to its services on this computer is missing. Start OpenBot to set \
+            "Mangaba Bot's connection to its services on this computer is missing. Start Mangaba Bot to set \
              it up again.",
         )
         .connection(openbot_desktop_lib::problem::Connection::Intelligence));
@@ -4750,7 +4750,7 @@ fn require_existing_encryption_key(
     // Only a verified fresh database may receive a newly minted encryption key.
     if configured || existing_postgres_volume()? {
         return Err(Problem::plain(
-            "This installation's saved encryption key is missing, invalid, or public. Restore its original private key from backup, or get help preserving its saved data. OpenBot will not replace the key automatically.",
+            "This installation's saved encryption key is missing, invalid, or public. Restore its original private key from backup, or get help preserving its saved data. Mangaba Bot will not replace the key automatically.",
         ));
     }
     Ok(())
@@ -4791,7 +4791,7 @@ fn require_existing_encryption_key_with_recovery(
             if found.volumes.is_empty() {
                 return Ok(());
             }
-            let mut problem = Problem::plain("OpenBot found data from a previous installation, such as Bots' files and browser sign-ins. OpenBot will not reuse it in a new installation. Restore the previous installation's folder to keep it, or choose Start fresh to delete it.");
+            let mut problem = Problem::plain("Mangaba Bot found data from a previous installation, such as Bots' files and browser sign-ins. Mangaba Bot will not reuse it in a new installation. Restore the previous installation's folder to keep it, or choose Start fresh to delete it.");
             match fresh_root_without_encryption_key(root, secrets) {
                 Ok(true) if found.resettable() => {
                     problem.leftover = Some(Box::new(LeftoverReset {
@@ -4820,9 +4820,9 @@ fn require_existing_encryption_key_with_recovery(
     match recovery {
         Ok(Some(found)) if found.database.is_some() && found.resettable() => {
             problem.said = if found.volumes.len() > 1 {
-                "OpenBot found a database and other data from a previous installation, but its encryption key is unavailable. Restore the original key to keep its saved data, or choose Start fresh to delete it."
+                "Mangaba Bot found a database and other data from a previous installation, but its encryption key is unavailable. Restore the original key to keep its saved data, or choose Start fresh to delete it."
             } else {
-                "OpenBot found a database from a previous installation, but its encryption key is unavailable. Restore the original key to keep its saved data, or choose Start fresh to delete it."
+                "Mangaba Bot found a database from a previous installation, but its encryption key is unavailable. Restore the original key to keep its saved data, or choose Start fresh to delete it."
             }
             .into();
             problem.leftover = Some(Box::new(LeftoverReset {
@@ -4876,7 +4876,7 @@ fn fresh_root_without_encryption_key(
         return Ok(false);
     }
     let unknown = || {
-        Problem::plain("OpenBot could not verify that this is an unconfigured installation. Its leftover data cannot be reset here.")
+        Problem::plain("Mangaba Bot could not verify that this is an unconfigured installation. Its leftover data cannot be reset here.")
     };
     let settings = openbot_env::read_already_set(&root.join(".env"), &["DATABASE_URL"])
         .map_err(|_| unknown())?;
@@ -4916,7 +4916,7 @@ fn reset_leftover_database_with(
     let attempt = StartAttempt::begin(shell)?;
     let _startup = attempt.lock_current()?;
     if shell.containers.lock().unwrap().is_some() || shell.root.lock().unwrap().is_some() {
-        return Err(Problem::plain("OpenBot still owns running services. Choose Stop OpenBot before resetting leftover data."));
+        return Err(Problem::plain("Mangaba Bot still owns running services. Choose Stop Mangaba Bot before resetting leftover data."));
     }
     if shell
         .selected_root
@@ -4992,7 +4992,7 @@ async fn reset_leftover_database<R: tauri::Runtime>(
 /// Write the `.env`, raise the containers, migrate, then wait for the server container to answer.
 ///
 /// `api_url` and `gateway_ws_url` are the local Intelligence stack's addresses; its key is the one
-/// `local connect` gave OpenBot, read from the credential store.
+/// `local connect` gave Mangaba Bot, read from the credential store.
 #[tauri::command]
 async fn start_stack<R: tauri::Runtime>(
     app: tauri::AppHandle<R>,
@@ -5050,7 +5050,7 @@ async fn start_stack_now<R: tauri::Runtime>(
         .load(std::sync::atomic::Ordering::SeqCst)
     {
         return Err(Problem::plain(
-            "OpenBot is updating. Wait for it to finish before starting.",
+            "Mangaba Bot is updating. Wait for it to finish before starting.",
         ));
     }
     let root = stack::root_from(&root);
@@ -5061,22 +5061,22 @@ async fn start_stack_now<R: tauri::Runtime>(
     let menus = app.clone();
     let started =
         start_stack_inner(app, root.clone(), api_url, gateway_ws_url, model, harness).await;
-    // The menu bar says whether OpenBot is running, and so does the Status window.
+    // The menu bar says whether Mangaba Bot is running, and so does the Status window.
     refresh_menus(&menus);
     status_changed(&menus);
-    // Setup is done once OpenBot starts: the window hands over to it at once. Recorded once.
+    // Setup is done once Mangaba Bot starts: the window hands over to it at once. Recorded once.
     if started.is_ok() {
         desktop_telemetry::record(&menus, telemetry::EventData::Activated);
-        // Attribution after Start, in the background: OpenBot is already open.
+        // Attribution after Start, in the background: Mangaba Bot is already open.
         desktop_telemetry::link_account_after_start(&menus);
-        // What an earlier update could not remove yet, now that OpenBot answers again.
+        // What an earlier update could not remove yet, now that Mangaba Bot answers again.
         remove_superseded_images(&menus, &root);
     }
     started
 }
 
 /**
-Remove the images of releases this installation was updated from, once OpenBot has started and
+Remove the images of releases this installation was updated from, once Mangaba Bot has started and
 answered: straight after the update that replaced them, and after every later Start while any are
 left. See `superseded_images`.
 
@@ -5128,7 +5128,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
             .is_some_and(|owned| owned.root != root)
         {
             return Err(Problem::plain(
-                "OpenBot still has services from another installation to stop. Choose Stop OpenBot before starting in a different folder.",
+                "Mangaba Bot still has services from another installation to stop. Choose Stop Mangaba Bot before starting in a different folder.",
             ));
         }
         // A rejected concurrent Start must not replace the accepted attempt's selection.
@@ -5137,7 +5137,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
     }
     /*
      * A release that needs a newer app than this one is not started, and nothing is woken or
-     * written for it: the window says "Update OpenBot" with this app's update, and the release stays
+     * written for it: the window says "Update Mangaba Bot" with this app's update, and the release stays
      * as it was laid out (`deployment_release::start_problem`). Off the async thread, because it can
      * ask the release's manifest over blocking HTTP.
      */
@@ -5183,12 +5183,12 @@ async fn start_stack_inner<R: tauri::Runtime>(
     let harness = harness::for_credential(&credential, harness);
     let picked = harness::picked(harness.as_ref(), &root).map_err(|error| {
         // Two registers, because one of these refusals is about a release and the other is
-        // about a pick. "OpenBot v0.0.8 does not include agent-langgraph-agui" is the
+        // about a pick. "Mangaba Bot v0.0.8 does not include agent-langgraph-agui" is the
         // evidence, not the sentence: it names a published image, which is not a thing the
         // person chose or can change.
         Problem::with(
-            "This version of OpenBot does not include the Bot you picked. Go back and choose \
-                 another, or update OpenBot.",
+            "This version of Mangaba Bot does not include the Bot you picked. Go back and choose \
+                 another, or update Mangaba Bot.",
             error,
         )
     })?;
@@ -5255,13 +5255,13 @@ async fn start_stack_inner<R: tauri::Runtime>(
         // stops Start with the reason instead of starting under a name. Never the folder's name
         // alone: a source checkout called `openbot` runs as that too. See `stack::project`.
         stack::project(&found, &root)?;
-        // Intelligence runs on the engine OpenBot is about to run on. See `local_eval::use_engine`.
+        // Intelligence runs on the engine Mangaba Bot is about to run on. See `local_eval::use_engine`.
         local_eval::use_engine(&found);
         #[cfg(target_os = "linux")]
         ensure_linux_podman_api(&shell, &found)?;
         /*
          * A rootless network namespace that predates the host loopback configuration keeps the old
-         * options for as long as any container holds it, and an OpenBot left running by an earlier
+         * options for as long as any container holds it, and an Mangaba Bot left running by an earlier
          * version does. Taken down once, here, so the containers about to start build a new one,
          * and acknowledged only once that worked, so "Try Start again" tries the teardown again.
          * See `engine::local_api::Service::host_loopback_reset_pending`.
@@ -5275,7 +5275,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
         {
             stack::down(&found, &root).map_err(|error| {
                 Problem::with(
-                    "OpenBot couldn't restart with its new network settings. Try Start again.",
+                    "Mangaba Bot couldn't restart with its new network settings. Try Start again.",
                     error,
                 )
             })?;
@@ -5288,7 +5288,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
         #[cfg(target_os = "linux")]
         let status = found.status();
         // The installation's own ports, as its last run recorded them or as they start out, for
-        // the port rules a removed machine of OpenBot's left (`netavark_rules::orphan_rules`).
+        // the port rules a removed machine of Mangaba Bot's left (`netavark_rules::orphan_rules`).
         if let Ok(ports) = openbot_env::Ports::read(&root) {
             remember_own_ports(&ports);
         }
@@ -5358,7 +5358,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
             picked.as_ref().and_then(|picked| picked.installed_port()),
         )
         .map_err(|error| {
-            Problem::with("OpenBot could not read its local ports.", error.to_string())
+            Problem::with("Mangaba Bot could not read its local ports.", error.to_string())
         })?;
         setup_phase("cleanup");
         let reclaimed = cleanup_before_start(&app, &attempt, &root, stack::stop_processes_under)?;
@@ -5372,7 +5372,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
         let ours = stack::ports_we_already_publish(&found, &root);
         // The last run's own ports are waited for before anything moves off them (`for_start`).
         let own = openbot_env::Ports::recorded(&root).map_err(|error| {
-            Problem::with("OpenBot could not read its local ports.", error.to_string())
+            Problem::with("Mangaba Bot could not read its local ports.", error.to_string())
         })?;
         let ports = previous_ports
             .for_start(
@@ -5383,7 +5383,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
             )
             .map_err(|error| {
                 Problem::with(
-                    "OpenBot could not find available local ports. Try Start again.",
+                    "Mangaba Bot could not find available local ports. Try Start again.",
                     error.to_string(),
                 )
             })?;
@@ -5449,7 +5449,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
             use std::os::unix::fs::MetadataExt as _;
             let owner = std::fs::metadata(&root).map_err(|error| {
                 Problem::with(
-                    "OpenBot could not read its installation folder.",
+                    "Mangaba Bot could not read its installation folder.",
                     format!("{}: {error}", root.display()),
                 )
             })?;
@@ -5474,7 +5474,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
 
         // Installation already verified these images. Start only raises the local containers;
         // its no-pull policy sends missing assets back to the installation step.
-        report_running_plain(&app, "services", "Starting OpenBot's services.");
+        report_running_plain(&app, "services", "Starting Mangaba Bot's services.");
 
         // Only an installed harness needs the local service; a BYO endpoint is already running
         // elsewhere, and a Bot a plan's own engine serves runs there (`stack::plan_engine`).
@@ -5512,7 +5512,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
             root: root.clone(),
             address: found.clone(),
         });
-        // The ports this run publishes are known now: rules a removed machine of OpenBot's left on
+        // The ports this run publishes are known now: rules a removed machine of Mangaba Bot's left on
         // them go before Compose publishes them again.
         remember_own_ports(&ports);
         acquire::readied_for_backend(Some(&found), || ());
@@ -5520,7 +5520,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
         // The server applies its migrations as it starts. In an installation whose Compose file is
         // an earlier release's, they ran with that `up`: `migrate` is the dependency Compose
         // completes before it starts `server`, once, and a failed one fails the `up`.
-        report_plain(&app, "services", true, "OpenBot's services are running.");
+        report_plain(&app, "services", true, "Mangaba Bot's services are running.");
 
         // `compose up` succeeds once it has asked for everything. A service that then exits is not its
         // problem, and both Bots exit immediately without a model key. Reported and made fatal here;
@@ -5533,7 +5533,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
          * The personal edition shares one computer, so a Bot's files and logins from the computer
          * the supervisor made for its person are brought into it, once (`stack::
          * carry_over_person_computers`). On every Start, the first one after an upgrade included,
-         * and cheap once done. Not fatal: OpenBot runs, the old volumes keep everything, and the next
+         * and cheap once done. Not fatal: Mangaba Bot runs, the old volumes keep everything, and the next
          * Start tries again.
          */
         let carried = deployment::reference(&root, "agent-computer")
@@ -5555,7 +5555,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
                     &app,
                     "carry-over",
                     false,
-                    "Your Bots' files and sign-ins from before are not in place yet. OpenBot tries \
+                    "Your Bots' files and sign-ins from before are not in place yet. Mangaba Bot tries \
                      again the next time it starts.",
                 );
             }
@@ -5575,7 +5575,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
     report_running_plain(
         &app,
         "answering",
-        "Starting OpenBot. This can take a few minutes the first time.",
+        "Starting Mangaba Bot. This can take a few minutes the first time.",
     );
     let ticket = attempt.generation;
     let waiting = app.clone();
@@ -5638,7 +5638,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
         .map(|owned| owned.address.clone())
         .ok_or_else(|| {
             Problem::with(
-                "The software OpenBot runs on isn't running. Try Start again.",
+                "The software Mangaba Bot runs on isn't running. Try Start again.",
                 "the local container runtime is unavailable",
             )
         })?;
@@ -5650,7 +5650,7 @@ async fn start_stack_inner<R: tauri::Runtime>(
     preparation::record_launch(&root, requested_harness.as_ref())?;
     let config = app.path().app_config_dir().map_err(|error| {
         Problem::with(
-            "OpenBot could not remember this installation for next time.",
+            "Mangaba Bot could not remember this installation for next time.",
             error.to_string(),
         )
     })?;
@@ -5668,16 +5668,16 @@ async fn start_stack_inner<R: tauri::Runtime>(
     );
     watch_connections(app.clone(), root, host_token, generation, ports.server);
 
-    report_plain(&app, "answering", true, "OpenBot is ready.");
+    report_plain(&app, "answering", true, "Mangaba Bot is ready.");
     Ok(())
 }
 
 /**
-Give local Intelligence's Learning agent the model the person signed in to, once OpenBot answers.
+Give local Intelligence's Learning agent the model the person signed in to, once Mangaba Bot answers.
 See `learning_model`.
 
 In the background, on its own thread. Learning is not what Start waits on, and a CLI call that
-fails here leaves OpenBot running, Settings saying why Learning can't run, and the next Start trying
+fails here leaves Mangaba Bot running, Settings saying why Learning can't run, and the next Start trying
 again. The CLI takes its turn with the window's own calls (`local_eval::one_at_a_time`).
 */
 fn give_learning_its_model<R: tauri::Runtime>(
@@ -5799,10 +5799,10 @@ async fn stop_stack<R: tauri::Runtime>(
 enum AskedFrom {
     /// The setup window's Stop.
     SetupWindow,
-    /// Settings > This computer, in OpenBot's own page.
+    /// Settings > This computer, in Mangaba Bot's own page.
     Settings,
     StatusWindow,
-    /// Stop OpenBot in the tray or the window menu.
+    /// Stop Mangaba Bot in the tray or the window menu.
     Menu,
     Quit,
     /// This version is below the security floor (`hold_below_security_floor`).
@@ -5841,7 +5841,7 @@ fn shutdown_root(shell: &Shell, fallback_root: &Path) -> PathBuf {
 }
 
 /// Take the whole stack down: any host processes an installation from before the server was a
-/// container left running, the containers, and the local Intelligence stack if OpenBot created it.
+/// container left running, the containers, and the local Intelligence stack if Mangaba Bot created it.
 ///
 /// One implementation, because there are three ways to ask for it (the button, the menu bar, and
 /// quitting) and a person who used one of them and got a different amount of stopping would be
@@ -5855,7 +5855,7 @@ fn stop_everything<R: tauri::Runtime>(app: &tauri::AppHandle<R>, fallback_root: 
     stop_everything_for(&shell, fallback_root)
 }
 
-/// Stop OpenBot's own processes and containers so an update can replace their files, without
+/// Stop Mangaba Bot's own processes and containers so an update can replace their files, without
 /// cancelling that update. The local Intelligence stack is left running: an update does
 /// not touch it, and the restart that follows finds it already up.
 fn stop_for_update<R: tauri::Runtime>(
@@ -5876,8 +5876,8 @@ fn stop_for_update<R: tauri::Runtime>(
 
 /// Stop as the button and the menu bar run it.
 ///
-/// The person stopped OpenBot, so nothing starts it again on its own in this session. Only here:
-/// an update's stop (`stop_for_update`) is not theirs, and once it had marked the session, OpenBot
+/// The person stopped Mangaba Bot, so nothing starts it again on its own in this session. Only here:
+/// an update's stop (`stop_for_update`) is not theirs, and once it had marked the session, Mangaba Bot
 /// stopped under the window after an update never started again by itself.
 fn stop_everything_for(shell: &Shell, fallback_root: &Path) -> Stopped {
     shell
@@ -5903,7 +5903,7 @@ fn stop_everything_for(shell: &Shell, fallback_root: &Path) -> Stopped {
         down,
         intelligence,
     );
-    // Last, once nothing of OpenBot's runs in it: OpenBot's own machine.
+    // Last, once nothing of Mangaba Bot's runs in it: Mangaba Bot's own machine.
     stop_own_machine(
         engine,
         on_podman,
@@ -5940,7 +5940,7 @@ where
         intelligence,
         &mut progress,
     );
-    // Once nothing of OpenBot's runs in it: OpenBot's own machine.
+    // Once nothing of Mangaba Bot's runs in it: Mangaba Bot's own machine.
     let machine = stop_own_machine(
         engine,
         on_podman,
@@ -5950,7 +5950,7 @@ where
     if let Some(machine) = machine {
         progress(QuitStep::StopEngine, QuitStepState::of(&machine));
     }
-    // Last: the person's Podman OpenBot paused.
+    // Last: the person's Podman Mangaba Bot paused.
     give_back_paused_podman(&mut progress);
     stopped
 }
@@ -5965,7 +5965,7 @@ the same cleanup runs in the same order and the exit follows.
 fn quit_cleanup_shown<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Vec<String> {
     // A setup window that stopped answering and still has not: said before the flush below.
     desktop_stall::at_quit(app);
-    // Connected to an OpenBot that runs elsewhere: Quit closes. Nothing on this computer runs
+    // Connected to an Mangaba Bot that runs elsewhere: Quit closes. Nothing on this computer runs
     // because of it, so there is nothing to stop and no Shutting down screen to show.
     if desktop_connected::is_connected(app) {
         desktop_telemetry::shutdown(app);
@@ -6000,12 +6000,12 @@ enum QuitStep {
     /// (`local_eval::close_for_quit_reporting`).
     FinishUpdate,
     /// Host processes, Compose down, and on Linux the Podman API.
-    OpenBot,
-    /// The local Intelligence stack OpenBot created.
+    Mangaba Bot,
+    /// The local Intelligence stack Mangaba Bot created.
     Intelligence,
-    /// OpenBot's own Podman machine, when it runs (`stop_own_machine`).
+    /// Mangaba Bot's own Podman machine, when it runs (`stop_own_machine`).
     StopEngine,
-    /// On a Mac, the person's Podman that OpenBot paused while it ran, started again. See
+    /// On a Mac, the person's Podman that Mangaba Bot paused while it ran, started again. See
     /// `own_machine`.
     GiveBackPodman,
 }
@@ -6014,7 +6014,7 @@ impl QuitStep {
     fn id(self) -> &'static str {
         match self {
             QuitStep::FinishUpdate => "finish-update",
-            QuitStep::OpenBot => "stop-openbot",
+            QuitStep::Mangaba Bot => "stop-openbot",
             QuitStep::Intelligence => "stop-intelligence",
             QuitStep::StopEngine => "stop-engine",
             QuitStep::GiveBackPodman => "start-your-podman",
@@ -6026,7 +6026,7 @@ impl QuitStep {
     fn running_detail(self) -> &'static str {
         match self {
             QuitStep::FinishUpdate
-            | QuitStep::OpenBot
+            | QuitStep::Mangaba Bot
             | QuitStep::Intelligence
             | QuitStep::StopEngine
             | QuitStep::GiveBackPodman => "",
@@ -6095,7 +6095,7 @@ impl QuitStatus {
 /// Bring the window back on the Shutting down screen.
 ///
 /// The setup page already open listens for `quit:progress` and switches by itself; reloading it
-/// would only run its launch checks again. Anything else, OpenBot itself or a page that never
+/// would only run its launch checks again. Anything else, Mangaba Bot itself or a page that never
 /// loaded, is sent to the setup page's Shutting down screen, which asks `quit_status` for what it
 /// missed.
 fn show_shutting_down<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
@@ -6114,7 +6114,7 @@ fn show_shutting_down<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     }
     let _ = window.show();
     let _ = window.unminimize();
-    focus(&window, "OpenBot is shutting down");
+    focus(&window, "Mangaba Bot is shutting down");
 }
 
 fn report_quit<R: tauri::Runtime>(app: &tauri::AppHandle<R>, step: QuitStep, state: QuitStepState) {
@@ -6135,9 +6135,9 @@ fn quit_status<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Option<QuitStatus
     (status.seq > 0).then_some(status)
 }
 
-/// What a Stop or Quit could not do, kept apart: only OpenBot's own failures mean OpenBot needs
-/// recovery. A local Intelligence stack that would not stop is said, but it is not OpenBot's
-/// processes or containers left behind, and must not hold OpenBot's next start.
+/// What a Stop or Quit could not do, kept apart: only Mangaba Bot's own failures mean Mangaba Bot needs
+/// recovery. A local Intelligence stack that would not stop is said, but it is not Mangaba Bot's
+/// processes or containers left behind, and must not hold Mangaba Bot's next start.
 #[derive(Debug, Default, PartialEq, Eq)]
 struct Stopped {
     openbot: Vec<String>,
@@ -6146,7 +6146,7 @@ struct Stopped {
 }
 
 impl Stopped {
-    /// Every failure, OpenBot's first.
+    /// Every failure, Mangaba Bot's first.
     fn lines(self) -> Vec<String> {
         self.openbot.into_iter().chain(self.intelligence).collect()
     }
@@ -6207,7 +6207,7 @@ where
 }
 
 /**
-Stop, then `intelligence` last, once OpenBot's own processes and containers have had their turn,
+Stop, then `intelligence` last, once Mangaba Bot's own processes and containers have had their turn,
 and whether or not they stopped. Its failure is kept beside theirs, never instead of them.
 
 Local evaluation closes first, before any lock: calls in flight are cancelled and new ones refused
@@ -6270,7 +6270,7 @@ where
     }
     engine.say_first(&mut failures);
 
-    // Recovery is about what OpenBot runs, so only OpenBot's own failures keep it.
+    // Recovery is about what Mangaba Bot runs, so only Mangaba Bot's own failures keep it.
     if failures.is_empty() {
         clear_recovery_required(shell, &root);
     }
@@ -6315,10 +6315,10 @@ fn last_intelligence_timeout() -> Option<std::time::Duration> {
 }
 
 /**
-Ask the CLI to stop the local Intelligence stack, if and only if OpenBot created it.
+Ask the CLI to stop the local Intelligence stack, if and only if Mangaba Bot created it.
 
-No record, or a stack that was already there when OpenBot found it, is left exactly as it is: it
-may be serving other apps, and stopping OpenBot is not a reason to stop them. Docker and the
+No record, or a stack that was already there when Mangaba Bot found it, is left exactly as it is: it
+may be serving other apps, and stopping Mangaba Bot is not a reason to stop them. Docker and the
 stack's containers are never touched here; only the CLI stops what the CLI started.
 
 Calls already in flight are cancelled first, whoever owns the stack: cancelling ends only this
@@ -6395,7 +6395,7 @@ where
             })),
         },
         Err(local_eval::Failure::Unavailable) => {
-            Err("this build has no command-line tool to stop the backend OpenBot created".into())
+            Err("this build has no command-line tool to stop the backend Mangaba Bot created".into())
         }
         Err(local_eval::Failure::Cancelled) if by == local_eval::ShutdownBy::Stop => Ok(()),
         Err(failure) => Err(not_stopped(wire_name(failure))),
@@ -6403,13 +6403,13 @@ where
 }
 
 /**
-The Windows uninstaller's stop (`uninstall`, run from `windows/hooks.nsh`): what OpenBot runs for the
-installation it last launched is stopped, and OpenBot's machine removed when the person chose to
-delete OpenBot's data. Each line goes to stdout, which the uninstaller shows in its details. Answers
+The Windows uninstaller's stop (`uninstall`, run from `windows/hooks.nsh`): what Mangaba Bot runs for the
+installation it last launched is stopped, and Mangaba Bot's machine removed when the person chose to
+delete Mangaba Bot's data. Each line goes to stdout, which the uninstaller shows in its details. Answers
 0 when everything stopped, 1 otherwise; the uninstaller goes on either way.
 */
 fn stop_for_uninstall(asked: uninstall::Asked) -> i32 {
-    // The details go to OpenBot's own log, as the app's would; the uninstaller shows plain words.
+    // The details go to Mangaba Bot's own log, as the app's would; the uninstaller shows plain words.
     if let Some(folder) = headless_log_dir() {
         logging::append_without_app(&folder);
     }
@@ -6418,7 +6418,7 @@ fn stop_for_uninstall(asked: uninstall::Asked) -> i32 {
     std::thread::spawn(|| {
         std::thread::sleep(uninstall::LIMIT);
         log::warn!("[uninstall] gave up after {:?}", uninstall::LIMIT);
-        println!("OpenBot didn't finish stopping in time. Uninstalling anyway.");
+        println!("Mangaba Bot didn't finish stopping in time. Uninstalling anyway.");
         std::process::exit(1);
     });
     let root = last_launched_root().unwrap_or_else(stack::default_root);
@@ -6432,11 +6432,11 @@ fn stop_for_uninstall(asked: uninstall::Asked) -> i32 {
 }
 
 /// The app's identifier as built, the name of each folder Tauri keeps for it. Beside an installed
-/// OpenBot the app goes by another (`side_by_side`).
-const APP_IDENTIFIER: &str = "ai.copilotkit.openbot.desktop";
+/// Mangaba Bot the app goes by another (`side_by_side`).
+const APP_IDENTIFIER: &str = "ai.mangaba.bot.desktop";
 
 /**
-The app's context, under an identifier of its own when it is a second OpenBot beside an installed
+The app's context, under an identifier of its own when it is a second Mangaba Bot beside an installed
 one (`stack::identifier_for`). Set before the app is built, so the single-instance lock and every
 folder Tauri resolves for the app follow it.
 */
@@ -6467,10 +6467,10 @@ fn headless_log_dir() -> Option<PathBuf> {
 
 /**
 What the app's setup gives every engine command, set once per process: the folder of the Compose
-provider OpenBot installed, first on each engine command's PATH (`engine::command_at`), OpenBot's own
+provider Mangaba Bot installed, first on each engine command's PATH (`engine::command_at`), Mangaba Bot's own
 Docker configuration (`docker_config`) and the registry file a new backend node reads
 (`local_images::Mirror`). The app's setup and the uninstaller's stop both set them here, so both run
-Compose the same way. Without the first, `podman compose` finds no provider: OpenBot's
+Compose the same way. Without the first, `podman compose` finds no provider: Mangaba Bot's
 `docker-compose` is only in that folder.
 */
 fn use_engine_folders(root: &Path, local_data: Option<&Path>) {
@@ -6497,7 +6497,7 @@ fn machine_home_for(
     Ok(root.join("engine"))
 }
 
-/// The row's line when the disk stays in the user profile: "F: can't hold OpenBot's storage, so
+/// The row's line when the disk stays in the user profile: "F: can't hold Mangaba Bot's storage, so
 /// it's on C:." `profile` is `%USERPROFILE%`. Without it, the profile is on C:.
 fn machine_home_fallback_line(root: &Path, profile: Option<&str>) -> String {
     let install =
@@ -6505,7 +6505,7 @@ fn machine_home_fallback_line(root: &Path, profile: Option<&str>) -> String {
     let profile = profile
         .and_then(win::drive_of)
         .unwrap_or_else(|| "C:".to_string());
-    format!("{install} can't hold OpenBot's storage, so it's on {profile}.")
+    format!("{install} can't hold Mangaba Bot's storage, so it's on {profile}.")
 }
 
 /// On Windows, put the Podman machine's disk in the install folder `root`, or in the user profile
@@ -6570,8 +6570,8 @@ impl uninstall::Computer for ThisComputerAtUninstall {
         )
     }
 
-    /// The CLI's `local delete` for the stack OpenBot created, found as the stop finds it. A stack
-    /// that was there before OpenBot may serve other apps, and stays.
+    /// The CLI's `local delete` for the stack Mangaba Bot created, found as the stop finds it. A stack
+    /// that was there before Mangaba Bot may serve other apps, and stays.
     fn delete_backend(&mut self, engine: &engine::Address, root: &Path) -> Result<(), String> {
         local_eval::use_engine(engine);
         let Some(state) =
@@ -6653,7 +6653,7 @@ fn down_owned_containers(shell: &Shell, root: &Path) -> Result<(), String> {
         Some(owned) => stack::down(&owned.address, root),
         None if shell.stopped_container_root.lock().unwrap().as_deref() == Some(root) => Ok(()),
         None if root.join("docker-compose.yml").exists() => Err(
-            "OpenBot has no runtime ownership for this installation. Stop its containers using the original engine and context before starting OpenBot again.".into(),
+            "Mangaba Bot has no runtime ownership for this installation. Stop its containers using the original engine and context before starting Mangaba Bot again.".into(),
         ),
         None => Ok(()),
     }
@@ -6666,12 +6666,12 @@ fn down_owned_containers(shell: &Shell, root: &Path) -> Result<(), String> {
 /**
 A Podman machine whose Docker API has gone, stopped and started once before Stop or Quit stops
 anything (`engine_versions::answering_now`). Both stops reach the engine through that API:
-OpenBot's `compose down`, and the back end's `local stop`, which the CLI refuses as
-"docker_unavailable" without it. The containers that were running in the machine, OpenBot's and the
+Mangaba Bot's `compose down`, and the back end's `local stop`, which the CLI refuses as
+"docker_unavailable" without it. The containers that were running in the machine, Mangaba Bot's and the
 back end's among them, are started with it, and the two stops then stop them as they always do.
 
 On a live Windows run, with the machine's `win-sshproxy` gone, Quit failed both, and the next launch
-opened on "When OpenBot last quit, some of its services didn't stop". What still fails after this
+opened on "When Mangaba Bot last quit, some of its services didn't stop". What still fails after this
 is reported as before.
 */
 fn answering_before_stop(address: &engine::Address) {
@@ -6703,16 +6703,16 @@ fn answering_before_stop(address: &engine::Address) {
     }
 }
 
-/// What Stop says, first, when the software OpenBot runs on did not answer and its machine did not
+/// What Stop says, first, when the software Mangaba Bot runs on did not answer and its machine did not
 /// say it was stopped. The next launch says it of a Quit that found the same, as its headline.
-const ENGINE_UNREACHABLE_AT_STOP: &str = "OpenBot couldn't reach the software it runs on, so some of OpenBot may still be running. Stop OpenBot again to retry.";
+const ENGINE_UNREACHABLE_AT_STOP: &str = "Mangaba Bot couldn't reach the software it runs on, so some of Mangaba Bot may still be running. Stop Mangaba Bot again to retry.";
 
 /**
 What Stop and Quit find of the engine before they stop anything.
 
-On the EC2 Mac, OpenBot's Podman machine was stopped and then OpenBot quit. Every stop asked an
+On the EC2 Mac, Mangaba Bot's Podman machine was stopped and then Mangaba Bot quit. Every stop asked an
 engine that could not answer: the Bots' computers, `compose down`, the back end's `local stop` and
-the folder operations' check each failed, and the next launch said "OpenBot had trouble shutting
+the folder operations' check each failed, and the next launch said "Mangaba Bot had trouble shutting
 down last time." Nothing could have been running: every container stops with its machine.
 */
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -6743,7 +6743,7 @@ impl EngineAtStop {
     fn down<'a>(self, down: impl FnOnce(&Path) -> Result<(), String> + 'a) -> StopStep<'a> {
         if self == EngineAtStop::MachineStopped {
             Box::new(|_| {
-                log::info!("[stop] OpenBot's machine is stopped: its containers stopped with it");
+                log::info!("[stop] Mangaba Bot's machine is stopped: its containers stopped with it");
                 Ok(())
             })
         } else {
@@ -6776,7 +6776,7 @@ impl EngineAtStop {
     }
 }
 
-/// `EngineAtStop` for the engine Stop or Quit would stop things on: OpenBot's own containers'
+/// `EngineAtStop` for the engine Stop or Quit would stop things on: Mangaba Bot's own containers'
 /// while they run, otherwise the Podman the installation at `root` was set up on.
 fn engine_at_stop(shell: &Shell, root: &Path) -> EngineAtStop {
     // Only a Podman machine on a Mac or a PC has a machine of its own to ask.
@@ -6828,7 +6828,7 @@ fn engine_at_stop(shell: &Shell, root: &Path) -> EngineAtStop {
     found
 }
 
-/// The engine Stop and Quit stop things on: OpenBot's own containers' while they run, otherwise
+/// The engine Stop and Quit stop things on: Mangaba Bot's own containers' while they run, otherwise
 /// the one the installation at `root` was set up on, when it answers.
 fn engine_for_stop(shell: &Shell, root: &Path) -> Option<engine::Address> {
     // Only a Podman machine on a Mac or a PC has an API of its own to lose.
@@ -6841,7 +6841,7 @@ fn engine_for_stop(shell: &Shell, root: &Path) -> Option<engine::Address> {
         .unwrap()
         .as_ref()
         .map(|owned| owned.address.clone());
-    // Without OpenBot's own containers, only an installation on Podman is asked about: nothing else
+    // Without Mangaba Bot's own containers, only an installation on Podman is asked about: nothing else
     // has a machine to restart, and a Stop with nothing to stop runs no engine command.
     owned.or_else(|| {
         if preparation::saved_engine(root) != Some(engine::Engine::Podman) {
@@ -6947,11 +6947,11 @@ where
             Err(Problem::with(ENGINE_UNREACHABLE_AT_STOP, error))
         }
         (Err(error), Ok(_)) => Err(Problem::with(
-            "OpenBot could not stop a folder operation.",
+            "Mangaba Bot could not stop a folder operation.",
             error,
         )),
         (Err(error), Err(problem)) => Err(Problem::with(
-            "OpenBot could not finish stopping its work.",
+            "Mangaba Bot could not finish stopping its work.",
             format!("{error}\n{}", problem_detail(problem)),
         )),
     };
@@ -6986,7 +6986,7 @@ fn require_no_exited_compose_services(
         report_failure(line.to_string());
     }
     Err(Problem::with(
-        "Part of OpenBot stopped during startup.",
+        "Part of Mangaba Bot stopped during startup.",
         detail,
     ))
 }
@@ -7035,7 +7035,7 @@ fn compose_environment<R: tauri::Runtime>(
 
 /// What Restart says when it cannot make the server again with the settings it has now.
 const RESTART_NEEDS_START: &str =
-    "OpenBot couldn't restart with your current settings. Choose Stop OpenBot, then Start OpenBot.";
+    "Mangaba Bot couldn't restart with your current settings. Choose Stop Mangaba Bot, then Start Mangaba Bot.";
 
 /**
 `compose_environment` for the running deployment at `root`, from where Start left everything: the
@@ -7079,10 +7079,10 @@ fn saved_start_environment<R: tauri::Runtime>(
     credentials.extend(broker_runtime(root));
     let settings =
         openbot_env::read_already_set(&root.join(".env"), &PINNED_SETTINGS).map_err(|error| {
-            Problem::with("OpenBot could not read its settings.", error.to_string())
+            Problem::with("Mangaba Bot could not read its settings.", error.to_string())
         })?;
     let ports = openbot_env::Ports::read(root).map_err(|error| {
-        Problem::with("OpenBot could not read its local ports.", error.to_string())
+        Problem::with("Mangaba Bot could not read its local ports.", error.to_string())
     })?;
     Ok(compose_environment(
         app,
@@ -7099,7 +7099,7 @@ The app broker's settings, read where the person keeps them and handed over at r
 None of them is written, moved or purged. A Composio key in `.env` stays in `.env` and wins; a
 provisioned one stays in the protected store. Pinning them also beats a blank value inherited from
 this app's own environment, which Bun would otherwise prefer to `.env`. Never fatal: without them,
-OpenBot starts with apps unavailable.
+Mangaba Bot starts with apps unavailable.
 */
 fn broker_runtime(root: &Path) -> stack::Secrets {
     match openbot_desktop_lib::composio::resolve(root) {
@@ -7202,7 +7202,7 @@ struct QuitCleanupNotice {
     version: u8,
     failures: Vec<QuitCleanupFailure>,
     /**
-    The Quit could not reach the software OpenBot runs on (`ENGINE_UNREACHABLE_AT_STOP`), said as the
+    The Quit could not reach the software Mangaba Bot runs on (`ENGINE_UNREACHABLE_AT_STOP`), said as the
     notice's headline when it is read.
 
     A field of its own, never a failure of its own: an app rolled back to an earlier release reads
@@ -7236,8 +7236,8 @@ fn known_safe_quit_cleanup_failure(line: &str) -> QuitCleanupFailure {
 
 fn quit_cleanup_failure_summary(failure: QuitCleanupFailure) -> &'static str {
     match failure {
-        QuitCleanupFailure::HostProcesses => "OpenBot could not confirm all app processes stopped.",
-        QuitCleanupFailure::Containers => "OpenBot could not confirm all containers stopped.",
+        QuitCleanupFailure::HostProcesses => "Mangaba Bot could not confirm all app processes stopped.",
+        QuitCleanupFailure::Containers => "Mangaba Bot could not confirm all containers stopped.",
     }
 }
 
@@ -7246,7 +7246,7 @@ fn is_intelligence_quit_failure(line: &str) -> bool {
         .is_some_and(|failure| failure.starts_with(INTELLIGENCE_STOP_FAILED))
 }
 
-/// OpenBot's own failures go to the notice that means recovery; an Intelligence one goes to its
+/// Mangaba Bot's own failures go to the notice that means recovery; an Intelligence one goes to its
 /// own, which only says so.
 fn write_quit_cleanup_notice(root: &Path, lines: &[String]) -> Result<(), String> {
     let (intelligence, openbot): (Vec<&String>, Vec<&String>) = lines
@@ -7271,15 +7271,15 @@ fn write_quit_cleanup_notice(root: &Path, lines: &[String]) -> Result<(), String
 That the last Quit could not stop the local Intelligence stack, said once.
 
 Apart from `last_failure` on purpose. The window treats that as an interrupted run and holds its
-automatic start, and OpenBot's own processes are not what was left running. Fixed words: the
+automatic start, and Mangaba Bot's own processes are not what was left running. Fixed words: the
 notice records only that it happened.
 */
 fn take_local_eval_stop_notice(root: &Path) -> Option<Problem> {
     std::fs::remove_file(root.join(LOCAL_EVAL_STOP_NOTICE_FILE)).ok()?;
     Some(Problem::with(
-        "When OpenBot last quit, some of its services didn't stop. They may still be running. \
-         Stopping OpenBot again asks them to stop.",
-        "the backend stack did not stop when OpenBot last quit",
+        "When Mangaba Bot last quit, some of its services didn't stop. They may still be running. \
+         Stopping Mangaba Bot again asks them to stop.",
+        "the backend stack did not stop when Mangaba Bot last quit",
     ))
 }
 
@@ -7341,7 +7341,7 @@ fn read_quit_cleanup_notice(root: &Path) -> Result<Option<Problem>, Problem> {
         Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
         Err(error) => {
             return Err(Problem::with(
-                "OpenBot could not read its previous shutdown notice.",
+                "Mangaba Bot could not read its previous shutdown notice.",
                 format!("{}: {error}", path.display()),
             ))
         }
@@ -7350,14 +7350,14 @@ fn read_quit_cleanup_notice(root: &Path) -> Result<Option<Problem>, Problem> {
         .metadata()
         .map_err(|error| {
             Problem::with(
-                "OpenBot could not read its previous shutdown notice.",
+                "Mangaba Bot could not read its previous shutdown notice.",
                 format!("{}: {error}", path.display()),
             )
         })?
         .len();
     if size > QUIT_CLEANUP_NOTICE_LIMIT as u64 {
         return Err(Problem::with(
-            "OpenBot could not read its previous shutdown notice.",
+            "Mangaba Bot could not read its previous shutdown notice.",
             format!(
                 "{}: shutdown notice exceeded its size limit",
                 path.display()
@@ -7366,13 +7366,13 @@ fn read_quit_cleanup_notice(root: &Path) -> Result<Option<Problem>, Problem> {
     }
     let notice: QuitCleanupNotice = serde_json::from_reader(file).map_err(|error| {
         Problem::with(
-            "OpenBot could not read its previous shutdown notice.",
+            "Mangaba Bot could not read its previous shutdown notice.",
             format!("{}: {error}", path.display()),
         )
     })?;
     std::fs::remove_file(&path).map_err(|error| {
         Problem::with(
-            "OpenBot could not clear its previous shutdown notice.",
+            "Mangaba Bot could not clear its previous shutdown notice.",
             format!("{}: {error}", path.display()),
         )
     })?;
@@ -7389,7 +7389,7 @@ fn read_quit_cleanup_notice(root: &Path) -> Result<Option<Problem>, Problem> {
     let said = if notice.engine_unreachable {
         ENGINE_UNREACHABLE_AT_STOP
     } else {
-        "OpenBot had trouble shutting down last time."
+        "Mangaba Bot had trouble shutting down last time."
     };
     Ok(Some(Problem::with(said, detail)))
 }
@@ -7442,8 +7442,8 @@ then Intelligence, with no lock held. So Quit's Intelligence cap starts after al
 seconds for the CLI, its turn or the Stop's stop included, plus up to five seconds of grace to stop
 the CLI's process tree if its own overruns.
 
-`progress` hears OpenBot's part start and end, then Intelligence's. Intelligence has a row only
-when a stack OpenBot created is recorded, which is when its step stops anything; it is asked either
+`progress` hears Mangaba Bot's part start and end, then Intelligence's. Intelligence has a row only
+when a stack Mangaba Bot created is recorded, which is when its step stops anything; it is asked either
 way, as before. A failure always gets its row, so the screen never says everything stopped when
 something did not.
 */
@@ -7496,7 +7496,7 @@ where
     }) {
         progress(QuitStep::FinishUpdate, QuitStepState::Complete);
     }
-    progress(QuitStep::OpenBot, QuitStepState::Running);
+    progress(QuitStep::Mangaba Bot, QuitStepState::Running);
     shell
         .start_generation
         .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
@@ -7525,7 +7525,7 @@ where
     }
     drop(startup);
     progress(
-        QuitStep::OpenBot,
+        QuitStep::Mangaba Bot,
         if failures.is_empty() {
             QuitStepState::Complete
         } else {
@@ -7548,7 +7548,7 @@ where
     }
 }
 
-/// A local Intelligence stack OpenBot created is recorded under `root`, so Stop and Quit stop it.
+/// A local Intelligence stack Mangaba Bot created is recorded under `root`, so Stop and Quit stop it.
 fn created_stack_recorded(root: &Path) -> bool {
     local_eval_state::read(root, None).is_some_and(|state| state.tied_to_openbot())
 }
@@ -7573,18 +7573,18 @@ struct QuitState {
     phase: Mutex<QuitPhase>,
     /// The Shutting down screen's rows.
     status: Mutex<QuitStatus>,
-    /// Somebody launched OpenBot while it quit (`launch_while_quitting`): it opens again once
+    /// Somebody launched Mangaba Bot while it quit (`launch_while_quitting`): it opens again once
     /// Quit has stopped everything (`after_exit`). Set and cleared only while `phase` is held.
     open_again: std::sync::atomic::AtomicBool,
 }
 
 /**
-Whether a launch that reached this OpenBot came while it quits, and if so keeps it for after.
+Whether a launch that reached this Mangaba Bot came while it quits, and if so keeps it for after.
 
-The single-instance plugin hands every later launch to the OpenBot already running and ends the new
+The single-instance plugin hands every later launch to the Mangaba Bot already running and ends the new
 process: on Windows it sends its arguments with `SendMessageW` and calls `process::exit(0)`; on a Mac
 opening a running app is a Reopen. Quit keeps the event loop alive while its cleanup stops the stack
-(about twenty seconds on Windows), so a launch then reached the OpenBot that was about to exit, and
+(about twenty seconds on Windows), so a launch then reached the Mangaba Bot that was about to exit, and
 nothing opened. Decided under Quit's own lock, so a launch is never both missed and too late.
 */
 fn launch_while_quitting(quit: &QuitState) -> bool {
@@ -7597,7 +7597,7 @@ fn launch_while_quitting(quit: &QuitState) -> bool {
     quitting
 }
 
-/// Quit did not finish and OpenBot stays open, which answers any launch it held.
+/// Quit did not finish and Mangaba Bot stays open, which answers any launch it held.
 fn quit_back_to_idle(quit: &QuitState) {
     *quit.phase.lock().unwrap() = QuitPhase::Idle;
     quit.open_again
@@ -7673,11 +7673,11 @@ where
     Ok(())
 }
 
-/// Show OpenBot itself in this window.
+/// Show Mangaba Bot itself in this window.
 ///
 /// The point of a desktop application is that it is the application. A window that sets things up
 /// and then sends somebody to a browser tab is a launcher, and nobody wanted a launcher: they
-/// double-clicked OpenBot to get OpenBot.
+/// double-clicked Mangaba Bot to get Mangaba Bot.
 ///
 /// So the window navigates to the running app, and the tray keeps the controls that would otherwise
 /// have nowhere to live. The connection screen comes back if the stack is stopped.
@@ -7690,7 +7690,7 @@ where
 async fn show_openbot<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), Problem> {
     let asked = std::time::Instant::now();
     log::info!("[show] asked");
-    // Connected to an OpenBot that runs elsewhere, this computer's own is not looked for.
+    // Connected to an Mangaba Bot that runs elsewhere, this computer's own is not looked for.
     if let Err(problem) = desktop_connected::local_only(&app) {
         logging::outcome("show", asked, &Err::<(), _>(problem.clone()));
         return Err(problem);
@@ -7700,7 +7700,7 @@ async fn show_openbot<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(),
         show_openbot_on(app, &ports)
     })
     .await
-    .map_err(|error| Problem::with("OpenBot could not open its window.", error.to_string()))
+    .map_err(|error| Problem::with("Mangaba Bot could not open its window.", error.to_string()))
     .and_then(|shown| shown);
     logging::outcome("show", asked, &shown);
     shown
@@ -7711,7 +7711,7 @@ fn ports_for_shell<R: tauri::Runtime>(
 ) -> Result<openbot_env::Ports, Problem> {
     let root = cleanup_root(&app.state::<Shell>(), &stack::default_root());
     openbot_env::Ports::read(&root).map_err(|error| {
-        Problem::with("OpenBot could not read its local ports.", error.to_string())
+        Problem::with("Mangaba Bot could not read its local ports.", error.to_string())
     })
 }
 
@@ -7730,16 +7730,16 @@ fn show_openbot_on<R: tauri::Runtime>(
         return Err(Problem::plain(UPGRADE_INTERRUPTED_SHOWING));
     }
     if recovery_required_or_pending_quit_notice(&shell, &root) {
-        return Err("Part of OpenBot needs recovery. Try starting OpenBot once more.".into());
+        return Err("Part of Mangaba Bot needs recovery. Try starting Mangaba Bot once more.".into());
     }
     let (url, address) = owned_app(&shell, &root, ports).ok_or_else(|| {
-        format!("OpenBot could not verify its app on port {port} belongs to this installation. Try starting OpenBot again.")
+        format!("Mangaba Bot could not verify its app on port {port} belongs to this installation. Try starting Mangaba Bot again.")
     })?;
     // Held either way: it is running, and this session's from now on, as one Start raised is. A
     // launch that found it running and needs a newer app said "Not running" in the tray otherwise.
     hold_shown_deployment(&app, &shell, &root, address.clone(), ports.server);
     refresh_menus(&app);
-    // An OpenBot that needs a newer app is not shown: the window says "Update OpenBot" instead.
+    // An Mangaba Bot that needs a newer app is not shown: the window says "Update Mangaba Bot" instead.
     if let Some(problem) = local_app_too_old(&shell, &root, &address, ports) {
         log::warn!("[show] {}", logging::Failure::described(&problem));
         return Err(problem);
@@ -7757,23 +7757,23 @@ fn show_openbot_on<R: tauri::Runtime>(
         }
         None => url,
     };
-    log::info!("[show] navigating to the owned OpenBot app");
+    log::info!("[show] navigating to the owned Mangaba Bot app");
     let window = app
         .get_webview_window("main")
-        .ok_or("the OpenBot window is not there to show it in")?;
+        .ok_or("the Mangaba Bot window is not there to show it in")?;
     let destination: tauri::Url = destination
         .parse()
-        .map_err(|_| "OpenBot returned an invalid app destination.".to_string())?;
+        .map_err(|_| "Mangaba Bot returned an invalid app destination.".to_string())?;
     // Through the entry address, so the window has the install's cookie (`owned_app_entry`).
     let destination = owned_app_entry(&shell, &root, &address, &destination);
     let outcome = window
         .navigate(destination)
-        .map_err(|_| Problem::plain("OpenBot could not navigate to its app."));
+        .map_err(|_| Problem::plain("Mangaba Bot could not navigate to its app."));
     log::info!("[show] navigate returned {outcome:?}");
-    // Setup is over and OpenBot is what the person uses now: in front, wherever they had gone
+    // Setup is over and Mangaba Bot is what the person uses now: in front, wherever they had gone
     // while it started.
     if outcome.is_ok() {
-        bring_to_front(&app, "OpenBot is showing");
+        bring_to_front(&app, "Mangaba Bot is showing");
     }
     outcome
 }
@@ -7792,7 +7792,7 @@ fn configured_setup_url(
         .windows
         .iter()
         .find(|window| window.label == "main")
-        .ok_or("the OpenBot setup window is not configured")?;
+        .ok_or("the Mangaba Bot setup window is not configured")?;
     match &window.url {
         tauri::WebviewUrl::External(url) | tauri::WebviewUrl::CustomProtocol(url) => {
             Ok(url.clone())
@@ -7831,7 +7831,7 @@ fn configured_setup_url(
                     .map_err(|error| format!("invalid setup page path: {error}"))
             }
         }
-        _ => Err("the OpenBot setup window URL is not supported".into()),
+        _ => Err("the Mangaba Bot setup window URL is not supported".into()),
     }
 }
 
@@ -7857,20 +7857,20 @@ fn setup_destination<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Result<tau
 fn show_setup<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(), String> {
     let window = app
         .get_webview_window("main")
-        .ok_or("the OpenBot window is not there")?;
+        .ok_or("the Mangaba Bot window is not there")?;
     window
         .navigate(setup_destination(&app)?)
         .map_err(|error| format!("could not go back to setup: {error}"))
 }
 
 /// The setup screens' background in light and in dark, which the macOS title bar takes while they
-/// show. The same values as `--surface-main` in styles.css (OpenBot's `--sidebar`, in sRGB).
+/// show. The same values as `--surface-main` in styles.css (Mangaba Bot's `--sidebar`, in sRGB).
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 const SETUP_BACKGROUND: tauri::window::Color = tauri::window::Color(0xed, 0xed, 0xf5, 0xff);
 #[cfg(any(target_os = "macos", target_os = "windows"))]
 const SETUP_BACKGROUND_DARK: tauri::window::Color = tauri::window::Color(0x0d, 0x0b, 0x13, 0xff);
 
-/// Whether `url` is the setup page rather than OpenBot.
+/// Whether `url` is the setup page rather than Mangaba Bot.
 fn on_setup_page<R: tauri::Runtime>(app: &tauri::AppHandle<R>, url: &tauri::Url) -> bool {
     let setup = app.state::<Shell>().setup_url.lock().unwrap().clone();
     setup
@@ -7879,20 +7879,20 @@ fn on_setup_page<R: tauri::Runtime>(app: &tauri::AppHandle<R>, url: &tauri::Url)
 }
 
 /**
-The appearance the setup screens use: the light or dark the person chose in OpenBot, the last time
-its page reported one (`page_appearance`), and the system's until then or when OpenBot follows the
+The appearance the setup screens use: the light or dark the person chose in Mangaba Bot, the last time
+its page reported one (`page_appearance`), and the system's until then or when Mangaba Bot follows the
 system. Both themes exist; the page follows the window's appearance through `prefers-color-scheme`,
 so `Some(Dark)` or `Some(Light)` pins one and `None` follows the system.
 
-The person's choice, not the system's: somebody who set OpenBot to light on a Mac in dark mode saw
-setup in dark, then OpenBot in light, as if they were two apps.
+The person's choice, not the system's: somebody who set Mangaba Bot to light on a Mac in dark mode saw
+setup in dark, then Mangaba Bot in light, as if they were two apps.
 */
 fn setup_theme<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Option<tauri::Theme> {
     let record = app.path().app_config_dir().ok()?.join(APPEARANCE_FILE);
     theme_from_record(std::fs::read_to_string(record).ok().as_deref())
 }
 
-/// The setup screens' colours before any page has painted: OpenBot's own light or dark when its
+/// The setup screens' colours before any page has painted: Mangaba Bot's own light or dark when its
 /// page has said, the system's otherwise, as the setup page itself follows it (`first_paint`).
 fn setup_palette<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> first_paint::Palette {
     first_paint::palette(
@@ -7909,12 +7909,12 @@ fn ground_color(palette: first_paint::Palette) -> tauri::window::Color {
     tauri::window::Color(red, green, blue, 0xff)
 }
 
-/// Where OpenBot's last light or dark, or that it follows the system, is kept, in the app's own
+/// Where Mangaba Bot's last light or dark, or that it follows the system, is kept, in the app's own
 /// configuration folder.
 const APPEARANCE_FILE: &str = "appearance.json";
 
 /// The theme a saved record names, or None for no record, one that cannot be read, or one that says
-/// OpenBot follows the system.
+/// Mangaba Bot follows the system.
 fn theme_from_record(record: Option<&str>) -> Option<tauri::Theme> {
     let record: serde_json::Value = serde_json::from_str(record?).ok()?;
     match record.get("dark")?.as_bool()? {
@@ -7923,7 +7923,7 @@ fn theme_from_record(record: Option<&str>) -> Option<tauri::Theme> {
     }
 }
 
-/// The record for what OpenBot's page reported: the light or dark the person chose, or that OpenBot
+/// The record for what Mangaba Bot's page reported: the light or dark the person chose, or that Mangaba Bot
 /// follows the system, which names no theme, so setup follows the system too.
 fn appearance_record(dark: bool, system: bool) -> String {
     if system {
@@ -7933,7 +7933,7 @@ fn appearance_record(dark: bool, system: bool) -> String {
     }
 }
 
-/// Keep OpenBot's light or dark for the next setup screen. Best effort: a record that cannot be
+/// Keep Mangaba Bot's light or dark for the next setup screen. Best effort: a record that cannot be
 /// written only means setup follows the system next time.
 fn remember_appearance<R: tauri::Runtime>(app: &tauri::AppHandle<R>, dark: bool, system: bool) {
     let Ok(directory) = app.path().app_config_dir() else {
@@ -7951,17 +7951,17 @@ fn remember_appearance<R: tauri::Runtime>(app: &tauri::AppHandle<R>, dark: bool,
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum WindowPage {
     Setup,
-    /// The OpenBot this shell verified it owns, served from this machine: its sidebar takes the
+    /// The Mangaba Bot this shell verified it owns, served from this machine: its sidebar takes the
     /// title bar's place. A page on another loopback origin is `Other`.
     OwnedApp,
-    /// OpenBot served from this machine, from a release whose styles make no room for the window
+    /// Mangaba Bot served from this machine, from a release whose styles make no room for the window
     /// buttons: the system's title bar, still in the app's own light or dark.
     LocalApp,
     /// Anything else: the system's title bar.
     Other,
 }
 
-/// The main window's guard: from OpenBot's own pages, a site outside OpenBot opens in the person's
+/// The main window's guard: from Mangaba Bot's own pages, a site outside Mangaba Bot opens in the person's
 /// default browser and the window stays where it is. The booking calendar a page embeds loads in
 /// its frame. See `outside_links`.
 fn outside_links_guard<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
@@ -7972,8 +7972,8 @@ fn outside_links_guard<R: tauri::Runtime>() -> tauri::plugin::TauriPlugin<R> {
                 log::info!("[window] kept the page; a dropped file does not replace it");
                 return false;
             }
-            // Showing an OpenBot that runs elsewhere, through the relay: only the relay's own pages
-            // are OpenBot in this window. Everything else is the browser's, the address the app is
+            // Showing an Mangaba Bot that runs elsewhere, through the relay: only the relay's own pages
+            // are Mangaba Bot in this window. Everything else is the browser's, the address the app is
             // connected to included, whatever its host (`desktop_connected::leaves_for_browser`).
             if webview.label() == "main" {
                 if let Some(leaves) =
@@ -8022,7 +8022,7 @@ fn open_in_browser<R: tauri::Runtime>(app: &tauri::AppHandle<R>, destination: &t
 The main window, as `tauri.conf.json` describes it, built here rather than from the configuration so
 it gets a new-window handler, which only a builder can attach: a new window asked for from it (a
 link in the booking calendar's frame, which the page's shim can't reach) opens in the person's
-browser for a site outside OpenBot, and nowhere otherwise. Without one, macOS opened nothing and
+browser for a site outside Mangaba Bot, and nowhere otherwise. Without one, macOS opened nothing and
 Windows opened a bare browser window of its own. The configuration says `"create": false`.
 */
 /**
@@ -8053,7 +8053,7 @@ fn build_main_window<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Res
     };
     let opener = app.clone();
     let builder = tauri::WebviewWindowBuilder::from_config(app, &config)?;
-    // The window's buttons on the same row as the OpenBot name and + in the sidebar's header, rather
+    // The window's buttons on the same row as the Mangaba Bot name and + in the sidebar's header, rather
     // than above them (`TRAFFIC_LIGHTS`, and the page's styles that make room beside them).
     #[cfg(target_os = "macos")]
     let builder = builder.traffic_light_position(TRAFFIC_LIGHTS);
@@ -8077,7 +8077,7 @@ fn build_main_window<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Res
      * Never a blank grey or white window before the page paints (`first_paint`): on macOS and
      * Windows the window, and the webview's background under the page, are the setup screens'
      * ground, in light or dark, from the first frame. On Windows, from its first show until the
-     * setup page paints, "Getting OpenBot ready" covers it too. The cover goes up while `build()`
+     * setup page paints, "Getting Mangaba Bot ready" covers it too. The cover goes up while `build()`
      * waits for WebView2, and is put back on top of WebView2's own window after.
      */
     let palette = setup_palette(app);
@@ -8087,7 +8087,7 @@ fn build_main_window<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Res
     let building = std::time::Instant::now();
     let window = builder
         .on_new_window(move |destination, _features| {
-            // Showing an OpenBot that runs elsewhere: whatever is not the relay's own page opens
+            // Showing an Mangaba Bot that runs elsewhere: whatever is not the relay's own page opens
             // in the browser, as a navigation to it would (`outside_links_guard`).
             match desktop_connected::leaves_for_browser(&opener, &destination) {
                 Some(true) => open_in_browser(&opener, &destination),
@@ -8107,7 +8107,7 @@ fn build_main_window<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Res
     drop(watching);
     if let Some(after) = first_paint::shown_after_start() {
         log::info!(
-            "[window] showed {:.1}s after OpenBot started, saying {} until its page paints; WebView2 was ready {:.1}s after that",
+            "[window] showed {:.1}s after Mangaba Bot started, saying {} until its page paints; WebView2 was ready {:.1}s after that",
             after.as_secs_f64(),
             first_paint::HEADING,
             building.elapsed().as_secs_f64()
@@ -8245,7 +8245,7 @@ fn window_page<R: tauri::Runtime>(app: &tauri::AppHandle<R>, url: &tauri::Url) -
     if on_setup_page(app, url) {
         WindowPage::Setup
     } else if desktop_connected::is_relay_page(app, url) {
-        // OpenBot from the OpenBot the app is connected to, through the relay: its own page, from
+        // Mangaba Bot from the Mangaba Bot the app is connected to, through the relay: its own page, from
         // a release that makes room for the window buttons. No installation here is asked.
         WindowPage::OwnedApp
     } else if url.scheme() == "http"
@@ -8266,7 +8266,7 @@ fn window_page<R: tauri::Runtime>(app: &tauri::AppHandle<R>, url: &tauri::Url) -
 }
 
 /**
-Whether the OpenBot installed under `root` pads its sidebar for the window's buttons.
+Whether the Mangaba Bot installed under `root` pads its sidebar for the window's buttons.
 
 The overlay title bar needs the page's help: without the room its styles make, the buttons sit on
 the sidebar's name. Releases before that change (v0.2.0 among them) do not have it, so they keep the
@@ -8284,14 +8284,14 @@ The window's appearance and title bar for the page it shows.
 Setup: the setup screens' theme, a transparent title bar over their ground, the title shown. The
 window starts this way (in `setup`), so the first paint already matches.
 
-OpenBot from this machine: one surface, as Mac apps with a sidebar have it. The title bar becomes an
+Mangaba Bot from this machine: one surface, as Mac apps with a sidebar have it. The title bar becomes an
 overlay, its title text is hidden (the sidebar carries the name), and the page is marked so its
 sidebar makes room for the window buttons and works as the drag handle (`OVERLAY_TITLE_BAR_PAGE`).
 
 Anything else gets the system's bar back, since a page this app did not style cannot make room.
 */
 fn match_title_bar<R: tauri::Runtime>(window: &tauri::Window<R>, page: WindowPage) {
-    // OpenBot's own page sets the window's appearance to its own light or dark (`APP_THEME_PAGE`);
+    // Mangaba Bot's own page sets the window's appearance to its own light or dark (`APP_THEME_PAGE`);
     // setting it here as well would undo that on every theme event.
     match page {
         WindowPage::Setup => {
@@ -8316,7 +8316,7 @@ fn match_title_bar<R: tauri::Runtime>(window: &tauri::Window<R>, page: WindowPag
         let _ = window.set_background_color((page == WindowPage::Setup).then_some(ground));
         show_window_title(window, page != WindowPage::OwnedApp);
     }
-    // OpenBot's own page tints the bar to its own light or dark through `appearance`.
+    // Mangaba Bot's own page tints the bar to its own light or dark through `appearance`.
     #[cfg(target_os = "windows")]
     match page {
         WindowPage::Setup => {
@@ -8329,9 +8329,9 @@ fn match_title_bar<R: tauri::Runtime>(window: &tauri::Window<R>, page: WindowPag
     }
 }
 
-/// OpenBot's own page reporting its light or dark, and whether that is the system's
+/// Mangaba Bot's own page reporting its light or dark, and whether that is the system's
 /// (`APP_THEME_PAGE`). On Windows the title bar takes the page's ground, when the page is one whose
-/// ground that is: an OpenBot from before the reskin keeps Windows's own bar, in the page's light or
+/// ground that is: an Mangaba Bot from before the reskin keeps Windows's own bar, in the page's light or
 /// dark.
 pub(crate) fn page_appearance<R: tauri::Runtime>(
     window: &tauri::Window<R>,
@@ -8354,8 +8354,8 @@ pub(crate) fn page_appearance<R: tauri::Runtime>(
     let _ = (window, dark);
 }
 
-/// The window's theme for what OpenBot's page reported: pinned to the light or dark the person
-/// chose, and the system's own (`None`) when OpenBot follows the system. A pinned window answers
+/// The window's theme for what Mangaba Bot's page reported: pinned to the light or dark the person
+/// chose, and the system's own (`None`) when Mangaba Bot follows the system. A pinned window answers
 /// the page's `prefers-color-scheme` with the pin, so a window left pinned would never show the
 /// page that the system changed.
 pub(crate) fn window_theme(dark: bool, system: bool) -> Option<tauri::Theme> {
@@ -8392,7 +8392,7 @@ const TEXT_COLOR: u32 = 36;
 The window attributes, in the order they are set, that give the title bar `dark`'s look.
 
 `Some(dark)`: Windows's own dark or light bar, then (Windows 11) the setup screens' ground, which
-OpenBot's own pages share (`--background` in the app's styles), so the bar, its text and the
+Mangaba Bot's own pages share (`--background` in the app's styles), so the bar, its text and the
 window's border are one surface with the page instead of a band across its top. Windows 10 and
 Windows Server 2022 have no colour attributes; those calls fail there and the dark or light bar is
 what shows. `None`: Windows's own colours, and its dark or light left to the window's theme.
@@ -8428,7 +8428,7 @@ MEASURED on Windows Server 2022 (box H) in dark: the bar stayed light until the 
 Windows applies these attributes to the frame only when it next draws it, and nothing here moved or
 resized the window, so the frame is redrawn on the spot (`SWP_FRAMECHANGED`). Called as the main
 window first shows (`first_paint`), for each page it loads, on every theme change, and whenever
-OpenBot's own page reports its light or dark.
+Mangaba Bot's own page reports its light or dark.
 */
 #[cfg(target_os = "windows")]
 pub(crate) fn tint_title_bar_of(hwnd: isize, dark: Option<bool>) {
@@ -8497,7 +8497,7 @@ fn show_window_title<R: tauri::Runtime>(window: &tauri::Window<R>, shown: bool) 
 }
 
 /**
-Marks OpenBot's page for the overlay title bar: its styles pad the sidebar's header for the window
+Marks Mangaba Bot's page for the overlay title bar: its styles pad the sidebar's header for the window
 buttons, and the header becomes the drag handle, as does the strip the main column keeps above
 itself while no sidebar shows beside it (hidden, or a sheet in a narrow window), onboarding's
 header, which has no sidebar beside it, and every place the page marks `data-desktop-drag` (the
@@ -8549,17 +8549,17 @@ const OVERLAY_TITLE_BAR_PAGE: &str = r#"(() => {
 })();"#;
 
 /**
-Keeps the window's appearance on OpenBot's own light or dark when the person chose one (Settings),
-and on the system's when OpenBot follows the system.
+Keeps the window's appearance on Mangaba Bot's own light or dark when the person chose one (Settings),
+and on the system's when Mangaba Bot follows the system.
 
-MEASURED: with the Mac in dark and OpenBot set to light, the window kept the dark appearance, and
+MEASURED: with the Mac in dark and Mangaba Bot set to light, the window kept the dark appearance, and
 macOS drew its dark-window outline, a black line, around a light window. The page sets the window's
 theme to its own whenever its `dark` class changes, through `desktop_page::appearance`.
 
 The page names the choice in `data-theme-choice` on its root (app/index.html, app/src/lib/theme.ts).
 "system" lets the window follow the system, which is what lets the page see the system change. It
 is watched as well as the class: going back to System from a chosen dark on a dark window changes
-no class, and the window must still be let go. An OpenBot from before it followed the system names
+no class, and the window must still be let go. An Mangaba Bot from before it followed the system names
 no choice, and its window stays pinned to its light or dark.
 */
 const APP_THEME_PAGE: &str = r#"(() => {
@@ -8585,10 +8585,10 @@ const APP_THEME_PAGE: &str = r#"(() => {
 })();"#;
 
 /**
-Record `address` as the OpenBot app this shell verified it owns, and let it use the Intelligence row.
+Record `address` as the Mangaba Bot app this shell verified it owns, and let it use the Intelligence row.
 
 Called with an address `owned_app_url` verified, before the window navigates there. Its origin is
-then the only loopback origin the window treats as OpenBot (`window_page`) and gives the window's
+then the only loopback origin the window treats as Mangaba Bot (`window_page`) and gives the window's
 controls to (`allow_app_page`).
 
 They are granted here, before the page exists, and not only once it has loaded: the notification
@@ -8615,7 +8615,7 @@ fn trust_owned_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>, address: &str) 
     intelligence_bridge::allow(app, address);
 }
 
-/// Lets `trust_owned_app` grant OpenBot's page its permissions before the page loads. Only for an
+/// Lets `trust_owned_app` grant Mangaba Bot's page its permissions before the page loads. Only for an
 /// app built by `generate_context!`, which compiles them in.
 fn know_app_page_grants<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
     app.state::<Shell>()
@@ -8623,7 +8623,7 @@ fn know_app_page_grants<R: tauri::Runtime>(app: &tauri::AppHandle<R>) {
         .store(true, std::sync::atomic::Ordering::SeqCst);
 }
 
-/// Whether `url` is on the origin of the OpenBot app this shell verified it owns.
+/// Whether `url` is on the origin of the Mangaba Bot app this shell verified it owns.
 fn is_owned_app_origin<R: tauri::Runtime>(app: &tauri::AppHandle<R>, url: &tauri::Url) -> bool {
     let origin = url.origin().ascii_serialization();
     app.state::<Shell>()
@@ -8650,13 +8650,13 @@ const APP_PAGE_NOTIFICATIONS: [&str; 3] = [
 ];
 
 /**
-Lets OpenBot's own page move and zoom the window from its drag handle, set the window's appearance
+Lets Mangaba Bot's own page move and zoom the window from its drag handle, set the window's appearance
 to its own theme, use Settings → This computer (`desktop_page`), and show a Bot's notifications
 (`APP_PAGE_NOTIFICATIONS`), and nothing more.
 
-Only the origin this shell verified as its own OpenBot (`trust_owned_app`). A page on any other
+Only the origin this shell verified as its own Mangaba Bot (`trust_owned_app`). A page on any other
 loopback port, which a link in a reply can open in this window, gets none of it: Settings → This
-computer can stop OpenBot and the local Intelligence.
+computer can stop Mangaba Bot and the local Intelligence.
 */
 fn allow_app_page<R: tauri::Runtime>(app: &tauri::AppHandle<R>, url: &tauri::Url) {
     if !is_owned_app_origin(app, url) {
@@ -8743,9 +8743,9 @@ mod app_page_tests {
 
     const STOP: &str = "plugin:openbot-desktop|stop";
 
-    /// Settings → This computer can stop OpenBot and the local Intelligence. A page on another
+    /// Settings → This computer can stop Mangaba Bot and the local Intelligence. A page on another
     /// loopback port that this window loads, from a link in a reply for instance, used to get the
-    /// same controls as OpenBot's own page.
+    /// same controls as Mangaba Bot's own page.
     #[test]
     fn only_the_owned_app_origin_can_stop_openbot_from_its_page() {
         let (app, window) = app();
@@ -8754,7 +8754,7 @@ mod app_page_tests {
             .parse()
             .unwrap();
 
-        // Loaded before any OpenBot was verified: not OpenBot, and granted nothing.
+        // Loaded before any Mangaba Bot was verified: not Mangaba Bot, and granted nothing.
         assert_eq!(window_page(app.handle(), &foreign), WindowPage::Other);
         allow_app_page(app.handle(), &foreign);
         assert!(ask(&window, foreign.as_str(), STOP).is_err());
@@ -8789,7 +8789,7 @@ mod app_page_tests {
 
     /// On Windows the tray said "Quit  Ctrl+Q" and Ctrl+Q in the window did nothing: a tray menu's
     /// shortcut is only a label there, and the window has no menu bar. The window's pages now ask
-    /// to quit themselves (`quit-shortcut.js`), so the setup screens and OpenBot's own page must be
+    /// to quit themselves (`quit-shortcut.js`), so the setup screens and Mangaba Bot's own page must be
     /// able to, and a page on another loopback port must not.
     #[test]
     fn ctrl_q_on_windows_can_quit_from_setup_and_openbot_but_not_another_page() {
@@ -8821,7 +8821,7 @@ mod app_page_tests {
     /// "The text is too small and you can't zoom in." The window now zooms as a browser does: the
     /// View menu on macOS and Linux, and the page's own shortcut (`zoom-shortcut.js`) for what no
     /// menu carries, every key on Windows and Command and + on macOS, which the setup screens and
-    /// OpenBot's own page may ask and a page on another loopback port may not. Every window's page
+    /// Mangaba Bot's own page may ask and a page on another loopback port may not. Every window's page
     /// starts at the level kept from the last launch.
     #[test]
     fn the_window_zooms_from_the_view_menu_or_the_page_and_starts_at_the_kept_level() {
@@ -8887,8 +8887,8 @@ mod app_page_tests {
         assert!(build.contains("let _ = window.set_zoom(saved_zoom(app));"));
     }
 
-    /// Every command OpenBot's page may ask, the update banner's among them (installing an update
-    /// stops OpenBot and restarts the app), answers only the OpenBot this shell owns.
+    /// Every command Mangaba Bot's page may ask, the update banner's among them (installing an update
+    /// stops Mangaba Bot and restarts the app), answers only the Mangaba Bot this shell owns.
     #[test]
     fn every_page_command_answers_only_the_owned_app_origin() {
         let (app, window) = app();
@@ -8907,7 +8907,7 @@ mod app_page_tests {
             "check_update",
             "dismiss_update",
             "install_update",
-            // Open log folder opens the shell's own folder, but only for its own OpenBot.
+            // Open log folder opens the shell's own folder, but only for its own Mangaba Bot.
             "open_logs",
         ] {
             assert!(commands.contains(&format!("plugin:openbot-desktop|{update}")));
@@ -8936,7 +8936,7 @@ mod app_page_tests {
         let folder = logging::folder(app.handle()).unwrap();
         assert_eq!(folder, app.path().app_log_dir().unwrap());
         let identifier = app.config().identifier.clone();
-        assert_eq!(identifier, "ai.copilotkit.openbot.desktop");
+        assert_eq!(identifier, "ai.mangaba.bot.desktop");
         let home = PathBuf::from(
             std::env::var_os(if cfg!(windows) { "USERPROFILE" } else { "HOME" }).unwrap(),
         );
@@ -8954,10 +8954,10 @@ mod app_page_tests {
         }
     }
 
-    /// OpenBot's own page turns notifications on and shows them through the notification plugin,
+    /// Mangaba Bot's own page turns notifications on and shows them through the notification plugin,
     /// whose script stands in for the page's Notification API. It answers that they are on, as the
     /// plugin does on every desktop, so the page's offer to turn them on does not come back. A page
-    /// on another port gets none of it: it could post notices in OpenBot's name.
+    /// on another port gets none of it: it could post notices in Mangaba Bot's name.
     #[test]
     fn only_the_owned_app_origin_can_turn_on_and_show_notifications() {
         let (app, window) = app();
@@ -8999,7 +8999,7 @@ mod app_page_tests {
         );
     }
 
-    /// The notification plugin's script asks whether notifications are on as OpenBot's page
+    /// The notification plugin's script asks whether notifications are on as Mangaba Bot's page
     /// starts, before it has loaded. Its origin is granted when the shell trusts it, ahead of the
     /// window going there, so that first question is answered. It used to be granted only once the
     /// page had loaded: the question was refused, and the page never showed a notification.
@@ -9025,7 +9025,7 @@ mod app_page_tests {
         .is_err());
     }
 
-    /// A click on a Bot's notification opens the page it names, on the OpenBot the window shows,
+    /// A click on a Bot's notification opens the page it names, on the Mangaba Bot the window shows,
     /// and nowhere else: not another site, not another port, and not while the window shows setup.
     #[test]
     fn a_click_on_a_notification_opens_only_a_page_of_the_shown_openbot() {
@@ -9056,7 +9056,7 @@ mod app_page_tests {
     }
 
     /// The uninstaller's stop (`stop_for_uninstall`) runs with no app around it, so it works out the
-    /// app's folders itself. They are Tauri's own: the local data folder that holds OpenBot's Docker
+    /// app's folders itself. They are Tauri's own: the local data folder that holds Mangaba Bot's Docker
     /// configuration, and the log folder.
     #[test]
     fn the_uninstallers_stop_finds_the_folders_the_app_uses() {
@@ -9069,7 +9069,7 @@ mod app_page_tests {
         assert_eq!(headless_log_dir(), app.path().app_log_dir().ok());
     }
 
-    /// Box G: a second OpenBot beside an installed one (`stack::PROJECT_VARIABLE`) went by the
+    /// Box G: a second Mangaba Bot beside an installed one (`stack::PROJECT_VARIABLE`) went by the
     /// installed one's identifier. Its launch was handed to the installed app by the single-instance
     /// lock, and with that app quit it opened the installed one's folder from the installed one's
     /// `last-launched-root.json`, and its Quit stopped the installed one's back end. It goes by an
@@ -9148,8 +9148,8 @@ mod app_page_tests {
         // The installation it last opened is read from its own folder, never the installed one's.
         let config = app.path().app_config_dir().unwrap();
         let installed = config.with_file_name(APP_IDENTIFIER);
-        let first = home.join("OpenBot");
-        let second = home.join("second").join("OpenBot");
+        let first = home.join("Mangaba Bot");
+        let second = home.join("second").join("Mangaba Bot");
         std::fs::create_dir_all(&first).unwrap();
         std::fs::create_dir_all(&second).unwrap();
         // Where Windows keeps them is not under HOME: the installed app's record there is a real one.
@@ -9209,10 +9209,10 @@ mod app_page_tests {
 
     /// Box I: the uninstaller's stop ran `podman compose` with none of what the app sets up when it
     /// starts. Podman found no Compose provider ("looking up compose provider failed", exit 125),
-    /// since OpenBot's `docker-compose.exe` is only in `~\OpenBot\openbot-engine\bin`, and OpenBot's
+    /// since Mangaba Bot's `docker-compose.exe` is only in `~\Mangaba Bot\openbot-engine\bin`, and Mangaba Bot's
     /// containers were left to the machine's stop. Run in a process of its own, with a home of its
     /// own, since what the app sets up is set once per process: after the stop's preparation every
-    /// engine command has that folder first on its PATH, and OpenBot's own Docker configuration, as
+    /// engine command has that folder first on its PATH, and Mangaba Bot's own Docker configuration, as
     /// in the running app.
     #[test]
     fn the_uninstallers_stop_runs_engine_commands_as_the_app_does() {
@@ -9254,7 +9254,7 @@ mod app_page_tests {
             .expect("engine commands get a PATH");
         assert_eq!(
             std::env::split_paths(path).next(),
-            Some(home.join("OpenBot").join("openbot-engine").join("bin"))
+            Some(home.join("Mangaba Bot").join("openbot-engine").join("bin"))
         );
         let data = headless_local_data_dir().expect("a local data folder");
         assert_eq!(
@@ -9268,16 +9268,16 @@ mod app_page_tests {
     /// notification plugin names the bundle identifier in an installed app (`desktop.rs`,
     /// `notification.app_id(&self.identifier)`), and Tauri's own NSIS template stamps the same
     /// `${BUNDLEID}` on the Start menu shortcut it names after the product (`installer.nsi`,
-    /// `SetLnkAppUserModelId`). OpenBot's template, `windows/installer.nsi`, is that template with
-    /// OpenBot's lines added (`desktop/scripts/installer-update.test.ts`). So a toast reads "OpenBot"
+    /// `SetLnkAppUserModelId`). Mangaba Bot's template, `windows/installer.nsi`, is that template with
+    /// Mangaba Bot's lines added (`desktop/scripts/installer-update.test.ts`). So a toast reads "Mangaba Bot"
     /// as long as the installer keeps those lines and the identifier and product name stay what
     /// they are.
     #[test]
     fn windows_toasts_name_the_app_the_start_menu_shortcut_carries() {
         let (app, _) = app();
         let config = app.config();
-        assert_eq!(config.identifier, "ai.copilotkit.openbot.desktop");
-        assert_eq!(config.product_name.as_deref(), Some("OpenBot"));
+        assert_eq!(config.identifier, "ai.mangaba.bot.desktop");
+        assert_eq!(config.product_name.as_deref(), Some("Mangaba Bot"));
         // Read from the files the installer is built from, the base and every overlay a build
         // passes with --config: the app's runtime config leaves the bundle settings out.
         let folder = std::path::Path::new(env!("CARGO_MANIFEST_DIR"));
@@ -9299,10 +9299,10 @@ mod app_page_tests {
                 );
             }
             if let Some(identifier) = file.get("identifier") {
-                assert_eq!(identifier, "ai.copilotkit.openbot.desktop", "{name}");
+                assert_eq!(identifier, "ai.mangaba.bot.desktop", "{name}");
             }
             if let Some(product) = file.get("productName") {
-                assert_eq!(product, "OpenBot", "{name}");
+                assert_eq!(product, "Mangaba Bot", "{name}");
             }
             checked += 1;
         }
@@ -9330,7 +9330,7 @@ mod app_page_tests {
         }
     }
 
-    /// Narration listens through the shell's speech recognition from OpenBot's own page, and from
+    /// Narration listens through the shell's speech recognition from Mangaba Bot's own page, and from
     /// no other: a page that could start it could listen to the person.
     #[test]
     fn only_the_owned_app_origin_can_listen_through_the_shell() {
@@ -9354,7 +9354,7 @@ mod app_page_tests {
             assert_eq!(
                 ask(&window, owned.as_str(), &command),
                 Ok(serde_json::Value::Null),
-                "{command} from OpenBot"
+                "{command} from Mangaba Bot"
             );
         }
     }
@@ -9364,13 +9364,13 @@ mod app_page_tests {
 const STATUS_FRAGMENT: &str = "status";
 
 /**
-The Status window: what OpenBot is running, what it costs, and Restart and Stop for each part.
+The Status window: what Mangaba Bot is running, what it costs, and Restart and Stop for each part.
 
-Its own window rather than a page of the main one, so looking at it never takes OpenBot off the
+Its own window rather than a page of the main one, so looking at it never takes Mangaba Bot off the
 screen. Closing it hides it, as the main window does; it reads everything again when shown.
 */
 fn show_status_window(app: &tauri::AppHandle) {
-    // Status is about OpenBot on this computer; a connected app has none to report on.
+    // Status is about Mangaba Bot on this computer; a connected app has none to report on.
     if desktop_connected::is_connected(app) {
         return;
     }
@@ -9396,7 +9396,7 @@ fn show_status_window(app: &tauri::AppHandle) {
         tauri::WebviewUrl::CustomProtocol(url)
     };
     let built = tauri::WebviewWindowBuilder::new(app, "status", page)
-        .title("OpenBot Status")
+        .title("Mangaba Bot Status")
         .inner_size(640.0, 720.0)
         .min_inner_size(520.0, 480.0)
         .build();
@@ -9415,7 +9415,7 @@ fn show_status_window(app: &tauri::AppHandle) {
     }
 }
 
-/// The address Desktop opens for what OpenBot runs on this computer.
+/// The address Desktop opens for what Mangaba Bot runs on this computer.
 ///
 /// That is a section of Settings → Computer (`/settings/computer`) now, and this address is kept
 /// in the app as a redirect to it. Desktop still opens this one because releases before that
@@ -9423,8 +9423,8 @@ fn show_status_window(app: &tauri::AppHandle) {
 const COMPUTER_SETTINGS_PATH: &str = "/settings/this-computer";
 
 /**
-Status in OpenBot itself, Settings → This computer, when the OpenBot running here has that page:
-the main window goes there. True when it did. Otherwise, with OpenBot stopped or from a release
+Status in Mangaba Bot itself, Settings → This computer, when the Mangaba Bot running here has that page:
+the main window goes there. True when it did. Otherwise, with Mangaba Bot stopped or from a release
 without the page, the Status window does the job.
 */
 fn show_status_in_app(app: &tauri::AppHandle) -> bool {
@@ -9463,12 +9463,12 @@ fn show_status_in_app(app: &tauri::AppHandle) -> bool {
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub(crate) struct DesktopStatus {
-    /// OpenBot answers on its own address, whoever started it.
+    /// Mangaba Bot answers on its own address, whoever started it.
     openbot_running: bool,
-    /// This session of the desktop app started the OpenBot that is running, so it can restart it.
-    /// False for an OpenBot left running by an earlier session that ended without its Quit.
+    /// This session of the desktop app started the Mangaba Bot that is running, so it can restart it.
+    /// False for an Mangaba Bot left running by an earlier session that ended without its Quit.
     openbot_held: bool,
-    /// Always empty now: OpenBot's server is a container and is listed with the rest.
+    /// Always empty now: Mangaba Bot's server is a container and is listed with the rest.
     /// Kept so a Status window from before that still reads the shape it expects.
     processes: Vec<desktop_status::Part>,
     containers: Vec<desktop_status::Part>,
@@ -9485,14 +9485,14 @@ pub(crate) struct DesktopStatus {
     /// The folder this app's log file is in (`logging`), for Open log folder. Absent from a desktop
     /// app older than the log, so a page can tell the button would have nothing to open.
     log_folder: Option<String>,
-    /// OpenBot is updating itself (`RuntimeUpdateGuard`), as the setup window's Updating OpenBot
+    /// Mangaba Bot is updating itself (`RuntimeUpdateGuard`), as the setup window's Updating Mangaba Bot
     /// says. It stops and starts again on its own meanwhile, so nothing offers Start for it: the
-    /// Status window offered Start while an update had OpenBot stopped.
+    /// Status window offered Start while an update had Mangaba Bot stopped.
     updating: bool,
 }
 
 impl DesktopStatus {
-    /// What there is to say with no OpenBot on this computer in the picture: the app's version,
+    /// What there is to say with no Mangaba Bot on this computer in the picture: the app's version,
     /// its build and its log folder. Nothing of an installation here is read to answer.
     fn of_the_app_alone<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Self {
         DesktopStatus {
@@ -9525,7 +9525,7 @@ async fn desktop_status<R: tauri::Runtime>(
     memory: Option<bool>,
 ) -> Result<DesktopStatus, String> {
     let memory = memory.unwrap_or(true);
-    // Connected to an OpenBot that runs elsewhere: the app's own facts, and no engine asked.
+    // Connected to an Mangaba Bot that runs elsewhere: the app's own facts, and no engine asked.
     if desktop_connected::is_connected(&app) {
         return Ok(desktop_connected::status(&app));
     }
@@ -9587,7 +9587,7 @@ fn read_desktop_status<R: tauri::Runtime>(
         None => (Vec::new(), Vec::new()),
     };
     let ports = ports_for_shell(app).ok();
-    // Whether this installation's OpenBot answers, shown in the window or not: one behind this app
+    // Whether this installation's Mangaba Bot answers, shown in the window or not: one behind this app
     // that waits for Start to upgrade it is still running.
     let answering = ports.as_ref().is_some_and(|ports| {
         app_url_published_by(held_engine(&shell, &root).as_ref(), &root, ports).is_some()
@@ -9707,7 +9707,7 @@ On the main thread because of a crash. On macOS the opener calls NSWorkspace's
 `activateFileViewerSelectingURLs:`, which on its way to failing can present the error in an alert.
 An alert made off the main thread throws an Objective-C exception ("NSWindow should only be
 instantiated on the main thread!"), and an exception unwinding through a Rust thread aborts the app.
-OpenBot Desktop 1.0.2 did exactly that from the menu's own thread, after the gathering had already
+Mangaba Bot Desktop 1.0.2 did exactly that from the menu's own thread, after the gathering had already
 taken seconds. Apple documents the call as safe from any thread, calls the crash a bug (FB22340592)
 and gives this as the workaround. The gathering stays off the main thread; only the reveal moves.
 
@@ -9802,7 +9802,7 @@ fn gather_troubleshooting_logs<R: tauri::Runtime>(
         Ok(found.address.filter(|_| found.responding))
     });
     // The server container's recent log, for what a model provider really said: the server keeps
-    // those words in its own log (`model-provider-refused`), and only there. Only an OpenBot this
+    // those words in its own log (`model-provider-refused`), and only there. Only an Mangaba Bot this
     // session started, whose engine and folder it knows, as Restart asks. On the thread too: Stop
     // holds `containers` while `compose down` waits on the engine.
     let server_log: troubleshooting::Ask<String> = {
@@ -9833,7 +9833,7 @@ fn gather_troubleshooting_logs<R: tauri::Runtime>(
     };
     let text = troubleshooting::gather(troubleshooting::Sources {
         desktop: format!(
-            "OpenBot Desktop {} ({})",
+            "Mangaba Bot Desktop {} ({})",
             desktop_version(app),
             build_description(
                 env!("OPENBOT_BUILD_COMMIT"),
@@ -9853,10 +9853,10 @@ fn gather_troubleshooting_logs<R: tauri::Runtime>(
 }
 
 /**
-Restart OpenBot itself: the server's container, made again through Compose with the settings as they
+Restart Mangaba Bot itself: the server's container, made again through Compose with the settings as they
 are now, and the worker's in an installation whose Compose file still defines one. The other
 containers, its database among them, keep running, so nothing is lost and the restart takes seconds.
-Only an OpenBot this session holds, whose engine it knows. Its failure says what to do in its
+Only an Mangaba Bot this session holds, whose engine it knows. Its failure says what to do in its
 sentence, which the Status window shows.
 */
 #[tauri::command]
@@ -9873,7 +9873,7 @@ async fn restart_openbot_from<R: tauri::Runtime>(
     // Compose takes seconds to make a container again. Off Tauri's threads, as Stop is.
     let restarted = tauri::async_runtime::spawn_blocking(move || restart_openbot_now(&app))
         .await
-        .map_err(|error| Problem::with("OpenBot could not restart.", error.to_string()))
+        .map_err(|error| Problem::with("Mangaba Bot could not restart.", error.to_string()))
         .and_then(|restarted| restarted);
     logging::outcome("restart", asked, &restarted);
     restarted
@@ -9899,14 +9899,14 @@ fn restart_openbot_now<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> Result<(
         .filter(|owned| Some(&owned.root) == root.as_ref())
         .map(|owned| owned.address.clone());
     let (Some(root), Some(address)) = (root, address) else {
-        return Err(Problem::plain("OpenBot is not running."));
+        return Err(Problem::plain("Mangaba Bot is not running."));
     };
     let secrets = saved_start_environment(app, &address, &root)?;
     stack::recreate_openbot(&address, &root, &secrets)
-        .map_err(|error| Problem::with("OpenBot could not restart.", error))
+        .map_err(|error| Problem::with("Mangaba Bot could not restart.", error))
 }
 
-/// Stop, as the menu used to offer it: everything, Intelligence included if OpenBot started it.
+/// Stop, as the menu used to offer it: everything, Intelligence included if Mangaba Bot started it.
 #[tauri::command]
 fn stop_openbot_from_status(app: tauri::AppHandle) {
     stop_from_menu(app, AskedFrom::StatusWindow);
@@ -9916,10 +9916,10 @@ fn stop_openbot_from_status(app: tauri::AppHandle) {
 const START_ASKED_EVENT: &str = "setup:start";
 
 /**
-Start, from the Status window once OpenBot has stopped: the setup window's own Start OpenBot, run
-there, so there is one Start. It brings up OpenBot's services and then OpenBot, as that button does.
+Start, from the Status window once Mangaba Bot has stopped: the setup window's own Start Mangaba Bot, run
+there, so there is one Start. It brings up Mangaba Bot's services and then Mangaba Bot, as that button does.
 Before, the Status window offered no Start for the app, and its services' Start brought up only the
-services, leaving OpenBot stopped until Start OpenBot in the main window.
+services, leaving Mangaba Bot stopped until Start Mangaba Bot in the main window.
 
 Stop sends the main window back to setup, so its page may still be loading: the ask is kept for it
 (`take_start_asked`), and said to a page already there (`setup:start`). A main window showing
@@ -9932,7 +9932,7 @@ fn start_openbot_from_status<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Res
     ask_setup_to_start(&app.state::<Shell>());
     let window = app
         .get_webview_window("main")
-        .ok_or("the OpenBot window is not there")?;
+        .ok_or("the Mangaba Bot window is not there")?;
     let on_setup = window.url().is_ok_and(|url| on_setup_page(&app, &url));
     if !on_setup {
         show_setup(app.clone())?;
@@ -9970,7 +9970,7 @@ fn show_setup_and_focus<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(
     show_setup(app.clone())?;
     let window = app
         .get_webview_window("main")
-        .ok_or("the OpenBot window is not there")?;
+        .ok_or("the Mangaba Bot window is not there")?;
     window
         .show()
         .map_err(|error| format!("could not show setup: {error}"))?;
@@ -9985,7 +9985,7 @@ fn show_setup_and_focus<R: tauri::Runtime>(app: tauri::AppHandle<R>) -> Result<(
 ///
 /// The shell keeps what it started in memory, so closing the window and opening it again forgets a
 /// stack that is still up. Without asking, the second launch offers to set up something already
-/// running, and the port check then reports OpenBot as a foreign process holding its own port.
+/// running, and the port check then reports Mangaba Bot as a foreign process holding its own port.
 ///
 /// Asked of the deployment rather than of a file: a stamp says a deployment was installed, and only
 /// an answer on the port says one is running now.
@@ -10019,7 +10019,7 @@ where
 /// there froze the window until the download finished.
 #[tauri::command]
 async fn already_running<R: tauri::Runtime>(app: tauri::AppHandle<R>, root: String) -> bool {
-    // Connected to an OpenBot that runs elsewhere, none here is looked for.
+    // Connected to an Mangaba Bot that runs elsewhere, none here is looked for.
     if desktop_connected::is_connected(&app) {
         return false;
     }
@@ -10054,9 +10054,9 @@ fn owned_app_url(shell: &Shell, root: &Path, ports: &openbot_env::Ports) -> Opti
 }
 
 /**
-Whether this app is too old for the OpenBot `root`'s server runs, read from its `deployment` as every
-OpenBot app reads it (`client_version::local_problem`), with the install's token. "Update OpenBot",
-with this app's update, is the only thing that stops the window from opening it: an OpenBot from an
+Whether this app is too old for the Mangaba Bot `root`'s server runs, read from its `deployment` as every
+Mangaba Bot app reads it (`client_version::local_problem`), with the install's token. "Update Mangaba Bot",
+with this app's update, is the only thing that stops the window from opening it: an Mangaba Bot from an
 older release opens exactly as before (Start upgrades it), and one that does not answer is the
 readiness check's to report.
 */
@@ -10192,7 +10192,7 @@ fn server_install_token(
 }
 
 /// Read the install's token `root`'s server was given, and remember it for this session. A Start
-/// and a deployment the window takes over both learn it here, so the window enters the OpenBot they
+/// and a deployment the window takes over both learn it here, so the window enters the Mangaba Bot they
 /// show with exactly the token that server checks. Not remembered when it could not be read: the
 /// next window that opens the app asks again.
 fn learn_install_token(shell: &Shell, root: &Path, address: &engine::Address) -> Option<String> {
@@ -10218,7 +10218,7 @@ fn install_token_for(shell: &Shell, root: &Path, address: &engine::Address) -> O
 }
 
 /**
-Where a window opens `page` of the owned OpenBot at `root`: through its entry address, which leaves the
+Where a window opens `page` of the owned Mangaba Bot at `root`: through its entry address, which leaves the
 webview the install's cookie and goes on to `page`, when that server was given a token; and `page`
 itself for one from a release before it, which has no entry address. Every native load of the owned
 app goes through here. A load the page makes itself, on the same origin, carries the cookie already.
@@ -10267,7 +10267,7 @@ fn app_published_by(
 }
 
 /// An address the Recorder's native host answers in place of a Desktop deployment's own, so a test
-/// can drive the whole handoff against an OpenBot it started itself. Debug builds only: a release
+/// can drive the whole handoff against an Mangaba Bot it started itself. Debug builds only: a release
 /// binary never reads the variable.
 #[cfg(debug_assertions)]
 fn recorder_host_test_app_url() -> Option<String> {
@@ -10281,8 +10281,8 @@ fn recorder_host_test_app_url() -> Option<String> {
     None
 }
 
-/// An OpenBot this window shows as its own at launch, so a test can drive OpenBot's page inside the
-/// real Desktop window, with the shell's plugin granted to it, against an OpenBot it started itself
+/// An Mangaba Bot this window shows as its own at launch, so a test can drive Mangaba Bot's page inside the
+/// real Desktop window, with the shell's plugin granted to it, against an Mangaba Bot it started itself
 /// and no installation. Debug builds only: a release binary never reads the variable.
 #[cfg(debug_assertions)]
 fn desktop_test_app_url() -> Option<String> {
@@ -10296,13 +10296,13 @@ fn desktop_test_app_url() -> Option<String> {
     None
 }
 
-/// An OpenBot app a developer runs from source (`OPENBOT_DEV_APP_URL`, such as `cd app && SERVER_PORT=3001 bun run dev
+/// An Mangaba Bot app a developer runs from source (`OPENBOT_DEV_APP_URL`, such as `cd app && SERVER_PORT=3001 bun run dev
 /// --port 3030`, whose `/api` goes to this installation's server), shown in place of the installation's own once it has
 /// started, so a change to the app shows in the real window as it is saved. Unlike `OPENBOT_DESKTOP_TEST_APP_URL` it
 /// waits for the installation: setup and Start run as they always do. Debug builds only: a release binary never reads
 /// the variable.
 ///
-/// `localhost` is read as `127.0.0.1`. Only a loopback IP is trusted as OpenBot's own page
+/// `localhost` is read as `127.0.0.1`. Only a loopback IP is trusted as Mangaba Bot's own page
 /// (`intelligence_bridge::app_origin`), so at `localhost` the window drew the system's title bar over a page that never
 /// made room for the buttons.
 #[cfg(debug_assertions)]
@@ -10330,7 +10330,7 @@ fn loopback_ip(address: &str) -> String {
     }
 }
 
-/// Trust `address` as this shell's OpenBot and show it, the way `show_openbot` shows a verified one.
+/// Trust `address` as this shell's Mangaba Bot and show it, the way `show_openbot` shows a verified one.
 fn show_test_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>, address: &str) {
     let (Some(window), Ok(url)) = (
         app.get_webview_window("main"),
@@ -10339,7 +10339,7 @@ fn show_test_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>, address: &str) {
         return;
     };
     trust_owned_app(app, address);
-    // A test's own OpenBot, given its install's token the way start.sh gives it, in the environment.
+    // A test's own Mangaba Bot, given its install's token the way start.sh gives it, in the environment.
     let url = openbot_desktop_lib::install_token::entry(
         &url,
         std::env::var(openbot_desktop_lib::install_token::NAME)
@@ -10347,7 +10347,7 @@ fn show_test_app<R: tauri::Runtime>(app: &tauri::AppHandle<R>, address: &str) {
             .as_deref(),
     );
     if let Err(error) = window.navigate(url) {
-        log::warn!("[window] could not show the test OpenBot: {error}");
+        log::warn!("[window] could not show the test Mangaba Bot: {error}");
     }
 }
 
@@ -10377,7 +10377,7 @@ fn last_launched_root() -> Option<PathBuf> {
     preparation::selected_root(&config)
 }
 
-/// What the Recorder's native host knows about this computer's OpenBot.
+/// What the Recorder's native host knows about this computer's Mangaba Bot.
 ///
 /// The browser starts the host as a fresh process with no app around it, so it finds the deployment
 /// the way the app's setup does: the root last launched, read from Tauri's config directory.
@@ -10391,7 +10391,7 @@ fn recorder_host_environment() -> recorder_host::HostEnvironment {
             installed: Box::new(|| true),
             app_answers: Box::new(move || port.is_some_and(recorder_ping_app_answers)),
             app_url: Box::new(move || Some(url.clone())),
-            // The test's own OpenBot, given its token the way start.sh gives it, in the environment.
+            // The test's own Mangaba Bot, given its token the way start.sh gives it, in the environment.
             install_token: Box::new(|| {
                 std::env::var(openbot_desktop_lib::install_token::NAME)
                     .ok()
@@ -10435,7 +10435,7 @@ fn recorder_host_environment() -> recorder_host::HostEnvironment {
 
 /// The engine on which `root`'s `server` container publishes `ports`, if it does: asked of the
 /// engine this session raised it on when there is one, and otherwise of whichever engine answers:
-/// an OpenBot left running by an earlier session is still this deployment's, and its restart policy
+/// an Mangaba Bot left running by an earlier session is still this deployment's, and its restart policy
 /// kept it up.
 #[cfg(not(test))]
 fn server_container_publisher(
@@ -10492,7 +10492,7 @@ async fn last_failure<R: tauri::Runtime>(
         .await
         .unwrap_or_else(|error| {
             Some(Problem::with(
-                "OpenBot could not read what stopped it.",
+                "Mangaba Bot could not read what stopped it.",
                 error.to_string(),
             ))
         })
@@ -10787,7 +10787,7 @@ async fn finish_chatgpt_sign_in(app: tauri::AppHandle) -> Result<String, String>
 Stop a ChatGPT sign-in the person has left: another provider, Back, Escape.
 
 Whoever is waiting in `finish_chatgpt_sign_in` gets an error, which the screen it came from has
-already stopped listening for. The browser tab gets OpenBot's page saying the sign-in ended.
+already stopped listening for. The browser tab gets Mangaba Bot's page saying the sign-in ended.
 */
 #[tauri::command]
 async fn cancel_chatgpt_sign_in(app: tauri::AppHandle) -> Result<(), String> {
@@ -10856,7 +10856,7 @@ async fn run_local_eval<R: tauri::Runtime>(
         window_call_arrived(action, handed_back().as_ref(), std::time::SystemTime::now())
     );
     let stack = local_eval::StackId::parse(&stack)?;
-    // Below the security floor, OpenBot's services start no more than OpenBot does: not from
+    // Below the security floor, Mangaba Bot's services start no more than Mangaba Bot does: not from
     // setup, and not from the Status window's Start.
     if matches!(
         action,
@@ -11008,7 +11008,7 @@ fn back_end_wait() -> std::sync::MutexGuard<'static, Option<openbot_desktop_lib:
 }
 
 /// The window stopped waiting for the back end, and why: the sentence it shows (`waitForReady`),
-/// such as "OpenBot didn't get ready in time. Retry to check again." Written with how long it
+/// such as "Mangaba Bot didn't get ready in time. Retry to check again." Written with how long it
 /// waited and the last status, so the log says why Start gave up.
 #[tauri::command]
 fn back_end_wait_ended(why: String) {
@@ -11024,7 +11024,7 @@ fn back_end_wait_ended(why: String) {
 static UPDATE_LOGGED: Mutex<Option<String>> = Mutex::new(None);
 
 /// The release the back end is on, the one the window updates it to, and the CLI's step an earlier
-/// update stopped at. The window says only "Updating OpenBot", and where it stopped in plain words:
+/// update stopped at. The window says only "Updating Mangaba Bot", and where it stopped in plain words:
 /// the versions and the step's name are for whoever reads the log.
 fn log_update_due(from: &str, to: &str, stopped_at: Option<&str>) {
     let entry = update_due_entry(from, to, stopped_at);
@@ -11059,12 +11059,12 @@ fn local_eval_answer(
         preparation::saved_engine(root),
     ) {
         log::info!(
-            "[local eval] {action:?} not asked: OpenBot's own engine does not answer, and the \
+            "[local eval] {action:?} not asked: Mangaba Bot's own engine does not answer, and the \
              backend's tool would take Podman's default connection"
         );
         return Ok(local_eval::Report::engine_not_answering());
     }
-    // The room the back end's update needs counts OpenBot's own database (`update_room`).
+    // The room the back end's update needs counts Mangaba Bot's own database (`update_room`).
     if action == local_eval::Action::Update {
         local_eval::installation_database(
             local_eval::engine_in_use()
@@ -11087,7 +11087,7 @@ fn local_eval_answer(
     ) {
         let kept = openbot_database_kept(root);
         log::warn!(
-            "[local eval] {} is gone, its record or its cluster, and OpenBot's own database {}; \
+            "[local eval] {} is gone, its record or its cluster, and Mangaba Bot's own database {}; \
              offering to set the backend up again",
             stack.as_str(),
             if kept { "is still there" } else { "is not" }
@@ -11095,11 +11095,11 @@ fn local_eval_answer(
         report.reason = Some(lost_reason(kept));
     }
     // An Intelligence an older app installed, behind the release this app's CLI installs, or one
-    // whose update did not finish: the window updates it before it starts OpenBot on it.
+    // whose update did not finish: the window updates it before it starts Mangaba Bot on it.
     if action == local_eval::Action::Status {
         report.update_to =
             local_eval::update_due(&report, local_eval::bundled_release().as_deref());
-        // The window says "Updating OpenBot"; the log keeps the releases, once per update due,
+        // The window says "Updating Mangaba Bot"; the log keeps the releases, once per update due,
         // and the step an update that did not finish stopped at.
         if let (Some(to), Some(stack)) = (&report.update_to, &report.stack) {
             let stopped_at = stack
@@ -11125,7 +11125,7 @@ fn backend_gone(
     }
 }
 
-/// What the window is told about a backend that is gone (`backend_lost`): with OpenBot's own
+/// What the window is told about a backend that is gone (`backend_lost`): with Mangaba Bot's own
 /// database still there, only the backend's data went (`BackendGone`); without it, everything did
 /// (`StackLost`).
 fn lost_reason(openbot_database_kept: bool) -> local_eval::Reason {
@@ -11136,7 +11136,7 @@ fn lost_reason(openbot_database_kept: bool) -> local_eval::Reason {
     }
 }
 
-/// Whether this installation's own database volume is still in the engine OpenBot runs on. False
+/// Whether this installation's own database volume is still in the engine Mangaba Bot runs on. False
 /// when that can't be said, so the window never claims Bots are kept when they may not be.
 fn openbot_database_kept(root: &Path) -> bool {
     let Some(address) = local_eval::engine_in_use() else {
@@ -11153,16 +11153,16 @@ fn openbot_database_kept(root: &Path) -> bool {
 }
 
 /**
-Whether the backend OpenBot created for this installation is gone, so the window offers to set it
+Whether the backend Mangaba Bot created for this installation is gone, so the window offers to set it
 up again rather than Retry (`local_eval::Reason::StackLost`, `local_eval::Reason::BackendGone`).
 
-Box I: OpenBot's Podman machine was removed and made again, and the backend's cluster, with
-OpenBot's database, went with the old one. The installation still recorded the stack, so every
+Box I: Mangaba Bot's Podman machine was removed and made again, and the backend's cluster, with
+Mangaba Bot's database, went with the old one. The installation still recorded the stack, so every
 status the CLI ran failed at its ownership check ("status 404"), answered `local_command_failed`
 with no stack, and the window said "Setup stopped partway through with an error. Retry." forever.
 The same on a dogfooding Mac with Docker Desktop (Desktop 1.1.2): `docker container prune` removed
 the backend's node container while it was stopped, and Retry, and Quit, failed the same way every
-time. Only for a stack OpenBot created and recorded here, asked about by its own id, and only when
+time. Only for a stack Mangaba Bot created and recorded here, asked about by its own id, and only when
 the engine the CLI runs on answers and lists none of its cluster's containers.
 */
 fn backend_lost(
@@ -11179,7 +11179,7 @@ fn backend_lost(
 /**
 The engine for the Intelligence CLI when nothing this run has named one yet.
 
-A relaunched OpenBot can ask Intelligence for its status before Start has pinned an engine, and the
+A relaunched Mangaba Bot can ask Intelligence for its status before Start has pinned an engine, and the
 account screen asks the CLI before Install has found one (Install does not run again over an
 installation already prepared). On Windows Podman also answers on Docker's pipe, and a CLI not told
 which engine it is on declines with `engine_mismatch`. The
@@ -11201,7 +11201,7 @@ fn know_cli_engine(root: &Path) {
 Whether asking the CLI now would leave it to pick a Podman machine itself. Told no engine, it takes
 Podman's default connection, and on Windows that can be the person's machine: on box I their
 rootless `mine`, which the backend's check called an engine it can't run on. On Windows, where
-OpenBot runs only on its own machine, the CLI is asked only once that answers (`know_cli_engine`);
+Mangaba Bot runs only on its own machine, the CLI is asked only once that answers (`know_cli_engine`);
 until then the answer is that the engine does not answer, which Retry and the next start repair.
 */
 fn cli_left_to_pick(os: &str, engine_known: bool, saved: Option<engine::Engine>) -> bool {
@@ -11209,18 +11209,18 @@ fn cli_left_to_pick(os: &str, engine_known: bool, saved: Option<engine::Engine>)
 }
 
 /**
-Whether the person's own Podman machine answers while OpenBot's is still on its way, so the CLI must
+Whether the person's own Podman machine answers while Mangaba Bot's is still on its way, so the CLI must
 not be asked yet.
 
 The CLI, told no engine, takes the Podman machine that answers, and that is the person's. On a live
 Windows run it refused theirs ("Rootless Podman is not supported. Switch to rootful Podman ...") and
-the account step showed that as a change the person had to make. OpenBot passes theirs over and
+the account step showed that as a change the person had to make. Mangaba Bot passes theirs over and
 makes its own (`engine::passed_over_machine`), so until that answers, the account step waits as it
 waits for any engine coming up. Asked only while no engine is known, after `know_cli_engine`.
 */
 fn own_machine_on_its_way(root: &Path) -> bool {
     let (engine_known, saved) = (local_eval::engine_known(), preparation::saved_engine(root));
-    // On Windows nothing of the person's is asked: OpenBot's own machine answers, or it waits.
+    // On Windows nothing of the person's is asked: Mangaba Bot's own machine answers, or it waits.
     if engine::own_machine_only(std::env::consts::OS) {
         return cli_left_to_pick(std::env::consts::OS, engine_known, saved);
     }
@@ -11230,7 +11230,7 @@ fn own_machine_on_its_way(root: &Path) -> bool {
 }
 
 /// `own_machine_on_its_way`, with what it reads passed in: whether an engine is known, the engine
-/// the installation saved, and the person's machine behind Podman's default connection that OpenBot
+/// the installation saved, and the person's machine behind Podman's default connection that Mangaba Bot
 /// passes over, if any.
 fn own_machine_on_its_way_with(
     engine_known: bool,
@@ -11240,7 +11240,7 @@ fn own_machine_on_its_way_with(
     !engine_known && saved != Some(engine::Engine::Docker) && passed_over().is_some()
 }
 
-/// The account step's check: the CLI's own answer, or, while OpenBot's machine is on its way, that
+/// The account step's check: the CLI's own answer, or, while Mangaba Bot's machine is on its way, that
 /// the engine is not ready yet, without asking the CLI.
 fn account_terms(
     on_its_way: bool,
@@ -11282,7 +11282,7 @@ impl From<local_eval::Failure> for SetupError {
     }
 }
 
-/// A setup OpenBot stopped itself is said like a stack it could not record: in plain words.
+/// A setup Mangaba Bot stopped itself is said like a stack it could not record: in plain words.
 impl From<local_eval::SetupStopped> for SetupError {
     fn from(stopped: local_eval::SetupStopped) -> Self {
         match stopped {
@@ -11293,7 +11293,7 @@ impl From<local_eval::SetupStopped> for SetupError {
 }
 
 /**
-`local setup` for this installation, and the stack it made recorded as OpenBot's.
+`local setup` for this installation, and the stack it made recorded as Mangaba Bot's.
 
 Blocked is a normal answer here, not an error: the first one is the evaluation agreement, which the
 person accepts in their own terminal before the window asks again. Only a completed setup is
@@ -11314,7 +11314,7 @@ async fn set_up_local_eval<R: tauri::Runtime>(
         .transpose()
         .map_err(SetupError::Failure)?;
     let report = tauri::async_runtime::spawn_blocking(move || {
-        // A local first run starts setup while OpenBot is still installing into this folder, which
+        // A local first run starts setup while Mangaba Bot is still installing into this folder, which
         // may not exist yet; the CLI runs in it.
         std::fs::create_dir_all(&root)
             .map_err(|_| SetupError::Failure(local_eval::Failure::Spawn))?;
@@ -11422,8 +11422,8 @@ async fn local_eval_room() -> Option<local_eval::Shortfall> {
         .flatten()
 }
 
-/// How the Podman machine OpenBot runs on would be made big enough for what local setup found
-/// short, and whether OpenBot can do it for the person (`machine_size::plan_here`). Nothing when
+/// How the Podman machine Mangaba Bot runs on would be made big enough for what local setup found
+/// short, and whether Mangaba Bot can do it for the person (`machine_size::plan_here`). Nothing when
 /// it isn't a Podman machine on a Mac, or a bigger one isn't the answer.
 #[tauri::command]
 async fn podman_machine_plan(short: machine_size::Short) -> Option<machine_size::Plan> {
@@ -11443,7 +11443,7 @@ struct ResizeStopped {
     resized: bool,
 }
 
-/// The person said yes: stop the Podman machine OpenBot runs on, give it `cpus` CPUs and
+/// The person said yes: stop the Podman machine Mangaba Bot runs on, give it `cpus` CPUs and
 /// `memory_mib` MiB, start it again with the containers that were running in it, and wait until it
 /// answers and reaches a registry (`machine_size::ready_with`). The window then retries the setup.
 /// A failure is said plainly; Podman's own words are in the log.
@@ -11461,7 +11461,7 @@ async fn resize_podman_machine(cpus: u64, memory_mib: u64) -> Result<(), ResizeS
             resized: true,
         }),
         Err(machine_size::Stopped::Refused(_)) => Err(ResizeStopped {
-            said: "OpenBot couldn't resize your Podman machine. Use the steps below instead."
+            said: "Mangaba Bot couldn't resize your Podman machine. Use the steps below instead."
                 .to_string(),
             resized: false,
         }),
@@ -11571,11 +11571,11 @@ fn apps_unavailable() -> Problem {
 /**
 Run `setup` in `root` and record what it made.
 
-A stack set up here was made for OpenBot, so it starts and stops with it. It is OpenBot's only when
+A stack set up here was made for Mangaba Bot, so it starts and stops with it. It is Mangaba Bot's only when
 the CLI records it for `root` itself (`appPaths`): a stack recorded for another folder is another
 app's, whatever setup reported, and is kept as shared, so Stop and Quit never stop it. A record that
 already calls the same stack shared stays shared: setting up again resumes that stack, it does not
-make OpenBot its owner.
+make Mangaba Bot its owner.
 */
 fn set_up_local_eval_at<S>(root: &Path, setup: S) -> Result<local_eval::Report, SetupError>
 where
@@ -11598,7 +11598,7 @@ where
     };
     if !ours {
         log::warn!(
-            "[local setup] {} is recorded for another folder; OpenBot keeps it as shared and never stops it",
+            "[local setup] {} is recorded for another folder; Mangaba Bot keeps it as shared and never stops it",
             stack.as_str()
         );
     }
@@ -11607,8 +11607,8 @@ where
     Ok(report)
 }
 
-/// Why connecting OpenBot to local Intelligence produced nothing to show: the CLI's own static
-/// category, or a connection OpenBot would not take up. Told apart by shape, like `SetupError`.
+/// Why connecting Mangaba Bot to local Intelligence produced nothing to show: the CLI's own static
+/// category, or a connection Mangaba Bot would not take up. Told apart by shape, like `SetupError`.
 #[derive(Debug, Serialize)]
 #[serde(untagged)]
 enum ConnectError {
@@ -11617,10 +11617,10 @@ enum ConnectError {
 }
 
 /**
-`local connect` for this installation, after the person chose to connect OpenBot to it.
+`local connect` for this installation, after the person chose to connect Mangaba Bot to it.
 
-Interim, until the CLI issues OpenBot a credential of its own: the key `connect` writes into the
-installation's `.env` is moved into the credential store as OpenBot's Intelligence key, the same
+Interim, until the CLI issues Mangaba Bot a credential of its own: the key `connect` writes into the
+installation's `.env` is moved into the credential store as Mangaba Bot's Intelligence key, the same
 place a pasted key goes, and Start takes it from there. Blocked and conflicted answers are returned
 as they are, with nothing taken.
 */
@@ -11661,7 +11661,7 @@ async fn connect_local_eval<R: tauri::Runtime>(
     Ok(connection)
 }
 
-/// Where `local connect` puts the key for an app's runtime. OpenBot's server reads it as
+/// Where `local connect` puts the key for an app's runtime. Mangaba Bot's server reads it as
 /// `INTELLIGENCE_API_KEY`.
 const LOCAL_EVAL_CONNECTED_KEY: &str = "CPK_INTELLIGENCE_API_KEY";
 
@@ -11687,7 +11687,7 @@ where
 {
     let unconnected = |said: &str| ConnectError::Unconnected(Problem::plain(said));
     let recorded = local_eval_state::read(root, None)
-        .ok_or_else(|| unconnected("Set up the backend before connecting OpenBot to it."))?;
+        .ok_or_else(|| unconnected("Set up the backend before connecting Mangaba Bot to it."))?;
     let connection = connect(root).map_err(ConnectError::Failure)?;
     if connection.outcome != local_eval::Outcome::Completed || connection.conflicted {
         return Ok(connection);
@@ -11698,7 +11698,7 @@ where
         .filter(|stack| stack.id == recorded.stack)
     else {
         return Err(unconnected(
-            "A different backend was connected. OpenBot did not use it.",
+            "A different backend was connected. Mangaba Bot did not use it.",
         ));
     };
     let env_file = root.join(".env");
@@ -11712,7 +11712,7 @@ where
     )
     .map_err(|error| {
         ConnectError::Unconnected(Problem::with(
-            "OpenBot could not read the connection settings for its backend.",
+            "Mangaba Bot could not read the connection settings for its backend.",
             format!("{}: {}", env_file.display(), error.kind()),
         ))
     })?;
@@ -11739,7 +11739,7 @@ where
             != Some(reported)
     }) {
         return Err(unconnected(
-            "The connection settings do not match the backend that was set up. OpenBot did not use them.",
+            "The connection settings do not match the backend that was set up. Mangaba Bot did not use them.",
         ));
     }
     match written
@@ -11756,7 +11756,7 @@ where
             let purge = [(LOCAL_EVAL_CONNECTED_KEY.to_owned(), String::new())].into();
             openbot_env::write(&env_file, &settings, &purge).map_err(|error| {
                 ConnectError::Unconnected(Problem::with(
-                    "OpenBot kept the backend's key but could not remove it from its settings file.",
+                    "Mangaba Bot kept the backend's key but could not remove it from its settings file.",
                     format!("{}: {}", env_file.display(), error.kind()),
                 ))
             })?;
@@ -11768,7 +11768,7 @@ where
                     .is_some_and(|key| !key.trim().is_empty());
             if !kept {
                 return Err(unconnected(
-                    "The backend connected, but OpenBot has no key for it.",
+                    "The backend connected, but Mangaba Bot has no key for it.",
                 ));
             }
         }
@@ -11796,7 +11796,7 @@ fn cancel_local_eval(attempt: String) {
     local_eval::cancel(&attempt);
 }
 
-/// Why the dashboard did not open: a fixed category, which is all the OpenBot app's page is told.
+/// Why the dashboard did not open: a fixed category, which is all the Mangaba Bot app's page is told.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "snake_case")]
 enum DashboardFailure {
@@ -11836,12 +11836,12 @@ where
 
 /**
 The dashboard addresses the CLI has reported this session, and which stacks `local login` has
-signed in since OpenBot started.
+signed in since Mangaba Bot started.
 
 `local login` costs a CLI call: about 0.3 s to check the pinned CLI's digests and 0.25 s for it to
 start, before it waits for the dashboard, mints a single-use link and hands that to the browser.
 The browser keeps the session it was given, so once a stack has been signed in during this session,
-"Open back end dashboard" opens its address directly and at once. OpenBot does not read the
+"Open back end dashboard" opens its address directly and at once. Mangaba Bot does not read the
 CLI's credential files or the browser to decide; the first opening in each session signs in again,
 and a dashboard whose session ended shows its own Sign In.
 
@@ -11954,7 +11954,7 @@ fn intelligence_menu_root(root: &Path, offered: bool) -> Option<PathBuf> {
 The window says whether it is in local mode for `root`, and the app page's dashboard offer follows.
 
 The window decides local mode, as it does for its own link. The menus have no dashboard item: the
-dashboard is the back end's own, under another product's name, and a menu of OpenBot's does not
+dashboard is the back end's own, under another product's name, and a menu of Mangaba Bot's does not
 send a person there.
 */
 #[tauri::command]
@@ -12171,7 +12171,7 @@ A maximized window is where the system put it, on a screen, and stays maximized.
 maximized window's frame past the screen's edges by its resize border: on a 1920 by 1080 screen its
 outer position is -8,-8, so the top 8 pixels of its title bar are above the work area. Measured as a
 window the person placed, that read as off every screen, and moving it un-maximized it: a window
-maximized when OpenBot was quit from the tray came back at 1000 by 800 in the middle of the screen.
+maximized when Mangaba Bot was quit from the tray came back at 1000 by 800 in the middle of the screen.
 A maximized window whose screen is gone never gets here: `place_saved_window` builds it on the
 primary one.
 */
@@ -12272,9 +12272,9 @@ fn publish_connection_failure<R: tauri::Runtime>(
         return Ok(true);
     }
     let said = match connection {
-        openbot_desktop_lib::problem::Connection::Model => "Your AI connection was refused. Refresh it to continue using your existing OpenBot.",
-        openbot_desktop_lib::problem::Connection::Intelligence => "Your OpenBot account connection was refused. Refresh it to continue using your existing OpenBot.",
-        openbot_desktop_lib::problem::Connection::Installation => "Part of OpenBot has to be installed again. OpenBot does that, then you can continue using your existing OpenBot.",
+        openbot_desktop_lib::problem::Connection::Model => "Your AI connection was refused. Refresh it to continue using your existing Mangaba Bot.",
+        openbot_desktop_lib::problem::Connection::Intelligence => "Your Mangaba Bot account connection was refused. Refresh it to continue using your existing Mangaba Bot.",
+        openbot_desktop_lib::problem::Connection::Installation => "Part of Mangaba Bot has to be installed again. Mangaba Bot does that, then you can continue using your existing Mangaba Bot.",
     };
     mark_recovery_required(&shell, root, generation);
     if let Some(recovery) = shell.recovery_required.lock().unwrap().as_mut() {
@@ -12285,12 +12285,12 @@ fn publish_connection_failure<R: tauri::Runtime>(
     Ok(true)
 }
 
-/// How long a running OpenBot's server goes unanswered before the watcher asks whether it is still
+/// How long a running Mangaba Bot's server goes unanswered before the watcher asks whether it is still
 /// up. Longer than the server takes to come back after its restart policy restarts it.
 const SERVER_GONE_AFTER: std::time::Duration = std::time::Duration::from_secs(10);
 
 /**
-Watch a running OpenBot for a connection it reports refused, and send the window back to setup to
+Watch a running Mangaba Bot for a connection it reports refused, and send the window back to setup to
 refresh it.
 
 What is left of the host-process supervisor. Docker's restart policy keeps the server
@@ -12340,7 +12340,7 @@ fn watch_connections<R: tauri::Runtime>(
             let polled = desktop_connection::poll(&client, server_port, &token);
             if polled.is_ok() {
                 if busy_said {
-                    log::info!("[watch] OpenBot is answering again");
+                    log::info!("[watch] Mangaba Bot is answering again");
                 }
                 poll_failed = false;
                 unanswered_since = None;
@@ -12375,7 +12375,7 @@ fn watch_connections<R: tauri::Runtime>(
                         Ok(Unanswered::Busy(said)) => {
                             if !busy_said {
                                 log::info!(
-                                    "[watch] OpenBot hasn't answered for {}s, and {said}, so it is left to finish",
+                                    "[watch] Mangaba Bot hasn't answered for {}s, and {said}, so it is left to finish",
                                     since.elapsed().as_secs()
                                 );
                             }
@@ -12394,11 +12394,11 @@ fn watch_connections<R: tauri::Runtime>(
 /// What [`show_setup_when_stopped`] found.
 #[derive(Debug, PartialEq)]
 enum Unanswered {
-    /// OpenBot is not running, and the window shows setup.
+    /// Mangaba Bot is not running, and the window shows setup.
     Stopped,
-    /// OpenBot is running after all.
+    /// Mangaba Bot is running after all.
     Running,
-    /// OpenBot is not answering, and its engine says it is up: busy, or on an engine that is slow.
+    /// Mangaba Bot is not answering, and its engine says it is up: busy, or on an engine that is slow.
     /// The window stays where it is. What the engine said, for the log.
     Busy(&'static str),
     /// Not the watcher's to decide now: setup is at work, the run is over, or it needs recovery.
@@ -12406,10 +12406,10 @@ enum Unanswered {
 }
 
 /// How long the watcher gives the engine to say whether the `server` container is up. An engine
-/// that takes longer is there and slow, which is no reason to start OpenBot again.
+/// that takes longer is there and slow, which is no reason to start Mangaba Bot again.
 const ENGINE_ASKED_WITHIN: std::time::Duration = std::time::Duration::from_secs(20);
 
-/// What the window says when the watcher finds OpenBot's server stopped and staying stopped, so the
+/// What the window says when the watcher finds Mangaba Bot's server stopped and staying stopped, so the
 /// person sees what happened in place of a Start that runs by itself.
 fn server_stopped_problem(container: &stack::ServerContainer) -> Option<Problem> {
     match container {
@@ -12417,33 +12417,33 @@ fn server_stopped_problem(container: &stack::ServerContainer) -> Option<Problem>
             out_of_memory: true,
             code,
         } => Some(Problem::with(
-            "OpenBot stopped because it ran out of memory. Start it again to continue.",
+            "Mangaba Bot stopped because it ran out of memory. Start it again to continue.",
             format!(
-                "The engine stopped OpenBot's server container for using too much memory (exit code {}).",
+                "The engine stopped Mangaba Bot's server container for using too much memory (exit code {}).",
                 code.map_or("unknown".to_owned(), |code| code.to_string())
             ),
         )),
         stack::ServerContainer::Exited { code, .. } => Some(Problem::with(
-            "OpenBot stopped unexpectedly. Start it again to continue.",
+            "Mangaba Bot stopped unexpectedly. Start it again to continue.",
             format!(
-                "OpenBot's server container stopped with exit code {} and was not restarted.",
+                "Mangaba Bot's server container stopped with exit code {} and was not restarted.",
                 code.map_or("unknown".to_owned(), |code| code.to_string())
             ),
         )),
         stack::ServerContainer::Missing => Some(Problem::with(
-            "OpenBot stopped unexpectedly. Start it again to continue.",
-            "OpenBot's server container is no longer there.",
+            "Mangaba Bot stopped unexpectedly. Start it again to continue.",
+            "Mangaba Bot's server container is no longer there.",
         )),
         stack::ServerContainer::Running | stack::ServerContainer::Restarting => None,
     }
 }
 
 /**
-A running OpenBot's server stopped answering: when OpenBot is no longer running, send the window to
+A running Mangaba Bot's server stopped answering: when Mangaba Bot is no longer running, send the window to
 setup, which shows it stopped with its Start.
 
 The same decision bringing the window forward makes (`restore_window_on`), taken by the watcher on
-its own. Without it, the engine's machine stopped or the back end gone under a window on OpenBot
+its own. Without it, the engine's machine stopped or the back end gone under a window on Mangaba Bot
 left that window as it was, unable to load anything, until the person brought it forward. Setup is
 shown without bringing the window forward: the person finds it there when they look. The run stays
 this session's, as it does when the window is brought forward, so Start raises it again.
@@ -12458,7 +12458,7 @@ fn show_setup_when_stopped<R: tauri::Runtime>(
      * The engine's word on the server container, asked before setup's lock so a Start never waits
      * on a slow engine. Not answering is not the same as not running. Found in a dogfooding report
      * (Desktop 1.1.2, macOS): the engine stalled for minutes, the server's container stayed up, and
-     * this watcher, asking only the server, sent the window to setup, which started OpenBot again
+     * this watcher, asking only the server, sent the window to setup, which started Mangaba Bot again
      * by itself. That Start recreated the server and ended the Bot turns that were running.
      */
     let engine_says = held_engine(&shell, root)
@@ -12494,19 +12494,19 @@ fn show_setup_when_stopped<R: tauri::Runtime>(
             ))
         }
         Some(Ok(container)) => {
-            log::info!("[watch] the engine says OpenBot's server container stopped: {container:?}");
+            log::info!("[watch] the engine says Mangaba Bot's server container stopped: {container:?}");
             server_stopped_problem(container)
         }
         // The engine itself is gone (Docker quit, its machine stopped): setup, as before.
         Some(Err(stack::ServerContainerUnknown::Unreachable(error))) => {
-            log::info!("[watch] the engine could not be asked about OpenBot's server: {error}");
+            log::info!("[watch] the engine could not be asked about Mangaba Bot's server: {error}");
             None
         }
         None => None,
     };
     let window = app
         .get_webview_window("main")
-        .ok_or("the OpenBot window is not there")?;
+        .ok_or("the Mangaba Bot window is not there")?;
     // Said on setup, which then waits for the person's Start (`last_failure`).
     if let Some(problem) = stopped {
         *shell.last_failure.lock().unwrap() = Some(problem);
@@ -12514,19 +12514,19 @@ fn show_setup_when_stopped<R: tauri::Runtime>(
     if window.url().is_ok_and(|url| on_setup_page(app, &url)) {
         return Ok(Unanswered::Stopped);
     }
-    log::info!("[watch] OpenBot stopped answering and is not running; the window shows setup");
+    log::info!("[watch] Mangaba Bot stopped answering and is not running; the window shows setup");
     window
         .navigate(setup_destination(app)?)
         .map_err(|error| format!("could not go back to setup: {error}"))?;
     Ok(Unanswered::Stopped)
 }
 
-/// Point the window at OpenBot if it is up, and at the setup screen if it is not.
+/// Point the window at Mangaba Bot if it is up, and at the setup screen if it is not.
 ///
 /// Used by the tray and by a second launch, both of which happen at moments when the caller has no
 /// idea which of the two the person should be looking at.
 fn show_whichever_applies(app: &tauri::AppHandle) {
-    // Connected to an OpenBot that runs elsewhere: that one, or setup to sign in to it.
+    // Connected to an Mangaba Bot that runs elsewhere: that one, or setup to sign in to it.
     if desktop_connected::is_connected(app) {
         desktop_connected::show_window(app);
         return;
@@ -12590,7 +12590,7 @@ fn restore_window_on<R: tauri::Runtime>(app: &tauri::AppHandle<R>, ports: &openb
     }
     let _ = window.show();
     let _ = window.unminimize();
-    focus(&window, "OpenBot is showing");
+    focus(&window, "Mangaba Bot is showing");
 }
 
 fn schedule_second_instance_restore<T, F>(
@@ -12608,8 +12608,8 @@ where
 
 /**
 Where a click on one of a Bot's notifications takes the window: the page the notice names
-(`extra.path`, which OpenBot's page sets as it posts it), on the OpenBot the window shows. Nothing
-when the window shows anything else, or for a path that is not one of that OpenBot's own pages.
+(`extra.path`, which Mangaba Bot's page sets as it posts it), on the Mangaba Bot the window shows. Nothing
+when the window shows anything else, or for a path that is not one of that Mangaba Bot's own pages.
 */
 fn notification_destination(
     current: &tauri::Url,
@@ -12625,7 +12625,7 @@ fn notification_destination(
 }
 
 /**
-A Bot's notification, shown by the system: OpenBot's page asks for it (`desktop_page::notify`) with
+A Bot's notification, shown by the system: Mangaba Bot's page asks for it (`desktop_page::notify`) with
 the page a click opens.
 
 On Windows a toast of our own, which opens an `openbot://` link by protocol: the only way an app
@@ -12691,7 +12691,7 @@ fn open_from_notification(
 }
 
 /// An `openbot://open?path=…` link, which a click on a Windows toast opens, from the notification
-/// centre too: Windows starts OpenBot.exe with it and the single-instance plugin hands it here.
+/// centre too: Windows starts Mangaba Bot.exe with it and the single-instance plugin hands it here.
 fn open_from_link(app: &tauri::AppHandle, link: &tauri::Url) {
     if link.scheme() != notice::SCHEME {
         return;
@@ -12700,9 +12700,9 @@ fn open_from_link(app: &tauri::AppHandle, link: &tauri::Url) {
 }
 
 /**
-OpenBot comes forward, as it does for a second launch, at the page a notice is about. While the
-window does not show this OpenBot yet (it is still starting, from a click that launched it), the
-page waits for it: `open_waiting_notice_page` opens it once OpenBot's page has loaded.
+Mangaba Bot comes forward, as it does for a second launch, at the page a notice is about. While the
+window does not show this Mangaba Bot yet (it is still starting, from a click that launched it), the
+page waits for it: `open_waiting_notice_page` opens it once Mangaba Bot's page has loaded.
 */
 fn open_notice_page(app: &tauri::AppHandle, path: Option<String>) {
     show_whichever_applies(app);
@@ -12743,7 +12743,7 @@ fn open_notice_page(app: &tauri::AppHandle, path: Option<String>) {
     navigate_to_notice_page(&current, &path, |script| window.eval(script));
 }
 
-/// The page a click asked for before OpenBot's page was there, now that it is.
+/// The page a click asked for before Mangaba Bot's page was there, now that it is.
 fn open_waiting_notice_page<R: tauri::Runtime>(window: &tauri::Webview<R>, loaded: &tauri::Url) {
     let waiting = window
         .app_handle()
@@ -12758,11 +12758,11 @@ fn open_waiting_notice_page<R: tauri::Runtime>(window: &tauri::Webview<R>, loade
 }
 
 /**
-Goes to `path` on the OpenBot at `current`, unless it is there already or `path` is not one of its
+Goes to `path` on the Mangaba Bot at `current`, unless it is there already or `path` is not one of its
 pages (`notification_destination`).
 
 As a route change in the page (`notice::open_script`), never by loading the page again: a click on a
-notice used to reload OpenBot and lose what the person was in the middle of. A page from before the
+notice used to reload Mangaba Bot and lose what the person was in the middle of. A page from before the
 page handled it is loaded at the target instead.
 */
 fn navigate_to_notice_page(
@@ -12806,27 +12806,27 @@ fn after_exit(quit: &QuitState) -> AfterExit {
     }
 }
 
-/// The argument OpenBot starts again with, after a Quit that a launch came during (`after_exit`).
+/// The argument Mangaba Bot starts again with, after a Quit that a launch came during (`after_exit`).
 const OPENED_AFTER_QUIT: &str = "--opened-after-quit";
 
-/// Whether this launch is OpenBot opening again after such a Quit, from the program's arguments
+/// Whether this launch is Mangaba Bot opening again after such a Quit, from the program's arguments
 /// (the program first).
 fn opened_after_quit(args: &[std::ffi::OsString]) -> bool {
     args.iter().skip(1).any(|arg| arg == OPENED_AFTER_QUIT)
 }
 
 /**
-OpenBot again, for the launch that came while it quit. Called from `RunEvent::Exit`, after the
+Mangaba Bot again, for the launch that came while it quit. Called from `RunEvent::Exit`, after the
 single-instance plugin's own `Exit` handler has released its mutex (Windows) or removed its socket
-(macOS), so the new OpenBot is the one running rather than handing itself back to this one.
+(macOS), so the new Mangaba Bot is the one running rather than handing itself back to this one.
 
 Through Tauri's `process::restart`: a new process on Windows, `open -n` through LaunchServices on a
 Mac. With `OPENED_AFTER_QUIT` only, as a launch from the Start menu or the Dock has no arguments,
-so its window comes forward at first show. On Windows this OpenBot's right to the foreground is
+so its window comes forward at first show. On Windows this Mangaba Bot's right to the foreground is
 passed on first, as the update's restart does (`pass_the_foreground_on`).
 */
 fn open_again_after_quit<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> ! {
-    log::info!("[quit] everything stopped; opening OpenBot again for the launch made meanwhile");
+    log::info!("[quit] everything stopped; opening Mangaba Bot again for the launch made meanwhile");
     #[cfg(windows)]
     pass_the_foreground_on();
     app.cleanup_before_exit();
@@ -12841,19 +12841,19 @@ fn open_again_after_quit<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> ! {
     tauri::process::restart(&env)
 }
 
-/// A launch while OpenBot quits (`launch_while_quitting`): the Shutting down screen in front, as it
-/// is. Not a restore, which would take the window to OpenBot or setup halfway through stopping.
+/// A launch while Mangaba Bot quits (`launch_while_quitting`): the Shutting down screen in front, as it
+/// is. Not a restore, which would take the window to Mangaba Bot or setup halfway through stopping.
 fn kept_for_after_quit<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> bool {
     if !launch_while_quitting(&app.state::<Shell>().quit) {
         return false;
     }
-    log::info!("[launch] OpenBot is quitting; it opens again once everything has stopped");
-    bring_to_front(app, "OpenBot was launched while it quits");
+    log::info!("[launch] Mangaba Bot is quitting; it opens again once everything has stopped");
+    bring_to_front(app, "Mangaba Bot was launched while it quits");
     true
 }
 
-/// Another launch of OpenBot, which the single-instance plugin ended and handed to this one: the
-/// window, restored by `restore`, or while OpenBot quits, kept for after (`kept_for_after_quit`).
+/// Another launch of Mangaba Bot, which the single-instance plugin ended and handed to this one: the
+/// window, restored by `restore`, or while Mangaba Bot quits, kept for after (`kept_for_after_quit`).
 fn another_launch<R: tauri::Runtime>(
     app: &tauri::AppHandle<R>,
     restore: impl FnOnce(tauri::AppHandle<R>) + Send + 'static,
@@ -12869,13 +12869,13 @@ fn another_launch<R: tauri::Runtime>(
             &reporting_app,
             "open",
             false,
-            format!("OpenBot could not show the existing window: {error}"),
+            format!("Mangaba Bot could not show the existing window: {error}"),
         );
     }
 }
 
 fn publish_quit_notice_failure<R: tauri::Runtime>(app: tauri::AppHandle<R>, error: String) {
-    let problem = Problem::with("OpenBot could not record a shutdown problem.", error);
+    let problem = Problem::with("Mangaba Bot could not record a shutdown problem.", error);
     let shell = app.state::<Shell>();
     {
         let _startup = shell.startup.lock().unwrap();
@@ -12893,8 +12893,8 @@ fn stop_from_menu<R: tauri::Runtime>(app: tauri::AppHandle<R>, from: AskedFrom) 
     stop_then_show_setup(app, from, false, false);
 }
 
-/// Settings' Change on where OpenBot runs, while it runs on this computer: the same Stop, then the
-/// setup window at its choice of where OpenBot runs. The choice on record is not changed by
+/// Settings' Change on where Mangaba Bot runs, while it runs on this computer: the same Stop, then the
+/// setup window at its choice of where Mangaba Bot runs. The choice on record is not changed by
 /// asking. A Stop that failed shows setup with its failure, as any failed Stop does.
 pub(crate) fn change_connection_from_settings<R: tauri::Runtime>(app: tauri::AppHandle<R>) {
     stop_then_show_setup(app, AskedFrom::Settings, false, true);
@@ -12902,7 +12902,7 @@ pub(crate) fn change_connection_from_settings<R: tauri::Runtime>(app: tauri::App
 
 /// Settings' Change on the AI model row: the same Stop, then the setup window at its AI screen,
 /// where the setup window's own Change AI connection goes. A Stop that failed shows setup as any
-/// failed Stop does, with its failure and Start, since OpenBot may still be running.
+/// failed Stop does, with its failure and Start, since Mangaba Bot may still be running.
 pub(crate) fn change_ai_connection_from_settings<R: tauri::Runtime>(app: tauri::AppHandle<R>) {
     stop_then_show_setup(app, AskedFrom::Settings, true, false);
 }
@@ -12920,7 +12920,7 @@ fn take_change_ai_connection(shell: &Shell) -> bool {
         .swap(false, std::sync::atomic::Ordering::SeqCst)
 }
 
-/// Asked for only once everything stopped: the AI screen then starts OpenBot with the new choice.
+/// Asked for only once everything stopped: the AI screen then starts Mangaba Bot with the new choice.
 fn settle_change_ai_connection(shell: &Shell, stopped: bool, change_ai_connection: bool) {
     shell.change_ai_connection.store(
         stopped && change_ai_connection,
@@ -12938,13 +12938,13 @@ pub(crate) fn ai_connection_now<R: tauri::Runtime>(
 
 /*
  * THE AI CONNECTION, CHANGED IN THE APP WITH NO STOP. Settings' AI model dialog sends a key or an
- * address straight to OpenBot's server, which checks and keeps it; these are the parts only this
+ * address straight to Mangaba Bot's server, which checks and keeps it; these are the parts only this
  * app can do: the plan and provider sign-ins, which run here and keep what they get here, and the
  * plan engines and the picked Bot's container, which `ai_connection` starts, stops or restarts one
  * at a time while everything else keeps running. See `desktop_page` for the page's commands.
  */
 
-/// The installation OpenBot runs from on this computer now, and the engine it runs on.
+/// The installation Mangaba Bot runs from on this computer now, and the engine it runs on.
 fn running_installation<R: tauri::Runtime>(
     app: &tauri::AppHandle<R>,
 ) -> Result<(PathBuf, engine::Address), String> {
@@ -12955,7 +12955,7 @@ fn running_installation<R: tauri::Runtime>(
         .unwrap()
         .as_ref()
         .map(|owned| (owned.root.clone(), owned.address.clone()))
-        .ok_or_else(|| "OpenBot isn't running on this computer. Start it, then try again.".into())
+        .ok_or_else(|| "Mangaba Bot isn't running on this computer. Start it, then try again.".into())
 }
 
 /// The installation a sign-in keeps what it gets in: the running one, or the one selected.
@@ -13012,7 +13012,7 @@ pub(crate) async fn finish_plan_sign_in_now(
             })
             .await
             .map_err(|error| error.to_string())?
-            .map_err(|_| "OpenBot couldn't save the ChatGPT sign-in. Try again.".to_string())
+            .map_err(|_| "Mangaba Bot couldn't save the ChatGPT sign-in. Try again.".to_string())
         }
     }
 }
@@ -13110,7 +13110,7 @@ pub(crate) async fn settle_ai_connection_now(
 #[tauri::command]
 fn record_ai_connection_chosen(root: String) -> Result<(), String> {
     openbot_desktop_lib::ai_connection::record_chosen_at(&stack::root_from(&root))
-        .map_err(|error| format!("OpenBot couldn't record that choice: {error}"))
+        .map_err(|error| format!("Mangaba Bot couldn't record that choice: {error}"))
 }
 
 fn stop_then_show_setup<R: tauri::Runtime>(
@@ -13138,7 +13138,7 @@ fn stop_then_show_setup<R: tauri::Runtime>(
             desktop_connected::ask_to_choose(&app);
         }
         match settled {
-            Ok(()) => report_plain(&app, "stopped", true, "OpenBot has stopped."),
+            Ok(()) => report_plain(&app, "stopped", true, "Mangaba Bot has stopped."),
             // Said rather than swallowed. A menu item that fails silently is worse than one
             // that is not there: the person believes the stack is down and it is not.
             Err(problem) => report_plain(&app, "stopped", false, problem.said),
@@ -13147,18 +13147,18 @@ fn stop_then_show_setup<R: tauri::Runtime>(
     });
 }
 
-/// Keep a menu Stop's failure for the setup screen, and mark recovery only when OpenBot's own
+/// Keep a menu Stop's failure for the setup screen, and mark recovery only when Mangaba Bot's own
 /// processes or containers may still be running. None when everything stopped.
 fn settle_menu_stop(shell: &Shell, fallback_root: &Path, stopped: Stopped) -> Option<Problem> {
     let openbot_failed = !stopped.openbot.is_empty();
     let problem = if openbot_failed {
         Problem::with(
-            "OpenBot could not finish stopping. Try Stop OpenBot again.",
+            "Mangaba Bot could not finish stopping. Try Stop Mangaba Bot again.",
             stopped.lines().join("\n"),
         )
     } else {
         Problem::with(
-            "OpenBot stopped, but some of its services didn't. They may still be running.",
+            "Mangaba Bot stopped, but some of its services didn't. They may still be running.",
             stopped.intelligence?,
         )
     };
@@ -13184,7 +13184,7 @@ fn chose(app: &tauri::AppHandle, item: &str) {
         CONNECTED_LOG_FOLDER_MENU_ID => {
             let _ = open_log_folder_now(app);
         }
-        // Stop, Status and the engine's logs are about OpenBot on this computer. A connected app's
+        // Stop, Status and the engine's logs are about Mangaba Bot on this computer. A connected app's
         // menus do not carry them, and a shortcut or a stale menu does not reach them either.
         "stop" | "status" | "logs" if desktop_connected::is_connected(app) => {}
         // Stop without quitting: the stack is what costs something to leave running, and somebody
@@ -13267,18 +13267,18 @@ fn saved_zoom<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> f64 {
 }
 
 /**
-A quit macOS starts, not OpenBot: Dock > Quit, an AppleScript `quit`, logging out or shutting down.
+A quit macOS starts, not Mangaba Bot: Dock > Quit, an AppleScript `quit`, logging out or shutting down.
 
 Tauri on macOS answers those only in `applicationWillTerminate:`, which ends the event loop at once:
-`RunEvent::ExitRequested`, where OpenBot's own Quit stops its CLI calls, its containers and the
+`RunEvent::ExitRequested`, where Mangaba Bot's own Quit stops its CLI calls, its containers and the
 Intelligence stack it made, never runs. A local setup quit that way kept running with nobody to
 stop it, and the next setup was refused as busy.
 
 So the app delegate also answers `applicationShouldTerminate:`: it cancels macOS's termination
-and asks for OpenBot's own Quit (`app.exit`), whose cleanup then exits. Tauri ends the loop with
+and asks for Mangaba Bot's own Quit (`app.exit`), whose cleanup then exits. Tauri ends the loop with
 `stop:` and `process::exit`, never `terminate:`, so this is not asked again on the way out. A
-logout waits for nothing here: macOS reports that OpenBot cancelled it, and logging out again
-after OpenBot has closed goes through.
+logout waits for nothing here: macOS reports that Mangaba Bot cancelled it, and logging out again
+after Mangaba Bot has closed goes through.
 */
 #[cfg(target_os = "macos")]
 mod macos_quit {
@@ -13350,7 +13350,7 @@ fn desktop_version<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> String {
 }
 
 /**
-What About OpenBot says: the version, and which build this is.
+What About Mangaba Bot says: the version, and which build this is.
 
 The build is the commit it was built from, marked `-dirty` when the tree had uncommitted changes,
 and when; see `build_identity` in build.rs. macOS shows the version and the build on one line and
@@ -13363,7 +13363,7 @@ fn about_openbot(version: String) -> tauri::menu::AboutMetadata<'static> {
         env!("OPENBOT_BUILD_TIME").parse().unwrap_or_default(),
     );
     tauri::menu::AboutMetadata {
-        name: Some("OpenBot".into()),
+        name: Some("Mangaba Bot".into()),
         short_version: Some(version),
         version: Some(env!("OPENBOT_BUILD_COMMIT").into()),
         credits: Some(built.clone()),
@@ -13391,7 +13391,7 @@ fn log_launch<R: tauri::Runtime>(app: &tauri::AppHandle<R>, local_offset: Option
         .map(|folder| folder.display().to_string())
         .unwrap_or_else(|error| format!("unknown ({error})"));
     log::info!(
-        "[launch] OpenBot Desktop {} ({}) on {} {}; local time is {local}; logs in {folder}",
+        "[launch] Mangaba Bot Desktop {} ({}) on {} {}; local time is {local}; logs in {folder}",
         desktop_version(app),
         build_description(
             env!("OPENBOT_BUILD_COMMIT"),
@@ -13446,7 +13446,7 @@ const TROUBLESHOOTING_MENU_LABEL: &str = "Get Troubleshooting Logs…";
 /// The same item while the logs it asked for are being gathered, which can't be chosen.
 const TROUBLESHOOTING_MENU_GATHERING: &str = "Gathering Logs…";
 
-/// The menus' Sign Out and Open Log Folder while the app is connected to an OpenBot that runs
+/// The menus' Sign Out and Open Log Folder while the app is connected to an Mangaba Bot that runs
 /// elsewhere. See `desktop_connected`.
 const CONNECTED_SIGN_OUT_MENU_ID: &str = "sign-out";
 const CONNECTED_SIGN_OUT_MENU_LABEL: &str = "Sign Out";
@@ -13474,8 +13474,8 @@ fn install_menus<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<
     // The menu bar menu follows the system's appearance; its icons are drawn for each.
     let dark = system_is_dark(app);
     let running = app.state::<Shell>().root.lock().unwrap().is_some();
-    // Connected to an OpenBot that runs elsewhere: Show Window, the app's log folder, Sign Out and
-    // Quit. Nothing here starts, stops or reports on OpenBot, because none runs on this computer.
+    // Connected to an Mangaba Bot that runs elsewhere: Show Window, the app's log folder, Sign Out and
+    // Quit. Nothing here starts, stops or reports on Mangaba Bot, because none runs on this computer.
     let connected = desktop_connected::is_connected(app);
     // Check for Updates… only in a build offered updates: anywhere else it could only say no.
     let updates = app_update_feed(app).is_some();
@@ -13497,7 +13497,7 @@ fn install_menus<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<
      * status dot, then the things to do, each with an icon, then About, then Quit.
      *
      * No line carries the app's name. The icon it opens from already says whose menu it is, the
-     * name is a brand that builds change (OpenBot, Soar, a company's own), and a verb in front of
+     * name is a brand that builds change (Mangaba Bot, Soar, a company's own), and a verb in front of
      * a product name reads badly for some of them: never "Open Soar" (a product decision of
      * 2026-10-23).
      */
@@ -13613,7 +13613,7 @@ fn install_menus<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<
     let window_entries = || -> tauri::Result<Vec<MenuEntry<R>>> {
         let mut entries = vec![MenuEntry::Native(PredefinedMenuItem::about(
             app,
-            Some("About OpenBot"),
+            Some("About Mangaba Bot"),
             Some(about_openbot(desktop_version(app))),
         )?)];
         // Where every Mac app keeps it: under About.
@@ -13687,7 +13687,7 @@ fn install_menus<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<
      * No menu bar on Windows. Windows draws it as a white strip of its own that no colour reaches,
      * between a title bar tinted to the page and the page itself. Nothing is lost: the Edit menu is
      * there for macOS, which routes Command-V through the menu bar, while WebView2 handles Ctrl+V
-     * itself; and the OpenBot menu's items are in the tray and in Settings → This computer.
+     * itself; and the Mangaba Bot menu's items are in the tray and in Settings → This computer.
      */
     if cfg!(target_os = "windows") {
         return Ok(());
@@ -13702,7 +13702,7 @@ fn install_menus<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<
     // outlive each other.
     let window = window_entries()?;
     // A submenu, because a top-level entry in a menu bar has to be one to open at all.
-    let openbot = Submenu::with_items(app, "OpenBot", true, &menu_refs(&window))?;
+    let openbot = Submenu::with_items(app, "Mangaba Bot", true, &menu_refs(&window))?;
     /*
      * AN EDIT MENU, WITHOUT WHICH COMMAND-V DOES NOTHING.
      *
@@ -13759,7 +13759,7 @@ fn install_menus<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> tauri::Result<
 
 /**
 Whether the system, rather than any one window, is in dark: the menu bar follows the system, and the
-main window follows OpenBot's own theme once it shows OpenBot.
+main window follows Mangaba Bot's own theme once it shows Mangaba Bot.
 */
 fn system_is_dark<R: tauri::Runtime>(app: &tauri::AppHandle<R>) -> bool {
     #[cfg(target_os = "macos")]
@@ -14010,7 +14010,7 @@ fn non_empty_var(name: &str) -> Option<std::ffi::OsString> {
 /// One round at a time: the launch's rounds and a Start's may overlap, and both read and write Desktop's note of what
 /// it registered.
 fn install_recorder_host_for_this_user() -> Result<Vec<PathBuf>, Problem> {
-    // A second OpenBot beside an installed one leaves the browsers' Recorder to the installed one,
+    // A second Mangaba Bot beside an installed one leaves the browsers' Recorder to the installed one,
     // whose host manifests would otherwise be pointed at this app.
     if stack::side_by_side_project().is_some() {
         return Ok(Vec::new());
@@ -14021,7 +14021,7 @@ fn install_recorder_host_for_this_user() -> Result<Vec<PathBuf>, Problem> {
         .unwrap_or_else(|poisoned| poisoned.into_inner());
     let current_exe = std::env::current_exe().map_err(|error| {
         Problem::with(
-            "OpenBot Desktop could not set up the Recorder.",
+            "Mangaba Bot Desktop could not set up the Recorder.",
             error.to_string(),
         )
     })?;
@@ -14041,7 +14041,7 @@ fn install_recorder_host_for_this_user() -> Result<Vec<PathBuf>, Problem> {
         (home, None, None, None)
     } else {
         let home = recorder_home()
-            .ok_or_else(|| Problem::plain("OpenBot Desktop could not find your home folder."))?;
+            .ok_or_else(|| Problem::plain("Mangaba Bot Desktop could not find your home folder."))?;
         (
             home,
             non_empty_var("XDG_CONFIG_HOME").map(PathBuf::from),
@@ -14103,7 +14103,7 @@ fn install_recorder_host_at_start() -> Option<std::thread::JoinHandle<()>> {
 fn main() {
     let args: Vec<std::ffi::OsString> = std::env::args_os().collect();
     // Windows opening a notification's link: pass the foreground on, before the single-instance plugin
-    // hands the link to the OpenBot already running and this launch exits. See `notice.rs`.
+    // hands the link to the Mangaba Bot already running and this launch exits. See `notice.rs`.
     #[cfg(windows)]
     if notice::launched_by_link(args.iter().map(|arg| arg.to_string_lossy().into_owned())) {
         notice::let_running_openbot_come_forward();
@@ -14131,8 +14131,8 @@ fn main() {
             }
         });
     }
-    // The Windows uninstaller stopping what OpenBot runs before it removes it (`uninstall`):
-    // headless, and before the single-instance plugin, which would hand this launch to an OpenBot
+    // The Windows uninstaller stopping what Mangaba Bot runs before it removes it (`uninstall`):
+    // headless, and before the single-instance plugin, which would hand this launch to an Mangaba Bot
     // still open and exit.
     if let Some(asked) = uninstall::asked(&args) {
         std::process::exit(stop_for_uninstall(asked));
@@ -14142,10 +14142,10 @@ fn main() {
     let local_offset = time::UtcOffset::current_local_offset().ok();
     // After an in-app update, or from the installer's last page: in front as the window first shows.
     let from_installer = started_by_installer(&args);
-    // OpenBot opening again for a launch made while it quit (`open_again_after_quit`).
+    // Mangaba Bot opening again for a launch made while it quit (`open_again_after_quit`).
     let reopened = opened_after_quit(&args);
     let context = side_by_side(tauri::generate_context!());
-    // The version every request to an OpenBot names this app with (`client_version`): the one the
+    // The version every request to an Mangaba Bot names this app with (`client_version`): the one the
     // installer, the update check and About name.
     openbot_desktop_lib::client_version::set_app_version(
         context.package_info().version.to_string(),
@@ -14162,7 +14162,7 @@ fn main() {
         );
         context
     };
-    // Before the single-instance plugin hands this launch to an OpenBot already running and ends
+    // Before the single-instance plugin hands this launch to an Mangaba Bot already running and ends
     // it: this launch's right to the foreground, handed on with it (`pass_the_launch_on`).
     #[cfg(windows)]
     pass_the_launch_on(&context.config().identifier);
@@ -14273,7 +14273,7 @@ fn main() {
             open_log_folder,
             troubleshooting_logs,
             save_troubleshooting_logs,
-            // The app connected to an OpenBot that runs elsewhere. See `desktop_connected`.
+            // The app connected to an Mangaba Bot that runs elsewhere. See `desktop_connected`.
             desktop_connected::connection,
             desktop_connected::check_openbot_address,
             desktop_connected::connect_to_openbot,
@@ -14284,11 +14284,11 @@ fn main() {
             desktop_connected::take_connection_notice,
         ])
         // A packaged application is not a browser tab. Left alone, WebView2 answers a right-click
-        // with Back, Refresh, Save as and Print: Back walks the window out of OpenBot with nothing
+        // with Back, Refresh, Save as and Print: Back walks the window out of Mangaba Bot with nothing
         // to walk it home, and Save as offers to write the page to disk as `Webpage, complete`.
         // macOS never showed this because Tauri suppresses it there in release builds; Windows has
         // no such setting, and Tauri has no configuration option for it either, so the page is
-        // asked to refuse. Every navigation, because the window navigates to OpenBot and back.
+        // asked to refuse. Every navigation, because the window navigates to Mangaba Bot and back.
         .on_page_load(|window, payload| {
             // A new page in the main window is not the setup page until it sends a heartbeat.
             if window.label() == "main" && payload.event() == tauri::webview::PageLoadEvent::Started
@@ -14298,7 +14298,7 @@ fn main() {
             let _ = window
                 .eval("document.addEventListener('contextmenu', e => e.preventDefault(), true)");
             let page = window_page(window.app_handle(), payload.url());
-            // "Getting OpenBot ready" covers the main window until the setup page's first
+            // "Getting Mangaba Bot ready" covers the main window until the setup page's first
             // heartbeat (`first_paint`). Any other page sends none, so it goes as that page starts;
             // and a setup page that loaded but never says it painted is shown after ten seconds.
             if window.label() == "main" {
@@ -14327,7 +14327,7 @@ fn main() {
             // The level kept from the last launch, on every page this window loads (`zoom`).
             let _ = window.set_zoom(saved_zoom(window.app_handle()));
             if matches!(page, WindowPage::OwnedApp | WindowPage::LocalApp) {
-                // On the relay's pages only the page's own origin is OpenBot (`page_for`).
+                // On the relay's pages only the page's own origin is Mangaba Bot (`page_for`).
                 let _ = window.eval(outside_links::page_for(desktop_connected::is_relay_page(
                     window.app_handle(),
                     payload.url(),
@@ -14385,12 +14385,12 @@ fn main() {
             build_main_window(app.handle())?;
             log_launch(app.handle(), local_offset);
             // The window is built visible, so this is its first show: a launch the installer
-            // started comes forward now, while Starting OpenBot is what it shows.
+            // started comes forward now, while Starting Mangaba Bot is what it shows.
             forward_at_first_show(from_installer, |why| bring_to_front(app.handle(), why));
             if reopened {
-                bring_to_front(app.handle(), "OpenBot opened again after quitting");
+                bring_to_front(app.handle(), "Mangaba Bot opened again after quitting");
             }
-            // Built by `generate_context!`, so the permissions OpenBot's page is granted are
+            // Built by `generate_context!`, so the permissions Mangaba Bot's page is granted are
             // compiled in. First, before anything that could trust an app and open it.
             know_app_page_grants(app.handle());
             {
@@ -14407,7 +14407,7 @@ fn main() {
                         open_from_link(&handle, &link);
                     }
                 });
-                // OpenBot started by a click on a notification: its page, once OpenBot shows.
+                // Mangaba Bot started by a click on a notification: its page, once Mangaba Bot shows.
                 if let Ok(Some(links)) = app.deep_link().get_current() {
                     for link in links {
                         if let Some(path) = notice::path_of(&link) {
@@ -14438,10 +14438,10 @@ fn main() {
             get_updates_ready(app.handle());
             desktop_telemetry::initialize(app.handle());
             desktop_stall::initialize(app.handle());
-            // Connected to an OpenBot that runs elsewhere, no installation here is looked for.
+            // Connected to an Mangaba Bot that runs elsewhere, no installation here is looked for.
             let connected = desktop_connected::is_connected(app.handle());
             if connected {
-                log::info!("[launch] connected to an OpenBot that runs elsewhere");
+                log::info!("[launch] connected to an Mangaba Bot that runs elsewhere");
             }
             if let Some(root) = app
                 .path()
@@ -14459,7 +14459,7 @@ fn main() {
                 .flatten()
                 .map(|found| found.version);
             desktop_telemetry::observe_launch(app.handle(), installed.as_deref());
-            // Where the Compose provider OpenBot installs itself lives, OpenBot's own Docker
+            // Where the Compose provider Mangaba Bot installs itself lives, Mangaba Bot's own Docker
             // configuration (the one without the person's credential helper) and the registry
             // mirror k3d writes into a new back end node. Before anything asks for an engine.
             use_engine_folders(
@@ -14486,7 +14486,7 @@ fn main() {
             tauri::tray::TrayIconBuilder::with_id("openbot")
                 .icon(tray::icon())
                 .icon_as_template(false)
-                .tooltip("OpenBot")
+                .tooltip("Mangaba Bot")
                 .build(app)?;
             install_menus(app.handle())?;
             app.on_menu_event(|app, event| chose(app, event.id().as_ref()));
@@ -14498,12 +14498,12 @@ fn main() {
             Ok(())
         })
         .build(context)
-        .expect("the OpenBot window could not be created")
+        .expect("the Mangaba Bot window could not be created")
         .run(|app, event| {
             match event {
                 #[cfg(target_os = "macos")]
                 tauri::RunEvent::Reopen { .. } => {
-                    // Opening OpenBot from the Dock, Finder or Spotlight while it runs. While it
+                    // Opening Mangaba Bot from the Dock, Finder or Spotlight while it runs. While it
                     // quits, that is a launch to keep for after (`kept_for_after_quit`).
                     if !kept_for_after_quit(app) {
                         show_whichever_applies(app);
@@ -14548,7 +14548,7 @@ fn main() {
                             app,
                             "quit",
                             false,
-                            "OpenBot couldn't start shutting down. Try Quit again.",
+                            "Mangaba Bot couldn't start shutting down. Try Quit again.",
                         );
                     }
                 }
@@ -14559,7 +14559,7 @@ fn main() {
                     if windows_restart_owed(app) {
                         desktop_telemetry::restart_required(app);
                     }
-                    // Somebody launched OpenBot while it quit: now that everything has stopped,
+                    // Somebody launched Mangaba Bot while it quit: now that everything has stopped,
                     // it opens again (`after_exit`).
                     if after_exit(&app.state::<Shell>().quit) == AfterExit::OpenAgain {
                         open_again_after_quit(app);
@@ -14574,7 +14574,7 @@ fn main() {
 mod background_launch_tests {
     use tauri::utils::config::BackgroundThrottlingPolicy;
 
-    /// OpenBot that opens at login, or that somebody launches and switches away from, starts with
+    /// Mangaba Bot that opens at login, or that somebody launches and switches away from, starts with
     /// its window behind other windows. WebKit counts an occluded window's page as not visible,
     /// and its default inactive policy (`WKInactiveSchedulingPolicySuspend`) lets RunningBoard
     /// suspend the page's web content process. The setup page then never loads, its JavaScript
@@ -14797,12 +14797,12 @@ mod check_for_updates_tests {
         let failure = check(&window).unwrap_err();
         assert_eq!(
             failure["said"],
-            "OpenBot couldn't check for updates. Check your internet connection and try again."
+            "Mangaba Bot couldn't check for updates. Check your internet connection and try again."
         );
         assert!(failure["detail"].as_str().is_some_and(|d| !d.is_empty()));
     }
 
-    /// One way to ask, in every place OpenBot offers it: the windows' command is the feed's, the old
+    /// One way to ask, in every place Mangaba Bot offers it: the windows' command is the feed's, the old
     /// shell update commands are gone, and both menus carry Check for Updates…, which the menu
     /// handler routes to the same check. AppKit menus cannot be built under the mock runtime (see
     /// `refresh_menus`), so this reads the shell's own wiring.
@@ -14825,9 +14825,9 @@ mod check_for_updates_tests {
         assert!(main.contains("app_update::MENU_ID => check_for_updates_from_menu(app.clone()),"));
     }
 
-    /// Check for Updates…'s answers carry OpenBot's icon on the Mac. The dialog plugin shows a
+    /// Check for Updates…'s answers carry Mangaba Bot's icon on the Mac. The dialog plugin shows a
     /// message with no parent window through `CFUserNotificationDisplayAlert`, which draws the
-    /// system's grey note icon, so on macOS `show_prompt` runs OpenBot's own alert
+    /// system's grey note icon, so on macOS `show_prompt` runs Mangaba Bot's own alert
     /// (`native_alert`, tested in `tests/native_alert.rs`) and leaves the plugin to the others.
     #[test]
     fn the_update_answers_show_openbots_icon_on_the_mac() {
@@ -14857,7 +14857,7 @@ mod update_download_fallback_tests {
     /// A test signing key's public half, as `tauri signer generate` writes it. Its secret half was
     /// used once, to sign `PACKAGE`, and is kept nowhere.
     const PUBKEY: &str = "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDQ3ODJGM0QyNDNFRTk4QUYKUldTdm1PNUQwdk9DUjJWTWEyaHJFWjNkck9KK0N6emtZcmVZVDIxTm1UaGhPNy9YRmMyYTRQRVgK";
-    const PACKAGE: &[u8] = b"OpenBot update fallback test package\n";
+    const PACKAGE: &[u8] = b"Mangaba Bot update fallback test package\n";
     /// `tauri signer sign` of `PACKAGE` with that key.
     const SIGNATURE: &str = "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTdm1PNUQwdk9DUjBYZFFYWnQrWVZDMXNqbjY1TEdsQ0xDNHhjUnZvdEl4L2RaSEgwbVdadEpEVHcxYUVXb0lseG1mYkpQc2xjQzNydWxOS0JGcjBsRGh0NzUrTzI2ZEFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzk0MTgwNDYzCWZpbGU6cGF5bG9hZC5iaW4KaFF5azhkUzRYNW1LWk1SRW5YRk53SVVyTXlUbmdoOXFYMmVYa3FEangwRzF3d08zWTc0dDg4alBOTmVMZ2Vid0dheldNRzVRRFB3UDJRRDB3TVBpQkE9PQo=";
 
@@ -15037,7 +15037,7 @@ mod update_download_fallback_tests {
     }
 
     /**
-    OpenBot updating itself, through the real updater, as `install_app_update_steps` downloads it:
+    Mangaba Bot updating itself, through the real updater, as `install_app_update_steps` downloads it:
     `update_started`, with this version and the one the feed names, as the download begins. An
     archive whose signature does not match is `update_failed` (`signature_invalid`), with both
     versions again. A genuine one leaves the update started, and the new version's first launch
@@ -15210,7 +15210,7 @@ mod tests {
     fn machine_home_fallback_line_names_both_drives() {
         assert_eq!(
             machine_home_fallback_line(Path::new(r"\\?\F:\openbot"), Some(r"D:\Users\ada")),
-            "F: can't hold OpenBot's storage, so it's on D:."
+            "F: can't hold Mangaba Bot's storage, so it's on D:."
         );
     }
 
@@ -15219,7 +15219,7 @@ mod tests {
     fn machine_home_fallback_line_without_drive_letters() {
         assert_eq!(
             machine_home_fallback_line(Path::new(r"\\fileserver\homes\openbot"), None),
-            "The install folder can't hold OpenBot's storage, so it's on C:."
+            "The install folder can't hold Mangaba Bot's storage, so it's on C:."
         );
     }
 
@@ -15310,7 +15310,7 @@ mod tests {
     fn move_engine_failed_line_says_the_engine_is_still_on_its_drive() {
         assert_eq!(
             move_engine_failed_line(Some("F:"), Some("C:")),
-            "OpenBot couldn't move its storage to F:. It is still on C:."
+            "Mangaba Bot couldn't move its storage to F:. It is still on C:."
         );
     }
 
@@ -15319,7 +15319,7 @@ mod tests {
     fn move_engine_failed_line_says_the_engine_moved_when_it_is_on_the_new_drive() {
         assert_eq!(
             move_engine_failed_line(Some("F:"), Some("F:")),
-            "OpenBot moved its storage to F:, but couldn't start it again."
+            "Mangaba Bot moved its storage to F:, but couldn't start it again."
         );
     }
 
@@ -15327,7 +15327,7 @@ mod tests {
     fn move_engine_failed_line_without_known_drives() {
         assert_eq!(
             move_engine_failed_line(None, None),
-            "OpenBot couldn't move its storage."
+            "Mangaba Bot couldn't move its storage."
         );
     }
 
@@ -15397,7 +15397,7 @@ mod tests {
         assert!(!ran.load(std::sync::atomic::Ordering::SeqCst));
     }
 
-    /// OpenBot Desktop 1.0.2 aborted when Get Troubleshooting Logs… revealed the file from the
+    /// Mangaba Bot Desktop 1.0.2 aborted when Get Troubleshooting Logs… revealed the file from the
     /// menu's own thread: macOS's `activateFileViewerSelectingURLs:` can throw off the main
     /// thread. The opener's reveal is called in one place, which catches AppKit's exceptions, and
     /// on macOS that place is reached only through `run_on_main_thread`.
@@ -15475,7 +15475,7 @@ mod tests {
         );
     }
 
-    /// The window says "Updating OpenBot" and where an update stopped in plain words; the log
+    /// The window says "Updating Mangaba Bot" and where an update stopped in plain words; the log
     /// keeps the releases and the CLI's own name for the step.
     #[test]
     fn the_log_keeps_the_back_end_releases_and_the_step_an_update_stopped_at() {
@@ -15517,7 +15517,7 @@ mod tests {
 
     use super::*;
 
-    /// Setup opens in OpenBot's own light or dark once its page has reported one, and in the
+    /// Setup opens in Mangaba Bot's own light or dark once its page has reported one, and in the
     /// system's before that or when the record cannot be read.
     #[test]
     fn setup_takes_openbots_last_light_or_dark() {
@@ -15549,7 +15549,7 @@ mod tests {
         );
     }
 
-    /// When OpenBot follows the system, so do its window and the setup screens: the window is not
+    /// When Mangaba Bot follows the system, so do its window and the setup screens: the window is not
     /// pinned, whatever the page showed when it reported, and the record names no theme.
     #[test]
     fn a_window_following_the_system_is_not_pinned() {
@@ -15753,7 +15753,7 @@ mod tests {
         .unwrap();
     }
 
-    /// An update restarts the app after stopping OpenBot itself. Tauri sends that restart through the
+    /// An update restarts the app after stopping Mangaba Bot itself. Tauri sends that restart through the
     /// exit handler and ignores `prevent_exit` for it, so a Quit cleanup started there would be cut
     /// off halfway, possibly while stopping the local Intelligence the update meant to keep.
     #[test]
@@ -15775,11 +15775,11 @@ mod tests {
         .unwrap();
     }
 
-    /// Launching OpenBot while it quit opened nothing. The single-instance plugin hands a launch to
-    /// the OpenBot already running and ends the new process (on Windows, `SendMessageW` then
-    /// `process::exit(0)`); on a Mac, a launch of a running app is its Reopen. The OpenBot that got
+    /// Launching Mangaba Bot while it quit opened nothing. The single-instance plugin hands a launch to
+    /// the Mangaba Bot already running and ends the new process (on Windows, `SendMessageW` then
+    /// `process::exit(0)`); on a Mac, a launch of a running app is its Reopen. The Mangaba Bot that got
     /// it was stopping its stack, about twenty seconds on Windows, and then exited. The launch has
-    /// to outlive the Quit: once everything has stopped, OpenBot opens again.
+    /// to outlive the Quit: once everything has stopped, Mangaba Bot opens again.
     #[test]
     fn a_launch_while_quitting_opens_openbot_again_once_quit_has_stopped_everything() {
         use std::sync::{mpsc, Arc};
@@ -15813,7 +15813,7 @@ mod tests {
             .recv_timeout(Duration::from_secs(5))
             .unwrap();
 
-        // The launch arrives, as the plugin hands it over, while Quit is still stopping OpenBot.
+        // The launch arrives, as the plugin hands it over, while Quit is still stopping Mangaba Bot.
         let (restored, restores) = mpsc::channel();
         another_launch(app.handle(), move |_| restored.send(()).unwrap());
 
@@ -15836,12 +15836,12 @@ mod tests {
         assert_eq!(
             after_exit(&quit),
             AfterExit::OpenAgain,
-            "a launch that came while OpenBot quit was dropped"
+            "a launch that came while Mangaba Bot quit was dropped"
         );
         // The Shutting down screen stays as it is: the launch is not a restore that takes the
-        // window to OpenBot or setup halfway through stopping.
+        // window to Mangaba Bot or setup halfway through stopping.
         assert!(restores.recv_timeout(Duration::from_millis(300)).is_err());
-        // The OpenBot that opens again knows it is one, and comes forward as it first shows.
+        // The Mangaba Bot that opens again knows it is one, and comes forward as it first shows.
         let args = |given: &[&str]| -> Vec<std::ffi::OsString> {
             std::iter::once("openbot-desktop.exe")
                 .chain(given.iter().copied())
@@ -15855,7 +15855,7 @@ mod tests {
         )]));
     }
 
-    /// A launch hands its right to the foreground to the OpenBot already running
+    /// A launch hands its right to the foreground to the Mangaba Bot already running
     /// (`pass_the_launch_on`), which it finds the way the single-instance plugin does: by the
     /// plugin's own hidden window. With the real plugin registered, that lookup must name this
     /// process, and before it, nothing.
@@ -15876,7 +15876,7 @@ mod tests {
     }
 
     /// Quit with no launch exits as it always has; a launch during an update's restart is left to
-    /// that restart; and a launch held by a Quit that could not finish, which leaves OpenBot open,
+    /// that restart; and a launch held by a Quit that could not finish, which leaves Mangaba Bot open,
     /// is not owed to a later Quit.
     #[test]
     fn only_a_launch_during_the_quit_that_exits_opens_openbot_again() {
@@ -16105,7 +16105,7 @@ mod tests {
         let root = temp_root("openbot-quit-cleanup-notice");
         let lines = vec![
             "[exit] cleanup failed: Compose down failed: /Users/alice/OpenBot/docker-compose.yml refused token=secret".to_string(),
-            "[exit] cleanup failed: C:\\Users\\alice\\OpenBot\\owned.exe OAuth password".to_string(),
+            "[exit] cleanup failed: C:\\Users\\alice\\Mangaba Bot\\owned.exe OAuth password".to_string(),
         ];
 
         write_quit_cleanup_notice(&root, &lines).unwrap();
@@ -16113,7 +16113,7 @@ mod tests {
             .unwrap()
             .expect("notice should be present");
         let detail = first.detail.unwrap();
-        assert_eq!(first.said, "OpenBot had trouble shutting down last time.");
+        assert_eq!(first.said, "Mangaba Bot had trouble shutting down last time.");
         assert!(detail.contains("containers stopped"), "{detail}");
         assert!(detail.contains("app processes stopped"), "{detail}");
         assert!(!detail.contains("Compose down failed"), "{detail}");
@@ -16291,9 +16291,9 @@ mod tests {
         );
     }
 
-    /// The bug: with OpenBot's engine stopped under a window showing OpenBot, the watcher logged
+    /// The bug: with Mangaba Bot's engine stopped under a window showing Mangaba Bot, the watcher logged
     /// "Connection status request failed" once and left the window on a page that could no longer
-    /// load anything. Only bringing the window forward showed OpenBot as stopped. The watcher now
+    /// load anything. Only bringing the window forward showed Mangaba Bot as stopped. The watcher now
     /// sends the window to setup by itself once the server has stopped answering for a while, and
     /// leaves it where it is while the server answers.
     #[test]
@@ -16354,7 +16354,7 @@ mod tests {
         assert_eq!(
             window.url().unwrap().as_str(),
             home,
-            "a server that answers keeps the window on OpenBot"
+            "a server that answers keeps the window on Mangaba Bot"
         );
 
         let gone = std::time::Instant::now();
@@ -16368,7 +16368,7 @@ mod tests {
         }
         assert!(
             gone.elapsed() >= SERVER_GONE_AFTER,
-            "a moment's silence is not a stopped OpenBot"
+            "a moment's silence is not a stopped Mangaba Bot"
         );
         // Shown as stopped, the way bringing the window forward shows it: no failure to explain,
         // and the run is still this session's for Start to raise again.
@@ -16385,11 +16385,11 @@ mod tests {
     /// The bug (Desktop 1.1.2, macOS, a dogfooding report): the container engine stalled for
     /// minutes while the person was away. The server's container stayed up, but nothing it was
     /// asked was answered, and after ten seconds the watcher, asking only the server, sent the
-    /// window to setup. Setup started OpenBot again by itself, which recreates the server and ends
-    /// every Bot turn that was running. The window showed "Starting OpenBot" with no reason given.
+    /// window to setup. Setup started Mangaba Bot again by itself, which recreates the server and ends
+    /// every Bot turn that was running. The window showed "Starting Mangaba Bot" with no reason given.
     ///
     /// Now the watcher asks the engine too. A server container that is up stays as it is and the
-    /// window stays on OpenBot. One that stopped and stays stopped sends the window to setup with
+    /// window stays on Mangaba Bot. One that stopped and stays stopped sends the window to setup with
     /// what happened, which then waits for the person's Start.
     #[test]
     fn a_server_that_stops_answering_while_its_container_is_up_is_left_running() {
@@ -16471,7 +16471,7 @@ mod tests {
             assert_eq!(
                 window.url().unwrap().as_str(),
                 home,
-                "a server whose container is up is not a stopped OpenBot"
+                "a server whose container is up is not a stopped Mangaba Bot"
             );
             std::thread::sleep(std::time::Duration::from_millis(100));
         }
@@ -16490,10 +16490,10 @@ mod tests {
             std::thread::sleep(std::time::Duration::from_millis(100));
         }
         // Setup says what happened, and waits for the person's Start rather than starting itself.
-        let problem = last_failure_now(app.handle()).expect("setup is told why OpenBot stopped");
+        let problem = last_failure_now(app.handle()).expect("setup is told why Mangaba Bot stopped");
         assert_eq!(
             problem.said,
-            "OpenBot stopped because it ran out of memory. Start it again to continue."
+            "Mangaba Bot stopped because it ran out of memory. Start it again to continue."
         );
         assert!(
             problem
@@ -16513,8 +16513,8 @@ mod tests {
     /// Found on the real Mac pass of this fix, under Podman: with the engine's machine stalled (its
     /// VM process stopped, as an overloaded or sleeping machine is), `compose ps` failed after about
     /// 14 seconds with an ssh handshake reset rather than running out of time. Read as an engine
-    /// that is gone, it sent the window to setup, which started OpenBot again: the same
-    /// "Starting OpenBot · Starting the software OpenBot runs on" the report showed. A machine whose
+    /// that is gone, it sent the window to setup, which started Mangaba Bot again: the same
+    /// "Starting Mangaba Bot · Starting the software Mangaba Bot runs on" the report showed. A machine whose
     /// own record still says it is running is a slow engine; one that says stopped is gone.
     #[test]
     fn a_podman_machine_that_stalls_is_a_slow_engine_and_one_that_stopped_is_gone() {
@@ -16546,7 +16546,7 @@ mod tests {
 
     /// Found on the Windows pass of this fix: after the engine's machine had been stalled, a
     /// `podman compose ps` the watcher made never returned, and the watcher stopped for good. It
-    /// never said OpenBot was answering again, and would not have noticed it stop. Every engine call
+    /// never said Mangaba Bot was answering again, and would not have noticed it stop. Every engine call
     /// the watcher makes now gives up at its limit.
     #[test]
     fn an_engine_that_never_answers_does_not_hold_the_watcher() {
@@ -16573,7 +16573,7 @@ mod tests {
         );
         // And, when that fails, whether the machine still says it runs. Measured on a Mac with the
         // machine's VM process stopped: `machine inspect` waits on it too. Not saying in time is
-        // the slow machine it looks like, and the window stays on OpenBot.
+        // the slow machine it looks like, and the window stays on Mangaba Bot.
         assert_eq!(
             stack::server_container(&podman, &root, limit),
             Err(stack::ServerContainerUnknown::Slow)
@@ -17336,7 +17336,7 @@ mod tests {
         )
         .expect_err("unreadable .env must stop saved-key resolution");
 
-        assert_eq!(problem.said, "OpenBot could not read its settings.");
+        assert_eq!(problem.said, "Mangaba Bot could not read its settings.");
         assert!(
             problem
                 .detail
@@ -17577,7 +17577,7 @@ mod tests {
             database_leftovers(&BOT_LEFTOVERS).volumes
         );
 
-        // A database OpenBot cannot verify keeps the existing refusal, with nothing offered.
+        // A database Mangaba Bot cannot verify keeps the existing refusal, with nothing offered.
         let mut unverified = leftovers_without_database(&BOT_LEFTOVERS);
         unverified.database_exists = true;
         let error = require_existing_encryption_key_with_recovery(
@@ -17591,7 +17591,7 @@ mod tests {
         assert!(error.leftover_volumes().is_empty());
         assert!(error
             .said
-            .contains("OpenBot will not replace the key automatically"));
+            .contains("Mangaba Bot will not replace the key automatically"));
 
         // Stopped containers that hold the volumes join the confirmation; running ones block it.
         let mut held = leftovers_without_database(&BOT_LEFTOVERS);
@@ -18592,7 +18592,7 @@ mod tests {
             run(Some(Docker), true, false, true),
             ["open Docker Desktop"]
         );
-        // A saved Podman after a restart: OpenBot's machine is started.
+        // A saved Podman after a restart: Mangaba Bot's machine is started.
         assert_eq!(run(Some(Podman), true, false, true), ["start our machine"]);
         // An installation from before engines were saved, with nothing answering: the same.
         assert_eq!(run(None, true, false, true), ["start our machine"]);
@@ -18603,9 +18603,9 @@ mod tests {
         assert_eq!(run(Some(Podman), false, false, true), none);
     }
 
-    /// The EC2 Mac pass: OpenBot's Podman machine stopped under a running OpenBot, the window said
-    /// "The software OpenBot runs on isn't running. Retry to start it.", and Retry gave up at once
-    /// on `docker_unavailable`. This session still held OpenBot's containers, so waking the engine
+    /// The EC2 Mac pass: Mangaba Bot's Podman machine stopped under a running Mangaba Bot, the window said
+    /// "The software Mangaba Bot runs on isn't running. Retry to start it.", and Retry gave up at once
+    /// on `docker_unavailable`. This session still held Mangaba Bot's containers, so waking the engine
     /// was skipped as if they were running, and the machine was never started. Only Quit and a
     /// relaunch, which hold no containers, started it.
     #[test]
@@ -18618,7 +18618,7 @@ mod tests {
             address: address.clone(),
         });
 
-        // The machine is stopped: nothing answers on the engine OpenBot's containers ran on.
+        // The machine is stopped: nothing answers on the engine Mangaba Bot's containers ran on.
         let asked = RefCell::new(Vec::new());
         let up = own_containers_up(&shell, |on| {
             asked.borrow_mut().push(on.clone());
@@ -18634,7 +18634,7 @@ mod tests {
             "the containers' own engine is asked"
         );
 
-        // So Retry wakes the engine the installation runs on, which starts OpenBot's machine.
+        // So Retry wakes the engine the installation runs on, which starts Mangaba Bot's machine.
         let started = RefCell::new(false);
         wake_saved_engine(
             Some(engine::Engine::Podman),
@@ -18648,9 +18648,9 @@ mod tests {
             },
         )
         .unwrap();
-        assert!(started.into_inner(), "OpenBot's machine is started");
+        assert!(started.into_inner(), "Mangaba Bot's machine is started");
 
-        // While the machine answers, a running OpenBot's engine is still left alone.
+        // While the machine answers, a running Mangaba Bot's engine is still left alone.
         assert!(own_containers_up(&shell, |_| true));
         // And with no containers held, there is nothing to leave alone.
         *shell.containers.lock().unwrap() = None;
@@ -18659,11 +18659,11 @@ mod tests {
         )));
     }
 
-    /// Box I, step 7: "Delete the application data" took OpenBot's machine, the installation folder
+    /// Box I, step 7: "Delete the application data" took Mangaba Bot's machine, the installation folder
     /// stayed, and Podman made the person's rootless `mine` its default connection. The relaunch
     /// found nothing answering, did nothing, and the backend's tool, told no engine, judged `mine`:
-    /// "OpenBot can't run on this computer as it's set up", with no way on. Now, on Windows, the
-    /// relaunch makes OpenBot's machine again, and the tool is never asked before it answers.
+    /// "Mangaba Bot can't run on this computer as it's set up", with no way on. Now, on Windows, the
+    /// relaunch makes Mangaba Bot's machine again, and the tool is never asked before it answers.
     #[test]
     fn a_relaunch_without_openbots_machine_makes_it_again_and_never_judges_the_persons() {
         use engine::Engine::{Docker, Podman};
@@ -18680,14 +18680,14 @@ mod tests {
         };
         let windows = engine::own_machine_only("windows");
 
-        // Nothing answers and only the person's machine is there: OpenBot's is made again.
+        // Nothing answers and only the person's machine is there: Mangaba Bot's is made again.
         assert!(our_machine_is_gone(
             Some(Podman),
             windows,
             || false,
             || ours_in(only_theirs)
         ));
-        // OpenBot's machine is there, stopped: started as before, never made again.
+        // Mangaba Bot's machine is there, stopped: started as before, never made again.
         assert!(!our_machine_is_gone(
             Some(Podman),
             windows,
@@ -18717,7 +18717,7 @@ mod tests {
             || false
         ));
 
-        // Until OpenBot's own engine answers, the backend's tool is not asked on Windows: the answer
+        // Until Mangaba Bot's own engine answers, the backend's tool is not asked on Windows: the answer
         // is that the engine doesn't answer, which the relaunch repairs, never "unsupported engine"
         // from a look at the person's machine.
         for saved in [Some(Podman), None] {
@@ -18734,7 +18734,7 @@ mod tests {
     /// A live Windows run: the machine's network was checked only at Start, after the back end had
     /// started, and setting it up again restarted the machine under the back end. The window wakes
     /// the engine before every CLI call that sets up, updates or starts the back end, and the wake
-    /// now makes OpenBot's machine ready last, after the engine is up.
+    /// now makes Mangaba Bot's machine ready last, after the engine is up.
     #[test]
     fn the_wake_makes_openbots_machine_ready_after_the_engine_and_before_the_back_end() {
         use std::cell::RefCell;
@@ -18784,7 +18784,7 @@ mod tests {
 
     /// The same run, when Start is where the network is set up again (it went down after the
     /// wake, or the back end was already running): the back end is started again, and waited for
-    /// until it is ready, before Compose starts OpenBot's services.
+    /// until it is ready, before Compose starts Mangaba Bot's services.
     #[test]
     fn a_machine_restarted_at_start_starts_the_back_end_again_before_compose() {
         use local_eval::{Action, Outcome, Readiness};
@@ -18856,14 +18856,14 @@ mod tests {
         .unwrap_err();
         assert_eq!(
             error.said,
-            "OpenBot couldn't start again after reconnecting to the internet. Try Start again."
+            "Mangaba Bot couldn't start again after reconnecting to the internet. Try Start again."
         );
     }
 
-    /// Box I: OpenBot's machine made again, the backend's cluster gone with the old one, and every
+    /// Box I: Mangaba Bot's machine made again, the backend's cluster gone with the old one, and every
     /// status "local-command-failed, no stack", which the window said as "Setup stopped partway
     /// through with an error. Retry." for good. It is now said as a lost backend, with Start fresh,
-    /// but only for the stack OpenBot created and recorded here, asked about by its own id, once
+    /// but only for the stack Mangaba Bot created and recorded here, asked about by its own id, once
     /// the engine answers without its cluster.
     #[test]
     fn a_backend_whose_cluster_is_gone_is_said_lost_only_when_openbot_made_it() {
@@ -18893,7 +18893,7 @@ mod tests {
         // The cluster is there, or the engine couldn't say: an ordinary failure, with Retry.
         assert!(!backend_lost(&lost, Some(&created), &asked, || Some(false)));
         assert!(!backend_lost(&lost, Some(&created), &asked, || None));
-        // A stack OpenBot found and shares, none recorded, or another one asked about.
+        // A stack Mangaba Bot found and shares, none recorded, or another one asked about.
         let shared = recorded(local_eval_state::Ownership::Shared);
         assert!(!backend_lost(&lost, Some(&shared), &asked, || Some(true)));
         assert!(!backend_lost(&lost, None, &asked, || Some(true)));
@@ -18906,7 +18906,7 @@ mod tests {
         }));
     }
 
-    /// A Mac on Docker Desktop, Desktop 1.1.2: after `copilotkit local delete`, OpenBot's folder
+    /// A Mac on Docker Desktop, Desktop 1.1.2: after `copilotkit local delete`, Mangaba Bot's folder
     /// still recorded the deleted stack, and every launch's status answered "No recorded local
     /// stack was found" and stopped there, with no setup. A stack the CLI no longer records is gone,
     /// whatever the engine holds, and the window offers to set it up again; setup then records the
@@ -18976,7 +18976,7 @@ mod tests {
         let _ = std::fs::remove_dir_all(root);
     }
 
-    /// With OpenBot's own database still there, only the backend went (a prune of stopped
+    /// With Mangaba Bot's own database still there, only the backend went (a prune of stopped
     /// containers on Docker Desktop), and the window says so (`backend-gone`). Without it, or when
     /// that can't be said, everything went (`stack-lost`, box I).
     #[test]
@@ -19085,8 +19085,8 @@ mod tests {
             true,
             Ok(()),
             Err(Problem::plain(
-                "Docker on this computer is too old to run OpenBot. Update Docker, then start \
-                 OpenBot again.",
+                "Docker on this computer is too old to run Mangaba Bot. Update Docker, then start \
+                 Mangaba Bot again.",
             )),
         );
         assert!(result
@@ -19324,7 +19324,7 @@ mod tests {
                     .borrow_mut()
                     .push(format!("cleanup:{}", root.display()));
                 Err(Problem::with(
-                    "OpenBot could not inspect or stop its host processes.",
+                    "Mangaba Bot could not inspect or stop its host processes.",
                     "lsof exited with status 2",
                 ))
             },
@@ -19343,7 +19343,7 @@ mod tests {
             ]
         );
         assert!(
-            problem.contains("OpenBot could not inspect or stop its host processes."),
+            problem.contains("Mangaba Bot could not inspect or stop its host processes."),
             "{problem}"
         );
         assert!(problem.contains("lsof exited with status 2"), "{problem}");
@@ -19375,7 +19375,7 @@ mod tests {
                     .borrow_mut()
                     .push(format!("cleanup:{}", root.display()));
                 Err(Problem::with(
-                    "OpenBot could not inspect or stop its host processes.",
+                    "Mangaba Bot could not inspect or stop its host processes.",
                     "taskkill exited with status 5",
                 ))
             },
@@ -19775,7 +19775,7 @@ mod tests {
         );
     }
 
-    /// Words a person setting OpenBot up does not know, and a release's name.
+    /// Words a person setting Mangaba Bot up does not know, and a release's name.
     fn technical(said: &str) -> Option<&'static str> {
         let lower = said.to_lowercase();
         [
@@ -19816,7 +19816,7 @@ mod tests {
         }
     }
 
-    /// Found on Windows F: "Downloading OpenBot internal-d2df1b062ac0." reached the Account
+    /// Found on Windows F: "Downloading Mangaba Bot internal-d2df1b062ac0." reached the Account
     /// step's background row for two seconds, the one step line of the run with no plain line of
     /// its own. Its text is the log's now, and the window says the step's plain line.
     #[test]
@@ -19825,9 +19825,9 @@ mod tests {
             (
                 "deployment",
                 true,
-                "Downloading OpenBot internal-d2df1b062ac0.",
+                "Downloading Mangaba Bot internal-d2df1b062ac0.",
             ),
-            ("deployment", false, "v1.0.1 in C:\\Users\\you\\OpenBot"),
+            ("deployment", false, "v1.0.1 in C:\\Users\\you\\Mangaba Bot"),
             ("install-engine", false, "Compose 5.5.1 installed."),
             ("health-gate", false, "engine API 6.1.4"),
         ] {
@@ -19841,10 +19841,10 @@ mod tests {
                 "deployment",
                 true,
                 true,
-                "Downloading OpenBot internal-d2df1b062ac0.".into()
+                "Downloading Mangaba Bot internal-d2df1b062ac0.".into()
             )
             .said,
-            "Downloading OpenBot."
+            "Downloading Mangaba Bot."
         );
     }
 
@@ -20159,9 +20159,9 @@ mod tests {
         assert!(!body.contains(".show()"), "{body}");
     }
 
-    /// Windows F: "[front] the engine machine is prepared" brought OpenBot in front of the
+    /// Windows F: "[front] the engine machine is prepared" brought Mangaba Bot in front of the
     /// browser while the person typed their email to sign in. While the sign-in is open, setup's
-    /// own moments hold back; when it ends, OpenBot comes forward once.
+    /// own moments hold back; when it ends, Mangaba Bot comes forward once.
     #[test]
     fn nothing_comes_forward_while_the_browser_sign_in_is_open_and_once_when_it_ends() {
         if crate::test_support::isolated_process(
@@ -20191,7 +20191,7 @@ mod tests {
             while_signing_in(|| panic!("the sign-in failed"), || {});
         });
         assert!(failed.is_err());
-        assert!(!held_back("OpenBot is showing"));
+        assert!(!held_back("Mangaba Bot is showing"));
         // `bring_to_front` asks before it does anything, and the sign-in runs inside the hold.
         let main = include_str!("main.rs");
         let body = &main[main.find("fn bring_to_front<").unwrap()..];
@@ -20207,7 +20207,7 @@ mod tests {
 
     /// Box H, an in-app update from 1.0.1 to 1.0.2 on Windows Server 2022 with a maximised Edge
     /// open: Windows put Edge in front as 1.0.1 closed, and 1.0.2 opened behind it. The person saw
-    /// only Edge through the four minutes of Starting OpenBot, until "[front] OpenBot is showing"
+    /// only Edge through the four minutes of Starting Mangaba Bot, until "[front] Mangaba Bot is showing"
     /// at home. The updating version passes the foreground on before its window goes, the
     /// installer passes it on again and starts the new version saying so, and the new version
     /// comes forward once, as its window first shows. Never while the browser sign-in is open.
@@ -20245,7 +20245,7 @@ mod tests {
         });
         assert_eq!(
             *asked.borrow(),
-            [("the installer started OpenBot".to_owned(), false)]
+            [("the installer started Mangaba Bot".to_owned(), false)]
         );
         // Any other launch asks nothing.
         forward_at_first_show(false, |why| {
@@ -20294,7 +20294,7 @@ mod tests {
             .find("pass_the_foreground_on();")
             .expect("the foreground passed on before the installer starts");
         assert!(passed < before.find("app.cleanup_before_exit();").unwrap());
-        // The installer starts OpenBot with the flag read here.
+        // The installer starts Mangaba Bot with the flag read here.
         assert!(include_str!("../windows/hooks.nsh").contains(&format!(
             "!define OPENBOT_STARTED_BY_INSTALLER \"{STARTED_BY_INSTALLER}\""
         )));
@@ -20329,7 +20329,7 @@ mod tests {
     fn the_main_window_built_in_setup_keeps_every_property_the_configured_window_had() {
         // The entry as it stood while Tauri created the window from it.
         let pinned = serde_json::json!({
-            "title": "OpenBot",
+            "title": "Mangaba Bot",
             "width": 1000,
             "height": 800,
             "minWidth": 720,
@@ -20365,7 +20365,7 @@ mod tests {
             .iter()
             .find(|window| window.label == "main")
             .unwrap();
-        assert_eq!(built.title, "OpenBot");
+        assert_eq!(built.title, "Mangaba Bot");
         assert_eq!((built.width, built.height), (1000.0, 800.0));
         assert_eq!(
             (built.min_width, built.min_height),
@@ -20388,7 +20388,7 @@ mod tests {
     /// showed the system's dark grey for up to half a second, then WKWebView's white for a few
     /// frames, and blank white in light. The main window is built on the setup screens' ground on
     /// macOS as on Windows, the ground the title bar takes once the setup page loads, so the first
-    /// frame is already OpenBot's own colour in light and in dark.
+    /// frame is already Mangaba Bot's own colour in light and in dark.
     #[test]
     fn the_main_window_is_built_on_the_setup_ground_on_macos_and_windows() {
         let main = include_str!("main.rs");
@@ -20458,7 +20458,7 @@ mod tests {
             "{window}"
         );
         // A theme change from the system: the window's ThemeChanged event redraws the bar on every
-        // page but OpenBot's own, which reports its own theme (below).
+        // page but Mangaba Bot's own, which reports its own theme (below).
         let changed = &main[main
             .find("tauri::WindowEvent::ThemeChanged(_) => {")
             .unwrap()..];
@@ -20480,7 +20480,7 @@ mod tests {
             ),
             "{windows}"
         );
-        // A theme change from OpenBot's own page, through `desktop_page::appearance`.
+        // A theme change from Mangaba Bot's own page, through `desktop_page::appearance`.
         let reported = body("pub(crate) fn page_appearance<R: tauri::Runtime>");
         assert!(
             reported.contains("tint_title_bar(window, Some(dark));"),
@@ -20586,8 +20586,8 @@ mod tests {
         );
     }
 
-    /// Seen on a Mac: opened while OpenBot updated itself, the Status window said the app was
-    /// Stopped and offered Start. The status says OpenBot is updating for as long as an update
+    /// Seen on a Mac: opened while Mangaba Bot updated itself, the Status window said the app was
+    /// Stopped and offered Start. The status says Mangaba Bot is updating for as long as an update
     /// holds it, and not after.
     #[test]
     fn status_says_openbot_is_updating_while_an_update_holds_it() {
@@ -20760,7 +20760,7 @@ mod tests {
     /// The live Windows run: the person's own `podman-machine-default` answered, the CLI was told no
     /// engine and took it, and the account step showed its refusal ("Rootless Podman is not
     /// supported. Switch to rootful Podman ...") as a change the person had to make, with Try again
-    /// repeating it. While OpenBot's own machine is on its way the step waits instead, as it waits
+    /// repeating it. While Mangaba Bot's own machine is on its way the step waits instead, as it waits
     /// for any engine coming up, and the CLI is not asked. Once an engine is known, or on an
     /// installation that is on Docker, the CLI is asked as before.
     #[test]
@@ -20904,8 +20904,8 @@ mod tests {
         let _ = std::fs::remove_dir_all(fallback);
     }
 
-    /// A run OpenBot holds on a Podman machine that no longer answers, with folder access running:
-    /// what the EC2 Mac had when its machine was stopped and OpenBot then quit.
+    /// A run Mangaba Bot holds on a Podman machine that no longer answers, with folder access running:
+    /// what the EC2 Mac had when its machine was stopped and Mangaba Bot then quit.
     fn running_on_a_gone_engine(label: &str) -> (Shell, PathBuf) {
         let root = local_eval_root(label, Some(local_eval_state::Ownership::Created));
         let shell = Shell::default();
@@ -20950,10 +20950,10 @@ mod tests {
     }
 
     /**
-    The EC2 Mac: OpenBot's machine was stopped, then OpenBot quit. Every stop failed against the
-    engine ("could not resolve computer namespace", `local stop` "docker_unavailable", and "OpenBot
-    could not stop a folder operation"), and the next launch said "OpenBot had trouble shutting down
-    last time." With the machine stopped nothing of OpenBot's can run, so Quit and Stop each find
+    The EC2 Mac: Mangaba Bot's machine was stopped, then Mangaba Bot quit. Every stop failed against the
+    engine ("could not resolve computer namespace", `local stop` "docker_unavailable", and "Mangaba Bot
+    could not stop a folder operation"), and the next launch said "Mangaba Bot had trouble shutting down
+    last time." With the machine stopped nothing of Mangaba Bot's can run, so Quit and Stop each find
     every stop done, and the next launch says nothing.
     */
     #[test]
@@ -21024,9 +21024,9 @@ mod tests {
     }
 
     /**
-    A Windows test machine: Stop stopped OpenBot's services and left OpenBot's own Podman machine,
+    A Windows test machine: Stop stopped Mangaba Bot's services and left Mangaba Bot's own Podman machine,
     its WSL distro, running and holding memory, and Quit did the same. Both now stop it last, once
-    everything of OpenBot's in it has stopped, and only it: the person's own machine runs on. An
+    everything of Mangaba Bot's in it has stopped, and only it: the person's own machine runs on. An
     update's stop leaves it running for the restart that follows.
     */
     #[test]
@@ -21057,7 +21057,7 @@ mod tests {
         ));
         assert_eq!(machines.done, ["stop openbot"]);
 
-        // Nothing to stop: OpenBot on Docker, its machine found stopped, or not running.
+        // Nothing to stop: Mangaba Bot on Docker, its machine found stopped, or not running.
         for (engine, on_podman, running) in [
             (EngineAtStop::Answers, false, vec![THEIRS, acquire::MACHINE]),
             (
@@ -21094,7 +21094,7 @@ mod tests {
             let path = body(path);
             let machine = path
                 .find("stop_own_machine(")
-                .unwrap_or_else(|| panic!("OpenBot's machine is left running:\n{path}"));
+                .unwrap_or_else(|| panic!("Mangaba Bot's machine is left running:\n{path}"));
             assert!(machine > path.find(rest).unwrap(), "{path}");
             assert!(path.contains("&mut own_machine::ThisComputer"), "{path}");
         }
@@ -21254,7 +21254,7 @@ mod tests {
         }
     }
 
-    /// D's Quit: the machine's API pipe had gone, so OpenBot's compose down and the back end's
+    /// D's Quit: the machine's API pipe had gone, so Mangaba Bot's compose down and the back end's
     /// local stop both failed ("docker_unavailable") and the next launch said some services didn't
     /// stop. Now one heal comes first, shared by both stops: the machine is restarted once, both
     /// stops succeed, and there is no failure to record.
@@ -21288,7 +21288,7 @@ mod tests {
         assert_eq!(restarts.get(), 1);
         assert_eq!(stopped.lines(), Vec::<String>::new());
 
-        // OpenBot already stopped, as on D: the back end's stop still comes after the heal.
+        // Mangaba Bot already stopped, as on D: the back end's stop still comes after the heal.
         api.set(false);
         restarts.set(0);
         let (down, intelligence) = healed_once_before(
@@ -21349,7 +21349,7 @@ mod tests {
         })
         .unwrap();
         let openbot = read_quit_cleanup_notice(&root).unwrap().unwrap();
-        assert_eq!(openbot.said, "OpenBot had trouble shutting down last time.");
+        assert_eq!(openbot.said, "Mangaba Bot had trouble shutting down last time.");
         assert!(openbot
             .detail
             .as_deref()
@@ -21391,8 +21391,8 @@ mod tests {
         let mut status = QuitStatus::default();
         status.begin();
         let started = status.seq;
-        status.record(QuitStep::OpenBot, QuitStepState::Running);
-        status.record(QuitStep::OpenBot, QuitStepState::Failed);
+        status.record(QuitStep::Mangaba Bot, QuitStepState::Running);
+        status.record(QuitStep::Mangaba Bot, QuitStepState::Failed);
         status.record(QuitStep::Intelligence, QuitStepState::Running);
         assert!(status.seq > started);
         assert_eq!(
@@ -21499,7 +21499,7 @@ mod tests {
 
             assert_eq!(*exited.lock().unwrap(), Some(0), "{window_at:?}");
             // The Intelligence failure is in its own notice, as before the screen existed, and
-            // OpenBot's is not written for it.
+            // Mangaba Bot's is not written for it.
             assert!(!quit_cleanup_notice_path(&root).exists(), "{window_at:?}");
             assert!(
                 take_local_eval_stop_notice(&root).is_some(),
@@ -21643,7 +21643,7 @@ mod tests {
 
         assert_eq!(
             failed(Err(local_eval::Failure::Unavailable)),
-            "this build has no command-line tool to stop the backend OpenBot created"
+            "this build has no command-line tool to stop the backend Mangaba Bot created"
         );
         assert_eq!(
             failed(Err(local_eval::Failure::Timeout)),
@@ -21717,14 +21717,14 @@ mod tests {
             [
                 "Compose down failed: compose down refused",
                 "Backend stop failed: this build has no command-line tool to stop the backend \
-                 OpenBot created"
+                 Mangaba Bot created"
             ]
         );
         let _ = std::fs::remove_dir_all(root);
     }
 
     const NO_CLI_LINE: &str =
-        "Backend stop failed: this build has no command-line tool to stop the backend OpenBot created";
+        "Backend stop failed: this build has no command-line tool to stop the backend Mangaba Bot created";
 
     #[test]
     fn an_intelligence_failure_on_quit_is_shown_next_launch_without_recovery() {
@@ -21744,7 +21744,7 @@ mod tests {
         })
         .unwrap();
 
-        // Next launch: nothing about OpenBot's own processes, and nothing holding its start.
+        // Next launch: nothing about Mangaba Bot's own processes, and nothing holding its start.
         let next = Shell::default();
         assert!(!quit_cleanup_notice_path(&root).exists());
         assert!(!recovery_required_or_pending_quit_notice(&next, &root));
@@ -21752,11 +21752,11 @@ mod tests {
         assert_eq!(read_quit_cleanup_notice(&root).unwrap(), None);
         let problem =
             take_local_eval_stop_notice(&root).expect("the Intelligence failure is still shown");
-        // Said in the window's words: the part of OpenBot that did not stop, not its product name.
+        // Said in the window's words: the part of Mangaba Bot that did not stop, not its product name.
         assert_eq!(
             problem.said,
-            "When OpenBot last quit, some of its services didn't stop. They may still be running. \
-             Stopping OpenBot again asks them to stop."
+            "When Mangaba Bot last quit, some of its services didn't stop. They may still be running. \
+             Stopping Mangaba Bot again asks them to stop."
         );
         assert!(!problem.said.contains("app processes"), "{problem:?}");
         assert_eq!(take_local_eval_stop_notice(&root), None, "shown once");
@@ -21780,7 +21780,7 @@ mod tests {
         let openbot = read_quit_cleanup_notice(&root).unwrap().unwrap();
         assert_eq!(
             openbot.detail.as_deref(),
-            Some("OpenBot could not confirm all containers stopped.")
+            Some("Mangaba Bot could not confirm all containers stopped.")
         );
         assert!(take_local_eval_stop_notice(&root).is_some());
         let _ = std::fs::remove_dir_all(root);
@@ -21799,7 +21799,7 @@ mod tests {
             .expect("an Intelligence failure is still said");
         assert_eq!(
             problem.said,
-            "OpenBot stopped, but some of its services didn't. They may still be running."
+            "Mangaba Bot stopped, but some of its services didn't. They may still be running."
         );
         assert_eq!(problem.detail.as_deref(), Some(NO_CLI_LINE));
         assert!(!recovery_required(&shell, &root));
@@ -21812,7 +21812,7 @@ mod tests {
         let problem = settle_menu_stop(&shell, &root, both).unwrap();
         assert_eq!(
             problem.said,
-            "OpenBot could not finish stopping. Try Stop OpenBot again."
+            "Mangaba Bot could not finish stopping. Try Stop Mangaba Bot again."
         );
         assert_eq!(
             problem.detail.as_deref(),
@@ -21909,7 +21909,7 @@ fn main() {
 }
 "##;
 
-    /// A local Intelligence OpenBot created, stopped through the production Stop and Quit steps
+    /// A local Intelligence Mangaba Bot created, stopped through the production Stop and Quit steps
     /// by `STOPPING_CLI`. Sets the process's CLI, so only in an isolated test.
     struct StoppingBackend {
         cli: PathBuf,
@@ -22016,7 +22016,7 @@ fn main() {
     /**
     Stop pressed twice, from the menu and from Settings, while the first is asking the CLI to stop
     the local Intelligence. The second Stop used to cancel the first one's CLI stop: the first then
-    said some of OpenBot's services didn't stop. Both now finish, neither says anything failed, and
+    said some of Mangaba Bot's services didn't stop. Both now finish, neither says anything failed, and
     the stack is stopped.
     */
     #[test]
@@ -22032,7 +22032,7 @@ fn main() {
         backend.wait_for_a_stop_running();
         let (closed, second_closed) = std::sync::mpsc::channel();
         let second = backend.stop(&shell, Some(closed));
-        // The second Stop has closed local evaluation and is taking OpenBot's containers down.
+        // The second Stop has closed local evaluation and is taking Mangaba Bot's containers down.
         second_closed.recv().unwrap();
         backend.let_stops_finish();
 
@@ -22093,7 +22093,7 @@ fn main() {
         backend.wait_for_a_stop_running();
         let (closed, quit_closed) = std::sync::mpsc::channel();
         let quitting = backend.quit(&shell, Some(closed));
-        // Quit has closed local evaluation for good and is taking OpenBot's containers down.
+        // Quit has closed local evaluation for good and is taking Mangaba Bot's containers down.
         quit_closed.recv().unwrap();
         backend.let_stops_finish();
 
@@ -22334,17 +22334,17 @@ fn main() {
     }
 
     /**
-    A stack `local setup` reported that the CLI records for another folder is never OpenBot's.
+    A stack `local setup` reported that the CLI records for another folder is never Mangaba Bot's.
 
     Found with a CLI that resumed the stack someone set up in their home folder for `~/OpenBot`:
     Desktop recorded it as one it created, so Stop and Quit would have stopped another app's
-    stack. It is kept as shared, even over an earlier record that called it OpenBot's, and a stack
-    recorded for OpenBot's folder alongside others is still OpenBot's.
+    stack. It is kept as shared, even over an earlier record that called it Mangaba Bot's, and a stack
+    recorded for Mangaba Bot's folder alongside others is still Mangaba Bot's.
     */
     #[test]
     fn a_stack_recorded_for_another_folder_is_never_recorded_as_openbots() {
         let home = temp_root("openbot-local-eval-setup-foreign");
-        let root = home.join("OpenBot");
+        let root = home.join("Mangaba Bot");
         std::fs::create_dir_all(&root).unwrap();
         let foreign = local_eval_completed_for("local-abc123", &[&home]);
         set_up_local_eval_at(&root, |_| Ok((foreign.clone(), LOCAL_EVAL_PIN.to_owned()))).unwrap();
@@ -22352,7 +22352,7 @@ fn main() {
         assert_eq!(state.stack, "local-abc123");
         assert!(!state.tied_to_openbot());
 
-        // An earlier OpenBot recorded it as its own: setting up again takes that back.
+        // An earlier Mangaba Bot recorded it as its own: setting up again takes that back.
         local_eval_state::begin(
             &root,
             &local_eval::StackId::parse("local-abc123").unwrap(),
@@ -22365,7 +22365,7 @@ fn main() {
             .unwrap()
             .tied_to_openbot());
 
-        // A report that names no folder is not OpenBot's either.
+        // A report that names no folder is not Mangaba Bot's either.
         set_up_local_eval_at(&root, |_| {
             Ok((
                 local_eval_completed("local-abc123"),
@@ -22377,7 +22377,7 @@ fn main() {
             .unwrap()
             .tied_to_openbot());
 
-        // OpenBot's own folder among the stack's folders: OpenBot's.
+        // Mangaba Bot's own folder among the stack's folders: Mangaba Bot's.
         local_eval_state::clear(&root).unwrap();
         set_up_local_eval_at(&root, |_| {
             Ok((
@@ -22405,7 +22405,7 @@ fn main() {
                 LOCAL_EVAL_PIN.to_owned(),
             ))
         })
-        .expect_err("an unrecorded stack would never be stopped with OpenBot");
+        .expect_err("an unrecorded stack would never be stopped with Mangaba Bot");
         let SetupError::Unrecorded(problem) = error else {
             panic!("{error:?}");
         };
@@ -22415,7 +22415,7 @@ fn main() {
 
     const LOCAL_KEY: &str = "cpk-synthetic-local-key";
 
-    /// What `local connect` leaves in an installation folder, after a line OpenBot wrote earlier.
+    /// What `local connect` leaves in an installation folder, after a line Mangaba Bot wrote earlier.
     fn local_eval_connected_env(root: &Path) {
         std::fs::write(
             root.join(".env"),
@@ -22481,7 +22481,7 @@ fn main() {
         )
         .unwrap();
         assert_eq!(connection.outcome, local_eval::Outcome::Completed);
-        // OpenBot's server reads INTELLIGENCE_API_KEY; the CLI names it for an app's runtime.
+        // Mangaba Bot's server reads INTELLIGENCE_API_KEY; the CLI names it for an app's runtime.
         assert_eq!(
             vault
                 .borrow()
@@ -22770,13 +22770,13 @@ fn main() {
         let _ = std::fs::remove_dir_all(root);
     }
 
-    /// Settings › This computer › Details said "Installed in \\?\C:\Users\Administrator\OpenBot" on
+    /// Settings › This computer › Details said "Installed in \\?\C:\Users\Administrator\Mangaba Bot" on
     /// Windows. The folder there is the one the app remembered, read at launch into the shell and
     /// named by `read_desktop_status`; this follows it the same way.
     #[test]
     fn details_name_the_installation_folder_without_the_windows_extended_length_prefix() {
         let config = temp_root("openbot-details-installed-in");
-        let root = config.join("OpenBot");
+        let root = config.join("Mangaba Bot");
         std::fs::create_dir_all(&root).unwrap();
         preparation::save_selected_root(&config, &root).unwrap();
         let shown = |config: &Path| {
@@ -22799,10 +22799,10 @@ fn main() {
         {
             std::fs::write(
                 config.join("last-launched-root.json"),
-                r#""\\\\?\\C:\\Users\\Administrator\\OpenBot""#,
+                r#""\\\\?\\C:\\Users\\Administrator\\Mangaba Bot""#,
             )
             .unwrap();
-            assert_eq!(shown(&config), r"C:\Users\Administrator\OpenBot");
+            assert_eq!(shown(&config), r"C:\Users\Administrator\Mangaba Bot");
         }
         std::fs::remove_dir_all(config).unwrap();
     }
@@ -22954,7 +22954,7 @@ fn main() {
                 std::fs::create_dir_all(&runtime).unwrap();
                 let previous_runtime = std::env::var_os("XDG_RUNTIME_DIR");
                 std::env::set_var("XDG_RUNTIME_DIR", &runtime);
-                // Podman's configuration home too, where a local Podman Start writes OpenBot's
+                // Podman's configuration home too, where a local Podman Start writes Mangaba Bot's
                 // drop-in. Otherwise every fixture, each in its own process at once, writes the
                 // runner's real ~/.config/containers, and one replaces the file under another.
                 let previous_config = std::env::var_os("XDG_CONFIG_HOME");
@@ -23562,7 +23562,7 @@ fn main() {
                 std::fs::write(fixture.a.join("fail-up"), "").unwrap();
             }
             fixture.start(&fixture.a, false);
-            // A local Podman Start wrote OpenBot's drop-in under this fixture's own configuration
+            // A local Podman Start wrote Mangaba Bot's drop-in under this fixture's own configuration
             // home, so fixtures running at once never share one.
             #[cfg(target_os = "linux")]
             if podman && !case.contains("named") {
@@ -24647,7 +24647,7 @@ fn main() {
 
         let commands = std::fs::read_to_string(&record).expect("command record");
         assert_eq!(
-            problem.said, "Part of OpenBot stopped during startup.",
+            problem.said, "Part of Mangaba Bot stopped during startup.",
             "problem={problem:?} commands={commands}"
         );
         assert_eq!(
@@ -24738,7 +24738,7 @@ fn main() {
         .expect_err("the fixture's dead service fails Start after the identity handoff");
         let took = asked.elapsed();
 
-        assert_eq!(problem.said, "Part of OpenBot stopped during startup.");
+        assert_eq!(problem.said, "Part of Mangaba Bot stopped during startup.");
         let commands = std::fs::read_to_string(&record).expect("command record");
         assert!(
             commands.contains(
@@ -24811,7 +24811,7 @@ fn main() {
             ),
             "{commands}"
         );
-        assert_eq!(problem.said, "Part of OpenBot stopped during startup.");
+        assert_eq!(problem.said, "Part of Mangaba Bot stopped during startup.");
         let detail = problem.detail.as_deref().unwrap_or_default();
         assert!(
             detail.contains("agent-computer stopped: agent-computer died after boot"),
@@ -24885,7 +24885,7 @@ fn main() {
             (
                 "dead-service",
                 telemetry::SetupErrorClass::Unknown,
-                "Part of OpenBot stopped during startup.",
+                "Part of Mangaba Bot stopped during startup.",
             ),
         ] {
             let root = temp_root(&format!("openbot-failed-start-{scenario}"));
@@ -25504,7 +25504,7 @@ fn escaped(path: &Path) -> String {
 "##;
 
     /**
-    Someone who once ran `copilotkit local setup` in their home folder, then started OpenBot
+    Someone who once ran `copilotkit local setup` in their home folder, then started Mangaba Bot
     Desktop, which keeps its installation in `~/OpenBot`.
 
     The CLI found `~/.copilotkit/local.json` above `~/OpenBot` and resumed the home folder's stack
@@ -25513,7 +25513,7 @@ fn escaped(path: &Path) -> String {
     folder's stack as one it created, so Stop and Quit would have stopped it.
 
     Through the window's own `set_up_local_eval` and `connect_local_eval`, against a CLI that finds
-    stacks as the real one does: OpenBot passes `--app-path`, gets a stack of its own, recorded as
+    stacks as the real one does: Mangaba Bot passes `--app-path`, gets a stack of its own, recorded as
     its own, `~/OpenBot/.env` names it, and Start takes its key. The home folder's stack, reference
     and `.env` are left alone.
     */
@@ -25549,7 +25549,7 @@ fn escaped(path: &Path) -> String {
         std::env::set_var("OPENBOT_DEV_LOCAL_EVAL_PROGRAM_SHA256", digest);
         std::env::remove_var("OPENBOT_DEV_LOCAL_EVAL_ENTRY");
 
-        // The home folder, where `copilotkit local setup` once ran, and OpenBot's folder in it.
+        // The home folder, where `copilotkit local setup` once ran, and Mangaba Bot's folder in it.
         let home = temp_root("openbot-parent-stack-home");
         std::fs::create_dir_all(home.join(".copilotkit")).unwrap();
         let home = home.canonicalize().unwrap();
@@ -25565,7 +25565,7 @@ fn escaped(path: &Path) -> String {
             format!("{HOME_STACK}\t{}\t52796", home.display()),
         )
         .unwrap();
-        let root = home.join("OpenBot");
+        let root = home.join("Mangaba Bot");
         std::fs::create_dir_all(&root).unwrap();
         std::fs::write(
             root.join(".env"),
@@ -25615,7 +25615,7 @@ fn escaped(path: &Path) -> String {
         assert!(!env.contains("CPK_INTELLIGENCE_API_KEY"), "{env}");
         assert!(local_eval_state::read(&root, None).unwrap().connected);
 
-        // Start takes the key `local connect` gave OpenBot's own stack.
+        // Start takes the key `local connect` gave Mangaba Bot's own stack.
         let key = intelligence_key_for_start(&root, |root, name| {
             Ok(openbot_desktop_lib::vault::recall(root, name)?.unwrap_or_default())
         })
@@ -25628,7 +25628,7 @@ fn escaped(path: &Path) -> String {
             std::fs::read_to_string(home.join(".copilotkit/local.json")).unwrap(),
             reference
         );
-        // Both calls name OpenBot's folder exactly.
+        // Both calls name Mangaba Bot's folder exactly.
         assert!(
             calls().contains(&format!(
                 "local setup --defer-model --json --app-path {}",
@@ -25681,7 +25681,7 @@ fn main() {
 "#;
 
     /**
-    OpenBot Desktop 1.0.0, installed again after the earlier installation's `~/OpenBot`, app data
+    Mangaba Bot Desktop 1.0.0, installed again after the earlier installation's `~/OpenBot`, app data
     and back end were deleted: the CopilotKit CLI still recorded a stack for `~/OpenBot`, whose
     private folder was gone. Every `local setup` stopped with "Restore the private setup and
     credentials files before resuming this stack", and the window said "Back end setup stopped".
@@ -25837,7 +25837,7 @@ fn main() {
         };
         assert!(
             problem.said.starts_with(
-                "The saved settings of OpenBot's services on this computer can't be read."
+                "The saved settings of Mangaba Bot's services on this computer can't be read."
             ),
             "{problem:?}"
         );
@@ -26196,7 +26196,7 @@ fn main() {
         )
         .unwrap();
         let notice = last_failure_now(app.handle()).expect("persisted Quit notice");
-        assert_eq!(notice.said, "OpenBot had trouble shutting down last time.");
+        assert_eq!(notice.said, "Mangaba Bot had trouble shutting down last time.");
         assert!(notice
             .detail
             .as_ref()
@@ -26272,7 +26272,7 @@ fn main() {
             "restore must not consume the persisted notice before React asks for it"
         );
         let notice = last_failure_now(app.handle()).expect("persisted Quit notice");
-        assert_eq!(notice.said, "OpenBot had trouble shutting down last time.");
+        assert_eq!(notice.said, "Mangaba Bot had trouble shutting down last time.");
         assert!(notice
             .detail
             .as_ref()
@@ -26303,7 +26303,7 @@ fn main() {
 
         assert!(recovery_required(&shell, &f.owned));
         let failure = last_failure_now(app.handle()).expect("volatile sink failure");
-        assert_eq!(failure.said, "OpenBot could not record a shutdown problem.");
+        assert_eq!(failure.said, "Mangaba Bot could not record a shutdown problem.");
         assert!(failure
             .detail
             .as_ref()
@@ -26933,7 +26933,7 @@ fn main() {
         config.app.windows[0].label = "another-window".into();
         assert_eq!(
             configured_setup_url(&config, true, true).unwrap_err(),
-            "the OpenBot setup window is not configured",
+            "the Mangaba Bot setup window is not configured",
         );
     }
 
@@ -27148,9 +27148,9 @@ fn main() {
         assert_eq!(window_url(&app), shown);
     }
 
-    /// The OpenBot on this computer is read as every app reads it before the window opens it
+    /// The Mangaba Bot on this computer is read as every app reads it before the window opens it
     /// (API versioning design, 7.1). One whose admin raised the oldest app it serves above this
-    /// one, or one that serves only a newer API, is not shown: the window says "Update OpenBot", or
+    /// one, or one that serves only a newer API, is not shown: the window says "Update Mangaba Bot", or
     /// that this version has a security problem when the minimum was raised for one,
     /// and offers this app's update, and Show Window keeps it on setup. One left at 1.1.0, which
     /// publishes no version fields, opens exactly as before. Every request names this app.
@@ -27188,7 +27188,7 @@ fn main() {
         security["securityMinimumClients"]["desktop"] = format!("{}.0.0", major + 1).into();
         let plain = (
             "app-too-old",
-            "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going.",
+            "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going.",
         );
 
         for (too_new, (kind, said)) in [
@@ -27198,7 +27198,7 @@ fn main() {
                 security,
                 (
                     "app-too-old-security",
-                    "This version of OpenBot has a security problem. Update to keep using it.",
+                    "This version of Mangaba Bot has a security problem. Update to keep using it.",
                 ),
             ),
         ] {
@@ -27589,7 +27589,7 @@ fn main() {
 }
 
 /**
-A Quit's notice as OpenBot 1.0.3 reads it, for an app rolled back to it after this build quit.
+A Quit's notice as Mangaba Bot 1.0.3 reads it, for an app rolled back to it after this build quit.
 
 Copied as it is at the `v1.0.3` tag (`desktop/src-tauri/src/main.rs`), and never changed here: what
 this build writes must read in it.
@@ -27622,9 +27622,9 @@ mod release_1_0_3_quit_notice {
     fn quit_cleanup_failure_summary(failure: QuitCleanupFailure) -> &'static str {
         match failure {
             QuitCleanupFailure::HostProcesses => {
-                "OpenBot could not confirm all app processes stopped."
+                "Mangaba Bot could not confirm all app processes stopped."
             }
-            QuitCleanupFailure::Containers => "OpenBot could not confirm all containers stopped.",
+            QuitCleanupFailure::Containers => "Mangaba Bot could not confirm all containers stopped.",
         }
     }
 
@@ -27635,7 +27635,7 @@ mod release_1_0_3_quit_notice {
             Err(error) if error.kind() == std::io::ErrorKind::NotFound => return Ok(None),
             Err(error) => {
                 return Err(Problem::with(
-                    "OpenBot could not read its previous shutdown notice.",
+                    "Mangaba Bot could not read its previous shutdown notice.",
                     format!("{}: {error}", path.display()),
                 ))
             }
@@ -27644,14 +27644,14 @@ mod release_1_0_3_quit_notice {
             .metadata()
             .map_err(|error| {
                 Problem::with(
-                    "OpenBot could not read its previous shutdown notice.",
+                    "Mangaba Bot could not read its previous shutdown notice.",
                     format!("{}: {error}", path.display()),
                 )
             })?
             .len();
         if size > QUIT_CLEANUP_NOTICE_LIMIT as u64 {
             return Err(Problem::with(
-                "OpenBot could not read its previous shutdown notice.",
+                "Mangaba Bot could not read its previous shutdown notice.",
                 format!(
                     "{}: shutdown notice exceeded its size limit",
                     path.display()
@@ -27660,13 +27660,13 @@ mod release_1_0_3_quit_notice {
         }
         let notice: QuitCleanupNotice = serde_json::from_reader(file).map_err(|error| {
             Problem::with(
-                "OpenBot could not read its previous shutdown notice.",
+                "Mangaba Bot could not read its previous shutdown notice.",
                 format!("{}: {error}", path.display()),
             )
         })?;
         std::fs::remove_file(&path).map_err(|error| {
             Problem::with(
-                "OpenBot could not clear its previous shutdown notice.",
+                "Mangaba Bot could not clear its previous shutdown notice.",
                 format!("{}: {error}", path.display()),
             )
         })?;
@@ -27680,7 +27680,7 @@ mod release_1_0_3_quit_notice {
             return Ok(None);
         }
         Ok(Some(Problem::with(
-            "OpenBot had trouble shutting down last time.",
+            "Mangaba Bot had trouble shutting down last time.",
             detail,
         )))
     }
@@ -27695,7 +27695,7 @@ mod release_1_0_3_quit_notice {
         root
     }
 
-    /// A Quit that could not reach the software OpenBot runs on, as this build records it: 1.0.3
+    /// A Quit that could not reach the software Mangaba Bot runs on, as this build records it: 1.0.3
     /// reads it and says what it always said, and this build says why.
     #[test]
     fn a_quit_that_could_not_reach_the_engine_reads_in_1_0_3() {
@@ -27711,11 +27711,11 @@ mod release_1_0_3_quit_notice {
             .expect("and says it");
         assert_eq!(
             rolled_back.said,
-            "OpenBot had trouble shutting down last time."
+            "Mangaba Bot had trouble shutting down last time."
         );
         assert_eq!(
             rolled_back.detail.as_deref(),
-            Some("OpenBot could not confirm all app processes stopped.\nOpenBot could not confirm all containers stopped.")
+            Some("Mangaba Bot could not confirm all app processes stopped.\nOpenBot could not confirm all containers stopped.")
         );
 
         super::write_quit_cleanup_notice(&root, &lines).unwrap();
@@ -27723,7 +27723,7 @@ mod release_1_0_3_quit_notice {
         assert_eq!(now.said, ENGINE_UNREACHABLE_AT_STOP);
         assert_eq!(
             now.detail.as_deref(),
-            Some("OpenBot could not confirm all app processes stopped.\nOpenBot could not confirm all containers stopped.")
+            Some("Mangaba Bot could not confirm all app processes stopped.\nOpenBot could not confirm all containers stopped.")
         );
         let _ = std::fs::remove_dir_all(root);
     }
@@ -27741,7 +27741,7 @@ mod release_1_0_3_quit_notice {
         let rolled_back = read_quit_cleanup_notice(&root).unwrap().unwrap();
         assert_eq!(
             rolled_back.detail.as_deref(),
-            Some("OpenBot could not confirm all containers stopped.")
+            Some("Mangaba Bot could not confirm all containers stopped.")
         );
 
         super::write_quit_cleanup_notice(&root, &lines).unwrap();
@@ -27749,7 +27749,7 @@ mod release_1_0_3_quit_notice {
         assert_eq!(now.said, ENGINE_UNREACHABLE_AT_STOP);
         assert_eq!(
             now.detail.as_deref(),
-            Some("OpenBot could not confirm all containers stopped.")
+            Some("Mangaba Bot could not confirm all containers stopped.")
         );
         let _ = std::fs::remove_dir_all(root);
     }
@@ -27885,13 +27885,13 @@ fn main() {
     }
 
     /**
-    FOUND LIVE, OpenBot Desktop 1.1.2 on a Mac. Docker Desktop stalled while OpenBot ran, and
-    OpenBot > Get Troubleshooting Logs… gave no file and no word until Docker was restarted: the
+    FOUND LIVE, Mangaba Bot Desktop 1.1.2 on a Mac. Docker Desktop stalled while Mangaba Bot ran, and
+    Mangaba Bot > Get Troubleshooting Logs… gave no file and no word until Docker was restarted: the
     server's log came from `docker compose logs` with no time limit, and the engine's version, disk
     use and size waited on it after. Now the gathering asks them all at once, stops every engine
     command at its deadline, and the logs come back then, saying what they couldn't collect.
 
-    Through the menu's own path (`gather_troubleshooting_logs`), on an OpenBot this session started,
+    Through the menu's own path (`gather_troubleshooting_logs`), on an Mangaba Bot this session started,
     with the engine it runs on hanging on every command.
     */
     #[test]
@@ -27902,7 +27902,7 @@ fn main() {
             return;
         }
         let (dir, bin) = hanging_engine("logs-engine-hangs");
-        let root = dir.join("OpenBot");
+        let root = dir.join("Mangaba Bot");
         std::fs::create_dir_all(&root).unwrap();
         let address = engine::Address::new(engine::Engine::Docker, None);
         local_eval::use_engine(&address);
@@ -27953,9 +27953,9 @@ fn main() {
 
     /**
     FOUND ON A REAL WINDOWS BOX, testing the fix above: before setup has chosen an engine, with
-    OpenBot's Podman machine stalled, every gathering left a `podman volume ls` running until the
+    Mangaba Bot's Podman machine stalled, every gathering left a `podman volume ls` running until the
     engine came back. Finding which engine is running asked for `machine list` within the deadline,
-    but then for where OpenBot's database is (`acquire::connection_of_machine`) with no time limit.
+    but then for where Mangaba Bot's database is (`acquire::connection_of_machine`) with no time limit.
     Every podman command of that search now stops at the deadline too.
     */
     #[test]

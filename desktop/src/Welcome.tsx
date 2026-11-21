@@ -16,18 +16,18 @@ import {
 import { MarkImage } from "./Mark";
 import type { Problem } from "./Problem";
 
-/** What the first choice is: OpenBot, whole, on this computer. */
+/** What the first choice is: Mangaba Bot, whole, on this computer. */
 export const SELF_CONTAINED_SUMMARY =
   "Everything runs on this computer, for trying it or personal use.";
 
-/** What the second choice is: OpenBot as we run it, signed in to from here and on the web. */
+/** What the second choice is: Mangaba Bot as we run it, signed in to from here and on the web. */
 export const CLOUD_SUMMARY = "We run it for you. Sign in and start right away.";
 
-/** OpenBot for Business: on a company's own cloud or on-prem, which books a call. */
+/** Mangaba Bot for Business: on a company's own cloud or on-prem, which books a call. */
 export const BUSINESS_SUMMARY = "Your own cloud or on-prem. Book a call.";
 
 /**
- * Where OpenBot Cloud is off in this build (`cloudEnabled`), OpenBot for Business is one card with
+ * Where Mangaba Bot Cloud is off in this build (`cloudEnabled`), Mangaba Bot for Business is one card with
  * its two ways to run, and either books a call (`BusinessBooker`).
  */
 type BusinessChoice = "cloud" | "own-cloud";
@@ -52,7 +52,7 @@ const BUSINESS_CHOICES: readonly {
   },
 ];
 
-/** The clouds a company runs OpenBot for Business on, by their vendored marks (`shared/marks`). */
+/** The clouds a company runs Mangaba Bot for Business on, by their vendored marks (`shared/marks`). */
 const CLOUDS = [
   { id: "aws", name: "AWS" },
   { id: "azure", name: "Azure" },
@@ -61,10 +61,10 @@ const CLOUDS = [
 ] as const;
 
 /**
- * The least a computer needs to run every part of OpenBot itself.
+ * The least a computer needs to run every part of Mangaba Bot itself.
  *
  * From the installer's own checks: the engine needs 4 CPUs and 40 GiB of free disk
- * (`local_eval::MIN_ENGINE_CPUS`, `MIN_ENGINE_FREE_DISK_BYTES`), and OpenBot's own machine takes 6 to
+ * (`local_eval::MIN_ENGINE_CPUS`, `MIN_ENGINE_FREE_DISK_BYTES`), and Mangaba Bot's own machine takes 6 to
  * 8 GiB of memory while 4 GiB is kept for the computer itself (`machine_size.rs`). Memory is said as
  * 16 GB, room for that plus the person's own apps, as decided with David on 13 Nov 2026.
  */
@@ -75,42 +75,42 @@ export const SELF_CONTAINED_NEEDS = [
   "40 GB of free disk space",
 ] as const;
 
-/** Where OpenBot runs: on this computer, or at an address this app connects to. */
+/** Where Mangaba Bot runs: on this computer, or at an address this app connects to. */
 export type Hosting = "this-computer" | "connect";
 
 /**
- * Where OpenBot runs, and what that asks of this computer, before it asks for anything else.
+ * Where Mangaba Bot runs, and what that asks of this computer, before it asks for anything else.
  *
- * First the ways to run OpenBot. OpenBot (Self-Contained) runs everything on this computer, for
- * trying it or personal use. OpenBot Cloud is the OpenBot we run, at an address built into this app
- * (`cloudAddress`): the person signs in with their OpenBot account and this window shows the same
- * account, organizations, Bots and conversations as the web app. OpenBot for Business is Self-Hosted
+ * First the ways to run Mangaba Bot. Mangaba Bot (Self-Contained) runs everything on this computer, for
+ * trying it or personal use. Mangaba Bot Cloud is the Mangaba Bot we run, at an address built into this app
+ * (`cloudAddress`): the person signs in with their Mangaba Bot account and this window shows the same
+ * account, organizations, Bots and conversations as the web app. Mangaba Bot for Business is Self-Hosted
  * on a company's own cloud or on-prem, and books a call with us. Then what the choice needs. For
- * Self-Contained that is what this computer needs and why, which is that every part of OpenBot runs
+ * Self-Contained that is what this computer needs and why, which is that every part of Mangaba Bot runs
  * on it, how long setup takes, and Install, and it fits the window's default size (1000×800, less a
- * title bar) with no scrollbar. For OpenBot Cloud it is Sign in to OpenBot Cloud (`CloudSignIn`).
- * For OpenBot for Business it is the app's OpenBot for Business view: what it adds and the booking
+ * title bar) with no scrollbar. For Mangaba Bot Cloud it is Sign in to Mangaba Bot Cloud (`CloudSignIn`).
+ * For Mangaba Bot for Business it is the app's Mangaba Bot for Business view: what it adds and the booking
  * calendar (`BusinessBooker`), which scrolls in the card as any tall step does.
  *
- * OpenBot Cloud shows only in a build that turns it on (`VITE_OPENBOT_CLOUD_ENABLED`, `cloudEnabled`).
- * Otherwise the rows are OpenBot (Self-Contained) and OpenBot for Business as one card with its two
+ * Mangaba Bot Cloud shows only in a build that turns it on (`VITE_OPENBOT_CLOUD_ENABLED`, `cloudEnabled`).
+ * Otherwise the rows are Mangaba Bot (Self-Contained) and Mangaba Bot for Business as one card with its two
  * ways to run, Cloud and Self-Hosted, either of which books a call; and a saved connection to Cloud's
  * address is any other saved connection.
  *
- * Connecting this app to the OpenBot a company already runs is the link under the rows ("Already
- * have OpenBot at work?"), which opens the address and Connect (`ConnectToOpenBot`). While that
- * shows, no row is picked: it is none of them. A saved connection to OpenBot Cloud whose sign-in
- * ended opens on OpenBot Cloud, to sign in again. Usage data is not said here: it is the last
+ * Connecting this app to the Mangaba Bot a company already runs is the link under the rows ("Already
+ * have Mangaba Bot at work?"), which opens the address and Connect (`ConnectToOpenBot`). While that
+ * shows, no row is picked: it is none of them. A saved connection to Mangaba Bot Cloud whose sign-in
+ * ended opens on Mangaba Bot Cloud, to sign in again. Usage data is not said here: it is the last
  * screen's choice (`UsageDataChoice`).
  *
  * The big downloads start with Install (`startDownloads`), the moment the person chooses this
- * computer, and never before: somebody who connects to an OpenBot elsewhere downloads nothing.
+ * computer, and never before: somebody who connects to an Mangaba Bot elsewhere downloads nothing.
  * Where an installation is already on this computer they start when this screen shows. Its line
  * says how far they are (`EarlyDownloadsLine`). Once they are done it says nothing: Install is the
  * next step either way.
  *
- * On a disk too full for OpenBot, Install waits with the line that says so, and is there once the
- * download starts by itself. On Windows F it was pressable at 15 GB free: it built OpenBot's machine,
+ * On a disk too full for Mangaba Bot, Install waits with the line that says so, and is there once the
+ * download starts by itself. On Windows F it was pressable at 15 GB free: it built Mangaba Bot's machine,
  * then the next step stopped for space, with less free than before. Install asks the downloads it
  * starts for their look at the disk first (`earlyDownloadsMeasured`), and goes on only with room.
  */
@@ -126,16 +126,16 @@ export function Welcome({
 }: {
   hosting: Hosting;
   /**
-   * OpenBot is already set up on this computer, and the person asked from Settings to choose where
+   * Mangaba Bot is already set up on this computer, and the person asked from Settings to choose where
    * it runs. Self-Contained's way on is Continue, which goes on with that setup; there is nothing to
    * install or download first.
    */
   resumes?: boolean;
-  /** Connecting to the OpenBot a company already runs was picked. */
+  /** Connecting to the Mangaba Bot a company already runs was picked. */
   onConnect: () => void;
   /** This computer was picked again. May fail, when a saved connection has to be switched first. */
   onThisComputer: () => void | Promise<void>;
-  /** What is known of an OpenBot connected to before (`useConnectToOpenBot`). */
+  /** What is known of an Mangaba Bot connected to before (`useConnectToOpenBot`). */
   saved?: {
     address?: string;
     problem?: Problem | null;
@@ -152,7 +152,7 @@ export function Welcome({
 }) {
   const cloudOn = cloudEnabled();
   const cloud = cloudAddress();
-  // The connection saved is OpenBot Cloud's: what the launch found about it is Cloud's to say.
+  // The connection saved is Mangaba Bot Cloud's: what the launch found about it is Cloud's to say.
   const savedIsCloud =
     cloudOn &&
     Boolean(saved?.address) &&
@@ -166,11 +166,11 @@ export function Welcome({
     ...(savedIsCloud ? { problem: saved?.problem, reopen: saved?.reopen } : {}),
     onThisComputer,
   });
-  // OpenBot Cloud or OpenBot for Business picked: shown whatever the app holds as the choice.
+  // Mangaba Bot Cloud or Mangaba Bot for Business picked: shown whatever the app holds as the choice.
   const [picked, setPicked] = useState<"cloud" | "business" | null>(
     hosting === "connect" && savedIsCloud ? "cloud" : null,
   );
-  // With Cloud off, which of OpenBot for Business's two ways is picked: both book a call.
+  // With Cloud off, which of Mangaba Bot for Business's two ways is picked: both book a call.
   const [businessWay, setBusinessWay] = useState<BusinessChoice | null>(null);
   // Picked by the person, not opened on: Cloud's button takes the focus.
   const [pickedNow, setPickedNow] = useState(false);
@@ -207,15 +207,15 @@ export function Welcome({
       <div className="lockup">
         <div className="orb" aria-hidden="true" />
         <span>
-          OpenBot
+          Mangaba Bot
           <sup className="trademark" aria-hidden="true">
             ™
           </sup>
         </span>
       </div>
-      <h1>Set up OpenBot</h1>
+      <h1>Set up Mangaba Bot</h1>
       <fieldset className="picker hosting">
-        <legend className="sr-only">Where OpenBot runs</legend>
+        <legend className="sr-only">Where Mangaba Bot runs</legend>
         <label className={rowClass(shown === "this-computer")}>
           <input
             type="radio"
@@ -233,7 +233,7 @@ export function Welcome({
           <HostingMark>
             <IconDeviceLaptop stroke={1.75} />
           </HostingMark>
-          <span className="tile-name">OpenBot (Self-Contained)</span>
+          <span className="tile-name">Mangaba Bot (Self-Contained)</span>
           <span className="tile-summary">{SELF_CONTAINED_SUMMARY}</span>
         </label>
         {cloudOn ? (
@@ -251,7 +251,7 @@ export function Welcome({
               <HostingMark>
                 <IconCloud stroke={1.75} />
               </HostingMark>
-              <span className="tile-name">OpenBot Cloud</span>
+              <span className="tile-name">Mangaba Bot Cloud</span>
               <span className="tile-summary">{CLOUD_SUMMARY}</span>
             </label>
             <label
@@ -269,13 +269,13 @@ export function Welcome({
               <HostingMark>
                 <IconBuilding stroke={1.75} />
               </HostingMark>
-              <span className="tile-name">OpenBot for Business</span>
+              <span className="tile-name">Mangaba Bot for Business</span>
               <span className="tile-summary">{BUSINESS_SUMMARY}</span>
               <CloudMarks />
             </label>
           </>
         ) : (
-          /* OpenBot for Business, its two ways in one card: both book a call. */
+          /* Mangaba Bot for Business, its two ways in one card: both book a call. */
           <fieldset
             className={rowClass(shown === "business", "tile-group")}
             aria-labelledby="business-name"
@@ -284,7 +284,7 @@ export function Welcome({
               <IconBuilding stroke={1.75} />
             </HostingMark>
             <span className="tile-name" id="business-name">
-              OpenBot for Business
+              Mangaba Bot for Business
             </span>
             <span className="tile-summary">
               For your whole team. Book a call to see it.
@@ -324,11 +324,11 @@ export function Welcome({
             </div>
           </fieldset>
         )}
-        {/* Under the rows and not one of them: somebody whose company already runs OpenBot connects
+        {/* Under the rows and not one of them: somebody whose company already runs Mangaba Bot connects
             this app to it. Gone while the address shows, since that is where it leads. */}
         {shown !== "connect" && (
           <p className="tile-aside">
-            Already have OpenBot at work?{" "}
+            Already have Mangaba Bot at work?{" "}
             <button
               type="button"
               className="text-link inline-link"
@@ -376,7 +376,7 @@ function SelfContained({
       <section className="needs" aria-labelledby="needs-heading">
         <h2 id="needs-heading">What this computer needs</h2>
         <p className="lede">
-          Every part of OpenBot runs on this computer: the app, its server and
+          Every part of Mangaba Bot runs on this computer: the app, its server and
           database, your Bots&apos; memory, and a computer for each Bot to work
           on.
         </p>
@@ -438,7 +438,7 @@ function Install({
   );
 }
 
-/** The clouds OpenBot for Business runs on, by their marks. */
+/** The clouds Mangaba Bot for Business runs on, by their marks. */
 function CloudMarks() {
   return (
     <span className="cloud-marks">

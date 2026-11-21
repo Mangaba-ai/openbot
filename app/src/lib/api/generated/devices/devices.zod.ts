@@ -65,13 +65,13 @@ export const ListDevicesResponse = zod.object({
     .array(
       zod
         .object({
-          id: zod.uuid().describe("The id the OpenBot app made for the phone."),
+          id: zod.uuid().describe("The id the Mangaba Bot app made for the phone."),
           platform: zod
             .enum(["ios", "android"])
             .describe("The phone's operating system."),
           createdAt: zod.iso
             .datetime({ offset: true })
-            .describe("When OpenBot first registered the phone."),
+            .describe("When Mangaba Bot first registered the phone."),
         })
         .describe(
           "A phone that gets push notifications for the person, from every one of their Bots in the organization it is registered in. Never its push token.",
@@ -115,7 +115,7 @@ export const RegisterDeviceParams = zod.object({
   deviceId: zod
     .uuid()
     .describe(
-      "The device's id: a UUID the OpenBot app makes once on the phone and keeps, so registering again replaces rather than adds.",
+      "The device's id: a UUID the Mangaba Bot app makes once on the phone and keeps, so registering again replaces rather than adds.",
     ),
 });
 
@@ -143,12 +143,12 @@ export const RegisterDeviceBody = zod.object({
     .max(registerDeviceBodyTokenMax)
     .regex(registerDeviceBodyTokenRegExp)
     .describe(
-      "The phone's Expo push token, as the OpenBot app read it when it started. It is a credential: OpenBot never sends it back.",
+      "The phone's Expo push token, as the Mangaba Bot app read it when it started. It is a credential: Mangaba Bot never sends it back.",
     ),
   projectId: zod
     .uuid()
     .describe(
-      "The OpenBot app's project, which must be the one this deployment sends push notifications through.",
+      "The Mangaba Bot app's project, which must be the one this deployment sends push notifications through.",
     ),
   platform: zod
     .enum(["ios", "android"])
@@ -158,13 +158,13 @@ export const RegisterDeviceBody = zod.object({
 export const RegisterDeviceResponse = zod.object({
   device: zod
     .object({
-      id: zod.uuid().describe("The id the OpenBot app made for the phone."),
+      id: zod.uuid().describe("The id the Mangaba Bot app made for the phone."),
       platform: zod
         .enum(["ios", "android"])
         .describe("The phone's operating system."),
       createdAt: zod.iso
         .datetime({ offset: true })
-        .describe("When OpenBot first registered the phone."),
+        .describe("When Mangaba Bot first registered the phone."),
     })
     .describe(
       "A phone that gets push notifications for the person, from every one of their Bots in the organization it is registered in. Never its push token.",
@@ -198,7 +198,7 @@ export const DeleteDeviceParams = zod.object({
   deviceId: zod
     .uuid()
     .describe(
-      "The device's id: a UUID the OpenBot app makes once on the phone and keeps, so registering again replaces rather than adds.",
+      "The device's id: a UUID the Mangaba Bot app makes once on the phone and keeps, so registering again replaces rather than adds.",
     ),
 });
 

@@ -16,7 +16,7 @@
 //! and they say whose installation it is.
 //!
 //! NOTHING HERE WAITS LONGER THAN `LIMIT`. Logs are asked for when something is stuck, and the
-//! container engine is often what is stuck: on OpenBot Desktop 1.1.2 a Mac's Docker Desktop stalled,
+//! container engine is often what is stuck: on Mangaba Bot Desktop 1.1.2 a Mac's Docker Desktop stalled,
 //! `docker compose logs` for the server's log had no time limit, and Get Troubleshooting Logs… sat on
 //! "Gathering Logs…" until Docker was restarted, with no file and nothing said. Now everything that
 //! asks the engine runs at once, each on a thread of its own, against one deadline; every command
@@ -168,13 +168,13 @@ pub struct Engine {
 /// What goes into one bundle, gathered by `gather` and laid out by `bundle`.
 #[derive(Debug, Default)]
 pub struct Facts {
-    /// `OpenBot Desktop 1.0.0 (Built … from …)`, as the launch line says it.
+    /// `Mangaba Bot Desktop 1.0.0 (Built … from …)`, as the launch line says it.
     pub desktop: String,
     /// `macos aarch64`.
     pub system: String,
     /// What the person was told, and what lay beneath, when something failed.
     pub failure: Option<String>,
-    /// The engine OpenBot runs on, or None when none is answering.
+    /// The engine Mangaba Bot runs on, or None when none is answering.
     pub engine: Option<Engine>,
     /// The newest log file of this app, and its end.
     pub desktop_log: Option<(PathBuf, String)>,
@@ -404,7 +404,7 @@ pub fn bundle(facts: &Facts, home: Option<&str>) -> String {
         .map(|failure| bounded(failure.trim(), FAILURE_BYTES))
         .filter(|failure| !failure.is_empty());
     let mut out = String::new();
-    out.push_str("# OpenBot troubleshooting logs\n\n");
+    out.push_str("# Mangaba Bot troubleshooting logs\n\n");
     out.push_str(&summary(facts, failure));
     out.push_str(&format!("\n{REDACTED_NOTE}\n\n"));
     out.push_str(&format!("{}\n", facts.desktop));
@@ -451,7 +451,7 @@ pub fn bundle(facts: &Facts, home: Option<&str>) -> String {
             None => out.push_str("Not found on this computer.\n"),
         }
     };
-    file(&mut out, "OpenBot Desktop log (end)", &facts.desktop_log);
+    file(&mut out, "Mangaba Bot Desktop log (end)", &facts.desktop_log);
     file(&mut out, "Backend CLI log (end)", &facts.cli_log);
     // What a model provider really said when a Bot's turn failed: the server writes it to its own
     // log and nowhere else, and the person reads only a sentence about it.
@@ -804,7 +804,7 @@ mod tests {
             "write /var/lib/docker/tmp/GetImageBlob123: no space left on device",
             "Images          14        3         18.2GB    12.1GB (66%)",
             "27.3.1",
-            "[launch] OpenBot Desktop 1.0.0-rc.1 (Built 2026-11-08 06:40 UTC from 52ea4b5) on macos aarch64",
+            "[launch] Mangaba Bot Desktop 1.0.0-rc.1 (Built 2026-11-08 06:40 UTC from 52ea4b5) on macos aarch64",
             "WARN [local check] before local start: 8 CPUs and 7.7 GiB of memory, 0.0 GiB free of 58.4 GiB in a container; short of disk (nearly full)",
             r#"{"level":30,"time":"2026-11-08T10:12:03.000Z","event":"consent.state.invalid","flowId":"setup-abc","runId":"run-7"}"#,
             "stack local-7f3a2c is starting",
@@ -827,13 +827,13 @@ mod tests {
     #[test]
     fn a_bundle_opens_with_a_summary_and_has_every_section_redacted() {
         let facts = Facts {
-            desktop: "OpenBot Desktop 1.0.0 (Built 2026-11-08 06:40 UTC from 52ea4b5)".into(),
+            desktop: "Mangaba Bot Desktop 1.0.0 (Built 2026-11-08 06:40 UTC from 52ea4b5)".into(),
             system: "macos aarch64".into(),
             failure: Some("The backend could not start.\nexit 1".into()),
             engine: Some(full_engine()),
             desktop_log: Some((
                 PathBuf::from(
-                    "/Users/dana/Library/Logs/ai.copilotkit.openbot.desktop/openbot-desktop.log",
+                    "/Users/dana/Library/Logs/ai.mangaba.bot.desktop/openbot-desktop.log",
                 ),
                 "2026-11-08T10:15:40.003Z ERROR [local setup] failed after 88.1s: exit 1\n".into(),
             )),
@@ -850,14 +850,14 @@ mod tests {
         };
         let text = bundle(&facts, Some("/Users/dana"));
         assert!(text.starts_with(
-            "# OpenBot troubleshooting logs\n\nSummary: OpenBot Desktop 1.0.0 (Built 2026-11-08 06:40 UTC from 52ea4b5) on macos aarch64.\nFailed: The backend could not start. / exit 1\nContainer engine: docker 28.5.1. 8 CPUs and 7.7 GiB of memory, 0.0 GiB free of 58.4 GiB in a container; short of disk (nearly full).\n\nRedacted on this computer"
+            "# Mangaba Bot troubleshooting logs\n\nSummary: Mangaba Bot Desktop 1.0.0 (Built 2026-11-08 06:40 UTC from 52ea4b5) on macos aarch64.\nFailed: The backend could not start. / exit 1\nContainer engine: docker 28.5.1. 8 CPUs and 7.7 GiB of memory, 0.0 GiB free of 58.4 GiB in a container; short of disk (nearly full).\n\nRedacted on this computer"
         ), "{text}");
         for expected in [
             "System: macos aarch64",
             "## What failed\n\nThe backend could not start.\nexit 1\n",
             "## Container engine\n\ndocker 28.5.1\nMeasured: 8 CPUs",
             "$ docker system df\nTYPE",
-            "~/Library/Logs/ai.copilotkit.openbot.desktop/openbot-desktop.log",
+            "~/Library/Logs/ai.mangaba.bot.desktop/openbot-desktop.log",
             "[local setup] failed after 88.1s: exit 1",
             "~/.copilotkit/cli.log",
             r#"{"email":"[email]","organizationId":"[id]"}"#,
@@ -902,7 +902,7 @@ mod tests {
             )
         };
         let log = [
-            "server-1  | OpenBot server listening on 0.0.0.0:4000".to_owned(),
+            "server-1  | Mangaba Bot server listening on 0.0.0.0:4000".to_owned(),
             refused("other", "API Error: Connection dropped (ECONNRESET)"),
             r#"server-1  | {"type":"run-model","agentId":"personal-assistant","runId":"run-1"}"#
                 .to_owned(),
@@ -944,7 +944,7 @@ mod tests {
         // A server that said nothing of the kind, and one that isn't running, each say so.
         let quiet = bundle(
             &Facts {
-                server_log: Some("server-1  | OpenBot server listening".into()),
+                server_log: Some("server-1  | Mangaba Bot server listening".into()),
                 ..Facts::default()
             },
             None,
@@ -1094,7 +1094,7 @@ mod tests {
         std::fs::create_dir_all(&logs).unwrap();
         std::fs::write(
             logs.join("openbot-desktop.log"),
-            "2026-11-20T18:21:25.340Z INFO  [watch] OpenBot stopped answering and is not running\n",
+            "2026-11-20T18:21:25.340Z INFO  [watch] Mangaba Bot stopped answering and is not running\n",
         )
         .unwrap();
         let never = |_: Instant| -> Result<Option<String>, NoAnswer> {
@@ -1103,7 +1103,7 @@ mod tests {
         };
         let started = Instant::now();
         let text = gather(Sources {
-            desktop: "OpenBot Desktop 1.1.2 (Built 2026-11-20 13:53 UTC from 8826a0fe)".into(),
+            desktop: "Mangaba Bot Desktop 1.1.2 (Built 2026-11-20 13:53 UTC from 8826a0fe)".into(),
             failure: None,
             log_folder: Some(&logs),
             home: None,
@@ -1141,7 +1141,7 @@ mod tests {
             "Couldn't collect: which container engine is running, the server's log.",
             "## Container engine\n\nNo container engine answered in time.\n",
             "## Model provider errors (server log)\n\nCouldn't read the server's log in time.\n",
-            "[watch] OpenBot stopped answering and is not running",
+            "[watch] Mangaba Bot stopped answering and is not running",
         ] {
             assert!(text.contains(expected), "missing {expected:?} in\n{text}");
         }

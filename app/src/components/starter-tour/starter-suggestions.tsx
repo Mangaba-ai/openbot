@@ -12,7 +12,7 @@ import {
 } from "./suggestions";
 
 type Props = {
-  /** The Bot the composer is for. The tour is for the Bots OpenBot starts with. */
+  /** The Bot the composer is for. The tour is for the Bots Mangaba Bot starts with. */
   bot: { packageBotId?: string | null } | undefined;
   channelId?: string;
   disabled?: boolean;

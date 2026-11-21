@@ -17,8 +17,8 @@ import { queryClient } from "@/query-client";
  * screen of the app works in an organization, so this stands in for whichever one they opened, in the sign-in screen's
  * own layout, and offers only what acts on no organization.
  *
- * Try again reads their organizations afresh, for somebody added again meanwhile. On a hosted OpenBot, signing in again
- * through OpenBot by CopilotKit is how a membership added there reaches this OpenBot, so that is offered first. Sign out
+ * Try again reads their organizations afresh, for somebody added again meanwhile. On a hosted Mangaba Bot, signing in again
+ * through Mangaba Bot by CopilotKit is how a membership added there reaches this Mangaba Bot, so that is offered first. Sign out
  * is always there.
  */
 export function NoOrganizationPage() {
@@ -62,7 +62,7 @@ export function NoOrganizationPage() {
             >
               <CopilotKitMark />
               <span className="flex-1 text-center">
-                Continue with OpenBot by CopilotKit
+                Continue with Mangaba Bot by CopilotKit
               </span>
               <span aria-hidden="true" className="size-[18px]" />
             </a>

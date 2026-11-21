@@ -7,12 +7,12 @@ import type { AiConnectionSaved } from "./aiConnectionSaved";
 import type { AiConnectionSource } from "./aiConnectionSource";
 
 /**
- * How OpenBot reaches its AI provider: who, how it signs in, and whether a run can use it now. Never a key.
+ * How Mangaba Bot reaches its AI provider: who, how it signs in, and whether a run can use it now. Never a key.
  */
 export interface AiConnection {
   /** The provider. Null while none is chosen yet. */
   provider: AiConnectionProvider | null;
-  /** How OpenBot signs in to it. Null while none is chosen yet. */
+  /** How Mangaba Bot signs in to it. Null while none is chosen yet. */
   login: AiConnectionLogin | null;
   /**
    * The model named for an endpoint or a sign-in. Null for an API key or a plan, where the model catalogue offers the provider's models.
@@ -28,9 +28,9 @@ export interface AiConnection {
   keySet: boolean;
   /** Whether a run can use it now: its key is kept, its sign-in can be read, or its plan's engine answers. */
   ready: boolean;
-  /** stored: set here, or carried over from how OpenBot was set up. environment: set by whoever runs OpenBot, in its configuration. none: nothing set yet. */
+  /** stored: set here, or carried over from how Mangaba Bot was set up. environment: set by whoever runs Mangaba Bot, in its configuration. none: nothing set yet. */
   source: AiConnectionSource;
-  /** Whether an administrator can change it here. False where whoever runs OpenBot sets the provider: its key is changed in the vault. */
+  /** Whether an administrator can change it here. False where whoever runs Mangaba Bot sets the provider: its key is changed in the vault. */
   editable: boolean;
   /** The connections with a key still kept in the vault, so a switch to one of them needs no key pasted. */
   saved: AiConnectionSaved[];

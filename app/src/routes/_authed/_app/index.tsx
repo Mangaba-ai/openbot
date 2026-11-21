@@ -68,7 +68,7 @@ const EXPLORE_SHOWN = 4;
 
 /**
  * Said when the Bot a message went to takes no model pick, so the pick was not saved. The person
- * picked before OpenBot picked the Bot, and a pick that silently does nothing is a surprise. It
+ * picked before Mangaba Bot picked the Bot, and a pick that silently does nothing is a surprise. It
  * offers nothing to open: the Bot's Agents page, where what it runs on is shown, is hidden for now.
  */
 function sayModelNotUsed(
@@ -122,7 +122,7 @@ function RouteComponent() {
   const attachmentLimits = useAttachmentLimits();
   /*
    * The personal edition has nobody to share a Bot with. Its Explore lists the Bots included with
-   * OpenBot, and when there are none it shows nothing: "Nobody has shared a Bot with you yet" was
+   * Mangaba Bot, and when there are none it shows nothing: "Nobody has shared a Bot with you yet" was
    * not true of it. A Bots list that fails to load is said under the composer already.
    */
   const personal = capabilities.data?.edition === "personal";
@@ -170,7 +170,7 @@ function RouteComponent() {
     agents?.find((agent) => agent.visibility === "public"),
   );
   /*
-   * The model and thinking effort to run on, picked before OpenBot has picked the Bot. It starts on
+   * The model and thinking effort to run on, picked before Mangaba Bot has picked the Bot. It starts on
    * the catalogue's default and is saved with the conversation the Bot answers in, before the first
    * message runs, as `/channel/new` saves it.
    */
@@ -350,7 +350,7 @@ function RouteComponent() {
             // Said out loud: a message that silently reaches somebody you did not choose is the
             // kind of surprise that costs trust the first time it happens.
             <p className="mt-2 w-full max-w-2xl text-xs text-muted-foreground text-center">
-              OpenBot picks the right Bot. Type <code>@</code> to choose one.
+              Mangaba Bot picks the right Bot. Type <code>@</code> to choose one.
             </p>
           ) : null}
           {error ? (

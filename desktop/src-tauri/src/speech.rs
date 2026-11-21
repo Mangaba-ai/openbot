@@ -1,6 +1,6 @@
 /*!
-Speech recognition on this computer, for OpenBot's own page in the Desktop window: dictation in the
-message box (`app/src/lib/dictation/live.ts`, when OpenBot has no transcription provider) and narration.
+Speech recognition on this computer, for Mangaba Bot's own page in the Desktop window: dictation in the
+message box (`app/src/lib/dictation/live.ts`, when Mangaba Bot has no transcription provider) and narration.
 
 The page narrates a recording with the browser's own speech recognition, and only ever on the
 device (`app/src/lib/browser/narration.ts`, `shared/on-device-speech.ts`). The window that shows it
@@ -705,7 +705,7 @@ mod tests {
         );
 
         let text = crate::troubleshooting::gather(crate::troubleshooting::Sources {
-            desktop: "OpenBot Desktop 1.0.0 (Built 2026-11-18 06:40 UTC from 52ea4b5)".into(),
+            desktop: "Mangaba Bot Desktop 1.0.0 (Built 2026-11-18 06:40 UTC from 52ea4b5)".into(),
             failure: None,
             log_folder: None,
             home: None,

@@ -51,7 +51,7 @@ export const Route = createFileRoute("/_authed/_app/bot")({
  * WHATEVER THIS DEPLOYMENT ACTUALLY HAS. The default used to be a hardcoded `risk-analyst`, a name
  * from a tenant package this one is not: on a clone that ships anything else, opening this screen
  * without naming a Bot took the whole page down to an unstyled error boundary, because the chat
- * throws when asked for an agent the runtime never synced. OpenBot exists to be forked, so a Bot
+ * throws when asked for an agent the runtime never synced. Mangaba Bot exists to be forked, so a Bot
  * name written into a route is a defect on every fork but the one it came from.
  *
  * A named Bot that this deployment does not have is answered in a sentence rather than thrown,
@@ -249,7 +249,7 @@ function BotChat({ agentId, name }: { agentId: string; name: string }) {
           </div>
         ) : null}
         {/*
-         * The ask to star OpenBot on GitHub, when the server says it is due: this is the screen where
+         * The ask to star Mangaba Bot on GitHub, when the server says it is due: this is the screen where
          * a Bot's answer can be copied, which is one of the wins it follows (`StarPrompt`). Under the
          * header with the banners, for the same reason as them: the packaged chat owns the space
          * above its message box. Never while this chat shows an error. As wide as the chat's own

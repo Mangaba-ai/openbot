@@ -85,7 +85,7 @@ type AlreadyConfigured = {
     stack: string;
     ownership: "created" | "shared";
     phase: string;
-    /** OpenBot holds the key `local connect` gave it for this stack. */
+    /** Mangaba Bot holds the key `local connect` gave it for this stack. */
     connected?: boolean;
   };
 };
@@ -123,7 +123,7 @@ function comeForward(why: string) {
  */
 /** The restart screen's words when setup found that only a Windows restart lets it carry on. */
 const SETUP_NEEDS_RESTART =
-  "Windows needs to restart to finish setting up the software OpenBot runs on. OpenBot opens again after you sign back in.";
+  "Windows needs to restart to finish setting up the software Mangaba Bot runs on. Mangaba Bot opens again after you sign back in.";
 
 /** What the window says while Windows's own servicing holds the Windows check. */
 const WINDOWS_BUSY =
@@ -133,7 +133,7 @@ export function App() {
   return <Setup />;
 }
 
-/** Where OpenBot runs, as the shell has it saved (`connection`). */
+/** Where Mangaba Bot runs, as the shell has it saved (`connection`). */
 type Connection = {
   mode: "local" | "connected";
   address: string | null;
@@ -147,13 +147,13 @@ type ConnectionNotice = { kind: string; message: string | null };
 type Launch =
   | { at: "asking" }
   /**
-   * OpenBot on this computer: setup as it has always been. `choose`: the person asked from
-   * Settings to choose where OpenBot runs, so the first screen shows before anything starts.
+   * Mangaba Bot on this computer: setup as it has always been. `choose`: the person asked from
+   * Settings to choose where Mangaba Bot runs, so the first screen shows before anything starts.
    */
   | { at: "local"; address: string; choose: boolean }
-  /** Signed in to an OpenBot that runs elsewhere, which the shell is opening. */
+  /** Signed in to an Mangaba Bot that runs elsewhere, which the shell is opening. */
   | { at: "opening" }
-  /** The first screen with that OpenBot's address, to sign in to it again or choose otherwise. */
+  /** The first screen with that Mangaba Bot's address, to sign in to it again or choose otherwise. */
   | {
       at: "connect";
       address: string;
@@ -162,12 +162,12 @@ type Launch =
     };
 
 /**
- * Asks where OpenBot runs before anything else. On this computer, setup carries on exactly as it
- * did (`LocalSetup`). Connected to an OpenBot that runs elsewhere, none of that is mounted, so
+ * Asks where Mangaba Bot runs before anything else. On this computer, setup carries on exactly as it
+ * did (`LocalSetup`). Connected to an Mangaba Bot that runs elsewhere, none of that is mounted, so
  * nothing about an install on this computer is asked for, downloaded or started: the shell opens
- * that OpenBot, or the first screen shows its address to sign in to again.
+ * that Mangaba Bot, or the first screen shows its address to sign in to again.
  *
- * A shell from before this choice does not know `connection`: that is OpenBot on this computer.
+ * A shell from before this choice does not know `connection`: that is Mangaba Bot on this computer.
  */
 function Setup() {
   const [launch, setLaunch] = useState<Launch>({ at: "asking" });
@@ -182,7 +182,7 @@ function Setup() {
         const found = await invoke<Connection>("connection").catch(() => null);
         if (!alive.current) return;
         const address = found?.address ?? "";
-        // An older shell knows neither question: OpenBot on this computer, with nothing to say.
+        // An older shell knows neither question: Mangaba Bot on this computer, with nothing to say.
         if (!found) {
           setLaunch({ at: "local", address, choose: false });
           return;
@@ -264,9 +264,9 @@ function Setup() {
   return (
     <main>
       <div className="sheet connection-sheet">
-        <h1>Getting OpenBot ready</h1>
+        <h1>Getting Mangaba Bot ready</h1>
         {launch.at === "opening" ? (
-          <StatusLine>Opening OpenBot…</StatusLine>
+          <StatusLine>Opening Mangaba Bot…</StatusLine>
         ) : (
           <p className="lede" role="status">
             Checking your saved setup…
@@ -278,8 +278,8 @@ function Setup() {
 }
 
 /**
- * Setup of OpenBot on this computer. `address`: an OpenBot connected to before, if any. `choose`:
- * open at the first screen, the choice of where OpenBot runs, whatever is already installed.
+ * Setup of Mangaba Bot on this computer. `address`: an Mangaba Bot connected to before, if any. `choose`:
+ * open at the first screen, the choice of where Mangaba Bot runs, whatever is already installed.
  */
 function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   /*
@@ -317,7 +317,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   /*
    * The model as of the latest choice, without waiting for a render.
    *
-   * Local Intelligence starts OpenBot from its own sequence, a tick after the go-ahead. A choice
+   * Local Intelligence starts Mangaba Bot from its own sequence, a tick after the go-ahead. A choice
    * made by a click has rendered by then; one made from an effect (a sign-in that finished and moved
    * on by itself) may not have, and Start ran with the model from before it: null.
    */
@@ -361,7 +361,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   const installationReady =
     preparation?.key === installationKey && preparation.status === "complete";
   /*
-   * A first run sets Intelligence up alongside the OpenBot install, not after it: from the moment
+   * A first run sets Intelligence up alongside the Mangaba Bot install, not after it: from the moment
    * the install reports the container engine ready (Intelligence runs on the same Docker, and the
    * install is what starts or installs it), or at once when the install is already done. Queued by
    * the CopilotKit account step, which runs first.
@@ -382,9 +382,9 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   const returningToInstallation = savedLaunch.current === installationKey;
   const [running, setRunning] = useState(false);
   /*
-   * A Start that sent the window to OpenBot (`handover.ts`): Starting stays on screen, as it was,
-   * until OpenBot's page replaces it. `returning` is the screen it was: a first run's Finishing setup
-   * or a return's Starting OpenBot, decided before this Start recorded the installation as launched.
+   * A Start that sent the window to Mangaba Bot (`handover.ts`): Starting stays on screen, as it was,
+   * until Mangaba Bot's page replaces it. `returning` is the screen it was: a first run's Finishing setup
+   * or a return's Starting Mangaba Bot, decided before this Start recorded the installation as launched.
    */
   const [handingOver, setHandingOver] = useState<{ returning: boolean } | null>(
     null,
@@ -407,10 +407,10 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   /*
    * The big downloads (`early_downloads.rs`), which download only what this computer's install
    * will need, once per run of the app, after a look at the free disk. They start once the person
-   * has chosen this computer. With nothing of OpenBot on it that is Install with Self-hosted
+   * has chosen this computer. With nothing of Mangaba Bot on it that is Install with Self-hosted
    * picked, the first thing Install does: Self-hosted is picked to begin with, so the first screen
    * alone is no choice. Seen on a clean Windows machine: they started with the first screen, and
-   * somebody who only connects to their company's OpenBot downloaded about 2 GB for nothing.
+   * somebody who only connects to their company's Mangaba Bot downloaded about 2 GB for nothing.
    */
   const startEarlyDownloads = useCallback(async () => {
     if (!root.trim()) return;
@@ -425,7 +425,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
    */
   const onFirstScreen = visibleSetupStep === "welcome" && !choosing;
   useEffect(() => {
-    // Nothing of OpenBot here and nothing chosen yet (`windowsUnchecked`): Install starts them.
+    // Nothing of Mangaba Bot here and nothing chosen yet (`windowsUnchecked`): Install starts them.
     if (!onFirstScreen || windowsUnchecked.current) return;
     void startEarlyDownloads();
   }, [onFirstScreen, startEarlyDownloads]);
@@ -467,7 +467,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     }
   }, []);
   const [reinstall, setReinstall] = useState(false);
-  // A local Intelligence stack OpenBot could not stop. Shown, but it never holds a start.
+  // A local Intelligence stack Mangaba Bot could not stop. Shown, but it never holds a start.
   const [intelligenceNotice, setIntelligenceNotice] = useState<Problem | null>(
     null,
   );
@@ -489,18 +489,18 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
       setLocalStack(stack);
       if (connected) setLocalConnected(true);
     },
-    // Start fresh after the backend was lost: nothing recorded is OpenBot's until setup records anew.
+    // Start fresh after the backend was lost: nothing recorded is Mangaba Bot's until setup records anew.
     onForgotten: () => {
       setLocalStack(null);
       setLocalConnected(false);
     },
-    // And OpenBot's own software is installed again before it sets up (`installAfresh`).
+    // And Mangaba Bot's own software is installed again before it sets up (`installAfresh`).
     installAgain: () => installAfresh(),
   });
   /*
    * Every notice about the last quit or stop is about that run: what stopped it (`last_failure` at
-   * launch, such as "OpenBot had trouble shutting down last time.") and the services it left
-   * running ("When OpenBot last quit, some of its services didn't stop."). Once Start runs, they
+   * launch, such as "Mangaba Bot had trouble shutting down last time.") and the services it left
+   * running ("When Mangaba Bot last quit, some of its services didn't stop."). Once Start runs, they
    * go: a Start that then stops says why in its own row. Kept, they read as the reason this run
    * stopped, through Start and every Retry. Stop still asks those services to stop, and says so
    * again if they don't.
@@ -514,7 +514,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     launchNotice.current = null;
     setRecoveryFailure((current) => (current === notice ? null : current));
   }, [local.running]);
-  // The engine's wake found that only a Windows restart fixes OpenBot's machine: the restart
+  // The engine's wake found that only a Windows restart fixes Mangaba Bot's machine: the restart
   // screen, not a Retry that can't work.
   useEffect(() => {
     if (local.problem?.restart_windows) {
@@ -523,7 +523,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     }
   }, [local.problem]);
   /*
-   * Whether this Start updates OpenBot itself, asked once the back end is waited on, so the Start
+   * Whether this Start updates Mangaba Bot itself, asked once the back end is waited on, so the Start
    * journey counts the update from the start rather than learning of it when it begins: on Windows
    * D the time left said "About a minute", then "About 2", then "About 3". Start uses this answer.
    */
@@ -542,7 +542,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     releaseDueAsked.current = { root: at, answer };
     void answer.then((due) => setReleaseDue(Boolean(due)));
   }, [local.running, local.at, root]);
-  // A recorded stack: the OpenBot app's page may offer its dashboard (intelligence_bridge.rs).
+  // A recorded stack: the Mangaba Bot app's page may offer its dashboard (intelligence_bridge.rs).
   const intelligenceOffered = localStack !== null;
   // What the shell was last told. Starts hidden, so nothing is said before a stack is recorded.
   const offeredToMenus = useRef({ root: "", offered: false });
@@ -553,7 +553,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     offeredToMenus.current = { root, offered: intelligenceOffered };
     offerLocalIntelligence(root, intelligenceOffered).catch(() => {});
   }, [root, intelligenceOffered]);
-  // Stop OpenBot was chosen in this window: nothing local starts again on its own.
+  // Stop Mangaba Bot was chosen in this window: nothing local starts again on its own.
   const stoppedByChoice = useRef(false);
   const credentialContext = useRef([root, model, harness, step]);
   useEffect(() => {
@@ -570,11 +570,11 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   const [windowsBusy, setWindowsBusy] = useState(false);
 
   /*
-   * What this computer needs before OpenBot can run on it, which on Windows is WSL, a Windows
+   * What this computer needs before Mangaba Bot can run on it, which on Windows is WSL, a Windows
    * feature or a restart: looked at, and its screen shown, which then sets about it by itself
    * (`WindowsBlocker`). Only ever for a person who has chosen this computer. Seen on a clean
    * Windows machine: this ran at launch, before the choice, and somebody who only wanted to
-   * connect to their company's OpenBot had WSL turned on and a restart asked for first.
+   * connect to their company's Mangaba Bot had WSL turned on and a restart asked for first.
    *
    * Answers what is in the way, nothing, or that it could not tell (said on its own screen).
    */
@@ -605,7 +605,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
       setWindowsBusy(false);
     }
   }, []);
-  // Nothing of OpenBot is on this computer and the person has not chosen it yet: Install asks.
+  // Nothing of Mangaba Bot is on this computer and the person has not chosen it yet: Install asks.
   const windowsUnchecked = useRef(false);
   const [checkingWindows, setCheckingWindows] = useState(false);
   // A launch after the restart Windows needed, with Windows ready: the install asked for goes on.
@@ -672,7 +672,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
           setAlreadyHeld({ ...configured.values, saved: configured.saved });
         }
         /*
-         * Whether the person has chosen this computer: OpenBot is installed on it, or a restart
+         * Whether the person has chosen this computer: Mangaba Bot is installed on it, or a restart
          * for it is owed, or an earlier run's Install found Windows not ready. Then Windows is
          * looked at now, as it always was. Otherwise nothing is, until Install.
          */
@@ -714,7 +714,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
             ? recordedModel({ ...configured.values, saved: configured.saved })
             : null;
         /*
-         * Settings' Change on the AI model row stopped OpenBot to come here: open at the AI screen,
+         * Settings' Change on the AI model row stopped Mangaba Bot to come here: open at the AI screen,
          * as this window's own Change AI connection does. Asked every load, and answered once.
          */
         const changeAiConnection = await invoke<boolean>(
@@ -750,7 +750,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
             /*
              * Up, and needing a newer version of this app: the shell holds it as this session's
              * and does not show it. It is running, so the window says so as when Start finds the
-             * same (Update OpenBot, with Show OpenBot and Stop OpenBot), never that it stopped.
+             * same (Update Mangaba Bot, with Show Mangaba Bot and Stop Mangaba Bot), never that it stopped.
              */
             if (!appTooOld(asProblem(error))) throw error;
             setRunning(true);
@@ -813,7 +813,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
         step: "engine",
         ok: true,
         running: true,
-        detail: "Checking the software OpenBot needs.",
+        detail: "Checking the software Mangaba Bot needs.",
       },
     ]);
     setPreparation({ key: installationKey, status: "preparing" });
@@ -863,9 +863,9 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
    * the AI provider screen rather than after it.
    *
    * Always asked of the native side, even for an installation recorded as complete: it keeps a
-   * finished install of the same Bot ("OpenBot is already installed."), but only once it has the
+   * finished install of the same Bot ("Mangaba Bot is already installed."), but only once it has the
    * engine answering. On Windows a recorded install whose Podman had gone was skipped here, and the
-   * account step waited forever for OpenBot's own machine, which nothing was making.
+   * account step waited forever for Mangaba Bot's own machine, which nothing was making.
    */
   const localInstall = useRef<Promise<boolean> | null>(null);
   function beginLocalInstall(): Promise<boolean> {
@@ -929,9 +929,9 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   }
 
   /**
-   * Starts OpenBot against a ready Intelligence.
+   * Starts Mangaba Bot against a ready Intelligence.
    *
-   * `started` only when OpenBot started. `deferred` when it has to be installed first: the window
+   * `started` only when Mangaba Bot started. `deferred` when it has to be installed first: the window
    * goes to the install, and Start is asked for again after it. `failed` for anything else.
    */
   async function start(
@@ -942,15 +942,15 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
       setStep("install");
       return "deferred";
     }
-    // OpenBot starts only from a stack its CLI reports ready and licensed.
+    // Mangaba Bot starts only from a stack its CLI reports ready and licensed.
     if (!intelligence) {
       setStep("connect");
       return "deferred";
     }
     setBusy(true);
     setFailure(null);
-    // Why the last Start stopped is not this one's: kept, it stayed under Starting OpenBot through
-    // a Retry until OpenBot opened. This Start says its own reason if it stops too.
+    // Why the last Start stopped is not this one's: kept, it stayed under Starting Mangaba Bot through
+    // a Retry until Mangaba Bot opened. This Start says its own reason if it stops too.
     setRecoveryFailure(null);
     setReleaseNotice(null);
     setBackEndNotice(null);
@@ -958,7 +958,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     try {
       const startWith = {
         root: root.trim(),
-        // The key `local connect` gave OpenBot is in the vault; Start takes it from there.
+        // The key `local connect` gave Mangaba Bot is in the vault; Start takes it from there.
         apiUrl: intelligence.apiUrl,
         gatewayWsUrl: intelligence.gatewayWsUrl,
         // The whole answer from the model screen, so the Rust side decides which keys that
@@ -996,12 +996,12 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
       setRunning(true);
       setRecoveryFailure(null);
       startedAfterReinstall.current = false;
-      // The handover, on a first run as on a return: the window becomes OpenBot the moment the
+      // The handover, on a first run as on a return: the window becomes Mangaba Bot the moment the
       // stack is up. Recorded first, so a later Start of this installation reads as a return.
       savedLaunch.current = installationKey;
       setStep("connect");
       setRefreshIntelligence(false);
-      // An upgrade that did not happen is said on the running screen first; Show OpenBot hands over.
+      // An upgrade that did not happen is said on the running screen first; Show Mangaba Bot hands over.
       // So is a back end that runs the release it had because its own update did not finish.
       if (noticed) {
         // The notice says what the rows would: it is the one thing on the screen.
@@ -1010,8 +1010,8 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
         setBackEndNotice(intelligence.notice ?? null);
         return "started";
       }
-      // Straight from Starting to OpenBot, after an update as after any Start: the running screen
-      // only if this page is still here once OpenBot's page had time to replace it (`handover.ts`).
+      // Straight from Starting to Mangaba Bot, after an update as after any Start: the running screen
+      // only if this page is still here once Mangaba Bot's page had time to replace it (`handover.ts`).
       setHandingOver({ returning: returnedTo });
       await invoke("show_openbot");
       if (handoverHeld.current !== null) clearTimeout(handoverHeld.current);
@@ -1024,7 +1024,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     } catch (error) {
       setHandingOver(null);
       recoverFromStart(error);
-      // Refused until OpenBot is installed again, which the window now does by itself and then
+      // Refused until Mangaba Bot is installed again, which the window now does by itself and then
       // starts. Only once: refused again straight after that install, it is a failure.
       return asProblem(error).connection === "installation" &&
         !startedAfterReinstall.current
@@ -1038,10 +1038,10 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   }
 
   /*
-   * Start fresh after the backend was lost installs OpenBot's own software first, on the screen the
-   * person is on, before setup and Start carry on. On box I the backend went with OpenBot's machine,
-   * and the machine made again had none of OpenBot's software: Start was refused after setup, and
-   * the window went back from Starting OpenBot to Installing OpenBot. Installed with the Bot this
+   * Start fresh after the backend was lost installs Mangaba Bot's own software first, on the screen the
+   * person is on, before setup and Start carry on. On box I the backend went with Mangaba Bot's machine,
+   * and the machine made again had none of Mangaba Bot's software: Start was refused after setup, and
+   * the window went back from Starting Mangaba Bot to Installing Mangaba Bot. Installed with the Bot this
    * installation runs, so it is still the installation the person returns to. Already there, the
    * install says so and is done at once.
    */
@@ -1065,7 +1065,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     />
   );
 
-  // OpenBot's own updates. The installation follows the app: Start upgrades it to the app's release.
+  // Mangaba Bot's own updates. The installation follows the app: Start upgrades it to the app's release.
   const appUpdates = <CheckForUpdates />;
 
   /** The leftovers go first, then Start carries on: starting fresh is one choice, not two. */
@@ -1092,7 +1092,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     local.retry();
   }
 
-  /** The model chosen can start OpenBot: a saved one must be complete enough to use. */
+  /** The model chosen can start Mangaba Bot: a saved one must be complete enough to use. */
   function modelCanStart(choice = model) {
     if (!choice) return false;
     if (!choice.saved) return true;
@@ -1112,7 +1112,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     return choice.login === "plan" || choice.login === "api-key";
   }
 
-  /** True when OpenBot stopped, even if the local Intelligence stack it started did not. */
+  /** True when Mangaba Bot stopped, even if the local Intelligence stack it started did not. */
   async function stopStack(): Promise<boolean> {
     try {
       await invoke("stop_stack", { root });
@@ -1162,7 +1162,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
 
   /*
    * Starts local Intelligence without a click: a recorded stack on a first run that was not
-   * interrupted, or a connected one on relaunch with auto-start on. Never after Stop OpenBot. And a
+   * interrupted, or a connected one on relaunch with auto-start on. Never after Stop Mangaba Bot. And a
    * Start that waited for the install it asked for, which is carrying on, not starting anew.
    */
   const localAuto =
@@ -1182,8 +1182,8 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   }, [localAuto, resumingStart]);
 
   /*
-   * Start in the Status window once OpenBot has stopped (`start_openbot_from_status`): this
-   * window's own Start OpenBot, so there is one Start. Before, the Status window offered no Start
+   * Start in the Status window once Mangaba Bot has stopped (`start_openbot_from_status`): this
+   * window's own Start Mangaba Bot, so there is one Start. Before, the Status window offered no Start
    * for the app, and its services' Start brought up only the services. Stop sends this window
    * back to setup, so an ask can come while the page loads: it is taken once the saved setup is
    * read. One that comes later is said (`setup:start`), and taken then. Either way, once.
@@ -1209,7 +1209,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
       void stop.then((unlisten) => unlisten());
     };
   }, [settled]);
-  // Where this window offers Start OpenBot itself. Anywhere else the ask is spent, and the window,
+  // Where this window offers Start Mangaba Bot itself. Anywhere else the ask is spent, and the window,
   // now in front, says what comes first.
   const startOnOffer =
     !running &&
@@ -1233,7 +1233,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   // The person closed macOS's password prompt: whichever screen they are on says so, with Try
   // again, while Install asks again by itself. See `install::GoAhead`.
   const goAhead = goAheadNow(steps);
-  // On a Mac whose own Podman OpenBot can't use: the offer to pause it while OpenBot runs, on
+  // On a Mac whose own Podman Mangaba Bot can't use: the offer to pause it while Mangaba Bot runs, on
   // whichever screen the person is on, with the button that says yes. See `own_machine`.
   const pauseOffer = pauseOfferNow(steps);
   const pauseCard = pauseOffer && (
@@ -1242,7 +1242,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
 
   /*
    * What is installing behind a screen that asks the person for something else, as one row: the
-   * account step and the AI step. It says what OpenBot is doing, how far along it is and for how
+   * account step and the AI step. It says what Mangaba Bot is doing, how far along it is and for how
    * long, so the screen never looks stuck while minutes of install go on behind it.
    */
   // The downloads the first screen started, which the background row shows while they run.
@@ -1262,16 +1262,16 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   function installHere() {
     // The default Bot, recorded as a choice of it would be.
     recordSetupEvent(harnessChoiceEvent(DEFAULT_HARNESS));
-    // The account is the first screen; OpenBot installs behind it meanwhile.
+    // The account is the first screen; Mangaba Bot installs behind it meanwhile.
     setStep("account");
     void beginLocalInstall();
   }
 
   /*
    * Install, with Self-hosted chosen: the person has chosen this computer. Where nothing of
-   * OpenBot was on it, this is the first look at what Windows needs. Ready, the install begins.
+   * Mangaba Bot was on it, this is the first look at what Windows needs. Ready, the install begins.
    * Not ready, its screen shows and sets about it, as it did at launch before there was a choice.
-   * What OpenBot can fix itself costs a restart that ends the app, so that the person chose this
+   * What Mangaba Bot can fix itself costs a restart that ends the app, so that the person chose this
    * computer is kept for the launch after it (`thisComputer.ts`).
    */
   async function chooseThisComputer() {
@@ -1312,7 +1312,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     return (
       <main>
         <div className="sheet">
-          <h1>OpenBot could not check Windows setup</h1>
+          <h1>Mangaba Bot could not check Windows setup</h1>
           <Failure problem={blockerFailure} />
         </div>
       </main>
@@ -1335,7 +1335,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     return (
       <main>
         <div className="sheet connection-sheet">
-          <h1>Getting OpenBot ready</h1>
+          <h1>Getting Mangaba Bot ready</h1>
           <p className="lede" role="status">
             {windowsBusy
               ? WINDOWS_BUSY
@@ -1350,7 +1350,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   }
 
   /*
-   * Skipped entirely when a stack is already up: somebody returning to a running OpenBot is not
+   * Skipped entirely when a stack is already up: somebody returning to a running Mangaba Bot is not
    * setting one up.
    */
   if (!running && choosing && step !== "welcome") {
@@ -1373,7 +1373,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
     return (
       <main>
         <Welcome
-          // The same screen with the other choice picked: an OpenBot that runs elsewhere.
+          // The same screen with the other choice picked: an Mangaba Bot that runs elsewhere.
           hosting={step === "welcome" ? "this-computer" : "connect"}
           onConnect={() => setStep("connect_openbot")}
           onThisComputer={() => setStep("welcome")}
@@ -1392,11 +1392,11 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
         <div className="sheet">
           <Sections at="Install" />
           <h1>
-            {installationReady ? "Installation complete" : "Installing OpenBot"}
+            {installationReady ? "Installation complete" : "Installing Mangaba Bot"}
           </h1>
           <p className="lede">
             {installationReady
-              ? "OpenBot’s local software is ready. Next, connect your AI."
+              ? "Mangaba Bot’s local software is ready. Next, connect your AI."
               : INSTALL_BLURB}
           </p>
           {/* Intelligence sets itself up alongside, once the install has Docker answering. Its
@@ -1445,7 +1445,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
                 >
                   {preparation?.status === "failed"
                     ? "Retry installation"
-                    : "Install OpenBot"}
+                    : "Install Mangaba Bot"}
                 </button>
               )}
             </div>
@@ -1504,7 +1504,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
               <Failure
                 problem={displayedFailure}
                 // The install behind this step failed: Try again runs it again, its check of the
-                // software OpenBot runs on and any update or restart included. Nothing else on this
+                // software Mangaba Bot runs on and any update or restart included. Nothing else on this
                 // step would, and the account check waits on that software meanwhile.
                 onRetry={
                   failure && preparation?.status === "failed"
@@ -1538,7 +1538,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
               <BehindSlot>
                 <BehindRow
                   row={behind({
-                    done: "OpenBot starts as soon as you connect your AI.",
+                    done: "Mangaba Bot starts as soon as you connect your AI.",
                   })}
                 />
                 <LocalStatus sequence={local} download={false} />
@@ -1556,7 +1556,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
           }}
           onChoose={(choice) => {
             recordSetupEvent(modelChoiceEvent(choice));
-            // A choice made here wins over one made in the app since: OpenBot's server imports it
+            // A choice made here wins over one made in the app since: Mangaba Bot's server imports it
             // at its next start. Recording it changes nothing about this Start, so a failure is
             // only logged.
             invoke("record_ai_connection_chosen", { root: root.trim() }).catch(
@@ -1564,7 +1564,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
             );
             chosenModel.current = choice;
             setModel(choice);
-            // The go-ahead: OpenBot starts once Intelligence is ready, wherever it has got to.
+            // The go-ahead: Mangaba Bot starts once Intelligence is ready, wherever it has got to.
             setSteps([]);
             setStep("connect");
             local.start();
@@ -1602,7 +1602,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
             row.running,
         )
     : undefined;
-  // One row while it updates, with its download's bar once there is one: "Installing OpenBot" sat
+  // One row while it updates, with its download's bar once there is one: "Installing Mangaba Bot" sat
   // unchanged for minutes while the update's software downloaded. Not while the Start journey
   // shows, whose one bar counts the update too (`StartJourney`).
   const updatingLine = updating && !(local.running && !local.stopped) && (
@@ -1610,7 +1610,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
       label="Update progress"
       steps={[
         {
-          step: "Updating OpenBot",
+          step: "Updating Mangaba Bot",
           ok: true,
           running: true,
           detail: updating.detail,
@@ -1625,20 +1625,20 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   // restart: said under the rows.
   const handOff = engineNow(steps);
 
-  // Handing over to OpenBot: Starting, as it was, in place of the running screen.
+  // Handing over to Mangaba Bot: Starting, as it was, in place of the running screen.
   const starting = !running || handingOver !== null;
   const returning = handingOver?.returning ?? returningToInstallation;
 
   if (starting && returning && !refreshIntelligence) {
     // A Start that moves the installation to this app's release is an update, and says so:
-    // "Starting OpenBot" over "Updating OpenBot..." read as if nothing were updated. It says why
-    // an update has a screen at all, too: this OpenBot runs on this computer (`SelfContainedNote`).
+    // "Starting Mangaba Bot" over "Updating Mangaba Bot..." read as if nothing were updated. It says why
+    // an update has a screen at all, too: this Mangaba Bot runs on this computer (`SelfContainedNote`).
     const updatingSelf = localStarting && releaseDue && !installingAfresh;
     /*
-     * An update this computer has no room for, OpenBot's own or the back end's: what it needs is
+     * An update this computer has no room for, Mangaba Bot's own or the back end's: what it needs is
      * the one thing to read, so it is the heading and the sentence under it, with Retry beside it.
      * On Windows the sentence sat at the foot of the window in a "That didn't finish" box, under
-     * "OpenBot is stopped" and a row that said "OpenBot did not start.", with the logs twice.
+     * "Mangaba Bot is stopped" and a row that said "Mangaba Bot did not start.", with the logs twice.
      */
     const roomShort =
       localStarting || installingAfresh
@@ -1662,14 +1662,14 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
             {updatingSelf
               ? UPDATING_SELF_CONTAINED
               : localStarting || installingAfresh
-                ? "Starting OpenBot"
+                ? "Starting Mangaba Bot"
                 : appBehind
                   ? forSecurity(displayedFailure) && displayedFailure
                     ? displayedFailure.said
-                    : "Update OpenBot"
+                    : "Update Mangaba Bot"
                   : roomShort
                     ? ROOM_HEADING
-                    : "OpenBot is stopped"}
+                    : "Mangaba Bot is stopped"}
           </h1>
           {!appBehind && (
             <p className="lede">
@@ -1677,7 +1677,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
                 ? // No time of its own: the card under it says how long is left, from how long each
                   // part takes. "This usually takes a minute or two" sat over "About 3 minutes left"
                   // on Windows G, and the start took four.
-                  "OpenBot is getting ready and opens by itself."
+                  "Mangaba Bot is getting ready and opens by itself."
                 : roomShort
                   ? resourcesShortSaid(roomShort)
                   : "Your installation and saved connections are ready to reopen."}
@@ -1769,7 +1769,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
   }
 
   /*
-   * The Start step: Intelligence's rows, and OpenBot starts by itself once the CLI reports it ready
+   * The Start step: Intelligence's rows, and Mangaba Bot starts by itself once the CLI reports it ready
    * and valid. While a CLI call runs, Cancel is the only control; leaving is offered only once
    * nothing runs.
    */
@@ -1778,12 +1778,12 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
       <main>
         <div className="sheet connection-sheet">
           {!returning && <Sections at="Start" />}
-          {/* Not "Getting ready" over a "Getting OpenBot ready" row: Windows F read them as one. */}
+          {/* Not "Getting ready" over a "Getting Mangaba Bot ready" row: Windows F read them as one. */}
           <h1>Finishing setup</h1>
           <p className="lede">
             {leftoverVolumes.length > 0
-              ? "OpenBot starts once you choose what happens to the data a previous installation left."
-              : "OpenBot is setting up on this computer and starts by itself when it’s ready. This can take a few minutes."}
+              ? "Mangaba Bot starts once you choose what happens to the data a previous installation left."
+              : "Mangaba Bot is setting up on this computer and starts by itself when it’s ready. This can take a few minutes."}
           </p>
           {/* The last thing setup asks: whether to share usage data. Above the rows, which come one
               at a time: under them, on Windows K, the box moved down 147 px while a person could
@@ -1855,10 +1855,10 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
           {forSecurity(displayedFailure) && displayedFailure
             ? displayedFailure.said
             : appTooOld(displayedFailure)
-              ? "Update OpenBot"
+              ? "Update Mangaba Bot"
               : displayedFailure
-                ? "OpenBot stopped"
-                : "OpenBot is running"}
+                ? "Mangaba Bot stopped"
+                : "Mangaba Bot is running"}
         </h1>
         {/* The back end runs the release it had: information, said where the lede goes. Nothing
           failed, so it is not drawn as a failure and offers no help. */}
@@ -1869,7 +1869,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
         )}
         {!displayedFailure && !releaseNotice && !backEndNotice && (
           <p className="lede">
-            OpenBot is open in this window. You can also show it or stop it from
+            Mangaba Bot is open in this window. You can also show it or stop it from
             its icon in {trayPlace()}.
           </p>
         )}
@@ -1877,7 +1877,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
         {!displayedFailure && releaseNotice && (
           <InlineFailure problem={releaseNotice} />
         )}
-        {/* The start's rows only when something failed, to show where. Once OpenBot runs they are
+        {/* The start's rows only when something failed, to show where. Once Mangaba Bot runs they are
           all done, and they flashed for the moment before it opened with the native side's own
           words ("settings written, credentials stored"). */}
         {appTooOld(displayedFailure) && displayedFailure ? (
@@ -1888,24 +1888,24 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
             {displayedFailure && <Failure problem={displayedFailure} />}
           </>
         )}
-        {stopping && <StatusLine>Stopping OpenBot…</StatusLine>}
-        {showing && <StatusLine>Loading OpenBot…</StatusLine>}
+        {stopping && <StatusLine>Stopping Mangaba Bot…</StatusLine>}
+        {showing && <StatusLine>Loading Mangaba Bot…</StatusLine>}
         <div className="row">
           <button
             type="button"
             /*
              * The refusal is shown, not swallowed.
              *
-             * `show_openbot` answers with "OpenBot is not answering on port 3010 yet, so there is
+             * `show_openbot` answers with "Mangaba Bot is not answering on port 3010 yet, so there is
              * nothing to show" when the app host process is not up, and this button dropped it on
-             * the floor. Clicking it then did nothing at all, on a screen headed "OpenBot is
+             * the floor. Clicking it then did nothing at all, on a screen headed "Mangaba Bot is
              * running", which is the worst of both: a true sentence was available and the window
              * threw it away.
              */
             onClick={showOpenBot}
             disabled={busy || showing}
           >
-            Show OpenBot
+            Show Mangaba Bot
           </button>
           <button
             type="button"
@@ -1913,7 +1913,7 @@ function LocalSetup({ address, choose }: { address: string; choose: boolean }) {
             onClick={stop}
             disabled={busy || showing}
           >
-            Stop OpenBot
+            Stop Mangaba Bot
           </button>
         </div>
         {/* Under the buttons, as on the stopped screen. A disclosure draws a rule above itself, and

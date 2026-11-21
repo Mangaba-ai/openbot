@@ -4,7 +4,7 @@
 //! a manifest rather than a branch in wizard code, so adding a harness is an entry here plus an
 //! image, and never a new screen.
 //!
-//! Two things this list deliberately does not contain. OpenBot's own `built-in` agent type, which
+//! Two things this list deliberately does not contain. Mangaba Bot's own `built-in` agent type, which
 //! is a system prompt and not a harness: everybody leaves setup with a real one, either an image we
 //! publish or an address they already run. And anything whose AG-UI integration we would have to
 //! write ourselves. A harness earns a row only when the integration exists and somebody other than
@@ -193,7 +193,7 @@ pub const DEFAULT_HARNESS: &str = "langgraph-ts";
 ///
 /// Mastra is here on different terms from the rest, and the difference is in the server rather than
 /// in this list. Every other row is an image serving an AG-UI route; Mastra's image is a plain
-/// Mastra server, and OpenBot dials it through `getRemoteAgents` from `@ag-ui/mastra`, the bridge
+/// Mastra server, and Mangaba Bot dials it through `getRemoteAgents` from `@ag-ui/mastra`, the bridge
 /// Mastra and AG-UI maintain between them. See `remoteTransport` in server/src/copilot.ts.
 ///
 /// It reads as a harness like any other because the difference ends at the transport: a Mastra Bot
@@ -329,7 +329,7 @@ The Bot an install of `root` puts in: `asked`, when the release laid out in `roo
 
 A Mac on Docker Desktop, after Desktop was updated from 1.0.3 to 1.1.2: the folder was still laid out
 at 1.0.3, since Start moves it to the app's release, and the first screen's install asked for the
-new default Bot, which 1.0.3 does not have. Install failed with "OpenBot v1.0.3 does not include
+new default Bot, which 1.0.3 does not have. Install failed with "Mangaba Bot v1.0.3 does not include
 agent-langgraph-ts", and Retry the same way, every time. Install puts in what the folder's own
 release runs, so a release that lacks the Bot asked for keeps the one the folder already has
 (`kept`), and without one takes the first Bot the release does include, in the catalogue's order.
@@ -549,7 +549,7 @@ mod tests {
 
     use super::*;
 
-    /// OpenBot's own `built-in` agent type is a system prompt, not a harness, and the doc is
+    /// Mangaba Bot's own `built-in` agent type is a system prompt, not a harness, and the doc is
     /// explicit that it is not offered. Everybody leaves setup with a real one.
     #[test]
     fn the_built_in_agent_type_is_not_offered() {
@@ -941,7 +941,7 @@ mod tests {
     }
 
     /// A Mac updated from 1.0.3 to 1.1.2, its folder still laid out at 1.0.3: the first screen's
-    /// install asked for the new default Bot, and failed every time with "OpenBot v1.0.3 does not
+    /// install asked for the new default Bot, and failed every time with "Mangaba Bot v1.0.3 does not
     /// include agent-langgraph-ts". Install now keeps the Bot the folder has, and without one takes
     /// one its release includes. A release that includes the Bot asked for installs it.
     #[test]
@@ -1078,7 +1078,7 @@ mod tests {
         assert!(unmarked.is_empty(), "unmarked harnesses: {unmarked:?}");
     }
 
-    /// Mastra is offered, and the row is the assertion that the bridge on OpenBot's side works.
+    /// Mastra is offered, and the row is the assertion that the bridge on Mangaba Bot's side works.
     /// It was out while the only thing a harness could mount served the wrong protocol; it is in
     /// because `remoteTransport` dials Mastra's own API instead. Removing the row means that path
     /// regressed, so this fails rather than the picker quietly shrinking.

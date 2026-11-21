@@ -80,13 +80,13 @@ const NOT_ENTITLED = "Your licence doesn't include managed updates.";
 const APPROVE_STEP =
   "Open the approval page and sign in to CopilotKit as an admin of the organization your licence belongs to. Check the code matches, then approve it. This page moves on by itself.";
 const INSTALL_STEP =
-  "Run this command where kubectl reaches OpenBot's cluster. It holds nothing secret. This page updates itself when the agent reports in.";
-/** Where OpenBot's chart installs the agent and the last try failed: it tries again by itself. */
-const TRIES_AGAIN = "OpenBot tries again every hour. Connect to try now.";
+  "Run this command where kubectl reaches Mangaba Bot's cluster. It holds nothing secret. This page updates itself when the agent reports in.";
+/** Where Mangaba Bot's chart installs the agent and the last try failed: it tries again by itself. */
+const TRIES_AGAIN = "Mangaba Bot tries again every hour. Connect to try now.";
 const CONNECTING =
-  "OpenBot is connecting with its licence. This page updates itself.";
+  "Mangaba Bot is connecting with its licence. This page updates itself.";
 const TURNED_OFF =
-  "Managed updates are off, so OpenBot doesn't connect by itself. Connect to turn them back on.";
+  "Managed updates are off, so Mangaba Bot doesn't connect by itself. Connect to turn them back on.";
 const UPGRADES_NOT_SET_UP = "Needs a one-time setup in the cluster.";
 
 const APPROVE_FLOW =
@@ -95,17 +95,17 @@ const APPROVE_FLOW =
 type Confirming = "disconnect" | "stop-approved" | "stop-connecting";
 
 /**
- * Admin, Managed updates: connecting a self-hosted OpenBot to CopilotKit's management service, in
+ * Admin, Managed updates: connecting a self-hosted Mangaba Bot to CopilotKit's management service, in
  * four states the server decides (lib/management/queries.ts). Product copy never names CopilotKit
- * alone (openbot-copy), so the screen says managed updates and OpenBot by CopilotKit. Not connected
+ * alone (openbot-copy), so the screen says managed updates and Mangaba Bot by CopilotKit. Not connected
  * offers Connect. Waiting for approval shows the code and the page to confirm it on, where an admin
- * signs in with the account the licence is under (not their OpenBot sign-in). Waiting for the agent
+ * signs in with the account the licence is under (not their Mangaba Bot sign-in). Waiting for the agent
  * shows the one Helm command, which holds nothing secret: the agent collects its one-time token from
- * OpenBot. Connected shows the agent's last heartbeat and version, says Not reporting when the server
+ * Mangaba Bot. Connected shows the agent's last heartbeat and version, says Not reporting when the server
  * says the agent has gone quiet, and offers Disconnect for after the agent is uninstalled. The page
  * asks again every few seconds while it waits on somebody, and every half minute while connected.
  *
- * Where management doesn't apply (the personal edition, OpenBot Cloud, another organization) the
+ * Where management doesn't apply (the personal edition, Mangaba Bot Cloud, another organization) the
  * server answers 404 and the page says so, with nothing to press; the rail doesn't list it there.
  */
 export function ManagementPage() {
@@ -132,8 +132,8 @@ export function ManagementPage() {
     return (
       <PageShell title={TITLE}>
         <PageEmpty icon={IconCloudCog} title="Not available here">
-          Managed updates are for OpenBot that your company runs in its own
-          cluster. Ask whoever runs OpenBot about them.
+          Managed updates are for Mangaba Bot that your company runs in its own
+          cluster. Ask whoever runs Mangaba Bot about them.
         </PageEmpty>
       </PageShell>
     );
@@ -248,8 +248,8 @@ export function ManagementPage() {
 }
 
 /**
- * Disconnect, Stop once the code is approved, or Stop while OpenBot connects by itself. With the
- * agent OpenBot's chart installs, Connect turns managed updates back on with no code to approve.
+ * Disconnect, Stop once the code is approved, or Stop while Mangaba Bot connects by itself. With the
+ * agent Mangaba Bot's chart installs, Connect turns managed updates back on with no code to approve.
  */
 function ConfirmDialog({
   byChart,
@@ -267,9 +267,9 @@ function ConfirmDialog({
     ? "Connect turns them back on."
     : "Connecting again needs a new code and a new approval.";
   const description = disconnect
-    ? `OpenBot stops getting managed updates, and you upgrade it yourself. ${again}`
+    ? `Mangaba Bot stops getting managed updates, and you upgrade it yourself. ${again}`
     : confirming === "stop-connecting"
-      ? "OpenBot stops connecting and doesn't try again by itself. Connect turns managed updates back on."
+      ? "Mangaba Bot stops connecting and doesn't try again by itself. Connect turns managed updates back on."
       : "The code is already approved. Stopping forgets it, and connecting again needs a new code and a new approval.";
   return (
     <Dialog
@@ -548,12 +548,12 @@ function Connected({
         // The chart's agent: nothing to uninstall. Disconnect stops managed updates on its own.
         <PageSection
           action={disconnectButton}
-          description="Managed updates stop, and you upgrade OpenBot yourself. Connect turns them back on."
+          description="Managed updates stop, and you upgrade Mangaba Bot yourself. Connect turns them back on."
           title="Turn off managed updates"
         />
       ) : (
         <PageSection
-          description="Uninstall the management agent with Helm, then choose Disconnect. OpenBot keeps running as it is, and you upgrade it yourself from then on."
+          description="Uninstall the management agent with Helm, then choose Disconnect. Mangaba Bot keeps running as it is, and you upgrade it yourself from then on."
           title="Disconnect"
         >
           <PageCard className="mt-4" footer={disconnectButton}>

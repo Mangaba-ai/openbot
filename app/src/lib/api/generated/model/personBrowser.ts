@@ -10,7 +10,7 @@ import type { BrowserWindow } from "./browserWindow";
 import type { PersonBrowserReal } from "./personBrowserReal";
 
 /**
- * The browser OpenBot runs for a person.
+ * The browser Mangaba Bot runs for a person.
  */
 export interface PersonBrowser {
   /** Whether the browser is open. A closed one has no tabs. */
@@ -21,9 +21,9 @@ export interface PersonBrowser {
   recorder?: BrowserRecorderReport;
   real?: PersonBrowserReal;
   activity?: BrowserRecorderActivity;
-  /** False when this OpenBot has no way to run a person's browser. */
+  /** False when this Mangaba Bot has no way to run a person's browser. */
   available: boolean;
-  /** Why this OpenBot cannot run the person's browser, in one sentence. */
+  /** Why this Mangaba Bot cannot run the person's browser, in one sentence. */
   note?: string;
   /** The browser is there and is not answering, said in one sentence. Absent while it answers. */
   problem?: string;

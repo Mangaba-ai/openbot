@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot runs an organization's Bots only while it is on a plan or its free trial, and this organization is on neither, or its last payment failed (PLAN_REQUIRED). An owner or an admin adds a card at addCardUrl.
+ * This Mangaba Bot runs an organization's Bots only while it is on a plan or its free trial, and this organization is on neither, or its last payment failed (PLAN_REQUIRED). An owner or an admin adds a card at addCardUrl.
  */
 export type PlanRequiredResponse = Problem;

@@ -47,14 +47,14 @@ export function managePaths(edition: "team" | "personal", hosted = false) {
       auditLabel: "Activity",
       audit: () => linkOptions({ to: "/settings/activity" }),
       /*
-       * What a sentence calls the product itself. The person running OpenBot alone reads its name;
+       * What a sentence calls the product itself. The person running Mangaba Bot alone reads its name;
        * an admin reads "this deployment", the exact word Admin is allowed (see `openbot-copy`).
        * Mid-sentence; `atStart` capitalises it where it opens one.
        */
-      deploymentName: "OpenBot",
+      deploymentName: "Mangaba Bot",
       /** Which edition these paths are for, for the sentences that differ beyond a name. */
       edition: "personal" as const,
-      /** One person's own OpenBot is never a hosted one. */
+      /** One person's own Mangaba Bot is never a hosted one. */
       hosted: false,
     };
   }
@@ -88,20 +88,20 @@ export function managePaths(edition: "team" | "personal", hosted = false) {
     auditLabel: "Activity",
     audit: () => linkOptions({ to: "/admin/audit" }),
     /*
-     * On a hosted OpenBot (`hostedSignIn`) the deployment is OpenBot by CopilotKit's, not this
+     * On a hosted Mangaba Bot (`hostedSignIn`) the deployment is Mangaba Bot by CopilotKit's, not this
      * organization's admin's, so a sentence names the product.
      */
-    deploymentName: hosted ? "OpenBot" : "this deployment",
+    deploymentName: hosted ? "Mangaba Bot" : "this deployment",
     edition: "team" as const,
     /**
-     * Whether this is a hosted OpenBot (`hostedSignIn`): OpenBot by CopilotKit runs it and holds its
+     * Whether this is a hosted Mangaba Bot (`hostedSignIn`): Mangaba Bot by CopilotKit runs it and holds its
      * environment, so an organization admin is never told to set a variable or read its logs.
      */
     hosted,
   };
 }
 
-/** A name from these paths at the start of a sentence: "This deployment", and "OpenBot" as it is. */
+/** A name from these paths at the start of a sentence: "This deployment", and "Mangaba Bot" as it is. */
 export function atStart(text: string): string {
   return text.charAt(0).toUpperCase() + text.slice(1);
 }

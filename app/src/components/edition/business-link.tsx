@@ -25,10 +25,10 @@ function readDismissed(): boolean {
 }
 
 /**
- * The home page's way to OpenBot for Business, in the personal edition only. It opens the OpenBot
+ * The home page's way to Mangaba Bot for Business, in the personal edition only. It opens the Mangaba Bot
  * for Business dialog, with its calendar, in the app.
  *
- * An outlined button with OpenBot's mark, so it reads as an offer at a glance without competing
+ * An outlined button with Mangaba Bot's mark, so it reads as an offer at a glance without competing
  * with the greeting and the composer below it.
  *
  * Hidden until the deployment says which edition it is, so it never flashes on a team deployment.
@@ -44,7 +44,7 @@ export function BusinessLink() {
       <Button onClick={openTeamFeatures} size="sm" variant="outline">
         <OpenBotLogo />
         <span>
-          Meet OpenBot for Business
+          Meet Mangaba Bot for Business
           <Trademark />
         </span>
       </Button>

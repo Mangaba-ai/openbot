@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * This OpenBot could not finish setting the organization up, so it was not created. Nothing of it is left behind.
+ * This Mangaba Bot could not finish setting the organization up, so it was not created. Nothing of it is left behind.
  */
 export type OrganizationNotCreatedResponse = Problem;

@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * A field is missing or out of bounds, kind and endpoint don't agree, the address is one this organization may not reach or did not answer a real AG-UI run, the model is not one the catalogue offers, or the agent runs inside OpenBot and so takes no callback token.
+ * A field is missing or out of bounds, kind and endpoint don't agree, the address is one this organization may not reach or did not answer a real AG-UI run, the model is not one the catalogue offers, or the agent runs inside Mangaba Bot and so takes no callback token.
  */
 export type InvalidBotAgentResponse = Problem;

@@ -4,9 +4,9 @@
 
 /** The entry sentence, the same on the screen and on Admin's rail and overview (MANAGEMENT_ENTRY). */
 export const MANAGEMENT_SENTENCE =
-  "OpenBot by CopilotKit upgrades this OpenBot for you, in your own cluster.";
+  "Mangaba Bot by CopilotKit upgrades this Mangaba Bot for you, in your own cluster.";
 
-/** How to set up upgrades once the agent OpenBot's chart installs is connected (docs/managed-upgrades.md). */
+/** How to set up upgrades once the agent Mangaba Bot's chart installs is connected (docs/managed-upgrades.md). */
 export const UPGRADES_SETUP_URL =
   "https://github.com/CopilotKit/OpenBot/blob/main/docs/managed-upgrades.md";
 

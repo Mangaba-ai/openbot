@@ -37,12 +37,12 @@ import { cn } from "@/lib/utils";
  * One action as chips: who, what started it, and what it does. A question read by the model arrives
  * here, and every chip can be changed, so the action that is checked is the one the admin confirmed.
  *
- * Each chip holds only what this OpenBot has: its Bots, people, teams, apps and tools. The same chip
+ * Each chip holds only what this Mangaba Bot has: its Bots, people, teams, apps and tools. The same chip
  * shape as the Audit page's filters, wrapping onto as many lines as the column needs.
  *
  * "Runs as" is a person, or anyone in one of the organization's teams. A team is chosen and shown by
  * its name and kept as `team:<id>`. Directory groups are from before there were teams: one an action
- * already names is still shown, and the ones this OpenBot lists stay under a heading of their own.
+ * already names is still shown, and the ones this Mangaba Bot lists stay under a heading of their own.
  */
 export function ActionChips({
   action,

@@ -182,7 +182,7 @@ export const getListComponentFunctionsResponseMock = (): DataFunctionPage => ({
     {
       name: "recentRefusals",
       description:
-        "The most recent things OpenBot refused, and why each was refused.",
+        "The most recent things Mangaba Bot refused, and why each was refused.",
       reads: "the audit trail",
       granted: false,
     },

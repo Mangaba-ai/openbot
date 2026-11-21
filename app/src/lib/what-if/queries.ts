@@ -9,7 +9,7 @@ export const whatIfKeys = {
 };
 
 /**
- * What an action may name on this OpenBot: its Bots and their owners, its people, teams and directory
+ * What an action may name on this Mangaba Bot: its Bots and their owners, its people, teams and directory
  * groups, and its apps with their tools. The only values an action's chips hold, and the only ones the model may pick.
  */
 export function whatIfVocabularyQueryOptions() {
@@ -18,7 +18,7 @@ export function whatIfVocabularyQueryOptions() {
     queryFn: ({ signal }): Promise<WhatIfVocabulary> =>
       getWhatIfVocabulary(organizationId(), {
         signal,
-        fallback: "Couldn't load this OpenBot's Bots and apps",
+        fallback: "Couldn't load this Mangaba Bot's Bots and apps",
       }),
   });
 }

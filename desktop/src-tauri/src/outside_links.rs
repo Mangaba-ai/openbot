@@ -1,31 +1,31 @@
-//! A site outside OpenBot opens in the person's own browser, never in the desktop window.
+//! A site outside Mangaba Bot opens in the person's own browser, never in the desktop window.
 //!
-//! OpenBot's pages are shown in this app's webview, which is not a browser: it refuses
+//! Mangaba Bot's pages are shown in this app's webview, which is not a browser: it refuses
 //! `window.open`, so an app's sign-in claimed in a new tab was blocked ("This browser blocked the
-//! tab"), and a link to another site took the window itself there, leaving OpenBot. The person's
+//! tab"), and a link to another site took the window itself there, leaving Mangaba Bot. The person's
 //! accounts (HubSpot, Google and the rest) are signed in to in their own browser, so that is where
 //! a consent has to open. The page's shim (`outside-links.js`) turns every way out into a
 //! navigation, and the window's guard hands each one that leaves to the default browser while the
 //! page stays.
 //!
-//! A FRAME IN THE PAGE IS NOT THE WINDOW LEAVING. OpenBot embeds one site: the booking calendar on
-//! onboarding's Book a demo step and on the setup window's OpenBot for Business choice (Calendly),
+//! A FRAME IN THE PAGE IS NOT THE WINDOW LEAVING. Mangaba Bot embeds one site: the booking calendar on
+//! onboarding's Book a demo step and on the setup window's Mangaba Bot for Business choice (Calendly),
 //! which itself frames reCAPTCHA and Stripe. On macOS
 //! the window's guard is asked about every frame's navigation, not only the page's, so it would
 //! have sent the calendar and its parts to the browser and left an empty frame. Those hosts load
-//! in their frames (`loads_in_a_frame`); OpenBot never sends the window itself to any of them.
+//! in their frames (`loads_in_a_frame`); Mangaba Bot never sends the window itself to any of them.
 //! Links in the calendar open new windows, and a new window from this one opens in the browser
 //! (`new_window`).
 
-/// Injected into OpenBot's pages in the desktop window. See the module documentation.
+/// Injected into Mangaba Bot's pages in the desktop window. See the module documentation.
 pub const PAGE: &str = include_str!("outside-links.js");
 
 /**
-The shim as a page gets it: `connected` when the page is the relay's, an OpenBot that runs elsewhere
-(`desktop_connected::is_relay_page`). Then only the page's own origin is OpenBot, and a link meant
+The shim as a page gets it: `connected` when the page is the relay's, an Mangaba Bot that runs elsewhere
+(`desktop_connected::is_relay_page`). Then only the page's own origin is Mangaba Bot, and a link meant
 for a new tab to any other address, one on this computer included, is handed over as a navigation
 for the window's guard to open in the browser. Left to the webview as a new window, Settings' API
-keys "Open in browser" to an OpenBot at `http://127.0.0.1:20001` opened nothing on Windows.
+keys "Open in browser" to an Mangaba Bot at `http://127.0.0.1:20001` opened nothing on Windows.
 */
 pub fn page_for(connected: bool) -> String {
     format!("window.__openbotConnected = {connected};\n{PAGE}")
@@ -33,7 +33,7 @@ pub fn page_for(connected: bool) -> String {
 
 /**
 How the log names an address handed to the browser: its origin, and its path too when it is the
-OpenBot the app is connected to (`connected`, its address). Never a query or a fragment, and never
+Mangaba Bot the app is connected to (`connected`, its address). Never a query or a fragment, and never
 another site's path: an app's consent carries its session there.
 */
 pub fn described(destination: &tauri::Url, connected: Option<&str>) -> String {
@@ -48,7 +48,7 @@ pub fn described(destination: &tauri::Url, connected: Option<&str>) -> String {
     }
 }
 
-/// Whether `destination` is a site outside OpenBot: the web, not this machine.
+/// Whether `destination` is a site outside Mangaba Bot: the web, not this machine.
 pub fn leaves(destination: &tauri::Url) -> bool {
     matches!(destination.scheme(), "http" | "https")
         && destination.host_str().is_some_and(|host| {
@@ -56,19 +56,19 @@ pub fn leaves(destination: &tauri::Url) -> bool {
         })
 }
 
-/// Whether `destination` is a file on this computer, which the window never shows in place of OpenBot.
+/// Whether `destination` is a file on this computer, which the window never shows in place of Mangaba Bot.
 ///
 /// The page handles a dropped file itself (the composer attaches it), so Tauri's own drag-and-drop
 /// handler is off (`dragDropEnabled` in `tauri.conf.json`). With it off, a file let go over a page
 /// that does not take it is the webview's to handle. WebView2 on Windows is Chromium, whose default
-/// is to open the file in place, leaving OpenBot or the setup screen (WKWebView on macOS refuses the
-/// drop instead). OpenBot's own page refuses such a drop (`useUnclaimedDropGuard`), but the setup
-/// screens and older OpenBot releases do not, so the window refuses the navigation and stays put.
+/// is to open the file in place, leaving Mangaba Bot or the setup screen (WKWebView on macOS refuses the
+/// drop instead). Mangaba Bot's own page refuses such a drop (`useUnclaimedDropGuard`), but the setup
+/// screens and older Mangaba Bot releases do not, so the window refuses the navigation and stays put.
 pub fn opens_a_file(destination: &tauri::Url) -> bool {
     destination.scheme() == "file"
 }
 
-/// Whether `destination` is the booking calendar OpenBot embeds, or a frame that calendar embeds:
+/// Whether `destination` is the booking calendar Mangaba Bot embeds, or a frame that calendar embeds:
 /// Calendly, its reCAPTCHA (served from recaptcha.net) and its Stripe frames. Over https only.
 pub fn loads_in_a_frame(destination: &tauri::Url) -> bool {
     let within = |host: &str, domain: &str| {
@@ -86,7 +86,7 @@ pub fn loads_in_a_frame(destination: &tauri::Url) -> bool {
 }
 
 /// A new window asked for from the desktop window (a link meant for a new tab, or `window.open`,
-/// from the page or a frame in it). A site outside OpenBot is handed to `open`, the person's
+/// from the page or a frame in it). A site outside Mangaba Bot is handed to `open`, the person's
 /// browser; the webview opens no window of its own either way, as it never has on macOS.
 pub fn new_window(destination: &tauri::Url, open: impl FnOnce(&str)) {
     if leaves(destination) {
@@ -212,7 +212,7 @@ mod tests {
         let main = include_str!("main.rs");
         assert!(main.contains("plugin(outside_links_guard())"));
         assert!(PAGE.contains("window.open ="));
-        // The relay's pages get the shim told they are connected, every other page of OpenBot's
+        // The relay's pages get the shim told they are connected, every other page of Mangaba Bot's
         // gets it told they are not.
         assert!(main.contains(
             "window.eval(outside_links::page_for(desktop_connected::is_relay_page(\n                    window.app_handle(),\n                    payload.url(),\n                )))"
@@ -223,7 +223,7 @@ mod tests {
         assert!(PAGE.contains("window.__openbotConnected === true"));
     }
 
-    /// The log names the connected OpenBot's page it opened, address and path, and of any other
+    /// The log names the connected Mangaba Bot's page it opened, address and path, and of any other
     /// site only where it is: an app's consent keeps its session in the path and the query.
     #[test]
     fn the_log_names_the_connected_openbots_page_and_only_the_origin_of_anything_else() {

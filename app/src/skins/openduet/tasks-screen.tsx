@@ -40,11 +40,11 @@ function rememberView(view: TasksView) {
 }
 
 /**
- * OpenDuet's Tasks: its two big words, Active and Up next, over OpenBot's own screens.
+ * OpenDuet's Tasks: its two big words, Active and Up next, over Mangaba Bot's own screens.
  *
- * Every row here is OpenBot's own: its task rows and its approval and question rows, then
+ * Every row here is Mangaba Bot's own: its task rows and its approval and question rows, then
  * `RoutinesList` for routines, goals and check-ins, and `SuggestionsInbox` for
- * what check-ins found. So every choice, field and confirmation OpenBot offers is here, and a new
+ * what check-ins found. So every choice, field and confirmation Mangaba Bot offers is here, and a new
  * one arrives without this screen changing. The skin adds only the switch, the headings and the
  * layout around them.
  */
@@ -142,8 +142,8 @@ function SwitchTab({
 /**
  * Active: the person's tasks grouped by what each needs from them, in OpenDuet's order (Ready for
  * review, Needs input, Failed, Working, Resolved this week), then the routines their Bots carry, in
- * OpenBot's own Routines list, goals and check-ins included. Needs input also holds the approvals
- * and questions waiting outside any task, decided in OpenBot's own rows. A group with nothing in it
+ * Mangaba Bot's own Routines list, goals and check-ins included. Needs input also holds the approvals
+ * and questions waiting outside any task, decided in Mangaba Bot's own rows. A group with nothing in it
  * is left out.
  */
 function ActiveView() {
@@ -209,7 +209,7 @@ function ActiveView() {
   );
 }
 
-/** A section heading in OpenDuet's grey, with how many, over an OpenBot list. */
+/** A section heading in OpenDuet's grey, with how many, over an Mangaba Bot list. */
 function Section({
   label,
   count,

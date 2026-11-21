@@ -37,6 +37,9 @@
 set -euo pipefail
 
 REPOSITORY="CopilotKit/OpenBot"
+# Where the app downloads this commit from: the Mangaba fork. Releases and images still come from
+# REPOSITORY, the upstream.
+SOURCE_REPOSITORY="${OPENBOT_LOCAL_SOURCE_REPOSITORY:-Mangaba-ai/openbot}"
 REGISTRY_NAME="openbot-local-registry"
 REGISTRY_PORT="${OPENBOT_LOCAL_REGISTRY_PORT:-5050}"
 REGISTRY="127.0.0.1:${REGISTRY_PORT}"
@@ -122,7 +125,7 @@ if [ "${OPENBOT_LOCAL_NO_PUSH:-}" != 1 ]; then
     git push origin "HEAD:refs/heads/$BRANCH" || die "could not push $BRANCH. If origin has commits this branch lacks, pull them first; this never force-pushes."
   fi
 fi
-archive="https://github.com/$REPOSITORY/archive/$COMMIT.tar.gz"
+archive="https://github.com/$SOURCE_REPOSITORY/archive/$COMMIT.tar.gz"
 # Downloaded whole: GitHub ignores a byte range on an archive. Through download.sh, so a GitHub that
 # stops sending is given up after 30 seconds and tried again, never waited on forever.
 download -o /dev/null "$archive" \
@@ -225,6 +228,29 @@ for pair in openbot:openbot server:openbot agent-computer:openbot supervisor:ope
   PINNED="$(jq --arg name "$name" --arg repository "$repository" --arg digest "$digest" \
     '. + {($name): {repository: $repository, digest: $digest, reference: ($repository + "@" + $digest)}}' <<< "$PINNED")"
 done
+# The Mangaba Bot interface: the server image above with app/dist built from this commit on top,
+# pushed to the local registry, standing in for `openbot` and `server` (the same image).
+stage "mangaba server image"
+(cd "$ROOT/app" && logged "$LOGS/app-build.log" bun run build)
+base_ref="$(jq -r '.server.reference' <<< "$PINNED")"
+meta="$LOGS/mangaba-server.metadata.json"
+logged "$LOGS/mangaba-server.log" docker buildx build \
+  --platform linux/arm64 \
+  --file "$ROOT/mangaba/server.Dockerfile" \
+  --build-arg "BASE=$base_ref" \
+  --provenance=false --sbom=false \
+  --metadata-file "$meta" \
+  --tag "$REGISTRY/mangaba-openbot:sha-$COMMIT" \
+  --push \
+  "$ROOT/app/dist"
+digest="$(jq -r '."containerimage.digest" // empty' "$meta")"
+[[ "$digest" =~ ^sha256:[0-9a-f]{64}$ ]] || die "the Mangaba server image reported no digest"
+for name in openbot server; do
+  PINNED="$(jq --arg name "$name" --arg repository "$REGISTRY/mangaba-openbot" --arg digest "$digest" \
+    '. + {($name): {repository: $repository, digest: $digest, reference: ($repository + "@" + $digest)}}' <<< "$PINNED")"
+done
+echo "$REGISTRY/mangaba-openbot@$digest on $base_ref"
+stage_done
 MANIFEST="$STATE/manifests/container-images-$SHORT.json"
 jq --arg version "$VERSION" --arg commit "$COMMIT" --argjson built "$BUILT" --argjson pinned "$PINNED" \
   '.version = $version | .commit = $commit | .images += $pinned | .images += $built
@@ -268,13 +294,13 @@ logged "$LOGS/tauri-build.log" env \
   --config src-tauri/tauri.bundled-cli.conf.json \
   --bundles app
 cd "$ROOT"
-built_app="$TARGET_DIR/release/bundle/macos/OpenBot.app"
+built_app="$TARGET_DIR/release/bundle/macos/Mangaba Bot.app"
 [ -d "$built_app" ] || die "the build made no $built_app"
 APP_DIR="$STATE/apps/$VERSION"
 rm -rf "$APP_DIR"
 mkdir -p "$APP_DIR"
-ditto "$built_app" "$APP_DIR/OpenBot.app"
-APP="$APP_DIR/OpenBot.app"
+ditto "$built_app" "$APP_DIR/Mangaba Bot.app"
+APP="$APP_DIR/Mangaba Bot.app"
 stage_done
 
 stage "check the app"

@@ -252,7 +252,7 @@ mod stop_ipc {
 
         // The command Settings > This computer invokes.
         tauri::async_runtime::block_on(desktop_page::stop(fixture.app.handle().clone()))
-            .expect("OpenBot on this computer stops as it did");
+            .expect("Mangaba Bot on this computer stops as it did");
         await_compose(&compose).write_all(&[0]).unwrap();
         wait_until(|| fixture.window.url().unwrap().as_str() == setup);
 
@@ -465,7 +465,7 @@ mod stop_ipc {
             .expect("menu Stop failure should be retained for setup");
         assert_eq!(
             problem.said,
-            "OpenBot could not finish stopping. Try Stop OpenBot again."
+            "Mangaba Bot could not finish stopping. Try Stop Mangaba Bot again."
         );
         assert!(
             problem
@@ -540,8 +540,8 @@ mod stop_ipc {
         );
     }
 
-    /// EC2 Mac: OpenBot updated its installation at Start, and later its engine machine stopped
-    /// under the open window. Setup came back but never started OpenBot again: the update's own
+    /// EC2 Mac: Mangaba Bot updated its installation at Start, and later its engine machine stopped
+    /// under the open window. Setup came back but never started Mangaba Bot again: the update's own
     /// stop had marked the session as stopped by the person, which only their Stop may do.
     #[test]
     fn an_update_stop_keeps_automatic_start_and_a_person_stop_ends_it() {
@@ -568,7 +568,7 @@ mod stop_ipc {
         update.join().unwrap().unwrap();
         assert!(
             configured().auto_start,
-            "an update's stop is not the person stopping OpenBot"
+            "an update's stop is not the person stopping Mangaba Bot"
         );
 
         // The person's Stop, on what the update started again.
@@ -583,12 +583,12 @@ mod stop_ipc {
         wait_until(|| fixture.window.url().unwrap().as_str() == setup);
         assert!(
             !configured().auto_start,
-            "the person's Stop still holds OpenBot stopped"
+            "the person's Stop still holds Mangaba Bot stopped"
         );
     }
 
-    /// Settings' Change on the AI model row: OpenBot stops, the window goes to setup, and setup
-    /// is told once to open at its AI screen. A Stop that failed tells it nothing: OpenBot may
+    /// Settings' Change on the AI model row: Mangaba Bot stops, the window goes to setup, and setup
+    /// is told once to open at its AI screen. A Stop that failed tells it nothing: Mangaba Bot may
     /// still be running, and setup shows the failure with Start, as after any failed Stop.
     #[test]
     fn change_ai_connection_from_settings_stops_then_opens_the_ai_screen_once() {
@@ -603,7 +603,7 @@ mod stop_ipc {
         let compose = fixture.compose_barrier();
 
         change_ai_connection_from_settings(fixture.app.handle().clone());
-        // Nothing to open at until OpenBot has stopped.
+        // Nothing to open at until Mangaba Bot has stopped.
         assert!(!take_ai_connection_change(fixture.app.handle().clone()));
         await_compose(&compose).write_all(&[0]).unwrap();
 
@@ -617,7 +617,7 @@ mod stop_ipc {
     }
 
     /// After Stop from the Status window, its App row offered no Start. Its Start now runs the
-    /// setup page's own Start OpenBot, once: said to a setup page already there, and kept for one
+    /// setup page's own Start Mangaba Bot, once: said to a setup page already there, and kept for one
     /// still loading. A main window showing anything else is sent to setup, whose page takes it.
     #[test]
     fn start_from_the_status_window_asks_the_setup_page_to_start_once() {
@@ -654,7 +654,7 @@ mod stop_ipc {
             "one Start per ask"
         );
 
-        // Showing OpenBot's own page: sent to setup, and the ask kept for its page to take on load.
+        // Showing Mangaba Bot's own page: sent to setup, and the ask kept for its page to take on load.
         fixture
             .window
             .navigate("http://127.0.0.1:3010/".parse().unwrap())
@@ -683,7 +683,7 @@ mod stop_ipc {
             let _ = heard.send(());
         });
 
-        // A Start that ends at once: the fixture's OpenBot, in another folder, still runs.
+        // A Start that ends at once: the fixture's Mangaba Bot, in another folder, still runs.
         let elsewhere = temp_root("status-refresh-elsewhere");
         let started = tauri::async_runtime::block_on(start_stack_now(
             fixture.app.handle().clone(),

@@ -61,7 +61,7 @@ export const getCreateAutomaticLearningSpaceResponseMock =
 
 export const getGetLearningOverviewResponseMock = (): LearningOverview => ({
   configuration: "configured",
-  container: { id: "openbot", name: "OpenBot" },
+  container: { id: "openbot", name: "Mangaba Bot" },
   pendingThreadCount: 4,
   pendingCandidateCount: 2,
   publishedSkillCount: 5,

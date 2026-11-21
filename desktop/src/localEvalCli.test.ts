@@ -157,17 +157,17 @@ test("connects this installation as its own cancellable attempt", async () => {
   ]);
 });
 
-test("a connection OpenBot would not take up arrives as a Problem; CLI failures as categories", async () => {
+test("a connection Mangaba Bot would not take up arrives as a Problem; CLI failures as categories", async () => {
   invokeHandler = async () => {
     throw {
-      said: "A different backend was connected. OpenBot did not use it.",
+      said: "A different backend was connected. Mangaba Bot did not use it.",
     };
   };
   const problem = await connectLocalEval("/tmp/openbot").connection.catch(
     (e) => e,
   );
   expect(problem).toEqual({
-    said: "A different backend was connected. OpenBot did not use it.",
+    said: "A different backend was connected. Mangaba Bot did not use it.",
   });
   invokeHandler = async () => {
     throw "timeout";
@@ -269,7 +269,7 @@ test("future readiness and licence values open chat only when exactly good", () 
   }
 });
 
-test("OpenBot and provider states block independently", () => {
+test("Mangaba Bot and provider states block independently", () => {
   const ready = { ...report(), readiness: "ready", licence: "valid" };
   const intelligence = ready as unknown as LocalReport;
   expect(
@@ -294,12 +294,12 @@ test("the Stop failure prefix is the one the native side writes", async () => {
   );
   // The line a person can open under Technical details names the part, not the product.
   expect(intelligenceStopFailed).toBe("Backend stop failed: ");
-  // A real native line, as Stop returns it after OpenBot's own, is still the back end's part.
+  // A real native line, as Stop returns it after Mangaba Bot's own, is still the back end's part.
   const said = native.match(
     /Err\(local_eval::Failure::Unavailable\) => \{?\s*Err\(\s*"([^"]+)"/,
   )?.[1];
   expect(said).toBe(
-    "this build has no command-line tool to stop the backend OpenBot created",
+    "this build has no command-line tool to stop the backend Mangaba Bot created",
   );
   const line = `${intelligenceStopFailed}${said}`;
   expect(splitStopFailure(`Compose down failed: busy\n${line}`)).toEqual({
@@ -308,7 +308,7 @@ test("the Stop failure prefix is the one the native side writes", async () => {
   });
 });
 
-test("a Stop failure is split into OpenBot's part and Intelligence's part", () => {
+test("a Stop failure is split into Mangaba Bot's part and Intelligence's part", () => {
   const intelligence = `${intelligenceStopFailed}the CLI timed out`;
   expect(splitStopFailure(intelligence)).toEqual({
     openBot: null,
@@ -321,10 +321,10 @@ test("a Stop failure is split into OpenBot's part and Intelligence's part", () =
     openBot: "Compose down failed: busy",
     intelligence: null,
   });
-  // Anything that is not the native line format is OpenBot's own failure.
+  // Anything that is not the native line format is Mangaba Bot's own failure.
   expect(splitStopFailure({ said: "x" }).openBot).not.toBeNull();
   expect(intelligenceStopProblem(intelligence)).toEqual({
-    said: "OpenBot stopped, but some of its services didn't. They may still be running.",
+    said: "Mangaba Bot stopped, but some of its services didn't. They may still be running.",
     detail: intelligence,
   });
 });

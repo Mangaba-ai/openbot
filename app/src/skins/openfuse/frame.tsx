@@ -39,7 +39,7 @@ import { centreBot, type FuseTab, inColumn, statusLine, tabFor } from "./model";
 import { NotificationsSheet } from "./notifications-sheet";
 import { type FuseIcon, RoundButton } from "./ui";
 
-/** The deployment's own name, from its brand.yaml: the name OpenBot's sidebar shows. */
+/** The deployment's own name, from its brand.yaml: the name Mangaba Bot's sidebar shows. */
 const PRODUCT = appConfig.brand.productName;
 
 const TABS: { id: FuseTab; label: string; icon: FuseIcon }[] = [
@@ -51,12 +51,12 @@ const TABS: { id: FuseTab; label: string; icon: FuseIcon }[] = [
 ];
 
 /**
- * OpenFuse's shell around every OpenBot page: one centred column, the agent at the top, a bell for
- * what waits on you, and a floating pill of five tabs. The page itself is OpenBot's, untouched —
- * conversations are OpenBot's own chat routes, rendered as `children`.
+ * OpenFuse's shell around every Mangaba Bot page: one centred column, the agent at the top, a bell for
+ * what waits on you, and a floating pill of five tabs. The page itself is Mangaba Bot's, untouched —
+ * conversations are Mangaba Bot's own chat routes, rendered as `children`.
  */
 export function OpenFuseFrame({ children }: { children: ReactNode }) {
-  // The roster's socket. OpenBot opens it in its sidebar, which this frame replaces.
+  // The roster's socket. Mangaba Bot opens it in its sidebar, which this frame replaces.
   useChannelEvents();
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
@@ -119,7 +119,7 @@ export function OpenFuseFrame({ children }: { children: ReactNode }) {
   // A conversation's computer or Bot settings, open beside the transcript.
   const sidePanelOpen = search.watch === true || search.settings === true;
   const column = inColumn(pathname, sidePanelOpen);
-  // OpenBot's own count, the one its Bots badge shows: never a count of the skin's own.
+  // Mangaba Bot's own count, the one its Bots badge shows: never a count of the skin's own.
   const waiting = useWaitingCount();
   const status = statusLine({
     attention: attention.data?.find((entry) => entry.botId === bot?.id),
@@ -141,7 +141,7 @@ export function OpenFuseFrame({ children }: { children: ReactNode }) {
           className="mx-auto w-full max-w-[760px] shrink-0"
           data-desktop-drag=""
         >
-          {/* The window's title bar in OpenBot Desktop on macOS: a press on it outside its buttons
+          {/* The window's title bar in Mangaba Bot Desktop on macOS: a press on it outside its buttons
               moves the window (`data-desktop-drag`, read by the desktop on macOS only). */}
           <header
             className="relative mx-5 h-[122px] shrink-0 pt-0.5 min-[900px]:h-[146px] min-[900px]:pt-3.5"
@@ -153,7 +153,7 @@ export function OpenFuseFrame({ children }: { children: ReactNode }) {
                 label="Open conversations and menu"
                 onClick={() => setSheet("menu")}
               >
-                {/* OpenBot's own "a Bot needs you" mark, worn as OpenFuse's dot. */}
+                {/* Mangaba Bot's own "a Bot needs you" mark, worn as OpenFuse's dot. */}
                 <span className="openfuse-menu-badge">
                   <BotsNavBadge />
                 </span>
@@ -169,7 +169,7 @@ export function OpenFuseFrame({ children }: { children: ReactNode }) {
                 type="button"
               >
                 {/*
-                 * The Bot's own OpenBot avatar, the one its page and the Bots roster draw. With no Bot
+                 * The Bot's own Mangaba Bot avatar, the one its page and the Bots roster draw. With no Bot
                  * yet, the deployment's own mark stands in.
                  */}
                 <span className="mt-1 mb-1 flex size-11 items-center justify-center min-[900px]:size-[52px] [&>[role=img]]:size-full! [&_svg]:size-full">
@@ -216,8 +216,8 @@ export function OpenFuseFrame({ children }: { children: ReactNode }) {
           </header>
         </div>
         {/*
-         * A tab's own screen sits in OpenFuse's 760px column. Any other OpenBot page, and a conversation
-         * with its side panel open, takes OpenBot's own width on a wide screen; the bars stay centred.
+         * A tab's own screen sits in OpenFuse's 760px column. Any other Mangaba Bot page, and a conversation
+         * with its side panel open, takes Mangaba Bot's own width on a wide screen; the bars stay centred.
          */}
         <main
           className={cn(
@@ -277,7 +277,7 @@ export function OpenFuseFrame({ children }: { children: ReactNode }) {
   );
 }
 
-/** Activity, Ideas and Routines are this skin's own screens; Apps is OpenBot's Connections. */
+/** Activity, Ideas and Routines are this skin's own screens; Apps is Mangaba Bot's Connections. */
 function TabLink({
   tab,
   label,

@@ -15,8 +15,8 @@ import {
  *
  * `field`: the address is what to fix, so the sentence sits under the field and the field has the
  * focus. `sign-in` and `retry`: the screen's one button says Sign in again or Try again. `browser`:
- * this app can't connect to that OpenBot, and a link opens it in the browser. `update`: this app is
- * too old for that OpenBot, and the way on is this app's own update. A kind this app does not know
+ * this app can't connect to that Mangaba Bot, and a link opens it in the browser. `update`: this app is
+ * too old for that Mangaba Bot, and the way on is this app's own update. A kind this app does not know
  * is offered Try again.
  */
 type Offer = "field" | "retry" | "sign-in" | "browser" | "update";
@@ -56,13 +56,13 @@ type Trouble = { problem: Problem; offer: Offer | null };
 export type Connecting = ReturnType<typeof useConnectToOpenBot>;
 
 /**
- * Connecting this app to an OpenBot that runs elsewhere: the address, the sign-in in the person's
- * browser, and what went wrong. Held by the first screen, above the choice of where OpenBot runs,
+ * Connecting this app to an Mangaba Bot that runs elsewhere: the address, the sign-in in the person's
+ * browser, and what went wrong. Held by the first screen, above the choice of where Mangaba Bot runs,
  * so an address typed is still there after a look at the other choice.
  *
- * The shell does the work. `check_openbot_address` says whether there is an OpenBot this app can
+ * The shell does the work. `check_openbot_address` says whether there is an Mangaba Bot this app can
  * connect to at the address, and gives it back as it understood it. `connect_to_openbot` opens the
- * browser, waits for the sign-in and then shows that OpenBot in this window. Nothing is installed
+ * browser, waits for the sign-in and then shows that Mangaba Bot in this window. Nothing is installed
  * or started on this computer.
  */
 export function useConnectToOpenBot({
@@ -73,14 +73,14 @@ export function useConnectToOpenBot({
 }: {
   /** The address connected to before, when there is one. */
   address?: string;
-  /** What the launch found: a sign-in that ended, or an OpenBot it could not open. */
+  /** What the launch found: a sign-in that ended, or an Mangaba Bot it could not open. */
   problem?: Problem | null;
   /**
-   * Opens OpenBot with the sign-in this computer already has. Given when the launch tried that and
+   * Opens Mangaba Bot with the sign-in this computer already has. Given when the launch tried that and
    * it failed: Try again does it again, without a new sign-in, while the address is the same.
    */
   reopen?: () => Promise<void>;
-  /** Back to OpenBot on this computer. May fail, when a saved connection has to be switched. */
+  /** Back to Mangaba Bot on this computer. May fail, when a saved connection has to be switched. */
   onThisComputer: () => void | Promise<void>;
 }) {
   const [address, setAddress] = useState(remembered);
@@ -139,7 +139,7 @@ export function useConnectToOpenBot({
       await invoke("connect_to_openbot", { address: checked.address });
       if (!current()) return;
       waiting.current = false;
-      // Signed in: the shell is showing that OpenBot in this window.
+      // Signed in: the shell is showing that Mangaba Bot in this window.
       setPhase("opening");
     } catch (error) {
       if (!current()) return;
@@ -198,7 +198,7 @@ export function useConnectToOpenBot({
 }
 
 /**
- * The first screen's lower half when OpenBot runs elsewhere: one field for its address, what
+ * The first screen's lower half when Mangaba Bot runs elsewhere: one field for its address, what
  * happens next, and Connect. While the browser is waited on, Cancel is the only control.
  */
 export function ConnectToOpenBot({ connecting }: { connecting: Connecting }) {
@@ -215,7 +215,7 @@ export function ConnectToOpenBot({ connecting }: { connecting: Connecting }) {
       }}
     >
       <div className="field">
-        <label htmlFor={`${id}-address`}>OpenBot address</label>
+        <label htmlFor={`${id}-address`}>Mangaba Bot address</label>
         <input
           id={`${id}-address`}
           ref={connecting.field}
@@ -258,7 +258,7 @@ export function ConnectToOpenBot({ connecting }: { connecting: Connecting }) {
           </div>
         </>
       ) : phase === "opening" ? (
-        <StatusLine>Opening OpenBot…</StatusLine>
+        <StatusLine>Opening Mangaba Bot…</StatusLine>
       ) : (
         <>
           <p id={`${id}-next`} className="footnote">
@@ -268,7 +268,7 @@ export function ConnectToOpenBot({ connecting }: { connecting: Connecting }) {
           {trouble && !underField && trouble.offer !== "update" && (
             <Trouble trouble={trouble} />
           )}
-          {/* This app is too old for that OpenBot: its own update is the way on, and Connect
+          {/* This app is too old for that Mangaba Bot: its own update is the way on, and Connect
               comes back once the address is another. The update draws the notice, so a build
               that never updates itself says so in it. */}
           {trouble?.offer === "update" ? (
@@ -305,7 +305,7 @@ export function ConnectToOpenBot({ connecting }: { connecting: Connecting }) {
             disabled={busy}
             onClick={() => void connecting.leave()}
           >
-            Use OpenBot on this computer instead
+            Use Mangaba Bot on this computer instead
           </button>
         </>
       )}
@@ -316,8 +316,8 @@ export function ConnectToOpenBot({ connecting }: { connecting: Connecting }) {
 /**
  * The sentence, in a calm notice: the card that waits on the person. A connection that didn't work
  * is not a failed install, so it is not drawn as one: no failure heading and no troubleshooting
- * logs, which are about OpenBot on this computer. The way on is the screen's button, or the link
- * beside it when that OpenBot can only be opened in the browser.
+ * logs, which are about Mangaba Bot on this computer. The way on is the screen's button, or the link
+ * beside it when that Mangaba Bot can only be opened in the browser.
  */
 function Trouble({ trouble }: { trouble: Trouble }) {
   return (

@@ -3,7 +3,7 @@
  */
 
 /**
- * One folder on a person's own computer that they gave a Bot. The folder's path stays in OpenBot Desktop and is never part of a grant.
+ * One folder on a person's own computer that they gave a Bot. The folder's path stays in Mangaba Bot Desktop and is never part of a grant.
  */
 export interface HostAccessGrant {
   /** The grant's id. */

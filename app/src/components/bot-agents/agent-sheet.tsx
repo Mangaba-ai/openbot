@@ -70,7 +70,7 @@ type SkillDraft = { key: number; name: string; description: string };
  * Where an agent is added, or changed: a sheet from the right, so the list stays in view behind it.
  *
  * Adding takes the New Bot sheet's steps. What it is called and what it is good at come first, and
- * by default it runs inside OpenBot. "Connect an agent you run" goes through the same framework list
+ * by default it runs inside Mangaba Bot. "Connect an agent you run" goes through the same framework list
  * and address step New Bot has, and the address is tried with a real run before anything is saved.
  */
 export function AgentSheet({
@@ -405,7 +405,7 @@ function AgentFlow({
                 type="button"
                 variant="outline"
               >
-                Run it in OpenBot instead
+                Run it in Mangaba Bot instead
               </Button>
             )}
           </div>
@@ -519,10 +519,10 @@ function AboutFields({
     <FieldGroup>
       <p className="text-muted-foreground text-sm">
         {kind === "openbot"
-          ? "Runs in OpenBot, with the apps of whichever Bot hands it work."
+          ? "Runs in Mangaba Bot, with the apps of whichever Bot hands it work."
           : framework && framework.id !== "byo-url"
-            ? `An agent you run on ${framework.name}. OpenBot connects to it.`
-            : "An agent you run. OpenBot connects to it."}
+            ? `An agent you run on ${framework.name}. Mangaba Bot connects to it.`
+            : "An agent you run. Mangaba Bot connects to it."}
       </p>
       <Field>
         <FieldLabel htmlFor="agent-name">Name</FieldLabel>

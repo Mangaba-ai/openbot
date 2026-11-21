@@ -3,7 +3,7 @@
  */
 
 /**
- * How the app was added: from OpenBot's own catalogue, as a server at an address somebody typed, or from the wider app directory.
+ * How the app was added: from Mangaba Bot's own catalogue, as a server at an address somebody typed, or from the wider app directory.
  */
 export type AppSource = (typeof AppSource)[keyof typeof AppSource];
 

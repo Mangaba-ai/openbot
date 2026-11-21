@@ -1723,7 +1723,7 @@ export const ListGoalTriggersResponse = zod.object({
             .boolean()
             .optional()
             .describe(
-              "For an email trigger, whether this OpenBot can receive email at all.",
+              "For an email trigger, whether this Mangaba Bot can receive email at all.",
             ),
           createdAt: zod.iso
             .datetime({ offset: true })
@@ -1748,7 +1748,7 @@ export const ListGoalTriggersResponse = zod.object({
 });
 
 /**
- * Register a way for an outside event to start a run of the goal: a webhook, a GitHub, Linear, Sentry or PagerDuty delivery, an email, or a Slack message. For a webhook or GitHub trigger OpenBot makes the secret and answers it once, here; for the other providers the secret is the one pasted from the provider. When the trigger makes a shared app reachable in a new way, the answer says which apps an administrator approved or still has to.
+ * Register a way for an outside event to start a run of the goal: a webhook, a GitHub, Linear, Sentry or PagerDuty delivery, an email, or a Slack message. For a webhook or GitHub trigger Mangaba Bot makes the secret and answers it once, here; for the other providers the secret is the one pasted from the provider. When the trigger makes a shared app reachable in a new way, the answer says which apps an administrator approved or still has to.
  * @summary Add a trigger to a goal
  */
 
@@ -2850,7 +2850,7 @@ export const CreateGoalTriggerResponse = zod.object({
         .boolean()
         .optional()
         .describe(
-          "For an email trigger, whether this OpenBot can receive email at all.",
+          "For an email trigger, whether this Mangaba Bot can receive email at all.",
         ),
       createdAt: zod.iso
         .datetime({ offset: true })
@@ -2866,7 +2866,7 @@ export const CreateGoalTriggerResponse = zod.object({
     .string()
     .nullable()
     .describe(
-      "The secret OpenBot made, shown this once. Null when the secret was pasted, or the kind has none.",
+      "The secret Mangaba Bot made, shown this once. Null when the secret was pasted, or the kind has none.",
     ),
   sharedApps: zod
     .object({
@@ -3992,7 +3992,7 @@ export const UpdateGoalTriggerResponse = zod.object({
         .boolean()
         .optional()
         .describe(
-          "For an email trigger, whether this OpenBot can receive email at all.",
+          "For an email trigger, whether this Mangaba Bot can receive email at all.",
         ),
       createdAt: zod.iso
         .datetime({ offset: true })
@@ -4704,7 +4704,7 @@ export const EnableGoalTriggerResponse = zod.object({
         .boolean()
         .optional()
         .describe(
-          "For an email trigger, whether this OpenBot can receive email at all.",
+          "For an email trigger, whether this Mangaba Bot can receive email at all.",
         ),
       createdAt: zod.iso
         .datetime({ offset: true })
@@ -5371,7 +5371,7 @@ export const DisableGoalTriggerResponse = zod.object({
         .boolean()
         .optional()
         .describe(
-          "For an email trigger, whether this OpenBot can receive email at all.",
+          "For an email trigger, whether this Mangaba Bot can receive email at all.",
         ),
       createdAt: zod.iso
         .datetime({ offset: true })
@@ -5445,7 +5445,7 @@ export const GetGoalTriggerSecretResponse = zod.object({
 });
 
 /**
- * Replace a trigger's secret. With no secret sent, OpenBot makes a new one for a webhook or GitHub trigger and answers it once; with one, it stores the secret pasted from the provider. The old secret stops working at once.
+ * Replace a trigger's secret. With no secret sent, Mangaba Bot makes a new one for a webhook or GitHub trigger and answers it once; with one, it stores the secret pasted from the provider. The old secret stops working at once.
  * @summary Replace a trigger's secret
  */
 
@@ -5499,7 +5499,7 @@ export const ReplaceGoalTriggerSecretBody = zod.object({
     .max(replaceGoalTriggerSecretBodySecretMax)
     .optional()
     .describe(
-      "The provider's new signing secret. Absent has OpenBot make one, for a webhook or GitHub trigger.",
+      "The provider's new signing secret. Absent has Mangaba Bot make one, for a webhook or GitHub trigger.",
     ),
 });
 
@@ -6105,7 +6105,7 @@ export const ReplaceGoalTriggerSecretResponse = zod.object({
         .boolean()
         .optional()
         .describe(
-          "For an email trigger, whether this OpenBot can receive email at all.",
+          "For an email trigger, whether this Mangaba Bot can receive email at all.",
         ),
       createdAt: zod.iso
         .datetime({ offset: true })
@@ -6121,7 +6121,7 @@ export const ReplaceGoalTriggerSecretResponse = zod.object({
     .string()
     .nullable()
     .describe(
-      "The secret OpenBot made, shown this once. Null when the secret was pasted, or the kind has none.",
+      "The secret Mangaba Bot made, shown this once. Null when the secret was pasted, or the kind has none.",
     ),
   sharedApps: zod
     .object({

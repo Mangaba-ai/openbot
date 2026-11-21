@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * OpenBot has no app by that id, a team named is not one of this organization's, or the organization does not exist.
+ * Mangaba Bot has no app by that id, a team named is not one of this organization's, or the organization does not exist.
  */
 export type AppOrTeamNotFoundResponse = Problem;

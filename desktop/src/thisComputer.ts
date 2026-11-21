@@ -1,10 +1,10 @@
 /*
  * "The person chose this computer, and what Windows needs for it is not finished."
  *
- * What a computer needs before OpenBot can run on it (on Windows: WSL, a Windows feature, a
+ * What a computer needs before Mangaba Bot can run on it (on Windows: WSL, a Windows feature, a
  * restart) is looked at once the person has chosen this computer, with Install, never before the
- * choice: somebody connecting to an OpenBot that runs elsewhere installs nothing here. The fix
- * Windows needs can end the app with a restart, before anything of OpenBot is installed, so
+ * choice: somebody connecting to an Mangaba Bot that runs elsewhere installs nothing here. The fix
+ * Windows needs can end the app with a restart, before anything of Mangaba Bot is installed, so
  * nothing the shell records yet says the person had chosen. This does: kept from the Install that
  * found something in the way until a launch finds Windows ready, so that launch goes back to what
  * Windows needs and then on with the install, not to the choice again.

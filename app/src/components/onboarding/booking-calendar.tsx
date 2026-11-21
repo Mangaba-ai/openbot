@@ -57,8 +57,8 @@ type CalendlyMessage = {
 };
 
 /**
- * The OpenBot for Business calendar, inline, where somebody books a call without leaving the app:
- * onboarding's Book a demo step and the OpenBot for Business dialog.
+ * The Mangaba Bot for Business calendar, inline, where somebody books a call without leaving the app:
+ * onboarding's Book a demo step and the Mangaba Bot for Business dialog.
  *
  * A REAL CONTROL, SO A CARD, NOT THE ILLUSTRATION'S PANEL. It has the illustrations' rounded
  * corners and border, but the cards' fill: the muted fill is what says "this is only a picture" on
@@ -126,7 +126,7 @@ export function BookingCalendar({
     element?.addEventListener("error", onError);
     /*
      * The wait starts once the calendar is on screen. A browser holds back a frame scrolled out of
-     * view, and Calendly says nothing until it is drawn: in the OpenBot for Business dialog on a
+     * view, and Calendly says nothing until it is drawn: in the Mangaba Bot for Business dialog on a
      * phone the calendar sits below the list, and somebody still reading the list was told it
      * couldn't load.
      */

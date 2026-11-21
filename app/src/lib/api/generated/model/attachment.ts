@@ -10,7 +10,7 @@ export interface Attachment {
   id: string;
   /** The file's name. */
   name: string;
-  /** The type OpenBot recognised it as. */
+  /** The type Mangaba Bot recognised it as. */
   mimeType: string;
   /** @minimum 0 */
   sizeBytes: number;

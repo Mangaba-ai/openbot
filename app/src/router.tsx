@@ -13,7 +13,7 @@ export const router = createRouter({
    * which needs what arrives to be something that text can be recovered from.
    */
   parseSearch: parseSearchText,
-  // The router's own error screen, which also tells OpenBot what it caught (lib/error-reporting.tsx).
+  // The router's own error screen, which also tells Mangaba Bot what it caught (lib/error-reporting.tsx).
   defaultErrorComponent: ReportedErrorComponent,
 });
 

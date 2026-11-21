@@ -4,7 +4,7 @@
 import type { RealBrowser } from "./realBrowser";
 
 /**
- * On OpenBot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.
+ * On Mangaba Bot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.
  */
 export interface PersonBrowserReal {
   connected: boolean;

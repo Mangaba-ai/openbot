@@ -11,7 +11,7 @@ import { Command } from "./WindowsBlocker";
 
 /** Said when the native side could not resize the machine and gave no sentence of its own. */
 const COULD_NOT =
-  "OpenBot couldn't resize your Podman machine. Use the steps below instead.";
+  "Mangaba Bot couldn't resize your Podman machine. Use the steps below instead.";
 
 /** What the native side said when a resize did not end ready for setup (`ResizeStopped`). */
 function resizeStopped(error: unknown): { said: string; resized: boolean } {
@@ -51,7 +51,7 @@ export function usePodmanPlan(
 }
 
 /**
- * The person's Podman machine is too small for setup: OpenBot offers to make it bigger, and does it
+ * The person's Podman machine is too small for setup: Mangaba Bot offers to make it bigger, and does it
  * only once they click (`machine_size::resize_here`), then sets up again. Where it can't (a disk
  * that is short too, or Podman refused), the same change is three commands, each in its own block
  * with Copy, then Retry.
@@ -76,7 +76,7 @@ export function PodmanTooSmall({
   const offered = plan.forThem && failed === null && notReady === null;
   const commands = podmanResizeCommands(shortfall, plan);
   const heading = offered
-    ? "OpenBot can fix this for you"
+    ? "Mangaba Bot can fix this for you"
     : notReady !== null
       ? "Your Podman machine is bigger now"
       : "Make your Podman machine bigger";

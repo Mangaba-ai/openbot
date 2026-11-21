@@ -110,7 +110,7 @@ export function proposalReason(reason: string): string | null {
 /*
  * A Learning container, as an admin reads and names it.
  *
- * Where OpenBot keeps a container for an organization alone, the server names it with an id that says nothing to a
+ * Where Mangaba Bot keeps a container for an organization alone, the server names it with an id that says nothing to a
  * person (`organizationSpaceId`, api/openapi/learning.yaml), and every other container of the organization's is that
  * id, a hyphen, then a name its admin chose. That id is never drawn: the organization's own container is named for
  * the organization, and another by the admin's name alone. Where the server names no such container (`own` is null),

@@ -13,7 +13,7 @@
  */
 
 /**
- * The route that resumes a flow. This deployment's own, on its own origin. OpenBot Desktop's window
+ * The route that resumes a flow. This deployment's own, on its own origin. Mangaba Bot Desktop's window
  * opens it with no handle to finish the one its person's browser brought back
  * (`lib/plugins/finish-on-return.ts`).
  */

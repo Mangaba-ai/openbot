@@ -5,6 +5,6 @@ import type { LearningSharingMode } from "./learningSharingMode";
 
 export interface UpdatePersonLearningRequest {
   mode?: LearningSharingMode;
-  /** Only in a single-person OpenBot. */
+  /** Only in a single-person Mangaba Bot. */
   autoApprove?: boolean;
 }

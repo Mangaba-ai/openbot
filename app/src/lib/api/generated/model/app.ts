@@ -23,7 +23,7 @@ export interface App {
    */
   directoryEntryId: string | null;
   /**
-   * The server's address, or null for an app from the directory, which OpenBot reaches through the directory's own service.
+   * The server's address, or null for an app from the directory, which Mangaba Bot reaches through the directory's own service.
    * @nullable
    */
   address: string | null;
@@ -45,7 +45,7 @@ export interface App {
   connectsWith: AppConnectsWith | null;
   /** Whether a key or an OAuth client is kept for the app. */
   hasCredential: boolean;
-  /** Whether OpenBot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient). */
+  /** Whether Mangaba Bot registers its own OAuth client with the app's vendor, so an administrator has none to set (setAppOAuthClient). */
   dynamicClient: boolean;
   /** Whether a server added by its address signs each person in, so each person connects their own account and every action runs as them. */
   signIn: boolean;
@@ -54,27 +54,27 @@ export interface App {
    * @nullable
    */
   entraScope: string | null;
-  /** Whose account an app from the directory acts in: each person's own, or one account OpenBot holds for everybody in the organization. Null for an app with no account at all, and for any other app. */
+  /** Whose account an app from the directory acts in: each person's own, or one account Mangaba Bot holds for everybody in the organization. Null for an app with no account at all, and for any other app. */
   accountMode: AppAccountMode | null;
   /** Whether a shared app's one account is connected. False for any other app. */
   sharedAccountConnected: boolean;
-  /** Whether the app can only hold one shared account and never a person's own, because it connects with this OpenBot's own client. */
+  /** Whether the app can only hold one shared account and never a person's own, because it connects with this Mangaba Bot's own client. */
   sharedOnly: boolean;
   ownerGrants: AppOwnerGrants;
   /** What an administrator chose for ownerGrants, or null where the default for the app's account applies. */
   ownerGrantsChosen: AppOwnerGrants | null;
   /**
-   * The email address of whoever added the app, where OpenBot knows it.
+   * The email address of whoever added the app, where Mangaba Bot knows it.
    * @nullable
    */
   addedBy: string | null;
   /**
-   * When OpenBot last recorded what the app offers.
+   * When Mangaba Bot last recorded what the app offers.
    * @nullable
    */
   toolsRefreshedAt: string | null;
   /**
-   * Why OpenBot couldn't last ask the app what it offers, or null.
+   * Why Mangaba Bot couldn't last ask the app what it offers, or null.
    * @nullable
    */
   lastError: string | null;

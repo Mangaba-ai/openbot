@@ -1,25 +1,25 @@
 //! What the Windows uninstaller stops, and with "Delete the application data" removes, before it
-//! removes OpenBot.
+//! removes Mangaba Bot.
 //!
-//! Uninstalling OpenBot from Windows' Apps closed the app and left everything it runs behind:
-//! OpenBot's Podman machine (`acquire::MACHINE`), OpenBot's containers in it and the backend's
+//! Uninstalling Mangaba Bot from Windows' Apps closed the app and left everything it runs behind:
+//! Mangaba Bot's Podman machine (`acquire::MACHINE`), Mangaba Bot's containers in it and the backend's
 //! cluster, with no app left to stop them. So the uninstaller first runs this app headless
 //! (`NSIS_HOOK_PREUNINSTALL` in `windows/hooks.nsh`), as `openbot-desktop.exe --stop-for-uninstall`,
 //! with `--delete-data` added when the person ticked "Delete the application data".
 //!
-//! It stops what Stop stops, then OpenBot's own machine, and nothing else:
-//! - OpenBot's containers, with Compose (`stack::down`), on the engine the installation runs on;
-//! - the backend, with the CLI's `local stop`, and only when OpenBot created it;
-//! - OpenBot's machine, `openbot`, when there is one.
+//! It stops what Stop stops, then Mangaba Bot's own machine, and nothing else:
+//! - Mangaba Bot's containers, with Compose (`stack::down`), on the engine the installation runs on;
+//! - the backend, with the CLI's `local stop`, and only when Mangaba Bot created it;
+//! - Mangaba Bot's machine, `openbot`, when there is one.
 //!
 //! Deleting the data also removes what a new installation would otherwise find and take for its own:
-//! the backend OpenBot created (the CLI's `local delete`), OpenBot's machine, and OpenBot's files in
-//! the installation folder with its downloads in `~\OpenBot\openbot-engine` (`remove_installation`).
+//! the backend Mangaba Bot created (the CLI's `local delete`), Mangaba Bot's machine, and Mangaba Bot's files in
+//! the installation folder with its downloads in `~\Mangaba Bot\openbot-engine` (`remove_installation`).
 //! Box I found why: with the machine gone and the folder left complete, the next install opened on
 //! a Start that could never work. Otherwise the machine is left stopped, with everything in it and
-//! the downloads kept, so installing OpenBot again finds it.
+//! the downloads kept, so installing Mangaba Bot again finds it.
 //!
-//! The person's own machines and containers are never touched. An OpenBot that ran in a machine of
+//! The person's own machines and containers are never touched. An Mangaba Bot that ran in a machine of
 //! theirs has its containers taken down there, and their machine is left running.
 //!
 //! Not on an update: the installer runs the old uninstaller with `/UPDATE`, and the hook then leaves
@@ -64,11 +64,11 @@ pub fn asked(args: &[OsString]) -> Option<Asked> {
 pub trait Computer {
     /// The engine the installation at `root` runs on, when it answers.
     fn engine(&mut self, root: &Path) -> Option<Address>;
-    /// OpenBot's containers at `root`, taken down with Compose.
+    /// Mangaba Bot's containers at `root`, taken down with Compose.
     fn compose_down(&mut self, engine: &Address, root: &Path) -> Result<(), String>;
-    /// The backend, stopped with the CLI, when OpenBot created it.
+    /// The backend, stopped with the CLI, when Mangaba Bot created it.
     fn stop_backend(&mut self, engine: &Address, root: &Path) -> Result<(), String>;
-    /// The backend deleted with the CLI, when OpenBot created it.
+    /// The backend deleted with the CLI, when Mangaba Bot created it.
     fn delete_backend(&mut self, engine: &Address, root: &Path) -> Result<(), String>;
     /// The Podman machine `name`: `None` when there is none (or no Podman), else whether it runs.
     fn machine(&mut self, name: &str) -> Result<Option<bool>, String>;
@@ -76,15 +76,15 @@ pub trait Computer {
     fn remove_machine(&mut self, name: &str) -> Result<(), String>;
     /// Every container in the machine `name` stopped, taking its port rules with it.
     fn stop_containers(&mut self, name: &str) -> Result<(), String>;
-    /// Every one of OpenBot's port rules in the machine `name` removed, when its containers wouldn't stop.
+    /// Every one of Mangaba Bot's port rules in the machine `name` removed, when its containers wouldn't stop.
     fn clear_port_rules(&mut self, name: &str) -> Result<(), String>;
-    /// OpenBot's files in the installation folder `root`, and its downloads
+    /// Mangaba Bot's files in the installation folder `root`, and its downloads
     /// (`remove_installation`). With `keep_engine`, its `engine` folder and the downloads stay:
     /// WSL may still have the machine whose disk is there.
     fn remove_installation(&mut self, root: &Path, keep_engine: bool) -> Result<(), String>;
 }
 
-/// Stop what OpenBot runs for the installation at `root`, and with `delete_data` remove it, saying
+/// Stop what Mangaba Bot runs for the installation at `root`, and with `delete_data` remove it, saying
 /// each step to `say` in plain words. Every step is tried, whatever happened to the one before.
 /// What failed is returned in plain words too, and the engine's own words go to the log.
 pub fn stop_with(
@@ -94,7 +94,7 @@ pub fn stop_with(
     say: &mut dyn FnMut(&str),
 ) -> Vec<String> {
     log::info!(
-        "[uninstall] stopping what OpenBot runs for {}{}",
+        "[uninstall] stopping what Mangaba Bot runs for {}{}",
         root.display(),
         if asked.delete_data {
             ", and deleting its data"
@@ -104,32 +104,32 @@ pub fn stop_with(
     );
     let mut failures = Vec::new();
 
-    // No engine answering: nothing of OpenBot's runs there to take down.
+    // No engine answering: nothing of Mangaba Bot's runs there to take down.
     match computer.engine(root) {
         Some(engine) => {
             log::info!("[uninstall] on {engine:?}");
-            say("Stopping OpenBot.");
+            say("Stopping Mangaba Bot.");
             let down = computer.compose_down(&engine, root);
             note(
                 &mut failures,
-                "Couldn't stop OpenBot.",
+                "Couldn't stop Mangaba Bot.",
                 "compose down",
                 down,
             );
-            say("Stopping OpenBot's services.");
+            say("Stopping Mangaba Bot's services.");
             let backend = computer.stop_backend(&engine, root);
             note(
                 &mut failures,
-                "Couldn't stop OpenBot's services.",
+                "Couldn't stop Mangaba Bot's services.",
                 "the backend's stop",
                 backend,
             );
             if asked.delete_data {
-                say("Removing OpenBot's services.");
+                say("Removing Mangaba Bot's services.");
                 let deleted = computer.delete_backend(&engine, root);
                 note(
                     &mut failures,
-                    "Couldn't remove OpenBot's services.",
+                    "Couldn't remove Mangaba Bot's services.",
                     "the backend's delete",
                     deleted,
                 );
@@ -139,15 +139,15 @@ pub fn stop_with(
     }
 
     let own = crate::acquire::MACHINE;
-    // Whether OpenBot's machine is gone, so nothing in WSL uses the disk in `<install>\engine`.
+    // Whether Mangaba Bot's machine is gone, so nothing in WSL uses the disk in `<install>\engine`.
     let mut machine_gone = false;
     match computer.machine(own) {
         Ok(Some(running)) => {
             // Before the machine goes, its containers stop, and their port rules go with them. In
             // WSL's shared network namespace they would outlive the machine, ahead of the next
-            // OpenBot's rules for the same ports (box I: the backend wouldn't stop, its cluster's
-            // rules stayed, and the next install failed at "Opening OpenBot"). If they won't stop,
-            // OpenBot's rules are removed instead, while the machine can still be reached.
+            // Mangaba Bot's rules for the same ports (box I: the backend wouldn't stop, its cluster's
+            // rules stayed, and the next install failed at "Opening Mangaba Bot"). If they won't stop,
+            // Mangaba Bot's rules are removed instead, while the machine can still be reached.
             if asked.delete_data && running {
                 match computer.stop_containers(own) {
                     Ok(()) => log::info!("[uninstall] stopped every container in {own}"),
@@ -162,22 +162,22 @@ pub fn stop_with(
                 }
             }
             if running {
-                say("Stopping the software OpenBot runs on.");
+                say("Stopping the software Mangaba Bot runs on.");
                 let stopped = computer.stop_machine(own);
                 note(
                     &mut failures,
-                    "Couldn't stop the software OpenBot runs on.",
+                    "Couldn't stop the software Mangaba Bot runs on.",
                     &format!("podman machine stop {own}"),
                     stopped,
                 );
             }
             if asked.delete_data {
-                say("Removing the software OpenBot runs on.");
+                say("Removing the software Mangaba Bot runs on.");
                 let removed = computer.remove_machine(own);
                 machine_gone = removed.is_ok();
                 note(
                     &mut failures,
-                    "Couldn't remove the software OpenBot runs on.",
+                    "Couldn't remove the software Mangaba Bot runs on.",
                     &format!("podman machine rm {own}"),
                     removed,
                 );
@@ -189,15 +189,15 @@ pub fn stop_with(
         }
         Err(error) => note(
             &mut failures,
-            "Couldn't check the software OpenBot runs on.",
+            "Couldn't check the software Mangaba Bot runs on.",
             "podman machine list",
             Err(error),
         ),
     }
 
-    // Last, once nothing of OpenBot's runs from it.
+    // Last, once nothing of Mangaba Bot's runs from it.
     if asked.delete_data {
-        say("Removing OpenBot's files.");
+        say("Removing Mangaba Bot's files.");
         if !machine_gone {
             log::warn!(
                 "[uninstall] {own} was not removed, so its engine folder and the downloads stay"
@@ -206,7 +206,7 @@ pub fn stop_with(
         let removed = computer.remove_installation(root, !machine_gone);
         note(
             &mut failures,
-            "Couldn't remove all of OpenBot's files.",
+            "Couldn't remove all of Mangaba Bot's files.",
             "removing the installation's files",
             removed,
         );
@@ -225,7 +225,7 @@ fn note(failures: &mut Vec<String>, sentence: &str, step: &str, result: Result<(
     }
 }
 
-/// Only OpenBot writes these, so a folder with one of them is an OpenBot installation.
+/// Only Mangaba Bot writes these, so a folder with one of them is an Mangaba Bot installation.
 const RECORDS: [&str; 3] = [
     ".openbot-deployment",
     crate::preparation::FILE,
@@ -234,8 +234,8 @@ const RECORDS: [&str; 3] = [
 
 /// The installation's own files besides `upgrade::KEPT` and every `.openbot…` record: its settings
 /// and keys, the backend's tool's project and the sign-in store the containers keep there, the log of
-/// processes an older version ran, the engine tools OpenBot downloaded, and `engine`, where Windows
-/// keeps OpenBot's Podman machine disk. `stop_with` removes the machine first, and that deletes the
+/// processes an older version ran, the engine tools Mangaba Bot downloaded, and `engine`, where Windows
+/// keeps Mangaba Bot's Podman machine disk. `stop_with` removes the machine first, and that deletes the
 /// disk, but Podman can leave the folders around it.
 const OWN: [&str; 7] = [
     ".env",
@@ -247,10 +247,10 @@ const OWN: [&str; 7] = [
     ENGINE,
 ];
 
-/// The folder in an installation where Windows keeps OpenBot's Podman machine disk.
+/// The folder in an installation where Windows keeps Mangaba Bot's Podman machine disk.
 const ENGINE: &str = "engine";
 
-/// Whether the entry `name` in an installation folder is OpenBot's own.
+/// Whether the entry `name` in an installation folder is Mangaba Bot's own.
 fn openbots(name: &str) -> bool {
     crate::upgrade::KEPT.contains(&name)
         || OWN.contains(&name)
@@ -259,11 +259,11 @@ fn openbots(name: &str) -> bool {
 }
 
 /**
-OpenBot's files in the installation folder `root` (`remove_installation_files`), and unless
-`keep_engine`, OpenBot's downloads in the home folder `home` (`remove_downloads`).
+Mangaba Bot's files in the installation folder `root` (`remove_installation_files`), and unless
+`keep_engine`, Mangaba Bot's downloads in the home folder `home` (`remove_downloads`).
 
 The downloads are not in the installation folder: they are always in `openbot-engine` in the default
-one, `~\OpenBot` (`acquire::download_dir` of `stack::default_root`), whichever folder OpenBot was
+one, `~\Mangaba Bot` (`acquire::download_dir` of `stack::default_root`), whichever folder Mangaba Bot was
 installed in. Removing only the installation folder left them, about 128 MB on a Windows box, after
 "Delete the application data". They stay with the machine (`keep_engine`): the record of the
 person's own default Podman connection, which removing the machine puts back, is kept there.
@@ -286,8 +286,8 @@ pub fn remove_installation(
 }
 
 /**
-OpenBot's download folder, `openbot-engine` in the default installation folder in `home`, removed:
-the engine installers, the tools and the machine image OpenBot downloaded. Then that installation
+Mangaba Bot's download folder, `openbot-engine` in the default installation folder in `home`, removed:
+the engine installers, the tools and the machine image Mangaba Bot downloaded. Then that installation
 folder too, only when nothing at all is left in it. Nothing else in `home` is touched. A link is
 removed as a link, never followed.
 */
@@ -318,11 +318,11 @@ fn remove_downloads(home: &Path) -> Result<(), String> {
 }
 
 /**
-OpenBot's files in the installation folder `root`, removed, then the folder itself once nothing else
+Mangaba Bot's files in the installation folder `root`, removed, then the folder itself once nothing else
 is left in it: what a new installation would otherwise find and take for its own.
 
-Only a folder OpenBot recorded as an installation, by a record only it writes (`RECORDS`), and never
-the home folder `home`, a folder above it or the root of a drive. Inside it only OpenBot's own entries
+Only a folder Mangaba Bot recorded as an installation, by a record only it writes (`RECORDS`), and never
+the home folder `home`, a folder above it or the root of a drive. Inside it only Mangaba Bot's own entries
 go (`openbots`): a file of the person's stays, and with it the folder. The backend's tool also leaves
 a `.gitignore` in the folder it runs in, which goes only when nothing but it is left. Links are
 removed as links, never followed.
@@ -333,7 +333,7 @@ fn remove_installation_files(
     keep_engine: bool,
 ) -> Result<(), String> {
     if !root.is_absolute() || root.parent().is_none() {
-        return Err(format!("{} is not a folder OpenBot made", root.display()));
+        return Err(format!("{} is not a folder Mangaba Bot made", root.display()));
     }
     if let Some(home) = home {
         if root == home || home.starts_with(root) {
@@ -342,7 +342,7 @@ fn remove_installation_files(
     }
     if !RECORDS.iter().any(|record| root.join(record).exists()) {
         log::info!(
-            "[uninstall] {} holds no OpenBot installation; nothing removed",
+            "[uninstall] {} holds no Mangaba Bot installation; nothing removed",
             root.display()
         );
         return Ok(());
@@ -386,7 +386,7 @@ fn remove_installation_files(
         }
     } else {
         log::info!(
-            "[uninstall] {} keeps files that are not OpenBot's",
+            "[uninstall] {} keeps files that are not Mangaba Bot's",
             root.display()
         );
     }
@@ -481,7 +481,7 @@ mod tests {
         (said, failures)
     }
 
-    /// Uninstalling found OpenBot's machine, its containers and the backend still running with no
+    /// Uninstalling found Mangaba Bot's machine, its containers and the backend still running with no
     /// app left to stop them. The uninstaller now stops them, and leaves the machine there, stopped,
     /// with the installation folder, for a reinstall to find.
     #[test]
@@ -502,16 +502,16 @@ mod tests {
         assert_eq!(
             said,
             [
-                "Stopping OpenBot.",
-                "Stopping OpenBot's services.",
-                "Stopping the software OpenBot runs on.",
+                "Stopping Mangaba Bot.",
+                "Stopping Mangaba Bot's services.",
+                "Stopping the software Mangaba Bot runs on.",
             ]
         );
     }
 
     /// Box I: "Delete the application data" took the machine and left the installation folder whole,
     /// and the next install opened on a Start that could never work. Deleting the data now removes
-    /// the backend OpenBot created while its engine still runs, then OpenBot's machine, then its
+    /// the backend Mangaba Bot created while its engine still runs, then Mangaba Bot's machine, then its
     /// files, last.
     #[test]
     fn deleting_the_data_removes_the_backend_the_machine_and_the_installation() {
@@ -535,19 +535,19 @@ mod tests {
         assert_eq!(
             said,
             [
-                "Stopping OpenBot.",
-                "Stopping OpenBot's services.",
-                "Removing OpenBot's services.",
-                "Stopping the software OpenBot runs on.",
-                "Removing the software OpenBot runs on.",
-                "Removing OpenBot's files.",
+                "Stopping Mangaba Bot.",
+                "Stopping Mangaba Bot's services.",
+                "Removing Mangaba Bot's services.",
+                "Stopping the software Mangaba Bot runs on.",
+                "Removing the software Mangaba Bot runs on.",
+                "Removing Mangaba Bot's files.",
             ]
         );
     }
 
     /// The machine's disk is in `<install>\engine` on Windows. When `podman machine rm` fails, WSL
     /// still has the machine, so its folder stays: deleting the disk of a machine WSL still has
-    /// leaves WSL with a machine that cannot start. OpenBot's other files still go. A machine that
+    /// leaves WSL with a machine that cannot start. Mangaba Bot's other files still go. A machine that
     /// could not be found at all keeps the folder too.
     #[test]
     fn the_engine_folder_stays_when_the_machine_was_not_removed() {
@@ -562,7 +562,7 @@ mod tests {
         );
         assert_eq!(
             failures,
-            ["Couldn't remove the software OpenBot runs on. Uninstalling anyway."]
+            ["Couldn't remove the software Mangaba Bot runs on. Uninstalling anyway."]
         );
 
         let mut computer = Recorded {
@@ -586,8 +586,8 @@ mod tests {
 
     /// Box I: deleting the data removed `openbot` with the backend's cluster still running (its stop
     /// had failed), the cluster's port rules stayed in WSL's shared network namespace, and the next
-    /// install failed at "Opening OpenBot". Before the machine stops and goes, every container in it
-    /// stops, and if they won't, OpenBot's port rules are removed. Not when the data stays: the
+    /// install failed at "Opening Mangaba Bot". Before the machine stops and goes, every container in it
+    /// stops, and if they won't, Mangaba Bot's port rules are removed. Not when the data stays: the
     /// machine stays too, and its next start clears its own dead rules.
     #[test]
     fn before_openbots_machine_goes_its_containers_stop_or_its_port_rules_go() {
@@ -653,7 +653,7 @@ mod tests {
         );
     }
 
-    /// Docker, or no Podman machine of OpenBot's: the containers stop and no machine is touched.
+    /// Docker, or no Podman machine of Mangaba Bot's: the containers stop and no machine is touched.
     /// The installation's files still go when the data is deleted.
     #[test]
     fn without_openbots_machine_no_machine_is_touched() {
@@ -675,7 +675,7 @@ mod tests {
         );
     }
 
-    /// The only machine named is OpenBot's own, whatever the engine OpenBot ran on: one of the
+    /// The only machine named is Mangaba Bot's own, whatever the engine Mangaba Bot ran on: one of the
     /// person's machines is never stopped or removed.
     #[test]
     fn only_openbots_own_machine_is_ever_named() {
@@ -697,7 +697,7 @@ mod tests {
         );
     }
 
-    /// No engine answering (OpenBot's machine already stopped, say): nothing to take down, and the
+    /// No engine answering (Mangaba Bot's machine already stopped, say): nothing to take down, and the
     /// machine and the files are still dealt with.
     #[test]
     fn with_no_engine_answering_only_the_machine_and_the_files_are_dealt_with() {
@@ -728,13 +728,13 @@ mod tests {
         assert_eq!(
             failures,
             [
-                "Couldn't stop OpenBot. Uninstalling anyway.",
-                "Couldn't stop the software OpenBot runs on. Uninstalling anyway.",
+                "Couldn't stop Mangaba Bot. Uninstalling anyway.",
+                "Couldn't stop the software Mangaba Bot runs on. Uninstalling anyway.",
             ]
         );
     }
 
-    /// Nothing the uninstaller shows names the parts inside OpenBot: none of the copy guard's
+    /// Nothing the uninstaller shows names the parts inside Mangaba Bot: none of the copy guard's
     /// words (`tests/plain-setup-words.test.ts`), and never an engine's own message.
     #[test]
     fn the_uninstallers_lines_are_plain_words() {
@@ -771,7 +771,7 @@ mod tests {
         }
     }
 
-    /// What box I found left in `~\OpenBot` after "Delete the application data", by name.
+    /// What box I found left in `~\Mangaba Bot` after "Delete the application data", by name.
     const LEFT_ON_BOX_I: [&str; 18] = [
         ".copilotkit/local.json",
         ".langchain/chatgpt-auth.json",
@@ -795,7 +795,7 @@ mod tests {
 
     fn installation(name: &str) -> (std::path::PathBuf, std::path::PathBuf) {
         let home = crate::test_support::temp_root(name);
-        let root = home.join("OpenBot");
+        let root = home.join("Mangaba Bot");
         for entry in LEFT_ON_BOX_I {
             let path = root.join(entry);
             std::fs::create_dir_all(path.parent().unwrap()).unwrap();
@@ -814,7 +814,7 @@ mod tests {
     }
 
     /// The machine's disk is in `<install>\engine`. Once the machine is removed, the folder Podman
-    /// leaves there goes with OpenBot's other files, and a file of the person's still stays.
+    /// leaves there goes with Mangaba Bot's other files, and a file of the person's still stays.
     #[test]
     fn deleting_the_data_removes_the_engine_folder() {
         let (home, root) = installation("uninstall-engine-folder");
@@ -824,7 +824,7 @@ mod tests {
         assert!(!engine.exists(), "{:?}", std::fs::read_dir(&engine).ok());
         assert!(root.join("notes.txt").exists());
 
-        // Kept when WSL may still have the machine: OpenBot's other files go, the engine folder stays.
+        // Kept when WSL may still have the machine: Mangaba Bot's other files go, the engine folder stays.
         let (home_kept, root_kept) = installation("uninstall-engine-folder-kept");
         let kept = engine_left_by_podman(&root_kept);
         remove_installation(&root_kept, Some(&home_kept), true).unwrap();
@@ -841,11 +841,11 @@ mod tests {
         let _ = std::fs::remove_dir_all(home_alone);
     }
 
-    /// What a Windows box had in `%USERPROFILE%\OpenBot\openbot-engine` after "Delete the
-    /// application data", about 128 MB: the downloads are always there, whichever folder OpenBot
+    /// What a Windows box had in `%USERPROFILE%\Mangaba Bot\openbot-engine` after "Delete the
+    /// application data", about 128 MB: the downloads are always there, whichever folder Mangaba Bot
     /// was installed in. Returns the downloads folder.
     fn downloads_in(home: &Path) -> std::path::PathBuf {
-        let downloads = home.join("OpenBot").join("openbot-engine");
+        let downloads = home.join("Mangaba Bot").join("openbot-engine");
         for entry in [
             "bin/docker-compose.exe",
             "podman-installer.exe",
@@ -860,13 +860,13 @@ mod tests {
     }
 
     /// A Windows box: "Delete the application data" removed the installation and left
-    /// `%USERPROFILE%\OpenBot\openbot-engine`, because only the installation folder was looked in.
+    /// `%USERPROFILE%\Mangaba Bot\openbot-engine`, because only the installation folder was looked in.
     /// Now the downloads go too, and the default folder once it is empty. Nothing else in the
     /// home folder is touched.
     #[test]
     fn deleting_the_data_removes_the_downloads_wherever_openbot_was_installed() {
         let home = crate::test_support::temp_root("uninstall-downloads");
-        let root = home.join("Elsewhere").join("OpenBot");
+        let root = home.join("Elsewhere").join("Mangaba Bot");
         for entry in LEFT_ON_BOX_I {
             let path = root.join(entry);
             std::fs::create_dir_all(path.parent().unwrap()).unwrap();
@@ -881,7 +881,7 @@ mod tests {
         assert!(!root.exists());
         assert!(!downloads.exists(), "the downloads were left");
         assert!(
-            !home.join("OpenBot").exists(),
+            !home.join("Mangaba Bot").exists(),
             "the empty default folder was left"
         );
         assert!(home.join("notes.txt").exists());
@@ -902,10 +902,10 @@ mod tests {
         remove_installation(&root, Some(&home), true).unwrap();
         assert!(downloads.join("podman-default-before.json").exists());
 
-        std::fs::write(home.join("OpenBot").join("notes.txt"), "mine").unwrap();
+        std::fs::write(home.join("Mangaba Bot").join("notes.txt"), "mine").unwrap();
         remove_installation(&root, Some(&home), false).unwrap();
         assert!(!downloads.exists());
-        assert!(home.join("OpenBot").join("notes.txt").exists());
+        assert!(home.join("Mangaba Bot").join("notes.txt").exists());
         let _ = std::fs::remove_dir_all(&home);
     }
 
@@ -917,12 +917,12 @@ mod tests {
         let elsewhere = home.join("Keep");
         std::fs::create_dir_all(&elsewhere).unwrap();
         std::fs::write(elsewhere.join("mine.txt"), "mine").unwrap();
-        std::fs::create_dir_all(home.join("OpenBot")).unwrap();
-        std::os::unix::fs::symlink(&elsewhere, home.join("OpenBot").join("openbot-engine"))
+        std::fs::create_dir_all(home.join("Mangaba Bot")).unwrap();
+        std::os::unix::fs::symlink(&elsewhere, home.join("Mangaba Bot").join("openbot-engine"))
             .unwrap();
         remove_installation(&home.join("Elsewhere"), Some(&home), false).unwrap();
         assert!(elsewhere.join("mine.txt").exists());
-        assert!(!home.join("OpenBot").exists());
+        assert!(!home.join("Mangaba Bot").exists());
         let _ = std::fs::remove_dir_all(&home);
     }
 
@@ -951,11 +951,11 @@ mod tests {
         let _ = std::fs::remove_dir_all(home);
     }
 
-    /// Never the home folder, a folder above it, a drive's root, or a folder OpenBot didn't record.
+    /// Never the home folder, a folder above it, a drive's root, or a folder Mangaba Bot didn't record.
     #[test]
     fn only_a_folder_openbot_recorded_is_ever_touched() {
         let (home, root) = installation("uninstall-refusals");
-        // The home folder itself, holding OpenBot's records, and the folder above it.
+        // The home folder itself, holding Mangaba Bot's records, and the folder above it.
         for entry in LEFT_ON_BOX_I {
             let path = home.join(entry);
             std::fs::create_dir_all(path.parent().unwrap()).unwrap();
@@ -966,9 +966,9 @@ mod tests {
         assert!(home.join(".env").exists());
         let drive = Path::new(if cfg!(windows) { "C:\\" } else { "/" });
         assert!(remove_installation(drive, Some(&home), false).is_err());
-        assert!(remove_installation(Path::new("OpenBot"), Some(&home), false).is_err());
+        assert!(remove_installation(Path::new("Mangaba Bot"), Some(&home), false).is_err());
 
-        // A folder with none of OpenBot's records: nothing in it goes.
+        // A folder with none of Mangaba Bot's records: nothing in it goes.
         let engine = engine_left_by_podman(&root);
         for record in RECORDS {
             std::fs::remove_file(root.join(record)).unwrap();
@@ -1024,7 +1024,7 @@ mod tests {
             .collect()
     }
 
-    /// The uninstaller runs the stop on a real uninstall only, closes a running OpenBot first, and
+    /// The uninstaller runs the stop on a real uninstall only, closes a running Mangaba Bot first, and
     /// asks for the data to go only when "Delete the application data" is ticked. What it runs is
     /// what the app reads.
     #[test]
@@ -1044,7 +1044,7 @@ mod tests {
         let stop = nsis_macro("OPENBOT_STOP_WHAT_OPENBOT_RUNS");
         let close = stop
             .find("!insertmacro CheckIfAppIsRunning")
-            .expect("a running OpenBot is closed first");
+            .expect("a running Mangaba Bot is closed first");
         assert!(close < stop.find(COMMAND).unwrap());
         let ticked = stop
             .split("${If} $DeleteAppDataCheckboxState = 1")

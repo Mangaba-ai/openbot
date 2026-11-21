@@ -7,7 +7,7 @@ import { invokeDesktop } from "@/lib/desktop/queries";
 import { desktopShell } from "@/lib/desktop/shell";
 
 /**
- * How OpenBot reaches its AI provider (getAiConnection), and whether the Desktop window this page
+ * How Mangaba Bot reaches its AI provider (getAiConnection), and whether the Desktop window this page
  * may be in can change it in place.
  */
 export type { AiConnection };
@@ -20,7 +20,7 @@ export const aiConnectionKeys = {
 };
 
 /**
- * The organization's AI connection. Never a key. Null from an OpenBot older than this operation
+ * The organization's AI connection. Never a key. Null from an Mangaba Bot older than this operation
  * (404), where Settings keeps the Desktop row it had before.
  */
 export function aiConnectionQueryOptions() {
@@ -41,7 +41,7 @@ export function aiConnectionQueryOptions() {
 }
 
 /**
- * Whether this page is in an OpenBot Desktop that changes the AI connection in place: one that
+ * Whether this page is in an Mangaba Bot Desktop that changes the AI connection in place: one that
  * answers `ai_providers`, as every Desktop with `prepare_ai_connection` does. False in a plain
  * browser, true or false in Desktop by what it answers. An older Desktop refuses the command, and
  * Settings keeps its stop-and-setup Change there.

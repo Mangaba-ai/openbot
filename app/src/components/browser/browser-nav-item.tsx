@@ -17,14 +17,14 @@ const STORE_NAMES: Record<RecorderStore, string> = {
 };
 
 /**
- * What the person is told when Settings, Browsers opened the Recorder's store page in a new tab of the browser OpenBot is
+ * What the person is told when Settings, Browsers opened the Recorder's store page in a new tab of the browser Mangaba Bot is
  * open in: adding it there is what lets them record from here.
  */
 export function storeTabSentence(store: RecorderStore): string {
-  return `The OpenBot Recorder's page is open in a new tab. Add it to ${STORE_NAMES[store]} to record from OpenBot.`;
+  return `The Mangaba Bot Recorder's page is open in a new tab. Add it to ${STORE_NAMES[store]} to record from Mangaba Bot.`;
 }
 
-/** The short note that waits in OpenBot for a person who opened the Recorder's store page in a new tab: one at a time,
+/** The short note that waits in Mangaba Bot for a person who opened the Recorder's store page in a new tab: one at a time,
  * so a second click replaces it rather than stacking another under it. */
 export function noteStoreTabOpened(store: RecorderStore): void {
   toast.add({ id: STORE_TOAST, title: storeTabSentence(store), type: "info" });
@@ -37,8 +37,8 @@ export type RecordingLabel = { label: string; live: boolean };
  * the receipt, 1:23", ticking while it runs. Teaching a Bot a task is how a skill is recorded, so Skills is where the
  * menu says one is live.
  *
- * Read from the server's `activity`, which folds in every Recorder the person has (the OpenBot browser's, or one in
- * their everyday browser), and only where OpenBot can run a browser for them (`available`). The read polls every
+ * Read from the server's `activity`, which folds in every Recorder the person has (the Mangaba Bot browser's, or one in
+ * their everyday browser), and only where Mangaba Bot can run a browser for them (`available`). The read polls every
  * second while something records, so Stop takes the dot away as quickly (`browserStateQueryOptions`). Null while
  * nothing records. `live` while it records, as opposed to starting or stopping, as the Teach a Bot page's mark has it.
  */

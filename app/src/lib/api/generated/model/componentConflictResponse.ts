@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * A Playground component needs a description and HTML before it can be published, a component that comes with OpenBot can't be deleted or written in Playground, or the Idempotency-Key was used for a different request.
+ * A Playground component needs a description and HTML before it can be published, a component that comes with Mangaba Bot can't be deleted or written in Playground, or the Idempotency-Key was used for a different request.
  */
 export type ComponentConflictResponse = Problem;

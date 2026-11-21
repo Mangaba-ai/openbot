@@ -4,7 +4,7 @@
 //! deployment (`.openbot-deployment`) is not the app's own release is upgraded before it starts:
 //!
 //! 0. Check this computer has room for it (`Steps::room`). Without, nothing below runs.
-//! 1. Stop OpenBot.
+//! 1. Stop Mangaba Bot.
 //! 2. Take one `pg_dump` of its database, if it has one, and keep the previous version's files
 //!    (`KEPT`) in `.openbot-previous/`.
 //! 3. Lay the app's release out exactly as Install does.
@@ -144,14 +144,14 @@ pub fn previous_version(root: &Path) -> Option<String> {
 pub trait Steps {
     /// Say which step runs next, just before it runs (see `now_said`). Start's window shows one
     /// line for the whole upgrade, and a step that said nothing left the one before it on that line:
-    /// "Stopping OpenBot." under the rows through a whole download, install and start.
+    /// "Stopping Mangaba Bot." under the rows through a whole download, install and start.
     fn now(&mut self, _now: Now) {}
     /// Whether this computer has room for the update, before anything stops, is backed up or
     /// downloads (`local_eval::update_room`). A problem that says what is short when it has not.
     fn room(&mut self) -> Result<(), Problem> {
         Ok(())
     }
-    /// Stop OpenBot: every container and host process of this installation. Volumes stay.
+    /// Stop Mangaba Bot: every container and host process of this installation. Volumes stay.
     fn stop(&mut self) -> Result<(), Problem>;
     /// Whether the installation has a database to back up. One that never started has none, and
     /// starting its Postgres to back it up would create one.
@@ -192,32 +192,32 @@ pub enum Now {
 pub fn now_said(now: Now, root: &Path, own: &Own) -> StepLine {
     match now {
         Now::Checking => StepLine::here("Checking there's room for the update."),
-        Now::Stopping => StepLine::here("Stopping OpenBot."),
+        Now::Stopping => StepLine::here("Stopping Mangaba Bot."),
         Now::BackingUp => {
-            StepLine::here("Backing up your data.").logged("Backing up OpenBot's database.")
+            StepLine::here("Backing up your data.").logged("Backing up Mangaba Bot's database.")
         }
         Now::Downloading => StepLine::here("Downloading the update.")
-            .logged(format!("Downloading OpenBot {}.", own.version)),
+            .logged(format!("Downloading Mangaba Bot {}.", own.version)),
         Now::Installing => StepLine::here("Installing the update.")
-            .logged(format!("Installing OpenBot {}.", own.version)),
+            .logged(format!("Installing Mangaba Bot {}.", own.version)),
         Now::Starting => {
-            StepLine::here("Starting OpenBot.").logged(match deployment::installed(root) {
-                Some(found) => format!("Starting OpenBot {}.", found.version),
-                None => "Starting OpenBot.".into(),
+            StepLine::here("Starting Mangaba Bot.").logged(match deployment::installed(root) {
+                Some(found) => format!("Starting Mangaba Bot {}.", found.version),
+                None => "Starting Mangaba Bot.".into(),
             })
         }
         Now::Restoring => {
-            StepLine::here("Putting your data back.").logged("Putting OpenBot's database back.")
+            StepLine::here("Putting your data back.").logged("Putting Mangaba Bot's database back.")
         }
     }
 }
 
 /// An upgrade the app stopped part way is back on the version it was updating from.
 pub fn put_back_said(root: &Path) -> StepLine {
-    StepLine::here("OpenBot is back on the version it had.").logged(
+    StepLine::here("Mangaba Bot is back on the version it had.").logged(
         match deployment::installed(root) {
-            Some(found) => format!("OpenBot is back on {}.", found.version),
-            None => "OpenBot is back on the version it was updating from.".into(),
+            Some(found) => format!("Mangaba Bot is back on {}.", found.version),
+            None => "Mangaba Bot is back on the version it was updating from.".into(),
         },
     )
 }
@@ -323,7 +323,7 @@ fn undo(root: &Path, steps: &mut dyn Steps) -> Result<(), Problem> {
     said(steps, Now::Stopping, |steps| steps.stop())?;
     let moved = put_back(root).map_err(|error| {
         Problem::with(
-            "OpenBot could not put its previous version's files back.",
+            "Mangaba Bot could not put its previous version's files back.",
             error,
         )
     })?;
@@ -353,7 +353,7 @@ fn said(
     step(steps)
 }
 
-const UNCHANGED: &str = "OpenBot could not set its previous version aside, so nothing changed.";
+const UNCHANGED: &str = "Mangaba Bot could not set its previous version aside, so nothing changed.";
 
 /// Move the previous version's files into `PREVIOUS`, recording which first.
 fn keep(root: &Path) -> Result<(), String> {
@@ -437,13 +437,13 @@ fn write_synced(path: &PathBuf, bytes: &[u8]) -> Result<(), String> {
 
 /// What Start says while it upgrades. The releases are the log's: `moved_log`.
 pub fn moving_said(planned: &Move) -> StepLine {
-    StepLine::here("Updating OpenBot. Your Bots, sign-ins and data stay as they are.")
+    StepLine::here("Updating Mangaba Bot. Your Bots, sign-ins and data stay as they are.")
         .logged(moved_log(planned))
 }
 
 /// The upgrade, by its releases, for the log beside what the screen says.
 pub fn moved_log(planned: &Move) -> String {
-    format!("updating OpenBot from {} to {}", planned.from, planned.to)
+    format!("updating Mangaba Bot from {} to {}", planned.from, planned.to)
 }
 
 /// This computer is short of `short` for the update (`local_eval::update_room`): the problem Start
@@ -460,20 +460,20 @@ pub fn short_problem(short: crate::local_eval::Shortfall) -> Problem {
 
 /// The upgrade failed, and the previous version is running again.
 pub fn kept_said(_planned: &Move) -> String {
-    "OpenBot couldn't update, so it's still on the version it had, with your data as it was.".into()
+    "Mangaba Bot couldn't update, so it's still on the version it had, with your data as it was.".into()
 }
 
 /// The upgrade failed, the previous version is back, and it did not start.
 pub fn back_said(_planned: &Move, start: &Problem) -> String {
     format!(
-        "OpenBot couldn't update and went back to the version it had. {}",
+        "Mangaba Bot couldn't update and went back to the version it had. {}",
         start.said
     )
 }
 
 /// The upgrade failed, and the previous version could not be put back.
 pub fn stuck_said(_planned: &Move) -> String {
-    "OpenBot couldn't update or put the version it had back. Choose Retry to try putting it back \
+    "Mangaba Bot couldn't update or put the version it had back. Choose Retry to try putting it back \
      again."
         .into()
 }
@@ -661,7 +661,7 @@ mod tests {
         }
         assert_eq!(
             kept_said(&planned),
-            "OpenBot couldn't update, so it's still on the version it had, with your data as it was."
+            "Mangaba Bot couldn't update, so it's still on the version it had, with your data as it was."
         );
         assert!(moving_said(&planned)
             .log_entry()
@@ -793,9 +793,9 @@ mod tests {
 
     /**
     A Mac with 7.5 GB free updating to 1.1.0. Nothing checked for room, so the update stopped
-    OpenBot, backed it up and downloaded until the Mac was full, Docker's disk stopped writing, and
+    Mangaba Bot, backed it up and downloaded until the Mac was full, Docker's disk stopped writing, and
     neither the new version nor the one it had would start. The preflight runs first now, and short
-    of room nothing else does: OpenBot is not stopped, nothing is backed up, set aside or
+    of room nothing else does: Mangaba Bot is not stopped, nothing is backed up, set aside or
     downloaded, and the problem carries what is short for the window to say.
     */
     #[test]
@@ -870,7 +870,7 @@ mod tests {
 
     /// Start's window shows one line under its rows for the whole upgrade, and it says the step
     /// that runs now. Each step used to say itself only if it was the stop, the backup or the
-    /// restore, so "Stopping OpenBot." or "Backing up OpenBot's database." stayed on that line
+    /// restore, so "Stopping Mangaba Bot." or "Backing up Mangaba Bot's database." stayed on that line
     /// through the download, the install and the start that came after them.
     #[test]
     fn every_step_of_an_upgrade_runs_under_its_own_sentence() {
@@ -899,11 +899,11 @@ mod tests {
         assert_eq!(
             lines(&steps),
             said(&[
-                ("stop", "Stopping OpenBot."),
+                ("stop", "Stopping Mangaba Bot."),
                 ("back_up", "Backing up your data."),
                 ("lay_out", "Downloading the update."),
                 ("install", "Installing the update."),
-                ("start", "Starting OpenBot."),
+                ("start", "Starting Mangaba Bot."),
             ])
         );
         std::fs::remove_dir_all(root).unwrap();
@@ -915,10 +915,10 @@ mod tests {
         assert_eq!(
             lines(&steps),
             said(&[
-                ("stop", "Stopping OpenBot."),
+                ("stop", "Stopping Mangaba Bot."),
                 ("lay_out", "Downloading the update."),
                 ("install", "Installing the update."),
-                ("start", "Starting OpenBot."),
+                ("start", "Starting Mangaba Bot."),
             ])
         );
         std::fs::remove_dir_all(root).unwrap();
@@ -930,22 +930,22 @@ mod tests {
         assert_eq!(
             lines(&steps),
             said(&[
-                ("stop", "Stopping OpenBot."),
+                ("stop", "Stopping Mangaba Bot."),
                 ("back_up", "Backing up your data."),
                 ("lay_out", "Downloading the update."),
                 ("install", "Installing the update."),
-                ("stop", "Stopping OpenBot."),
+                ("stop", "Stopping Mangaba Bot."),
                 ("restore", "Putting your data back."),
-                ("start", "Starting OpenBot."),
+                ("start", "Starting Mangaba Bot."),
             ])
         );
         assert_eq!(
             put_back_said(&root).said,
-            "OpenBot is back on the version it had."
+            "Mangaba Bot is back on the version it had."
         );
         assert_eq!(
             put_back_said(&root).detail.as_deref(),
-            Some("OpenBot is back on v0.3.0.")
+            Some("Mangaba Bot is back on v0.3.0.")
         );
         std::fs::remove_dir_all(root).unwrap();
     }
@@ -1157,7 +1157,7 @@ mod tests {
 
 /// The upgrade against a real container engine, with the product's own layout (`deployment`), pull
 /// (`pull_metrics`), Start (`stack::up`), Stop (`stack::down`), `pg_dump` and `pg_restore` (`stack`).
-/// Releases are two versions of a fixture with the shape of OpenBot's Compose file up to 1.0.3,
+/// Releases are two versions of a fixture with the shape of Mangaba Bot's Compose file up to 1.0.3,
 /// which Start still raises as that file requires: Postgres, a `migrate` that `server` depends on, a
 /// `worker`, and the other services Start raises, all from a "server"
 /// image the fixture pushes to a local registry, so every pull is a real pull. Each migration
@@ -1181,7 +1181,7 @@ mod real_engine {
             "create table if not exists fixture_migrations(version text not null, ran_at timestamptz not null default now()); insert into fixture_migrations(version) values ('{version}');"
         );
         format!(
-            r#"# OpenBot fixture {version}
+            r#"# Mangaba Bot fixture {version}
 services:
   postgres:
     image: {POSTGRES}
@@ -1189,7 +1189,7 @@ services:
       POSTGRES_DB: openbot
       POSTGRES_USER: openbot
       POSTGRES_PASSWORD: openbot
-    # Published on loopback, as OpenBot's own Compose file does, so a client on the host can reach it.
+    # Published on loopback, as Mangaba Bot's own Compose file does, so a client on the host can reach it.
     ports:
       - "127.0.0.1:${{POSTGRES_PORT:-5432}}:5432"
     volumes:
@@ -1427,7 +1427,7 @@ volumes:
     impl Fixture {
         /// Something outside the installation's Compose project that keeps connecting to its
         /// database through the published port, and reconnects whenever it is cut off: what a
-        /// developer's OpenBot server left running on the host does to the Desktop's Postgres on
+        /// developer's Mangaba Bot server left running on the host does to the Desktop's Postgres on
         /// 5432 (found holding 12 sessions in the real failure). Six sessions, each opened again as
         /// soon as it ends. Not part of the project, so no Stop or `down` of it touches them.
         fn connect_from_outside(&mut self) {
@@ -1689,7 +1689,7 @@ volumes:
             NEXT,
             &format!("127.0.0.1:{closed}/openbot-upgrade-fixture/never-pushed:{NEXT}"),
         );
-        // And the database is in use from outside OpenBot the whole time.
+        // And the database is in use from outside Mangaba Bot the whole time.
         fixture.connect_from_outside();
 
         let mut steps = Real {
@@ -1746,7 +1746,7 @@ volumes:
 
     /// The state a real Desktop was left in: an upgrade that set the previous version aside, laid
     /// the next one out and then could not put the database back, because a client outside
-    /// OpenBot kept sessions open to it. Retry runs Start, which puts the previous version back
+    /// Mangaba Bot kept sessions open to it. Retry runs Start, which puts the previous version back
     /// (`recover`) and starts it, with that client still connected.
     #[test]
     #[ignore = "pushes to a local registry and runs an isolated Compose project on the selected engine"]
@@ -1797,7 +1797,7 @@ volumes:
             fixture.sql("select count(*) from fixture_migrations where version = 'v0.0.2'"),
             "0"
         );
-        // And the client outside OpenBot is back on it.
+        // And the client outside Mangaba Bot is back on it.
         let deadline = std::time::Instant::now() + std::time::Duration::from_secs(30);
         while fixture.outside_sessions() < 6 {
             assert!(

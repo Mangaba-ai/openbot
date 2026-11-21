@@ -41,10 +41,10 @@ import {
 } from "./account-label";
 import { useSignOut } from "./use-sign-out";
 
-/** The orb's palette: periwinkle, the nearest of the eight to OpenBot's own mark. */
+/** The orb's palette: periwinkle, the nearest of the eight to Mangaba Bot's own mark. */
 const ORB_COLORS = ORB_PALETTES[2];
 
-/** OpenBot's orb at the top of the strip. It goes home, as the product's name did. */
+/** Mangaba Bot's orb at the top of the strip. It goes home, as the product's name did. */
 function HomeOrb() {
   return (
     <Link
@@ -127,7 +127,7 @@ function StripAccount() {
   const navigation = useNavigationItems();
   const signOut = useSignOut();
   const signOutOffered = useSignOutOffered();
-  // Where OpenBot lists no organizations, the menu has none at all.
+  // Where Mangaba Bot lists no organizations, the menu has none at all.
   const organizationChoices = useOrganizationChoices();
   const invitationsWaiting = useWaitingInvitationCount();
   const switchOrganization = useSwitchOrganization();

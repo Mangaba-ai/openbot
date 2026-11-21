@@ -116,7 +116,7 @@ export const getListBotGrantsUrl = (
 };
 
 /**
- * Return one page of everything a Bot was given: each action of an app, each skill, and each other Bot it may hand work to. An action carries what it does while its app offers it. One the app no longer lists is kept but not offered, and its action is null. Reading the list also gives the Bot what OpenBot gives every Bot, such as Routines. Anybody who can use the Bot may list them. Grants come in order of their id. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of everything a Bot was given: each action of an app, each skill, and each other Bot it may hand work to. An action carries what it does while its app offers it. One the app no longer lists is kept but not offered, and its action is null. Reading the list also gives the Bot what Mangaba Bot gives every Bot, such as Routines. Anybody who can use the Bot may list them. Grants come in order of their id. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List what a Bot may use
  */
 export const listBotGrants = async (
@@ -494,7 +494,7 @@ export const getTranslateBotGrantsUrl = (
 };
 
 /**
- * Turn a description in English of what a Bot may do in one app into an exact set of that app's actions. OpenBot's model chooses them, they are checked against what the app offers now, and a second call that never sees the description says what the set lets the Bot do. Nothing is saved: batchUpdateBotGrants saves the set. The audit trail records the description and what it became. Only an administrator may ask.
+ * Turn a description in English of what a Bot may do in one app into an exact set of that app's actions. Mangaba Bot's model chooses them, they are checked against what the app offers now, and a second call that never sees the description says what the set lets the Bot do. Nothing is saved: batchUpdateBotGrants saves the set. The audit trail records the description and what it became. Only an administrator may ask.
  * @summary Choose a Bot's actions in one app from a description
  */
 export const translateBotGrants = async (
@@ -662,7 +662,7 @@ export const getReplayBotGrantsUrl = (
 };
 
 /**
- * Say what a set of one app's actions would change for a Bot against what it has now, and what that would have meant for its recent calls to the app: actions it used that the set takes away, and actions it was refused that the set gives. Nothing is saved. report is null where OpenBot keeps no audit trail it can read. Only an administrator may ask.
+ * Say what a set of one app's actions would change for a Bot against what it has now, and what that would have meant for its recent calls to the app: actions it used that the set takes away, and actions it was refused that the set gives. Nothing is saved. report is null where Mangaba Bot keeps no audit trail it can read. Only an administrator may ask.
  * @summary Test a Bot's actions in one app against its recent calls
  */
 export const replayBotGrants = async (
@@ -821,7 +821,7 @@ export const getReplaceBotGrantUrl = (
 };
 
 /**
- * Give a Bot one thing to use, or keep what it has. An administrator may give a Bot an action of an app OpenBot has added, even one the app no longer lists, any skill, or another Bot to hand work to. A Bot's owner may give it their own skill, or one action their own app offers now when the app is open to owners; that action runs on the account of whoever asks. For an action of an app with one shared account, approval says who may have the Bot use that account. Without it, an administrator's grant approves the people who can use the Bot now, unless an administrator already chose. Recorded on the audit trail.
+ * Give a Bot one thing to use, or keep what it has. An administrator may give a Bot an action of an app Mangaba Bot has added, even one the app no longer lists, any skill, or another Bot to hand work to. A Bot's owner may give it their own skill, or one action their own app offers now when the app is open to owners; that action runs on the account of whoever asks. For an action of an app with one shared account, approval says who may have the Bot use that account. Without it, an administrator's grant approves the people who can use the Bot now, unless an administrator already chose. Recorded on the audit trail.
  * @summary Give a Bot an action, a skill or another Bot
  */
 export const replaceBotGrant = async (
@@ -983,7 +983,7 @@ export const getDeleteBotGrantUrl = (
 };
 
 /**
- * Take one action, skill or Bot from a Bot. An administrator may take any of them, including one whose app or skill is gone. A Bot's owner may take their own skill from it, and takes back the actions they gave with takeBackBotApp. Routines can't be taken. In OpenBot Personal neither can an app's actions or another Bot, since every Bot has them. Recorded on the audit trail. A grant the Bot doesn't have is not found.
+ * Take one action, skill or Bot from a Bot. An administrator may take any of them, including one whose app or skill is gone. A Bot's owner may take their own skill from it, and takes back the actions they gave with takeBackBotApp. Routines can't be taken. In Mangaba Bot Personal neither can an app's actions or another Bot, since every Bot has them. Recorded on the audit trail. A grant the Bot doesn't have is not found.
  * @summary Take something from a Bot
  */
 export const deleteBotGrant = async (

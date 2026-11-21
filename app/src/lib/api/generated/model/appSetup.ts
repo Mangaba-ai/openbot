@@ -4,18 +4,18 @@
 import type { AppSetupDirectoryProvider } from "./appSetupDirectoryProvider";
 
 /**
- * How apps are set up on this OpenBot. Never a key.
+ * How apps are set up on this Mangaba Bot. Never a key.
  */
 export interface AppSetup {
   /** Whether apps from the wider directory can be listed and added here. */
   directoryAvailable: boolean;
   /**
-   * The service the app directory comes from. The screens read it to open their own page for the directory and to name the setting an administrator sets to turn it on. Null when this OpenBot names none.
+   * The service the app directory comes from. The screens read it to open their own page for the directory and to name the setting an administrator sets to turn it on. Null when this Mangaba Bot names none.
    * @nullable
    */
   directoryProvider: AppSetupDirectoryProvider;
   /**
-   * The address to register with a vendor for an OAuth client (setAppOAuthClient), exactly as OpenBot sends it. Null when this OpenBot has no public address, so nobody can sign in to an app through it.
+   * The address to register with a vendor for an OAuth client (setAppOAuthClient), exactly as Mangaba Bot sends it. Null when this Mangaba Bot has no public address, so nobody can sign in to an app through it.
    * @nullable
    */
   redirectUri: string | null;

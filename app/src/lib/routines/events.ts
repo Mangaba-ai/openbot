@@ -17,7 +17,7 @@ export const EVENT_SOURCE_LABEL: Record<Source, string> = {
 };
 
 /**
- * The events OpenBot is sent, by source and identifier, as a person would say them.
+ * The events Mangaba Bot is sent, by source and identifier, as a person would say them.
  *
  * The identifiers are the ones each source's webhook produces (`server/src/responsibilities`):
  * GitHub's `X-GitHub-Event` and the payload's `action` (`issues.opened`), Linear's entity and action

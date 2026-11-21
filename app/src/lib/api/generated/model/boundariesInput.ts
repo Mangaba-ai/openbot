@@ -7,7 +7,7 @@ import type { BoundaryMode } from "./boundaryMode";
 
 export interface BoundariesInput {
   mode: BoundaryMode;
-  /** The deny rules, each a CEL expression. One added here must be one OpenBot can evaluate. */
+  /** The deny rules, each a CEL expression. One added here must be one Mangaba Bot can evaluate. */
   deny?: string[];
   /** The allow rules, each a CEL expression. Empty permits nothing. */
   allow?: string[];

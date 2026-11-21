@@ -5,9 +5,9 @@
 //! nothing for them to send. Now every line also lands in a file in the platform's own place for
 //! application logs (`TargetKind::LogDir`, Tauri's `app_log_dir`):
 //!
-//! - macOS: `~/Library/Logs/ai.copilotkit.openbot.desktop/openbot-desktop.log`
-//! - Windows: `%LOCALAPPDATA%\ai.copilotkit.openbot.desktop\logs\openbot-desktop.log`
-//! - Linux: `$XDG_DATA_HOME/ai.copilotkit.openbot.desktop/logs/openbot-desktop.log`
+//! - macOS: `~/Library/Logs/ai.mangaba.bot.desktop/openbot-desktop.log`
+//! - Windows: `%LOCALAPPDATA%\ai.mangaba.bot.desktop\logs\openbot-desktop.log`
+//! - Linux: `$XDG_DATA_HOME/ai.mangaba.bot.desktop/logs/openbot-desktop.log`
 //!   (`~/.local/share/...` when it is unset)
 //!
 //! The official Tauri log plugin writes it: the `log` macros the shell already reads like its
@@ -216,7 +216,7 @@ pub fn timed<T, E: Failure>(what: &str, run: impl FnOnce() -> Result<T, E>) -> R
 What a Start phase waits on, as the log says it: the first answer and every change of it, the same
 answer again once a minute, and why the wait ended, with how long it ran and the last answer.
 
-A Start on Windows waited five minutes for OpenBot's services and then said "OpenBot didn't get
+A Start on Windows waited five minutes for Mangaba Bot's services and then said "Mangaba Bot didn't get
 ready in time", and the log had nothing in between: not what was asked, not what it answered, not
 why it stopped. Support had nothing to go on. Every wait writes these lines now.
 
@@ -472,7 +472,7 @@ static RULES: LazyLock<Vec<Rule>> = LazyLock::new(|| {
             r"(?i)\b(?P<name>set-cookie|cookie)(?P<sep>\s*[:=]\s*)[^\r\n]+",
             "${name}${sep}[redacted]",
         ),
-        // The secret the window carries to the relay for an OpenBot that runs elsewhere
+        // The secret the window carries to the relay for an Mangaba Bot that runs elsewhere
         // (`connected::relay`), wherever it is written without the word Cookie in front.
         rule(
             r"(?i)\b(?P<name>openbot-relay=)[^\s;,\x22']+",
@@ -520,7 +520,7 @@ static RULES: LazyLock<Vec<Rule>> = LazyLock::new(|| {
                 r"|ya29\.[0-9A-Za-z_\-]+",
                 r"|npm_[A-Za-z0-9]{36}",
                 r"|hf_[A-Za-z0-9]{30,}",
-                // OpenBot's own: an app's access token (`oba_`) and refresh token (`obr_`).
+                // Mangaba Bot's own: an app's access token (`oba_`) and refresh token (`obr_`).
                 r"|ob[ar]_[A-Za-z0-9_\-]{8,}",
                 r"|eyJ[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]*",
                 r")",
@@ -572,7 +572,7 @@ pub fn redact(text: &str) -> Cow<'_, str> {
 
 #[cfg(test)]
 mod tests {
-    /// A five-minute wait, as Start's for OpenBot's services ran on Windows: the first answer,
+    /// A five-minute wait, as Start's for Mangaba Bot's services ran on Windows: the first answer,
     /// nothing for the same one a second later, the same one again after a minute, a change, and
     /// why it gave up, with how long and the last answer.
     #[test]
@@ -580,7 +580,7 @@ mod tests {
         let start = std::time::Instant::now();
         let at = |seconds: u64| start + std::time::Duration::from_secs(seconds);
         let mut wait = WaitLog::new(
-            "OpenBot's services, GET /health on port 64770 (API) and port 64771 (app)",
+            "Mangaba Bot's services, GET /health on port 64770 (API) and port 64771 (app)",
             start,
         );
         let refused = "API not answering (http://127.0.0.1:64770/health: Connection refused (os \
@@ -589,7 +589,7 @@ mod tests {
         assert_eq!(
             wait.answered(at(1), refused).unwrap(),
             format!(
-                "[wait] OpenBot's services, GET /health on port 64770 (API) and port 64771 \
+                "[wait] Mangaba Bot's services, GET /health on port 64770 (API) and port 64771 \
                  (app): {refused} (1.0s in, check 1)"
             )
         );
@@ -604,7 +604,7 @@ mod tests {
         assert_eq!(
             wait.ended(at(302), "gave up: the API is not answering on port 64770."),
             format!(
-                "[wait] OpenBot's services, GET /health on port 64770 (API) and port 64771 \
+                "[wait] Mangaba Bot's services, GET /health on port 64770 (API) and port 64771 \
                  (app): gave up: the API is not answering on port 64770. after 5m 02s and 4 \
                  checks; last answer: {unavailable}"
             )
@@ -722,12 +722,12 @@ mod tests {
             "[engine] docker 27.3.1 is answering at unix:///var/run/docker.sock",
             "pulled ghcr.io/copilotkit/openbot-server:0.3.2 for openbot-desktop-server-1",
             "[app update] could not read https://github.com/CopilotKit/OpenBot/releases/latest/download/latest.json: 404",
-            r"[start] installed in C:\Users\Administrator\OpenBot, app on port 3010",
+            r"[start] installed in C:\Users\Administrator\Mangaba Bot, app on port 3010",
             "[start] using k3d-local-abc-server-0 and cpki-app-api-test",
             "[step engine] Docker Desktop 4.36.0 is running.",
             "[exit] code 0, Os { code: 2, kind: NotFound, message: \"No such file or directory\" }",
             "[start] model anthropic, signed in with a subscription",
-            "OpenBot Desktop 0.3.2 (v0.3.2 (b214c97e)) on macos aarch64",
+            "Mangaba Bot Desktop 0.3.2 (v0.3.2 (b214c97e)) on macos aarch64",
         ] {
             assert_eq!(redact(line), line);
         }

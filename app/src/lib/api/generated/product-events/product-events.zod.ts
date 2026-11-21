@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Tell OpenBot that the caller saw a Bot's answer on screen, or copied it, so OpenBot can count which answers people use. It is best effort: a client sends one for each answer it shows or copies, waits on nothing, and sends it with keepalive so it still leaves when the page closes. The event counts for the caller, and names only the answer. Where this OpenBot has product telemetry switched off, it is accepted and dropped.
+ * Tell Mangaba Bot that the caller saw a Bot's answer on screen, or copied it, so Mangaba Bot can count which answers people use. It is best effort: a client sends one for each answer it shows or copies, waits on nothing, and sends it with keepalive so it still leaves when the page closes. The event counts for the caller, and names only the answer. Where this Mangaba Bot has product telemetry switched off, it is accepted and dropped.
  * @summary Record that the caller saw or copied a Bot's answer
  */
 
@@ -82,7 +82,7 @@ export const RecordProductEventBody = zod
 export const RecordProductEventResponse = zod.void();
 
 /**
- * Tell OpenBot about an error the app hit and did not handle: one its error screen caught, or one the page threw or left unhandled. OpenBot forwards it with the rest of its product telemetry, so the app never holds a telemetry key, and takes out of its message and stack anything that could name a person, quote what they wrote, or carry a secret before it leaves. It is best effort: a client sends one per error, waits on nothing, and sends it with keepalive. Where this OpenBot has product telemetry switched off, it is accepted and dropped.
+ * Tell Mangaba Bot about an error the app hit and did not handle: one its error screen caught, or one the page threw or left unhandled. Mangaba Bot forwards it with the rest of its product telemetry, so the app never holds a telemetry key, and takes out of its message and stack anything that could name a person, quote what they wrote, or carry a secret before it leaves. It is best effort: a client sends one per error, waits on nothing, and sends it with keepalive. Where this Mangaba Bot has product telemetry switched off, it is accepted and dropped.
  * @summary Report an error the app did not handle
  */
 
@@ -154,13 +154,13 @@ export const RecordAppErrorBody = zod
       ),
   })
   .describe(
-    "An error the app hit and did not handle, as the app saw it. OpenBot scrubs and bounds it again before it is sent anywhere.",
+    "An error the app hit and did not handle, as the app saw it. Mangaba Bot scrubs and bounds it again before it is sent anywhere.",
   );
 
 export const RecordAppErrorResponse = zod.void();
 
 /**
- * Tell OpenBot that a nudge (a notice OpenBot shows a person once, such as the ask to star OpenBot on GitHub) was shown to the caller, that they followed it, or that they dismissed it, and where. OpenBot adds the moment that made it due, from what it already knows about the caller, so the counts say which moment works. It is best effort: a client sends one per show or answer and waits on nothing. Saving the answer is a separate change to the caller's preferences (`dismissedNotices`). The event counts for the caller and names nothing else. Where this OpenBot has product telemetry switched off, it is accepted and dropped.
+ * Tell Mangaba Bot that a nudge (a notice Mangaba Bot shows a person once, such as the ask to star Mangaba Bot on GitHub) was shown to the caller, that they followed it, or that they dismissed it, and where. Mangaba Bot adds the moment that made it due, from what it already knows about the caller, so the counts say which moment works. It is best effort: a client sends one per show or answer and waits on nothing. Saving the answer is a separate change to the caller's preferences (`dismissedNotices`). The event counts for the caller and names nothing else. Where this Mangaba Bot has product telemetry switched off, it is accepted and dropped.
  * @summary Record what the caller did with a nudge
  */
 
@@ -199,7 +199,7 @@ export const RecordNudgeEventBody = zod
       .max(recordNudgeEventBodyNudgeMax)
       .regex(recordNudgeEventBodyNudgeRegExp)
       .describe(
-        "A notice OpenBot shows a person once, such as a nudge, by its id: star-on-github is the ask to star OpenBot on GitHub.",
+        "A notice Mangaba Bot shows a person once, such as a nudge, by its id: star-on-github is the ask to star Mangaba Bot on GitHub.",
       ),
     action: zod
       .enum(["shown", "clicked", "dismissed"])
@@ -216,7 +216,7 @@ export const RecordNudgeEventBody = zod
       .describe("Where the caller saw or answered it."),
   })
   .describe(
-    "What the caller did with a nudge, and where. Names nothing about the person, who is the caller. The moment that made the nudge due is added by OpenBot, not sent.",
+    "What the caller did with a nudge, and where. Names nothing about the person, who is the caller. The moment that made the nudge due is added by Mangaba Bot, not sent.",
   );
 
 export const RecordNudgeEventResponse = zod.void();

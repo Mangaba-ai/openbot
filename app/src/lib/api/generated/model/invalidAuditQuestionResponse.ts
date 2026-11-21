@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The question is blank or longer than 500 characters once trimmed, holds a character OpenBot can't keep, or a parameter is malformed.
+ * The question is blank or longer than 500 characters once trimmed, holds a character Mangaba Bot can't keep, or a parameter is malformed.
  */
 export type InvalidAuditQuestionResponse = Problem;

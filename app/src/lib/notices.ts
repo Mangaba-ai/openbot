@@ -17,7 +17,7 @@ import { userPreferencesQueryOptions } from "@/lib/settings/message-list";
  * NOTICES A PERSON IS SHOWN ONCE: NUDGES (shared/notices.ts).
  *
  * The browser decides nothing about when one is due. The server works it out on every read of the
- * person's preferences (`noticesDue`), from the edition and how they have used OpenBot, and leaves
+ * person's preferences (`noticesDue`), from the edition and how they have used Mangaba Bot, and leaves
  * out any they dismissed (`dismissedNotices`). What the browser does is draw the card, save the
  * answer, count it, and read the preferences again at a moment that could have made one due: a
  * copied answer, a turn that ended somewhere, a Bot's reply.
@@ -69,7 +69,7 @@ let pendingRead: ReturnType<typeof setTimeout> | undefined;
 /**
  * A moment that could have made a nudge due: read the person's preferences again, so the server's
  * answer reaches the card right after the win. Only where a nudge could come of it at all (see
- * {@link mightBecomeDue}): a team's OpenBot, or somebody who answered every nudge, asks for nothing.
+ * {@link mightBecomeDue}): a team's Mangaba Bot, or somebody who answered every nudge, asks for nothing.
  *
  * `afterMs` waits a little for a moment the server records after telling the app (a routine's run
  * and a task's report are each said in the conversation a moment before their outcome is written),

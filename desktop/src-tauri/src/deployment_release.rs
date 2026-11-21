@@ -8,7 +8,7 @@
 //! launcher's side of the contract, numbered `compatibility.launcherApi` in `release-policy.json`
 //! and in every release's `release-manifest.json`. A release whose number is above the one this app
 //! was built with needs something this app does not write. It is never laid out for a first install
-//! (the app's own release is) and never started (the window says "Update OpenBot"); see
+//! (the app's own release is) and never started (the window says "Update Mangaba Bot"); see
 //! [`launcher_api`]. A release one number behind starts as it always has: the app still writes
 //! what that release reads (`install_token`, for one, is read back from a server that predates it).
 
@@ -119,7 +119,7 @@ pub fn resolve_version(root: &Path) -> Result<String, String> {
         &own,
         || {
             let policy = distribution(root)?;
-            // OpenBot's own releases: the app update feed on downloads.copilotkit.ai names the same
+            // Mangaba Bot's own releases: the app update feed on downloads.copilotkit.ai names the same
             // Latest release, and GitHub is asked only when it cannot be read.
             if policy.repository == "CopilotKit/OpenBot" {
                 match deployment::get_from_mirror(LATEST_FEED).and_then(|body| feed_tag(&body)) {
@@ -130,7 +130,7 @@ pub fn resolve_version(root: &Path) -> Result<String, String> {
                 }
             }
             let body = deployment::get(&latest_url(&policy))
-                .map_err(|error| format!("could not find the latest OpenBot release: {error}"))?;
+                .map_err(|error| format!("could not find the latest Mangaba Bot release: {error}"))?;
             release_tag(&body)
         },
         launcher_api(),
@@ -203,7 +203,7 @@ pub fn starts(needs: u32, speaks: u32) -> bool {
 Whether the release laid out in `root` needs a newer app than this one to start: a release newer
 than the app (one an earlier, newer app laid out, or one a first install from an app that did not
 read this number took), whose manifest names a launcher contract above this app's. Then Start
-leaves it as it is, stopped, and the window says "Update OpenBot" with this app's update: never moved
+leaves it as it is, stopped, and the window says "Update Mangaba Bot" with this app's update: never moved
 back to the app's own, whose database it is already past (`upgrade`).
 
 Only a release newer than the app is asked about, since the number never goes down from one release
@@ -235,7 +235,7 @@ pub fn start_problem_with(
     match release_launcher_api(root, &installed.version, get) {
         Ok(needs) if !starts(needs, speaks) => Some(crate::client_version::local_app_too_old(
             format!(
-                "OpenBot {} needs launcherApi {needs}; this app is {own} and speaks launcherApi {speaks}",
+                "Mangaba Bot {} needs launcherApi {needs}; this app is {own} and speaks launcherApi {speaks}",
                 installed.version
             ),
         )),
@@ -314,13 +314,13 @@ fn resolve_version_with(
                     Ok(needs) if starts(needs, speaks) => Ok(chosen),
                     Ok(needs) => {
                         log::warn!(
-                            "[download] OpenBot {chosen} needs launcherApi {needs} and this app speaks {speaks}: laying out this app's own {own}, and offering the app's update"
+                            "[download] Mangaba Bot {chosen} needs launcherApi {needs} and this app speaks {speaks}: laying out this app's own {own}, and offering the app's update"
                         );
                         Ok(own.to_string())
                     }
                     Err(error) => {
                         log::warn!(
-                            "[download] could not tell which launcher contract OpenBot {chosen} needs ({error}): laying out this app's own {own}"
+                            "[download] could not tell which launcher contract Mangaba Bot {chosen} needs ({error}): laying out this app's own {own}"
                         );
                         Ok(own.to_string())
                     }
@@ -352,9 +352,9 @@ fn release_tag(body: &[u8]) -> Result<String, String> {
     }
 
     let release: Release = serde_json::from_slice(body)
-        .map_err(|error| format!("the latest OpenBot release is not readable: {error}"))?;
+        .map_err(|error| format!("the latest Mangaba Bot release is not readable: {error}"))?;
     if release.tag_name.trim().is_empty() {
-        return Err("the latest OpenBot release has no version tag".into());
+        return Err("the latest Mangaba Bot release has no version tag".into());
     }
     Ok(release.tag_name)
 }
@@ -494,7 +494,7 @@ mod tests {
     }
 
     /// Design 7.1: an installation whose release needs a newer app is not started, and is never
-    /// moved back. Start says "Update OpenBot", the window's sentence, with this app's update.
+    /// moved back. Start says "Update Mangaba Bot", the window's sentence, with this app's update.
     #[test]
     fn a_release_that_needs_a_newer_app_is_not_started_and_says_update_openbot() {
         let releases = Releases {
@@ -521,11 +521,11 @@ mod tests {
         assert_eq!(problem.kind, Some(crate::client_version::APP_TOO_OLD));
         assert_eq!(
             problem.said,
-            "The OpenBot on this computer needs a newer version of this app. Update OpenBot to keep going."
+            "The Mangaba Bot on this computer needs a newer version of this app. Update Mangaba Bot to keep going."
         );
         assert!(
             problem.detail.as_deref().is_some_and(|detail| detail
-                .contains("OpenBot v1.3.0 needs launcherApi 2; this app is v1.1.1 and speaks launcherApi 1")),
+                .contains("Mangaba Bot v1.3.0 needs launcherApi 2; this app is v1.1.1 and speaks launcherApi 1")),
             "{problem:?}"
         );
         // Never moved back: Start has no upgrade to make, and the release is as it was laid out.
@@ -750,7 +750,7 @@ mod tests {
     #[test]
     fn githubs_exact_tag_is_used_instead_of_the_release_title() {
         assert_eq!(
-            release_tag(br#"{"name":"OpenBot September release","tag_name":"v0.0.9"}"#).unwrap(),
+            release_tag(br#"{"name":"Mangaba Bot September release","tag_name":"v0.0.9"}"#).unwrap(),
             "v0.0.9"
         );
     }

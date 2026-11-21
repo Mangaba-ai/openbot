@@ -9,7 +9,7 @@
 #   desktop/scripts/reset-test-machine.sh [--dry-run] [--yes] [--remove-app] [--images]
 set -uo pipefail
 
-BUNDLE_ID=ai.copilotkit.openbot.desktop
+BUNDLE_ID=ai.mangaba.bot.desktop
 ROOT="${OPENBOT_ROOT:-$HOME/OpenBot}"
 APP="${OPENBOT_APP:-/Applications/OpenBot.app}"
 CLI_CONFIG="$HOME/Library/Preferences/copilotkit-config-nodejs"

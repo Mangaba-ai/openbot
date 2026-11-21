@@ -53,10 +53,10 @@ import { StartJourney } from "./StartJourney";
 type Call<T> = { attempt: string; answer: Promise<T> };
 
 /**
- * What Start OpenBot is given for a local stack: its addresses. The key is in the vault.
+ * What Start Mangaba Bot is given for a local stack: its addresses. The key is in the vault.
  *
  * `notice` when the back end is ready on the release it had and an update did not finish: said on
- * the running screen, and the person opens OpenBot from there.
+ * the running screen, and the person opens Mangaba Bot from there.
  */
 export type LocalStartable = {
   apiUrl: string;
@@ -65,14 +65,14 @@ export type LocalStartable = {
 };
 
 /**
- * What became of one Start OpenBot.
+ * What became of one Start Mangaba Bot.
  *
  * `deferred` is a Start that did not run yet because something else has to happen first, such as
  * the installation that Start found it needs. Whoever deferred it gives the go-ahead again once
  * that is done, so it is not a failure and is never said as one.
  *
- * `opening` is a Start whose window is becoming OpenBot (`handover.ts`): its rows stay as they are,
- * the last one running, until OpenBot's page replaces them.
+ * `opening` is a Start whose window is becoming Mangaba Bot (`handover.ts`): its rows stay as they are,
+ * the last one running, until Mangaba Bot's page replaces them.
  */
 export type StartOutcome = "started" | "failed" | "deferred" | "opening";
 
@@ -84,10 +84,10 @@ const POLL_DELAYS: number[] = [2_000, 4_000, 8_000, ...Array(12).fill(15_000)];
 
 /** While a status call has run out of time and the wait asks again. */
 export const BACKEND_SLOW_SAID =
-  "OpenBot's services are slow to answer. OpenBot keeps checking.";
+  "Mangaba Bot's services are slow to answer. Mangaba Bot keeps checking.";
 /** When no status call answered before the wait's checks ran out. */
 export const BACKEND_SILENT_SAID =
-  "OpenBot's services didn't answer in time. Retry to check again.";
+  "Mangaba Bot's services didn't answer in time. Retry to check again.";
 
 /** How often a running setup or update asks how far its download has got. */
 const DOWNLOAD_EVERY_MS = 1_000;
@@ -99,21 +99,21 @@ const DOWNLOAD_EVERY_MS = 1_000;
 export const ROOM_EVERY_MS = 10_000;
 
 const unreadable: Problem = {
-  said: "OpenBot got an answer it couldn't read. Retry. If it happens again, copy the logs below.",
+  said: "Mangaba Bot got an answer it couldn't read. Retry. If it happens again, copy the logs below.",
 };
 
 type Phase = "setup" | "connect" | "wait" | "start";
 
 /*
  * In the person's words: the back end, its releases and the CLI are the log's business. Every row
- * says what OpenBot is doing for them, and the running one how far along it is ("Step 3 of 4").
+ * says what Mangaba Bot is doing for them, and the running one how far along it is ("Step 3 of 4").
  */
 const PHASES: [Phase, string][] = [
-  ["setup", "Setting up OpenBot"],
-  ["connect", "Connecting OpenBot"],
-  ["wait", "Getting OpenBot ready"],
-  // Not "Starting OpenBot": that is the screen's own heading.
-  ["start", "Opening OpenBot"],
+  ["setup", "Setting up Mangaba Bot"],
+  ["connect", "Connecting Mangaba Bot"],
+  ["wait", "Getting Mangaba Bot ready"],
+  // Not "Starting Mangaba Bot": that is the screen's own heading.
+  ["start", "Opening Mangaba Bot"],
 ];
 
 /** The readiness sentence for one CLI answer or failure category. */
@@ -129,7 +129,7 @@ function said(intelligence: LocalReport | LocalFailure): string {
 function connectionSaid(answered: LocalConnection): string {
   // A conflict has no reason of its own, so it is said in this window's words.
   if (answered.conflicted) {
-    return "Settings OpenBot saved were changed since, so it didn't connect. Retry, or repair the installation.";
+    return "Settings Mangaba Bot saved were changed since, so it didn't connect. Retry, or repair the installation.";
   }
   return said({
     outcome: answered.outcome,
@@ -157,7 +157,7 @@ function isReady(report: LocalReport): boolean {
  * report on a Mac: the server stopped mid-use, and on Retry six of eight services were ready and
  * the other two were running but not ready yet. The window gave up on the first answer.
  *
- * Not a back end with a disk OpenBot found short (`shortfall`), or with an update on record: those
+ * Not a back end with a disk Mangaba Bot found short (`shortfall`), or with an update on record: those
  * do not come back by themselves, and their rows say what to do. Not one the CLI did not say the
  * services of, as an older one does not: nothing says it is on its way.
  */
@@ -210,7 +210,7 @@ type State = {
   refused: string | null;
   /** What the running row is doing, when it says more than its label. */
   detail: string | null;
-  /** How much of the back end's download has arrived, while OpenBot downloads it. */
+  /** How much of the back end's download has arrived, while Mangaba Bot downloads it. */
   download: Downloads | null;
   /**
    * The back end could not be updated to the release this app installs. Said, and not a stop: the
@@ -266,21 +266,21 @@ const idle: State = {
 
 /**
  * The row an update of the back end that did not happen is said on, under the back end's row. Named
- * by the part, as the Status window and Quit name it: OpenBot's own update has a row of its own, and
- * on Windows K the two read as one, "Updating OpenBot · Failed" over a Start still updating OpenBot.
+ * by the part, as the Status window and Quit name it: Mangaba Bot's own update has a row of its own, and
+ * on Windows K the two read as one, "Updating Mangaba Bot · Failed" over a Start still updating Mangaba Bot.
  */
-const UPDATING = "Updating OpenBot's services";
+const UPDATING = "Updating Mangaba Bot's services";
 
 /**
  * The back end's row while it updates. How long it takes and what it is doing now are the
  * journey's (`StartJourney`): the row says only what this part is, and that nothing is lost.
  */
 export const UPDATING_SAID =
-  "Updating OpenBot. Your Bots and data stay as they are.";
+  "Updating Mangaba Bot. Your Bots and data stay as they are.";
 
-/** The start's row while Start updates OpenBot itself (`upgrade::now_said`). */
+/** The start's row while Start updates Mangaba Bot itself (`upgrade::now_said`). */
 export const RELEASE_SAID =
-  "Updating OpenBot. Your Bots, sign-ins and data stay as they are.";
+  "Updating Mangaba Bot. Your Bots, sign-ins and data stay as they are.";
 
 /**
  * An update that failed, and where it stopped once the CLI's record says (`failedStep`), in plain
@@ -291,7 +291,7 @@ export const RELEASE_SAID =
  * `runsWhatItHad` false when the update left the back end not working (paused services): then it
  * does not run the version it had, and Retry is what tries the update again.
  *
- * Not a failure of the Start when they run the version they had: OpenBot starts on it, and the
+ * Not a failure of the Start when they run the version they had: Mangaba Bot starts on it, and the
  * next Start tries the update again. A refusal before it began counts the same, `release_unavailable`
  * included: the CLI could not get the release this app installs (its download was out of reach on
  * Windows K), not that there was no newer one, which the status had already said there was.
@@ -301,15 +301,15 @@ function updateFailedSaid(step: string | null, runsWhatItHad = true): string {
     ? ` The update stopped while ${updateStepSaid(step)}.`
     : "";
   if (!runsWhatItHad)
-    return `OpenBot's services couldn't finish updating.${where} Your data is kept. Retry to try the update again.`;
+    return `Mangaba Bot's services couldn't finish updating.${where} Your data is kept. Retry to try the update again.`;
   return step
-    ? `OpenBot's services couldn't finish updating, so they run the version they had.${where} Your data is kept, and OpenBot tries again the next time it starts.`
-    : "OpenBot's services couldn't update, so they run the version they had. Your data is kept, and OpenBot tries again the next time it starts.";
+    ? `Mangaba Bot's services couldn't finish updating, so they run the version they had.${where} Your data is kept, and Mangaba Bot tries again the next time it starts.`
+    : "Mangaba Bot's services couldn't update, so they run the version they had. Your data is kept, and Mangaba Bot tries again the next time it starts.";
 }
 
 /** An update of the back end that stopped downloading: they run the version they had. */
 const UPDATE_STALLED_SAID =
-  "The update of OpenBot's services stopped downloading, so they run the version they had. OpenBot picks up the download the next time it starts.";
+  "The update of Mangaba Bot's services stopped downloading, so they run the version they had. Mangaba Bot picks up the download the next time it starts.";
 
 /**
  * An update that failed after it began updating the data (`UpdateState`), said in place of "so they
@@ -322,9 +322,9 @@ const UPDATE_STALLED_SAID =
  */
 const UPDATE_PAST_DATA_SAID: Partial<Record<UpdateState, string>> = {
   migrated:
-    "The update of OpenBot's services didn't finish starting. Your data is kept, and OpenBot finishes the update the next time it starts.",
+    "The update of Mangaba Bot's services didn't finish starting. Your data is kept, and Mangaba Bot finishes the update the next time it starts.",
   migrating:
-    "The update of OpenBot's services stopped while updating your data. Your data is kept, and OpenBot picks up the update the next time it starts.",
+    "The update of Mangaba Bot's services stopped while updating your data. Your data is kept, and Mangaba Bot picks up the update the next time it starts.",
 };
 
 /** The note on the update's row: nothing was updated, or the update began and did not finish. */
@@ -342,7 +342,7 @@ export type LocalSequence = State & {
   steps: Progress[];
   /** Runs set up, connect and wait, and stops before Start. */
   prepare: () => void;
-  /** The go-ahead: runs what is left and starts OpenBot once Intelligence is ready. */
+  /** The go-ahead: runs what is left and starts Mangaba Bot once Intelligence is ready. */
   start: () => void;
   retry: () => void;
   /** While the setup is paused for room: look again now. */
@@ -351,19 +351,19 @@ export type LocalSequence = State & {
   acceptTerms: (version: string) => void;
   /** Stops the running CLI call and says so. */
   cancel: () => void;
-  /** Forgets the rows, as after Stop OpenBot. */
+  /** Forgets the rows, as after Stop Mangaba Bot. */
   reset: () => void;
-  /** The backend is gone (`stack-lost`): forget it and set OpenBot up again from the start. */
+  /** The backend is gone (`stack-lost`): forget it and set Mangaba Bot up again from the start. */
   startFresh: () => void;
 };
 
 /**
- * Intelligence on this computer, run by the Intelligence CLI, then OpenBot started against it.
+ * Intelligence on this computer, run by the Intelligence CLI, then Mangaba Bot started against it.
  *
  * Held by the window rather than by a screen, so moving between screens never cancels it. Four
  * steps, each idempotent, run in order without a button: set up, connect (the installation is the
  * consent, and the native side keeps the key the CLI wrote), wait until the CLI itself reports
- * readiness "ready" and licence "valid", then start OpenBot. `prepare` runs the first three while
+ * readiness "ready" and licence "valid", then start Mangaba Bot. `prepare` runs the first three while
  * the person chooses an AI provider; Start waits for `start`. A recorded, connected stack starts
  * at waiting. A step that is blocked or fails stops there with its reason, and Retry resumes at
  * that step. A CLI that does not report ready and valid never reaches Start.
@@ -381,17 +381,17 @@ export function useLocalSequence({
 }: {
   root: string;
   stack: string | null;
-  /** OpenBot already holds the key `local connect` gave it for this stack. */
+  /** Mangaba Bot already holds the key `local connect` gave it for this stack. */
   connected?: boolean;
-  /** Starts OpenBot against the stack, or says it failed or was deferred. */
+  /** Starts Mangaba Bot against the stack, or says it failed or was deferred. */
   onStart: (startable: LocalStartable) => Promise<StartOutcome>;
   /** A stack was set up, or connected. */
   onRecorded?: (stack: string, connected: boolean) => void;
-  /** The recorded stack is gone and is no longer OpenBot's: set up from the start (`startFresh`). */
+  /** The recorded stack is gone and is no longer Mangaba Bot's: set up from the start (`startFresh`). */
   onForgotten?: () => void;
   /**
-   * Start fresh installs OpenBot's own software again before it sets up: the backend went with
-   * OpenBot's machine, and a machine made again has none of it. False when the install did not
+   * Start fresh installs Mangaba Bot's own software again before it sets up: the backend went with
+   * Mangaba Bot's machine, and a machine made again has none of it. False when the install did not
    * finish, which the window says.
    */
   installAgain?: () => Promise<boolean>;
@@ -427,7 +427,7 @@ export function useLocalSequence({
   const lookNow = useRef<(() => void) | null>(null);
   const queued = useRef<ReturnType<typeof setTimeout> | null>(null);
   const startable = useRef<LocalStartable | null>(null);
-  // Start OpenBot once Intelligence is ready. Spent when it starts.
+  // Start Mangaba Bot once Intelligence is ready. Spent when it starts.
   const go = useRef(false);
   // The agreement version the person accepted, carried to the next setup and spent once it works.
   const accepted = useRef<string | null>(null);
@@ -475,7 +475,7 @@ export function useLocalSequence({
   /**
    * While `attempt` runs, how much of the back end's download has arrived, so a slow line can be
    * told from a stuck one: the Start journey's bar counts it (`StartJourney`), and a screen about
-   * something else says it in its own row (`LocalStatus`). OpenBot downloads the images before the
+   * something else says it in its own row (`LocalStatus`). Mangaba Bot downloads the images before the
    * CLI pulls them. Returns what stops it.
    */
   function followDownload(attempt: string, token: number): () => void {
@@ -603,7 +603,7 @@ export function useLocalSequence({
   /**
    * Install the release this app's CLI installs over a stack an older app set up, with the CLI's
    * own `local update`, which keeps the stack's data and app connections. Once per wait. A failure
-   * is said and does not stop the sequence: the release the stack had is still there, and OpenBot
+   * is said and does not stop the sequence: the release the stack had is still there, and Mangaba Bot
    * starts on it. False only when the run was stopped meanwhile.
    */
   async function updateIntelligence(
@@ -621,7 +621,7 @@ export function useLocalSequence({
     let updated = false;
     let stalled = false;
     // Not started, for lack of room (`local_eval::update_room`): nothing changed, and the run stops
-    // here with what is short, before OpenBot's own update.
+    // here with what is short, before Mangaba Bot's own update.
     let short: Shortfall | null = null;
     try {
       const answer = await started.report;
@@ -695,7 +695,7 @@ export function useLocalSequence({
             if (!current() || !found?.failedJob) return;
             // The Job's name is in the log (`watch_jobs`).
             update({
-              detail: `${updating} Part of the update didn't work, so it will stop. OpenBot waits up to 10 minutes for it first. Your data is kept.`,
+              detail: `${updating} Part of the update didn't work, so it will stop. Mangaba Bot waits up to 10 minutes for it first. Your data is kept.`,
             });
           },
           () => {},
@@ -762,7 +762,7 @@ export function useLocalSequence({
     // Whether any status call in this wait ran out of time. A backend coming back from a slow spell
     // says degraded while its checks catch up: found on the Windows pass of this fix, after the
     // backend's CPU was held back for four and a half minutes, the first answer was degraded and
-    // the wait ended at once with "OpenBot is running but not working properly".
+    // the wait ended at once with "Mangaba Bot is running but not working properly".
     let wasSlow = false;
     for (let tries = 0; ; tries += 1) {
       const found = await status();
@@ -800,7 +800,7 @@ export function useLocalSequence({
       const kept = onInstalledRelease(found);
       /*
        * A stack an older app set up runs an older release than this app installs: updated once,
-       * before OpenBot starts on it, so OpenBot runs on the release it was built with.
+       * before Mangaba Bot starts on it, so Mangaba Bot runs on the release it was built with.
        *
        * ONLY ONCE IT IS UP. The CLI's update rolls the running stack forward and waits for each
        * service to come back (`kubectl rollout status`, three minutes). On a stack Quit had stopped
@@ -820,7 +820,7 @@ export function useLocalSequence({
        * Once per wait (`updatedIntelligence`), so an update that keeps failing stops at its row
        * rather than looping; Retry is the next attempt.
        *
-       * Not on a degraded stack whose disk OpenBot found short, or still recovering from being
+       * Not on a degraded stack whose disk Mangaba Bot found short, or still recovering from being
        * short (`shortfall`): the update downloads the new release's images and fails there again,
        * after up to ten minutes. The row says to free space, and the Retry after that updates.
        */
@@ -918,7 +918,7 @@ export function useLocalSequence({
       if (comingUp && tries >= pollDelays.length) return stuck(found);
       if (tries >= pollDelays.length) {
         const timedOut =
-          "OpenBot didn't get ready in time. Retry to check again.";
+          "Mangaba Bot didn't get ready in time. Retry to check again.";
         // The log says how long it waited and what the back end last said (`back_end_wait_ended`).
         backEndWaitEnded(timedOut);
         update({ blocked: { said: timedOut, reason: null } });
@@ -963,14 +963,14 @@ export function useLocalSequence({
     };
     /*
      * The engine first. Every CLI call below needs it, and a relaunch after a restart finds Docker
-     * Desktop quit or OpenBot's Podman machine stopped. Without this the CLI answered
+     * Desktop quit or Mangaba Bot's Podman machine stopped. Without this the CLI answered
      * "docker-unavailable" and the sequence stopped at "Waiting for the back end", before Start,
      * which is where the engine used to be woken. The screen says Docker's hand-off meanwhile (see
-     * `handOffNow`), and OpenBot comes back to the front once Docker answers. Start wakes the
-     * engine again itself, so a run that only starts OpenBot skips this.
+     * `handOffNow`), and Mangaba Bot comes back to the front once Docker answers. Start wakes the
+     * engine again itself, so a run that only starts Mangaba Bot skips this.
      */
     const began = Date.now();
-    // A new run counts from here; Start OpenBot after a run that got ready carries on its journey.
+    // A new run counts from here; Start Mangaba Bot after a run that got ready carries on its journey.
     if (from !== "start" || now.current.began === null)
       update({
         began: from,
@@ -1074,12 +1074,12 @@ export function useLocalSequence({
         if (!target) return run("wait");
         const outcome = await latest.current.onStart(target);
         if (outcome === "failed") {
-          return stop({ said: "OpenBot did not start." });
+          return stop({ said: "Mangaba Bot did not start." });
         }
         go.current = false;
         // Waiting on something else, which gives the go-ahead again when it is done.
         if (outcome === "deferred") return stop();
-        // The window is becoming OpenBot: nothing here changes before OpenBot's page replaces it.
+        // The window is becoming Mangaba Bot: nothing here changes before Mangaba Bot's page replaces it.
         if (outcome === "opening") return;
       }
     }
@@ -1102,7 +1102,7 @@ export function useLocalSequence({
   function start() {
     go.current = true;
     const { at, running, blocked, problem } = now.current;
-    // A running sequence starts OpenBot when it gets there; a stopped one waits for Retry.
+    // A running sequence starts Mangaba Bot when it gets there; a stopped one waits for Retry.
     if (running || blocked || problem) return;
     const from: Phase = at === "wait" ? "start" : first();
     // Deferred a tick: the screen that gave the go-ahead has rendered what it chose by then, and a
@@ -1124,9 +1124,9 @@ export function useLocalSequence({
   }
 
   /*
-   * The backend OpenBot set up is gone with everything in it (`stack-lost`): set up from the start.
-   * OpenBot's own software is installed again first (`installAgain`). On box I the backend went
-   * with OpenBot's machine, the machine made again had none of it, and Start was refused after
+   * The backend Mangaba Bot set up is gone with everything in it (`stack-lost`): set up from the start.
+   * Mangaba Bot's own software is installed again first (`installAgain`). On box I the backend went
+   * with Mangaba Bot's machine, the machine made again had none of it, and Start was refused after
    * setup, so the window went back from Starting to Installing. Setup then forgets the old stack
    * itself when its cluster is gone (`lost_stack` in local_eval.rs) and sets up a new one, and
    * connect, wait and start follow as on a first setup: one journey forward. The sign-in and the AI
@@ -1134,14 +1134,14 @@ export function useLocalSequence({
    *
    * The same for a backend whose cluster alone is gone (`backend-gone`), as after
    * `docker container prune` removed its stopped node: setup makes the cluster again for the same
-   * stack, with its saved licence and keys, so OpenBot's own data and its link to the backend stay.
-   * OpenBot's own installation is left as it is there, never installed again: a Mac whose folder
+   * stack, with its saved licence and keys, so Mangaba Bot's own data and its link to the backend stay.
+   * Mangaba Bot's own installation is left as it is there, never installed again: a Mac whose folder
    * was still on 1.0.3 under Desktop 1.1.2 failed a first install that asked for a Bot 1.0.3 did
    * not have, while Start takes the update path, moving the folder to this app's release first.
    */
   async function startFresh() {
     if (now.current.running) return;
-    // Only the backend went: OpenBot's own installation is as it was, and is not installed again.
+    // Only the backend went: Mangaba Bot's own installation is as it was, and is not installed again.
     const backendOnly = now.current.blocked?.reason === "backend-gone";
     halt();
     const token = generation.current;
@@ -1248,7 +1248,7 @@ export function useLocalSequence({
 
 /**
  * The local sequence's rows and its one control at a time: Cancel while a CLI call runs, Retry
- * once it stopped, and Start OpenBot when nothing has run yet and `offerStart` is set.
+ * once it stopped, and Start Mangaba Bot when nothing has run yet and `offerStart` is set.
  */
 export function LocalIntelligence({
   sequence,
@@ -1272,11 +1272,11 @@ export function LocalIntelligence({
    * row waits on them, with no Failed and no Retry (leftover data, `StartFresh`).
    */
   waitingOn?: string | null;
-  /** Start updates OpenBot itself (`upgrade_due`): the journey counts it from the start. */
+  /** Start updates Mangaba Bot itself (`upgrade_due`): the journey counts it from the start. */
   releaseDue?: boolean;
   /** What Docker Desktop's window may want while the engine wakes: see `handOffNow`. */
   handOff?: string | null;
-  /** What OpenBot's own start reports (`setup:progress`): the journey's last stretch. */
+  /** What Mangaba Bot's own start reports (`setup:progress`): the journey's last stretch. */
   open?: readonly Progress[];
 }) {
   const { at, running, stopped, problem } = sequence;
@@ -1316,7 +1316,7 @@ export function LocalIntelligence({
           : sequence.steps;
 
   return (
-    <section aria-label="OpenBot on this computer">
+    <section aria-label="Mangaba Bot on this computer">
       {journeying && (
         <StartJourney
           sequence={sequence}
@@ -1347,14 +1347,14 @@ export function LocalIntelligence({
               Cancel
             </button>
           )}
-          {/* Cancel stops the setup's own calls. The last step is OpenBot starting, or updating and
+          {/* Cancel stops the setup's own calls. The last step is Mangaba Bot starting, or updating and
             starting, which can't be stopped partway. Said where Cancel was, in its height: on
             Windows G Cancel went at step 4 and the card shrank under the rows. */}
           {running && at === "start" && (
             <p className="cannot-cancel">
               {releasing || releaseDue
                 ? "You can't cancel this last step. Stopping it partway could leave the update half done."
-                : "You can't cancel this last step. Stopping it partway could leave OpenBot half started."}
+                : "You can't cancel this last step. Stopping it partway could leave Mangaba Bot half started."}
             </p>
           )}
           {/* A Podman machine too small has its Retry in its card (`PodmanTooSmall`). */}
@@ -1369,7 +1369,7 @@ export function LocalIntelligence({
             )}
           {offerStart && !running && at === null && (
             <button type="button" onClick={sequence.start}>
-              Start OpenBot
+              Start Mangaba Bot
             </button>
           )}
         </div>
@@ -1395,7 +1395,7 @@ export function LocalIntelligence({
 
 /**
  * Intelligence on a screen that is about something else: nothing while it works, and a card that
- * cannot be missed when it stops. The person is installing OpenBot or choosing an AI here; a second
+ * cannot be missed when it stops. The person is installing Mangaba Bot or choosing an AI here; a second
  * progress line competed with that, and its full progress has its own step later. A stop is shown
  * at once, because finding out only at that later step would waste the minutes since: one they
  * clear themselves (signing in, accepting the agreement) with its action, anything else with Retry.
@@ -1411,15 +1411,15 @@ export function LocalStatus({
   const tooSmall = sequence.stopped ? sequence.blocked?.shortfall : undefined;
   const plan = usePodmanPlan(tooSmall);
   if (!sequence.stopped) {
-    // The rest of OpenBot downloads behind the screen in front: say how far, so the wait is visible.
+    // The rest of Mangaba Bot downloads behind the screen in front: say how far, so the wait is visible.
     if (!download || !sequence.running || !sequence.download) return null;
     return (
       <SetupProgress
-        label="OpenBot download"
+        label="Mangaba Bot download"
         showElapsed={false}
         steps={[
           {
-            step: "Downloading the rest of OpenBot",
+            step: "Downloading the rest of Mangaba Bot",
             ok: true,
             running: true,
             // The row says the time left from the download's own speed.
@@ -1433,19 +1433,19 @@ export function LocalStatus({
     );
   }
   const needs = needsPerson(sequence);
-  // Stopped at Start: Intelligence got as far as ready and licensed, and OpenBot is what failed.
+  // Stopped at Start: Intelligence got as far as ready and licensed, and Mangaba Bot is what failed.
   const openBot = !needs && sequence.at === "start";
   return (
     <section
       className={`local-alert${needs ? " needs" : ""}`}
       role="alert"
-      aria-label={openBot ? "OpenBot" : "Setup"}
+      aria-label={openBot ? "Mangaba Bot" : "Setup"}
     >
       <h2>
         {needs
           ? "Setup needs you"
           : openBot
-            ? "OpenBot did not start"
+            ? "Mangaba Bot did not start"
             : "Setup stopped"}
       </h2>
       {needs ? (
@@ -1454,7 +1454,7 @@ export function LocalStatus({
         <>
           <p>
             {openBot
-              ? "Everything else is ready. Retry starts OpenBot again."
+              ? "Everything else is ready. Retry starts Mangaba Bot again."
               : plan && tooSmall
                 ? podmanTooSmallSaid(tooSmall, plan)
                 : (sequence.blocked?.said ?? sequence.problem?.said)}
@@ -1543,7 +1543,7 @@ function backendLost(sequence: LocalSequence): boolean {
   );
 }
 
-/** The one way on once the backend is gone: set OpenBot up again. What is gone is said with it. */
+/** The one way on once the backend is gone: set Mangaba Bot up again. What is gone is said with it. */
 function StartFresh({
   said,
   label,
@@ -1614,17 +1614,17 @@ function SignInToCopilotKit({ onSignedIn }: { onSignedIn: () => void }) {
   return (
     <div className="local-needs">
       <Lockup byCopilotKit />
-      <p>Sign in to finish setting up OpenBot.</p>
+      <p>Sign in to finish setting up Mangaba Bot.</p>
       {waiting ? (
         <CopilotKitSignInWait
           attempt={waiting}
-          waiting="Finish signing in to OpenBot in your browser…"
+          waiting="Finish signing in to Mangaba Bot in your browser…"
           onCancel={cancel}
         />
       ) : (
         <div className="row">
           <button type="button" onClick={signIn}>
-            Sign in to OpenBot
+            Sign in to Mangaba Bot
           </button>
         </div>
       )}
@@ -1677,8 +1677,8 @@ function AcceptTerms({
     return (
       <div className="local-needs">
         <p className="footnote">
-          OpenBot couldn't record your acceptance. If a coding agent or a script
-          opened OpenBot, quit it, open it yourself, and accept again.
+          Mangaba Bot couldn't record your acceptance. If a coding agent or a script
+          opened Mangaba Bot, quit it, open it yourself, and accept again.
         </p>
         <div className="row">
           <button type="button" onClick={onRetry}>
@@ -1691,7 +1691,7 @@ function AcceptTerms({
     <div className="local-needs">
       {/* The organization and the agreement's version are the log's, as on the Account step. */}
       <p>
-        To run OpenBot on this computer, accept the OpenBot by CopilotKit
+        To run Mangaba Bot on this computer, accept the Mangaba Bot by CopilotKit
         license agreement.
       </p>
       <p className="footnote">

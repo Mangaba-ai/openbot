@@ -6,7 +6,7 @@ import type { Person } from "./person";
 export interface GetPersonResponse {
   person: Person;
   /**
-   * The OpenBot release the server runs, such as v1.0.3, which the apps show under the person's name. Null when the server was built without one. Only ever given to somebody signed in.
+   * The Mangaba Bot release the server runs, such as v1.0.3, which the apps show under the person's name. Null when the server was built without one. Only ever given to somebody signed in.
    * @nullable
    */
   openbotVersion: string | null;

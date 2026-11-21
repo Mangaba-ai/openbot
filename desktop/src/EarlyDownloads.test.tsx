@@ -119,8 +119,8 @@ function called(command: string) {
 const GB = 1_000_000_000;
 
 /*
- * On a computer with nothing of OpenBot on it, the first screen downloads nothing: somebody who
- * only connects to their company's OpenBot would download about 2 GB for nothing (seen on a clean
+ * On a computer with nothing of Mangaba Bot on it, the first screen downloads nothing: somebody who
+ * only connects to their company's Mangaba Bot would download about 2 GB for nothing (seen on a clean
  * Windows machine). Install with Self-hosted chosen starts them, as the first thing it does.
  */
 test("the big downloads start with Install, before anyone signs in, and never before the choice", async () => {
@@ -128,7 +128,7 @@ test("the big downloads start with Install, before anyone signs in, and never be
   await act(async () => {
     view = render(<App />);
   });
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
 
   // Nothing was clicked: nothing downloads, and the line says nothing.
   await act(async () => new Promise((resolve) => setTimeout(resolve, 30)));
@@ -145,7 +145,7 @@ test("the big downloads start with Install, before anyone signs in, and never be
     },
   ]);
   // The account step, checking the sign-in, which here never answers.
-  await view.findByRole("heading", { name: "Your OpenBot account" });
+  await view.findByRole("heading", { name: "Your Mangaba Bot account" });
   const welcome = {
     state: "downloading" as const,
     bytes: 1.2 * GB,
@@ -158,11 +158,11 @@ test("the big downloads start with Install, before anyone signs in, and never be
   await steadied(account);
   const row = within(
     view.getByRole("listitem", {
-      name: "Installing OpenBot in the background",
+      name: "Installing Mangaba Bot in the background",
     }),
   );
   expect(
-    row.getByText("Downloading OpenBot. About 2 minutes left."),
+    row.getByText("Downloading Mangaba Bot. About 2 minutes left."),
   ).toBeTruthy();
   const carried = row.getByRole("progressbar", { name: "Download progress" });
   expect(Number(carried.getAttribute("value"))).toBeCloseTo(2.0 / 2.9, 3);
@@ -181,7 +181,7 @@ test("on the first screen, the line says how far the downloads are, with one bar
   await act(async () => {
     view = render(<App />);
   });
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   const welcome = {
     state: "downloading" as const,
     bytes: 1.2 * GB,
@@ -189,10 +189,10 @@ test("on the first screen, the line says how far the downloads are, with one bar
     bytesPerSecond: 10_000_000,
   };
   await said(welcome);
-  expect(view.getByRole("status").textContent).toBe("Downloading OpenBot.");
+  expect(view.getByRole("status").textContent).toBe("Downloading Mangaba Bot.");
   await steadied(welcome);
   expect(view.getByRole("status").textContent).toBe(
-    "Downloading OpenBot. About 3 minutes left.",
+    "Downloading Mangaba Bot. About 3 minutes left.",
   );
   const bar = view.getByRole("progressbar", { name: "Download progress" });
   expect(Number(bar.getAttribute("value"))).toBeCloseTo(1.2 / 2.9, 3);
@@ -211,10 +211,10 @@ const WINDOWS_F_SHORT: EarlyDownloads = {
 };
 
 /**
- * Windows F, filled to 15.0 GB free: this line said "16 GB of free space, and OpenBot needs about
+ * Windows F, filled to 15.0 GB free: this line said "16 GB of free space, and Mangaba Bot needs about
  * 44 GB", and the next screen "It needs 40 GB free". Both were the back end's 40 GiB: this one added
  * the download and counted billions of bytes. It says the 40 and the download apart now, in the GB
- * Windows shows. And Install was pressable: it built OpenBot's machine at 15 GB free, then the next
+ * Windows shows. And Install was pressable: it built Mangaba Bot's machine at 15 GB free, then the next
  * step stopped for space with less free than before. Install waits for room now.
  */
 test("a disk too full to download to says what is free and what is needed, and Install waits for room", async () => {
@@ -223,7 +223,7 @@ test("a disk too full to download to says what is free and what is needed, and I
   await act(async () => {
     view = render(<App />);
   });
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   // Install starts the downloads, which look at the disk first and find it too full.
   await userEvent.click(view.getByRole("button", { name: "Install" }));
   await said(WINDOWS_F_SHORT);
@@ -233,7 +233,7 @@ test("a disk too full to download to says what is free and what is needed, and I
   // Each figure and its unit are kept on one line.
   expect(line.textContent).toContain("2\u00a0GB for its download");
   expect(line.textContent?.replaceAll("\u00a0", " ")).toBe(
-    "This computer has 15 GB of free space, and OpenBot needs 40 GB plus about 2 GB for its download. Free up some space and the download starts by itself.",
+    "This computer has 15 GB of free space, and Mangaba Bot needs 40 GB plus about 2 GB for its download. Free up some space and the download starts by itself.",
   );
   // Nothing is downloading, so nothing spins and there is no bar.
   expect(line.querySelector(".step-spinner")).toBeNull();
@@ -244,7 +244,7 @@ test("a disk too full to download to says what is free and what is needed, and I
   expect(install.disabled).toBe(true);
   await userEvent.click(install);
   expect(called("prepare_installation")).toEqual([]);
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
   // Space was freed: the download starts by itself, and Install is there again.
   await said({ state: "downloading", bytes: 0 });
   expect(install.disabled).toBe(false);
@@ -261,7 +261,7 @@ test("an Install pressed before the disk is looked at builds nothing on a disk t
   await act(async () => {
     view = render(<App />);
   });
-  await view.findByRole("heading", { name: "Set up OpenBot" });
+  await view.findByRole("heading", { name: "Set up Mangaba Bot" });
   const install = view.getByRole("button", {
     name: "Install",
   }) as HTMLButtonElement;
@@ -275,7 +275,7 @@ test("an Install pressed before the disk is looked at builds nothing on a disk t
     looked(WINDOWS_F_SHORT);
   });
   expect(called("prepare_installation")).toEqual([]);
-  expect(view.getByRole("heading", { name: "Set up OpenBot" })).toBeTruthy();
+  expect(view.getByRole("heading", { name: "Set up Mangaba Bot" })).toBeTruthy();
   expect(
     view.getByRole("status").textContent?.replaceAll("\u00a0", " "),
   ).toContain("This computer has 15 GB of free space");
@@ -333,7 +333,7 @@ test("a download paused for space says so, with no bar and no time running on", 
   );
   const item = within(
     view.getByRole("listitem", {
-      name: "Installing OpenBot in the background",
+      name: "Installing Mangaba Bot in the background",
     }),
   );
   expect(item.getByText("Step 2 of 4 · Paused")).toBeTruthy();
@@ -352,16 +352,16 @@ test("the line says what is known, and nothing once it is all downloaded", () =>
     bytes: GB,
     size: 2 * GB,
   };
-  expect(earlyDownloadsSaid(downloading, true)).toBe("Downloading OpenBot.");
+  expect(earlyDownloadsSaid(downloading, true)).toBe("Downloading Mangaba Bot.");
   expect(
     earlyDownloadsSaid(downloading, false, { left: 40, slow: false }),
-  ).toBe("Downloading OpenBot. Less than a minute left.");
+  ).toBe("Downloading Mangaba Bot. Less than a minute left.");
   expect(
     earlyDownloadsSaid(downloading, false, { left: 80, slow: false }),
-  ).toBe("Downloading OpenBot. About a minute left.");
+  ).toBe("Downloading Mangaba Bot. About a minute left.");
   expect(
     earlyDownloadsSaid(downloading, false, { left: null, slow: true }),
-  ).toBe("Downloading OpenBot. Taking longer than usual, still working.");
+  ).toBe("Downloading Mangaba Bot. Taking longer than usual, still working.");
   // Done says nothing, on the first screen too: Install is the next step either way.
   expect(earlyDownloadsSaid({ state: "done", bytes: GB, size: GB }, true)).toBe(
     null,
@@ -420,9 +420,9 @@ test("the background row carries the first screen's download as one bar, and kee
     step: "install-engine",
     ok: true,
     running: true,
-    detail: "Checking the software OpenBot needs.",
+    detail: "Checking the software Mangaba Bot needs.",
   });
-  expect(checking?.detail).toBe("Downloading OpenBot.");
+  expect(checking?.detail).toBe("Downloading Mangaba Bot.");
   expect(checking?.downloads).toEqual(early);
 
   // Install waiting on the machine image while the first screen's downloads still run: the same
@@ -431,10 +431,10 @@ test("the background row carries the first screen's download as one bar, and kee
     step: "create-machine",
     ok: true,
     running: true,
-    detail: "Preparing this computer to run OpenBot.",
+    detail: "Preparing this computer to run Mangaba Bot.",
     downloads: own,
   });
-  expect(waitingOnTheMachine?.detail).toBe("Downloading OpenBot.");
+  expect(waitingOnTheMachine?.detail).toBe("Downloading Mangaba Bot.");
   expect(waitingOnTheMachine?.downloads).toEqual(early);
 
   // Once those are done, a download of Install's own is the row's.
@@ -443,12 +443,12 @@ test("the background row carries the first screen's download as one bar, and kee
       step: "create-machine",
       ok: true,
       running: true,
-      detail: "Preparing this computer to run OpenBot.",
+      detail: "Preparing this computer to run Mangaba Bot.",
       downloads: own,
     },
     null,
   );
-  expect(machine?.detail).toBe("Downloading OpenBot.");
+  expect(machine?.detail).toBe("Downloading Mangaba Bot.");
   expect(machine?.downloads).toEqual(own);
 
   // The OS asking in its own window, explained in plain words: the row keeps them.
@@ -481,11 +481,11 @@ test("the background row carries the first screen's download as one bar, and kee
       step: "create-machine",
       ok: true,
       running: true,
-      detail: "Preparing this computer to run OpenBot.",
+      detail: "Preparing this computer to run Mangaba Bot.",
     },
     null,
   );
-  expect(plain?.detail).toBe("Preparing this computer to run OpenBot.");
+  expect(plain?.detail).toBe("Preparing this computer to run Mangaba Bot.");
   expect(plain?.downloads).toBeUndefined();
 });
 
@@ -495,7 +495,7 @@ test("the background row carries the first screen's download as one bar, and kee
  * what the move stops.
  */
 const SHORT_ON_C: EarlyDownloads = { ...WINDOWS_F_SHORT, moveTo: "F:" };
-const MOVE_TO_F = "Move OpenBot's storage to F:";
+const MOVE_TO_F = "Move Mangaba Bot's storage to F:";
 const WSL_STOPS =
   "Docker Desktop and other Linux apps on this computer stop for a moment.";
 
@@ -530,22 +530,22 @@ test("a click moves the engine once, and the button is gone while it moves", asy
     { command: "move_engine_here", args: undefined },
   ]);
   expect(view.queryByRole("button", { name: MOVE_TO_F })).toBeNull();
-  expect(view.getByText("Moving OpenBot's storage to F:…")).toBeTruthy();
+  expect(view.getByText("Moving Mangaba Bot's storage to F:…")).toBeTruthy();
 });
 
 test("a move that fails says why, and offers the move again", async () => {
   const failed: Problem = {
-    said: "OpenBot couldn't move its storage to F:. It is still on C:.",
+    said: "Mangaba Bot couldn't move its storage to F:. It is still on C:.",
     detail: "wsl --manage failed",
   };
   moveEngine = async () => Promise.reject(failed);
   const view = await lineSaying(SHORT_ON_C);
   await userEvent.click(view.getByRole("button", { name: MOVE_TO_F }));
   expect(view.getByRole("alert").textContent).toContain(
-    "OpenBot couldn't move its storage to F:. It is still on C:.",
+    "Mangaba Bot couldn't move its storage to F:. It is still on C:.",
   );
   expect(view.getByRole("button", { name: MOVE_TO_F })).toBeTruthy();
-  expect(view.queryByText("Moving OpenBot's storage to F:…")).toBeNull();
+  expect(view.queryByText("Moving Mangaba Bot's storage to F:…")).toBeNull();
 });
 
 /*
@@ -558,7 +558,7 @@ test("after a move, the same summary offers no second move", async () => {
   await userEvent.click(view.getByRole("button", { name: MOVE_TO_F }));
   expect(
     view.getByText(
-      "OpenBot's storage is on F: now. OpenBot checks the free space again.",
+      "Mangaba Bot's storage is on F: now. Mangaba Bot checks the free space again.",
     ),
   ).toBeTruthy();
   expect(view.queryByRole("button", { name: MOVE_TO_F })).toBeNull();

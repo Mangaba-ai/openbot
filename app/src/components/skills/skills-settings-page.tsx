@@ -59,8 +59,8 @@ import { NewSkill } from "./new-skill";
  *    their own page with a switch per Bot (`/skills/$slug`); learned ones open their dialog
  *    and keep the team edition's sharing switches (`LearningSharing`).
  * 2. Workspace skills, team edition only: the admin's, read-only.
- * 3. Waiting for your review: what OpenBot proposes, with Learn now and automatic approval.
- * 4. Teach a Bot: one row to the recording page, where OpenBot can run a browser for you.
+ * 3. Waiting for your review: what Mangaba Bot proposes, with Learn now and automatic approval.
+ * 4. Teach a Bot: one row to the recording page, where Mangaba Bot can run a browser for you.
  *
  * Writing and editing a skill you own is a search parameter, as it was on Capabilities, so the list
  * stays behind the panel and the form is linkable and closed by Back.
@@ -211,7 +211,7 @@ export function SkillsSettingsPage({
     >
       <PageShell
         className="@container"
-        description="Skills are how your Bots do a task your way. Write one, teach a Bot by showing it, or review what OpenBot proposes."
+        description="Skills are how your Bots do a task your way. Write one, teach a Bot by showing it, or review what Mangaba Bot proposes."
         title="Skills"
       >
         {error ? (
@@ -281,7 +281,7 @@ export function SkillsSettingsPage({
 
         <LearningReview />
 
-        {/* Only where OpenBot can run a browser for this person. */}
+        {/* Only where Mangaba Bot can run a browser for this person. */}
         {browser.data?.available ? (
           <PageSection title={TEACH_A_BOT}>
             <PageRows>
@@ -292,7 +292,7 @@ export function SkillsSettingsPage({
                 <ItemContent>
                   <ItemTitle>Record a task</ItemTitle>
                   <ItemDescription>
-                    Show a Bot a task once in your browser, and OpenBot turns
+                    Show a Bot a task once in your browser, and Mangaba Bot turns
                     the steps into a skill.
                   </ItemDescription>
                 </ItemContent>

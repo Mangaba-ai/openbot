@@ -7,7 +7,7 @@ import { queryClient } from "@/query-client";
 
 /**
  * What the server says when a Bot has no model key to answer with, word for word (the server's
- * `NO_AI_CONNECTION`). An organization that brings its own key, as every one on OpenBot Cloud does,
+ * `NO_AI_CONNECTION`). An organization that brings its own key, as every one on Mangaba Bot Cloud does,
  * reads it on its first message.
  */
 export const NO_AI_CONNECTION =

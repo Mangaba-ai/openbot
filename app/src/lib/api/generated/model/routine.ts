@@ -5,7 +5,7 @@ import type { RoutineConversation } from "./routineConversation";
 import type { RoutineLastRun } from "./routineLastRun";
 
 /**
- * One of a person's routines. schedule is display text and never a value to parse: words for the schedules OpenBot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.
+ * One of a person's routines. schedule is display text and never a value to parse: words for the schedules Mangaba Bot can describe, the five cron fields for anything stranger. nextRunAt is the one time to rely on.
  */
 export interface Routine {
   /** The routine's id. */

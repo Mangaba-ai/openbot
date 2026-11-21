@@ -3,7 +3,7 @@
  */
 
 /**
- * How OpenBot looks. openbot is OpenBot as it is without a skin.
+ * How Mangaba Bot looks. openbot is Mangaba Bot as it is without a skin.
  */
 export type SkinId = (typeof SkinId)[keyof typeof SkinId];
 

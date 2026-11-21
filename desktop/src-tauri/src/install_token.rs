@@ -6,7 +6,7 @@ never in `.env` (`vault::is_secret`), and handed to the `server` container alone
 (`docker-compose.yml`). A request is the person's when it carries it, either as the cookie the entry
 address sets or as [`HEADER`].
 
-- A window enters the owned OpenBot through [`entry`] the first time it loads it, so the page gets
+- A window enters the owned Mangaba Bot through [`entry`] the first time it loads it, so the page gets
   the cookie; every later load on that origin carries it.
 - A native caller (the Recorder's native host) sends [`HEADER`].
 
@@ -23,7 +23,7 @@ pub const HEADER: &str = "X-OpenBot-Install-Token";
 /// The address that sets the cookie and sends the window on to `to`.
 pub const ENTRY_PATH: &str = "/api/install/enter";
 
-/// Where a window opens `destination` on its owned OpenBot: through the entry address on the same
+/// Where a window opens `destination` on its owned Mangaba Bot: through the entry address on the same
 /// origin when the server was given a token, so the page arrives with the cookie, and at
 /// `destination` itself when it was given none.
 pub fn entry(destination: &reqwest::Url, token: Option<&str>) -> reqwest::Url {

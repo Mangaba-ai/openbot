@@ -1160,7 +1160,7 @@ export const getGetPersonBrowserUrl = (
 };
 
 /**
- * Return the browser OpenBot runs for a person: whether this OpenBot can run one at all, where it shows, whether it is open, its tabs, what the Recorder in it is doing, and what any of the person's Recorders is recording. It is the person's alone: nobody else, an administrator included, may read it. Reading it never starts a computer or opens the browser.
+ * Return the browser Mangaba Bot runs for a person: whether this Mangaba Bot can run one at all, where it shows, whether it is open, its tabs, what the Recorder in it is doing, and what any of the person's Recorders is recording. It is the person's alone: nobody else, an administrator included, may read it. Reading it never starts a computer or opens the browser.
  * @summary Read a person's own browser
  */
 export const getPersonBrowser = async (
@@ -1393,7 +1393,7 @@ export const getOpenPersonBrowserUrl = (
 };
 
 /**
- * Open the caller's browser, or bring it forward when it is already open, with the Recorder in it connected as them. On OpenBot Desktop it may instead bring the person's everyday Chrome or Edge forward, or open the Recorder's store page in it; the answer says which. Only the person themselves may.
+ * Open the caller's browser, or bring it forward when it is already open, with the Recorder in it connected as them. On Mangaba Bot Desktop it may instead bring the person's everyday Chrome or Edge forward, or open the Recorder's store page in it; the answer says which. Only the person themselves may.
  * @summary Open a person's own browser
  */
 export const openPersonBrowser = async (

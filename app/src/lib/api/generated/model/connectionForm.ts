@@ -11,6 +11,6 @@ import type { ConnectionKeyGuide } from "./connectionKeyGuide";
 export interface ConnectionForm {
   next: ConnectionFormNext;
   fields: ConnectionField[];
-  /** Where the person gets the key. Null where OpenBot has no guide for this app. */
+  /** Where the person gets the key. Null where Mangaba Bot has no guide for this app. */
   guide: ConnectionKeyGuide | null;
 }

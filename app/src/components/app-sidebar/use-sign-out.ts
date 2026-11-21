@@ -22,7 +22,7 @@ export function useSignOut() {
       signOut.mutate(undefined, {
         onSuccess: ({ leaving }) => {
           toast.close(SIGN_OUT_TOAST);
-          // Inside a connected OpenBot Desktop the app shows its own setup, where sign-in is.
+          // Inside a connected Mangaba Bot Desktop the app shows its own setup, where sign-in is.
           if (!leaving) void navigate({ to: "/sign" });
         },
         onError: (error) =>

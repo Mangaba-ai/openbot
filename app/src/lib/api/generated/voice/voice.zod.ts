@@ -347,7 +347,7 @@ export const SaveVoiceSessionResponse = zod.object({
 });
 
 /**
- * Say whether this OpenBot's voice calls run over WebRTC or a WebSocket, so the app prepares the right one before starting a call. Unavailable when voice calls are not set up.
+ * Say whether this Mangaba Bot's voice calls run over WebRTC or a WebSocket, so the app prepares the right one before starting a call. Unavailable when voice calls are not set up.
  * @summary Get how voice calls connect
  */
 

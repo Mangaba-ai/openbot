@@ -17,7 +17,7 @@ import { inNoOrganization } from "@/lib/organizations/in-no-organization";
  * ERRORS THE APP DID NOT HANDLE, TOLD TO OPENBOT.
  *
  * The router's error screen, an error the page threw, and a promise nobody handled each send one
- * report to this OpenBot's own server (recordAppError), which forwards it with the rest of its
+ * report to this Mangaba Bot's own server (recordAppError), which forwards it with the rest of its
  * product telemetry. The browser holds no telemetry key and decides nothing about consent: where
  * telemetry is off the server accepts the report and drops it, as it does a result view
  * (`product-telemetry.ts`). The server also scrubs the message and the stack before anything leaves.
@@ -75,7 +75,7 @@ function described(error: unknown): {
   return { type: "Error", message: `A ${typeof error} was thrown` };
 }
 
-/** Tell OpenBot about an error the app did not handle. Never throws, never waits. */
+/** Tell Mangaba Bot about an error the app did not handle. Never throws, never waits. */
 export function reportAppError(source: AppErrorSource, error: unknown): void {
   const organization = currentOrganizationId();
   if (organization === undefined) return;
@@ -129,7 +129,7 @@ export function ReportedErrorComponent(props: ErrorComponentProps) {
   const heldOut = heldOutBySso(error);
   useEffect(() => {
     // Somebody in no organization, or held out until they sign in through their company, is an answer, not a fault:
-    // there is nothing to tell OpenBot.
+    // there is nothing to tell Mangaba Bot.
     if (!none && !heldOut) reportAppError("error_boundary", error);
   }, [error, none, heldOut]);
   // Wherever it was found, it is answered with its own page, never the router's error screen.

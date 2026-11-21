@@ -114,7 +114,7 @@ export const getListBotsUrl = (
 };
 
 /**
- * Return one page of the Bots the caller can see: theirs, the ones shared with them, the ones assigned to them and the ones that come with OpenBot, oldest first, and by id among Bots made at the same moment. Somebody else's private Bot is never among them, an admin's list included. hidden=true lists only the Bots the caller hid from their own list instead. scope=organization lists every Bot in the organization, people's private Bots included, for an admin's screens that decide what Bots may hold; it is refused to anybody who is not an admin of the organization. Somebody else's private Bot comes withheld there: its name and avatar, and nothing from inside it (see the Bot's withheld). A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the Bots the caller can see: theirs, the ones shared with them, the ones assigned to them and the ones that come with Mangaba Bot, oldest first, and by id among Bots made at the same moment. Somebody else's private Bot is never among them, an admin's list included. hidden=true lists only the Bots the caller hid from their own list instead. scope=organization lists every Bot in the organization, people's private Bots included, for an admin's screens that decide what Bots may hold; it is refused to anybody who is not an admin of the organization. Somebody else's private Bot comes withheld there: its name and avatar, and nothing from inside it (see the Bot's withheld). A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List Bots
  */
 export const listBots = async (
@@ -310,7 +310,7 @@ export const getCreateBotUrl = (organizationId: string) => {
 };
 
 /**
- * Create a Bot owned by the caller. With no endpoint it runs inside OpenBot on its role description; with one, OpenBot sends each turn to that AG-UI address, which the server checks before saving. A key, when given, is stored encrypted and never returned. Asking for isolated needs the caller's Isolated Bots switch and a deployment that can give a Bot a computer of its own. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Create a Bot owned by the caller. With no endpoint it runs inside Mangaba Bot on its role description; with one, Mangaba Bot sends each turn to that AG-UI address, which the server checks before saving. A key, when given, is stored encrypted and never returned. Asking for isolated needs the caller's Isolated Bots switch and a deployment that can give a Bot a computer of its own. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Create a Bot
  */
 export const createBot = async (
@@ -646,7 +646,7 @@ export const getUpdateBotUrl = (organizationId: string, botId: string) => {
 };
 
 /**
- * Replace a Bot's name, title, role description and visibility, which are all required, and change any optional field that is present. An absent endpoint, key, isolated or default model leaves that setting as it is, so an edit to a name never drops a key or moves a Bot between computers. Only whoever may manage the Bot may change it, and a Bot that comes with OpenBot cannot be changed. Making a Bot public reports what that means for the shared app accounts it uses.
+ * Replace a Bot's name, title, role description and visibility, which are all required, and change any optional field that is present. An absent endpoint, key, isolated or default model leaves that setting as it is, so an edit to a name never drops a key or moves a Bot between computers. Only whoever may manage the Bot may change it, and a Bot that comes with Mangaba Bot cannot be changed. Making a Bot public reports what that means for the shared app accounts it uses.
  * @summary Change a Bot
  */
 export const updateBot = async (
@@ -792,7 +792,7 @@ export const getDeleteBotUrl = (organizationId: string, botId: string) => {
 };
 
 /**
- * Delete a Bot for everyone and retire its key. Conversations with it stay readable. Only whoever may manage the Bot may delete it, and a Bot that comes with OpenBot cannot be deleted. A Bot that is already deleted is not found.
+ * Delete a Bot for everyone and retire its key. Conversations with it stay readable. Only whoever may manage the Bot may delete it, and a Bot that comes with Mangaba Bot cannot be deleted. A Bot that is already deleted is not found.
  * @summary Delete a Bot
  */
 export const deleteBot = async (
@@ -931,7 +931,7 @@ export const getTestBotConnectionUrl = (organizationId: string) => {
 };
 
 /**
- * Send one short run to an AG-UI address from where OpenBot's runs will reach it, before a Bot is saved with it, and say what came back. The address is checked as saving checks it, so this can't reach an address a Bot could not be saved with. A failed test is an answer, not an error: ok is false and reason says what went wrong in words a person can act on. An address this deployment runs is tried with the token its runs use. Nothing is saved.
+ * Send one short run to an AG-UI address from where Mangaba Bot's runs will reach it, before a Bot is saved with it, and say what came back. The address is checked as saving checks it, so this can't reach an address a Bot could not be saved with. A failed test is an answer, not an error: ok is false and reason says what went wrong in words a person can act on. An address this deployment runs is tried with the token its runs use. Nothing is saved.
  * @summary Test a Bot's address
  */
 export const testBotConnection = async (
@@ -1777,7 +1777,7 @@ export const getIssueBotCallbackTokenUrl = (
 };
 
 /**
- * Give a Bot a new credential for calling OpenBot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for a Bot that has one replaces it, which is how a leaked token is retired. Only whoever may manage the Bot may issue one.
+ * Give a Bot a new credential for calling Mangaba Bot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for a Bot that has one replaces it, which is how a leaked token is retired. Only whoever may manage the Bot may issue one.
  * @summary Issue a Bot's callback token
  */
 export const issueBotCallbackToken = async (
@@ -1931,7 +1931,7 @@ export const getRevokeBotCallbackTokenUrl = (
 };
 
 /**
- * Take away a Bot's credential for calling OpenBot's tools back. It can still hold a conversation; it can't reach anything outside one. Only whoever may manage the Bot may revoke it. Revoking a token that is not there changes nothing.
+ * Take away a Bot's credential for calling Mangaba Bot's tools back. It can still hold a conversation; it can't reach anything outside one. Only whoever may manage the Bot may revoke it. Revoking a token that is not there changes nothing.
  * @summary Revoke a Bot's callback token
  */
 export const revokeBotCallbackToken = async (

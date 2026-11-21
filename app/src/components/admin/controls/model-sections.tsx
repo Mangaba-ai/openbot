@@ -481,7 +481,7 @@ export function usageModelName(model: string): string {
  * about why.
  */
 export function usageSourceWords(model: string, source: string): string {
-  if (source === "configured") return "chosen by OpenBot";
+  if (source === "configured") return "chosen by Mangaba Bot";
   if (source === "observed") return "reported by the Bot";
   const bot = UNREPORTED.exec(model)?.[1];
   return bot

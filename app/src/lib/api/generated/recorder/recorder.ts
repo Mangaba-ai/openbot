@@ -88,7 +88,7 @@ export const getCreateRecorderConnectCodeUrl = (
 };
 
 /**
- * Make a one-time code the OpenBot Recorder in a browser exchanges for a connection as this person (exchangeRecorderConnectCode). The code is in this answer and never again, works once and expires in five minutes. Because it is a credential the answer is not kept: a retry with the same Idempotency-Key is refused as a conflict rather than answered with the code again, so make a new code with a new key. Only the person themselves may make one, and only so many at once.
+ * Make a one-time code the Mangaba Bot Recorder in a browser exchanges for a connection as this person (exchangeRecorderConnectCode). The code is in this answer and never again, works once and expires in five minutes. Because it is a credential the answer is not kept: a retry with the same Idempotency-Key is refused as a conflict rather than answered with the code again, so make a new code with a new key. Only the person themselves may make one, and only so many at once.
  * @summary Make a code that connects a browser's Recorder
  */
 export const createRecorderConnectCode = async (
@@ -273,7 +273,7 @@ export const getListRecorderConnectionsUrl = (
 };
 
 /**
- * Return one page of the browsers whose Recorder is connected as this person, oldest first, each with whether it is recording now by its own latest report, and the Recorder extension ids this OpenBot trusts. Never a connection's token. Only the person themselves may list them. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the browsers whose Recorder is connected as this person, oldest first, each with whether it is recording now by its own latest report, and the Recorder extension ids this Mangaba Bot trusts. Never a connection's token. Only the person themselves may list them. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List a person's connected browsers
  */
 export const listRecorderConnections = async (
@@ -519,7 +519,7 @@ export const getDeleteRecorderConnectionUrl = (
 };
 
 /**
- * End one of the person's Recorder connections from OpenBot: from now on that browser's Recorder is refused as signed out, and where OpenBot can reach the browser it is told at once. Only the person themselves may disconnect their browsers. One already ended is not found, which a client can read as done.
+ * End one of the person's Recorder connections from Mangaba Bot: from now on that browser's Recorder is refused as signed out, and where Mangaba Bot can reach the browser it is told at once. Only the person themselves may disconnect their browsers. One already ended is not found, which a client can read as done.
  * @summary Disconnect a browser
  */
 export const deleteRecorderConnection = async (
@@ -922,7 +922,7 @@ export const getExchangeRecorderConnectCodeUrl = (organizationId: string) => {
 };
 
 /**
- * Exchange a connect code (createRecorderConnectCode) for a connection: the token the Recorder signs its own requests with from now on, shown this once. Nobody is signed in here: the code in the body is the credential, it works once, and only the OpenBot Recorder extension may ask, by its browser Origin. Every refusal is written to the audit trail. The code working once is what makes this write happen once; the Idempotency-Key is required as on every write, and the answer is never kept, because it holds the token.
+ * Exchange a connect code (createRecorderConnectCode) for a connection: the token the Recorder signs its own requests with from now on, shown this once. Nobody is signed in here: the code in the body is the credential, it works once, and only the Mangaba Bot Recorder extension may ask, by its browser Origin. Every refusal is written to the audit trail. The code working once is what makes this write happen once; the Idempotency-Key is required as on every write, and the answer is never kept, because it holds the token.
  * @summary Connect a browser's Recorder with a code
  */
 export const exchangeRecorderConnectCode = async (
@@ -1658,7 +1658,7 @@ export const getReportRecorderActivityUrl = (organizationId: string) => {
 };
 
 /**
- * Report what this browser's Recorder is doing, which it says whenever its recording phase changes and every 30 seconds while a recording runs, so OpenBot can show a recording wherever the person made it. Kept against the connection in place of the last report, and never audited: it is a heartbeat. Signed with the Recorder's connection token and nothing else. organizationId is `default` or the connection's own organization, and either way the report is kept in the connection's organization.
+ * Report what this browser's Recorder is doing, which it says whenever its recording phase changes and every 30 seconds while a recording runs, so Mangaba Bot can show a recording wherever the person made it. Kept against the connection in place of the last report, and never audited: it is a heartbeat. Signed with the Recorder's connection token and nothing else. organizationId is `default` or the connection's own organization, and either way the report is kept in the connection's organization.
  * @summary Say what a Recorder is doing now
  */
 export const reportRecorderActivity = async (

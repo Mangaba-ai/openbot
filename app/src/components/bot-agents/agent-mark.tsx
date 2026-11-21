@@ -14,7 +14,7 @@ export function markIdFor(framework: string | undefined): string | null {
 }
 
 /**
- * An agent's leading picture: OpenBot's own mark for an agent that runs inside OpenBot, the
+ * An agent's leading picture: Mangaba Bot's own mark for an agent that runs inside Mangaba Bot, the
  * framework's mark for one that names a framework with a mark, and the Agents glyph otherwise.
  * Never a monogram drawn to fill the gap (`shared/marks/README.md`).
  *

@@ -579,7 +579,7 @@ export const ListTeamMembersResponse = zod.object({
           name: zod
             .string()
             .nullable()
-            .describe("What OpenBot calls them. Null until they choose."),
+            .describe("What Mangaba Bot calls them. Null until they choose."),
           image: zod
             .string()
             .nullable()
@@ -670,7 +670,7 @@ export const PutTeamMemberResponse = zod.object({
       name: zod
         .string()
         .nullable()
-        .describe("What OpenBot calls them. Null until they choose."),
+        .describe("What Mangaba Bot calls them. Null until they choose."),
       image: zod
         .string()
         .nullable()

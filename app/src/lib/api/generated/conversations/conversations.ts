@@ -1058,7 +1058,7 @@ export const getUpdateConversationUrl = (
 };
 
 /**
- * Change what the conversation is called, whether the caller has it pinned, or both. Only the person who started a conversation may rename it; title null, or blank, gives the name back to OpenBot to write. A pin is the caller's own and moves nothing for anybody else. The answer holds what was changed.
+ * Change what the conversation is called, whether the caller has it pinned, or both. Only the person who started a conversation may rename it; title null, or blank, gives the name back to Mangaba Bot to write. A pin is the caller's own and moves nothing for anybody else. The answer holds what was changed.
  * @summary Rename or pin a conversation
  */
 export const updateConversation = async (
@@ -1233,7 +1233,7 @@ export const getDeleteConversationUrl = (
 };
 
 /**
- * Remove the conversation from the caller's list. Deleting one that is already gone answers the same way. A conversation that comes with OpenBot cannot be deleted. discardFailedStart removes a conversation whose first message never reached its Bot, and only that.
+ * Remove the conversation from the caller's list. Deleting one that is already gone answers the same way. A conversation that comes with Mangaba Bot cannot be deleted. discardFailedStart removes a conversation whose first message never reached its Bot, and only that.
  * @summary Delete a conversation
  */
 export const deleteConversation = async (
@@ -2126,7 +2126,7 @@ export const getAddConversationMemberUrl = (
 };
 
 /**
- * Add somebody who has signed in to this OpenBot to a group conversation the caller is in, by their email address. They see the whole transcript. Adding somebody already in it changes nothing.
+ * Add somebody who has signed in to this Mangaba Bot to a group conversation the caller is in, by their email address. They see the whole transcript. Adding somebody already in it changes nothing.
  * @summary Add a person to a group conversation
  */
 export const addConversationMember = async (
@@ -2876,7 +2876,7 @@ export const getUploadConversationAttachmentUrl = (
 };
 
 /**
- * Upload one file to send with the caller's next message in the conversation. The file is held until that message is sent, or removed, or a day has passed. OpenBot refuses a file no Bot could read, and says what the file was. A message takes up to 8 files.
+ * Upload one file to send with the caller's next message in the conversation. The file is held until that message is sent, or removed, or a day has passed. Mangaba Bot refuses a file no Bot could read, and says what the file was. A message takes up to 8 files.
  * @summary Attach a file to the next message
  */
 export const uploadConversationAttachment = async (
@@ -3049,7 +3049,7 @@ export const getGetAttachmentUrl = (
 };
 
 /**
- * Return the bytes of a file attached to a message, in the type OpenBot recognised it as. Only somebody in the conversation it was sent in, or the person still holding it to send, can read it. A picture is served to open in place. Every other file, a PDF or a Word, Excel or PowerPoint file among them, is served as a download.
+ * Return the bytes of a file attached to a message, in the type Mangaba Bot recognised it as. Only somebody in the conversation it was sent in, or the person still holding it to send, can read it. A picture is served to open in place. Every other file, a PDF or a Word, Excel or PowerPoint file among them, is served as a download.
  * @summary Download an attachment
  */
 export const getAttachment = async (
@@ -3425,7 +3425,7 @@ export const getCreateConversationThreadUrl = (organizationId: string) => {
 };
 
 /**
- * Make the id of a new thread for a chat that is kept only as its thread, such as the chat on a Bot's own page. The id belongs to this OpenBot, so two OpenBots sharing one store of threads can tell their conversations apart. Nothing is stored until something is said in it.
+ * Make the id of a new thread for a chat that is kept only as its thread, such as the chat on a Bot's own page. The id belongs to this Mangaba Bot, so two OpenBots sharing one store of threads can tell their conversations apart. Nothing is stored until something is said in it.
  * @summary Get a thread id for a chat with one Bot
  */
 export const createConversationThread = async (

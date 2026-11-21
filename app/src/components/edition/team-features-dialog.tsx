@@ -45,7 +45,7 @@ import {
   DEPLOY_LINE,
 } from "@openbot/shared/openbot-for-business";
 
-/** The dialog's first line, in big letters: where OpenBot for Business runs. */
+/** The dialog's first line, in big letters: where Mangaba Bot for Business runs. */
 export { DEPLOY_LINE };
 
 /** Each feature's icon. Desktop's first screen draws the same features with the same icons. */
@@ -107,8 +107,8 @@ function subscribe(listener: () => void) {
 }
 
 /**
- * The OpenBot for Business page: where it runs, what it adds, and the calendar to book a demo, side
- * by side. Every OpenBot for Business entry in the app opens this, never the website.
+ * The Mangaba Bot for Business page: where it runs, what it adds, and the calendar to book a demo, side
+ * by side. Every Mangaba Bot for Business entry in the app opens this, never the website.
  */
 export function TeamFeaturesDialog() {
   const isOpen = useSyncExternalStore(subscribe, () => open);
@@ -138,7 +138,7 @@ export function TeamFeaturesDialog() {
             <DialogHeader className="gap-3">
               <DialogTitle className="flex items-center gap-2">
                 <OpenBotLogo className="size-6" />
-                <BrandName>OpenBot for Business</BrandName>
+                <BrandName>Mangaba Bot for Business</BrandName>
               </DialogTitle>
               <DialogDescription className="font-semibold text-2xl text-balance text-foreground tracking-tight">
                 {DEPLOY_LINE}
@@ -173,11 +173,11 @@ export function TeamFeaturesDialog() {
 }
 
 /**
- * The booking calendar, in the dialog, so somebody picks a time without leaving OpenBot: the same
+ * The booking calendar, in the dialog, so somebody picks a time without leaving Mangaba Bot: the same
  * calendar as onboarding's Book a demo step, over the orb field the dialog has always shown.
  *
  * A calendar that can't load (offline, blocked, silent) gives way to Book a demo, which opens the
- * OpenBot for Business page in a new tab (on the Desktop, in the person's browser).
+ * Mangaba Bot for Business page in a new tab (on the Desktop, in the person's browser).
  */
 function BookDemo() {
   const [failed, setFailed] = useState(false);
@@ -289,7 +289,7 @@ export function NavigationTarget({
 }
 
 /**
- * The personal edition's way to learn about a computer for each Bot. It opens the OpenBot for
+ * The personal edition's way to learn about a computer for each Bot. It opens the Mangaba Bot for
  * Business dialog, over whatever it sits in.
  */
 export function BusinessComputerLink() {
@@ -299,7 +299,7 @@ export function BusinessComputerLink() {
       onClick={openTeamFeatures}
       type="button"
     >
-      Give each Bot its own computer with OpenBot for Business.
+      Give each Bot its own computer with Mangaba Bot for Business.
     </button>
   );
 }

@@ -46,7 +46,7 @@ import { queryClient } from "@/query-client";
 
 export const Route = createFileRoute("/_authed/admin/identity-providers")({
   /*
-   * On OpenBot by CopilotKit (`hostedSignIn`) people sign in with their CopilotKit account, so an
+   * On Mangaba Bot by CopilotKit (`hostedSignIn`) people sign in with their CopilotKit account, so an
    * organization has no identity provider of its own to set up: an old link or bookmark lands on the
    * Admin overview, as Admin lists no such page there. Admin's route has already read the answer, so
    * this waits on nothing and the page never draws first.
@@ -77,7 +77,7 @@ function IdentityProvidersPage() {
   // Outside `default`, an organization's providers are its own: they apply to its members.
   const organizationOnly =
     organization !== undefined && organization !== ONLY_ORGANIZATION;
-  // A hosted OpenBot: people also sign in with their OpenBot by CopilotKit account, set in no environment of theirs.
+  // A hosted Mangaba Bot: people also sign in with their Mangaba Bot by CopilotKit account, set in no environment of theirs.
   const hosted =
     useQuery(deploymentCapabilitiesQueryOptions()).data?.hostedSignIn === true;
   const words = identityProviderWords(organizationOnly, hosted);
@@ -97,19 +97,19 @@ function IdentityProvidersPage() {
   const failure = remove.error;
 
   /*
-   * Not this organization's: an admin of an organization that does not run OpenBot reads why, and
-   * is offered nothing to press. Sign-in is to OpenBot as a whole, so its providers, requiring SSO
+   * Not this organization's: an admin of an organization that does not run Mangaba Bot reads why, and
+   * is offered nothing to press. Sign-in is to Mangaba Bot as a whole, so its providers, requiring SSO
    * and directory provisioning are kept by the admins who run it (lib/identity-providers/queries.ts).
    */
   if (providers.data?.managedHere === false)
     return (
       <PageShell
-        description="People sign in to OpenBot as a whole, before they pick an organization."
+        description="People sign in to Mangaba Bot as a whole, before they pick an organization."
         title="Identity providers"
       >
-        <PageEmpty icon={IconBuildingBank} title="Set up for all of OpenBot">
+        <PageEmpty icon={IconBuildingBank} title="Set up for all of Mangaba Bot">
           Identity providers and SSO apply to everyone who signs in here, not to
-          one organization. Ask whoever runs OpenBot to add or change one.
+          one organization. Ask whoever runs Mangaba Bot to add or change one.
         </PageEmpty>
       </PageShell>
     );
@@ -216,26 +216,26 @@ function IdentityProvidersPage() {
         )}
       </PageSection>
       {/*
-       * Read-only: set up for everybody who signs in to OpenBot, they count for this organization's Require SSO as its
-       * own do, and only whoever runs OpenBot changes them.
+       * Read-only: set up for everybody who signs in to Mangaba Bot, they count for this organization's Require SSO as its
+       * own do, and only whoever runs Mangaba Bot changes them.
        */}
       {deploymentWide.length > 0 ? (
         <PageSection
           description={
             /*
              * Only while the organization has none of its own: once it has, only those count for its Require SSO.
-             * On a hosted OpenBot whoever runs it is OpenBot by CopilotKit, whom an organization admin has no way
+             * On a hosted Mangaba Bot whoever runs it is Mangaba Bot by CopilotKit, whom an organization admin has no way
              * to ask, so the sentence stops at what is true.
              */
             registered.length > 0
               ? hosted
-                ? "Set up for everyone who signs in to OpenBot. This organization has its own, so only those count for its Require SSO."
-                : "Set up for everyone who signs in to OpenBot. This organization has its own, so only those count for its Require SSO. Ask whoever runs OpenBot to change one of these."
+                ? "Set up for everyone who signs in to Mangaba Bot. This organization has its own, so only those count for its Require SSO."
+                : "Set up for everyone who signs in to Mangaba Bot. This organization has its own, so only those count for its Require SSO. Ask whoever runs Mangaba Bot to change one of these."
               : hosted
-                ? "Set up for everyone who signs in to OpenBot. They count for this organization too."
-                : "Set up for everyone who signs in to OpenBot. They count for this organization too. Ask whoever runs OpenBot to change one."
+                ? "Set up for everyone who signs in to Mangaba Bot. They count for this organization too."
+                : "Set up for everyone who signs in to Mangaba Bot. They count for this organization too. Ask whoever runs Mangaba Bot to change one."
           }
-          title="For all of OpenBot"
+          title="For all of Mangaba Bot"
         >
           <PageRows>
             {deploymentWide.map((provider, index) => (

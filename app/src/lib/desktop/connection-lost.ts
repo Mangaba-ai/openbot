@@ -14,9 +14,9 @@ import { openbotUnreachable, subscribeReachability } from "./reachability";
 import { desktopShell } from "./shell";
 
 /**
- * The connection line's moment: OpenBot Desktop connected to an OpenBot somewhere else, and that
- * OpenBot not answering (`reachability.ts`). While it lasts the line says why, once, and the screens
- * wait for OpenBot instead of each saying in red that its own read failed.
+ * The connection line's moment: Mangaba Bot Desktop connected to an Mangaba Bot somewhere else, and that
+ * Mangaba Bot not answering (`reachability.ts`). While it lasts the line says why, once, and the screens
+ * wait for Mangaba Bot instead of each saying in red that its own read failed.
  *
  * HOW THE SCREENS WAIT. To TanStack Query this is being offline, and Query already knows how to be
  * offline: a read that would go out is paused, a read that failed is retried once the client is back
@@ -24,14 +24,14 @@ import { desktopShell } from "./shell";
  * connection is lost the client is offline (`holdReadsWhileConnectionLost`), and a read that fails
  * because of it is retried rather than failed (`retryWhileConnectionLost`). A section is never told
  * its read failed for a cause the line already names; it keeps what it had, or waits as it does
- * while loading, and fills in by itself when OpenBot answers. Writes wait the same way, and go out
+ * while loading, and fills in by itself when Mangaba Bot answers. Writes wait the same way, and go out
  * then.
  *
  * Only in connected mode, where the line shows. A browser whose server went away, and a local
  * Desktop, have no line, so there every section still says its own read failed.
  */
 
-/** The address of the OpenBot this window is connected to, or null when it runs here or in a browser. */
+/** The address of the Mangaba Bot this window is connected to, or null when it runs here or in a browser. */
 function connectedAddress(client: QueryClient): string | null {
   const connection = client.getQueryData<DesktopConnection>(
     desktopKeys.connection,
@@ -39,7 +39,7 @@ function connectedAddress(client: QueryClient): string | null {
   return connection?.mode === "connected" ? connection.address : null;
 }
 
-/** True while the connection line shows: connected, and the OpenBot there did not answer. */
+/** True while the connection line shows: connected, and the Mangaba Bot there did not answer. */
 export function connectionLost(client: QueryClient): boolean {
   return openbotUnreachable() && connectedAddress(client) !== null;
 }
@@ -63,7 +63,7 @@ export function useConnectionLost(): {
 const reconnected = new Set<() => void>();
 
 /**
- * Called each time OpenBot answers again after the line showed. For what Query does not hold: a
+ * Called each time Mangaba Bot answers again after the line showed. For what Query does not hold: a
  * conversation's transcript, which the conversation reads itself.
  */
 export function useReconnected(listener: () => void): void {
@@ -111,7 +111,7 @@ export function retryWhileConnectionLost<TError>(
   };
 }
 
-/** A read of OpenBot's that failed and still says so. */
+/** A read of Mangaba Bot's that failed and still says so. */
 function failed(query: Query): boolean {
   return (
     query.state.status === "error" && query.queryKey[0] !== desktopKeys.all[0]
@@ -124,13 +124,13 @@ function isConnectionQuery(query: Query): boolean {
 }
 
 /**
- * Makes the client offline while the connection is lost, and online again when OpenBot answers.
+ * Makes the client offline while the connection is lost, and online again when Mangaba Bot answers.
  * Called once, for the app's one client.
  *
  * When the line appears, a read that had already failed is put back to waiting, so no section's
  * error is left under it. When it clears, the client is online again, which retries what was
  * waiting and asks again for every read on screen; a read that still says it failed is asked again
- * too, so no section keeps an error from while OpenBot was away.
+ * too, so no section keeps an error from while Mangaba Bot was away.
  *
  * The desktop app's own commands are answered on this computer, so they never wait.
  */

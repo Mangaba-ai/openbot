@@ -1,6 +1,6 @@
 //! The AI connection, as this desktop app keeps its half of it.
 //!
-//! THE CONNECTION CHANGES INSIDE OPENBOT, WITH NO RESTART. OpenBot's server keeps the connection
+//! THE CONNECTION CHANGES INSIDE OPENBOT, WITH NO RESTART. Mangaba Bot's server keeps the connection
 //! and every engine reaches models through the server's model gateway with a token this app mints
 //! (`GATEWAY_TOKEN`), so no engine holds a provider key and a key changed in the app reaches every
 //! Bot on its next request. What this app still does:
@@ -13,7 +13,7 @@
 //!   connection is one its engine cannot speak, as the setup window's Start would have picked it;
 //! - two non-secret settings the server imports from: which connection the setup window chose
 //!   (`CONNECTION_ENV`) and when (`CHOSEN_AT_ENV`), so a newer choice made there wins over the one
-//!   OpenBot keeps and an older one does not.
+//!   Mangaba Bot keeps and an older one does not.
 //!
 //! And Settings' AI model row on an older server, read from what Start recorded beside the
 //! installation (`saved_intent`): the kind of connection chosen, the model named with it, and for a
@@ -283,7 +283,7 @@ pub fn chosen_at(root: &Path) -> Option<String> {
 The connection last changed in the app, as the page settled it: provider, way in, the model named
 with it and an address's host. Never a key, and never a whole address.
 
-What lets Desktop's next Start carry on with a connection whose key OpenBot keeps and this app
+What lets Desktop's next Start carry on with a connection whose key Mangaba Bot keeps and this app
 never saw: the setup window resumes the recorded connection as a saved one, and Start then writes no
 key for it (`Settled::kept`), so the server keeps the one it holds.
 */
@@ -306,13 +306,13 @@ impl Settled {
     fn write(&self, root: &Path) -> Result<(), Problem> {
         let bytes = serde_json::to_vec(self).map_err(|error| {
             Problem::with(
-                "OpenBot couldn't record the new AI connection.",
+                "Mangaba Bot couldn't record the new AI connection.",
                 error.to_string(),
             )
         })?;
         crate::env::write_private_file(&root.join(SETTLED_FILE), &bytes).map_err(|error| {
             Problem::with(
-                "OpenBot couldn't record the new AI connection.",
+                "Mangaba Bot couldn't record the new AI connection.",
                 error.to_string(),
             )
         })
@@ -397,7 +397,7 @@ pub fn write_picked_harness_file(
     settings: &BTreeMap<String, String>,
 ) -> Result<(), Problem> {
     let failed =
-        |error: String| Problem::with("OpenBot couldn't record what your Bot runs on.", error);
+        |error: String| Problem::with("Mangaba Bot couldn't record what your Bot runs on.", error);
     let path = root.join(PICKED_HARNESS_FILE);
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).map_err(|error| failed(error.to_string()))?;
@@ -423,7 +423,7 @@ Refused, with the step to take, when the plan was not signed in to on this compu
 */
 pub fn prepare(engine: &Address, root: &Path, provider: &str, login: &str) -> Result<(), Problem> {
     let intent = intent_for(provider, login)
-        .ok_or_else(|| Problem::plain("OpenBot can't connect that way."))?;
+        .ok_or_else(|| Problem::plain("Mangaba Bot can't connect that way."))?;
     let Some(plan) = Plan::of(intent) else {
         return Ok(());
     };
@@ -449,7 +449,7 @@ pub fn prepare(engine: &Address, root: &Path, provider: &str, login: &str) -> Re
     let images = plan_images(root);
     if !images.is_empty() {
         crate::env::write(&root.join(".env"), &images, &BTreeMap::new()).map_err(|error| {
-            Problem::with("OpenBot couldn't save its settings.", error.to_string())
+            Problem::with("Mangaba Bot couldn't save its settings.", error.to_string())
         })?;
     }
     crate::stack::start_alone(engine, root, plan.alone(), &secrets)
@@ -499,7 +499,7 @@ and the server already keeps it.
 */
 pub fn settle(engine: &Address, root: &Path, change: &Change) -> Result<Settlement, Problem> {
     let intent = intent_for(&change.provider, &change.login)
-        .ok_or_else(|| Problem::plain("OpenBot can't connect that way."))?;
+        .ok_or_else(|| Problem::plain("Mangaba Bot can't connect that way."))?;
     let plan = Plan::of(intent);
     Settled {
         provider: change.provider.clone(),
@@ -523,12 +523,12 @@ pub fn settle(engine: &Address, root: &Path, change: &Change) -> Result<Settleme
     let effective = harness_for(plan, requested);
     let picked = crate::harness::picked(effective.as_ref(), root).map_err(|error| {
         Problem::with(
-            "This version of OpenBot does not include the Bot that connection needs.",
+            "This version of Mangaba Bot does not include the Bot that connection needs.",
             error,
         )
     })?;
     let ports = crate::env::Ports::read(root).map_err(|error| {
-        Problem::with("OpenBot could not read its local ports.", error.to_string())
+        Problem::with("Mangaba Bot could not read its local ports.", error.to_string())
     })?;
     let serving = Plan::serving_plan(plan, picked.as_ref());
     let mut settings = crate::env::harness_settings(picked.as_ref(), &ports);
@@ -573,9 +573,9 @@ pub fn settle(engine: &Address, root: &Path, change: &Change) -> Result<Settleme
 
     let env_file = root.join(".env");
     let before = crate::env::read_already_set(&env_file, &HARNESS_KEYS)
-        .map_err(|error| Problem::with("OpenBot couldn't read its settings.", error.to_string()))?;
+        .map_err(|error| Problem::with("Mangaba Bot couldn't read its settings.", error.to_string()))?;
     crate::env::write(&env_file, &settings, &purge)
-        .map_err(|error| Problem::with("OpenBot couldn't save its settings.", error.to_string()))?;
+        .map_err(|error| Problem::with("Mangaba Bot couldn't save its settings.", error.to_string()))?;
     write_picked_harness_file(root, &settings)?;
 
     let mut settlement = Settlement::default();
@@ -1081,7 +1081,7 @@ mod tests {
                 engine: Address::new(crate::engine::Engine::Docker, None),
                 project,
             };
-            // The rest of OpenBot, as Start raised it: the database and the picked Bot.
+            // The rest of Mangaba Bot, as Start raised it: the database and the picked Bot.
             let secrets = engine_secrets(&stack.root).unwrap();
             let output = crate::stack::compose_command_for(&stack.engine, &stack.root, &secrets)
                 .args(["up", "-d", "--wait", "postgres"])
@@ -1158,7 +1158,7 @@ mod tests {
     }
 
     /**
-    Changing the AI connection in the app leaves OpenBot running.
+    Changing the AI connection in the app leaves Mangaba Bot running.
 
     Signing in to a Claude plan starts the Claude plan's engine alone, healthy, while the database
     and the picked Bot keep their containers; moving to an Anthropic key stops that engine alone and

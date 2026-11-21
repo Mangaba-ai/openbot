@@ -4,6 +4,6 @@
 import type { Problem } from "./problem";
 
 /**
- * The caller asked about somebody else's API keys or sessions, or signed the request with an API key or an app's sign-in rather than signing in to OpenBot.
+ * The caller asked about somebody else's API keys or sessions, or signed the request with an API key or an app's sign-in rather than signing in to Mangaba Bot.
  */
 export type SignedInOwnOnlyResponse = Problem;

@@ -3,7 +3,7 @@ import { OrganizationSettingsPage } from "@/components/organizations/organizatio
 import { ownOrganizationsQueryOptions } from "@/lib/organizations/queries";
 
 export const Route = createFileRoute("/_authed/settings/organization")({
-  // Where OpenBot lists no organizations (the personal edition among them) there is none to set.
+  // Where Mangaba Bot lists no organizations (the personal edition among them) there is none to set.
   beforeLoad: async ({ context }) => {
     const mine = await context.queryClient.ensureQueryData(
       ownOrganizationsQueryOptions(),

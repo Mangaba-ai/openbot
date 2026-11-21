@@ -4,6 +4,6 @@
 import type { CreateRecorderConnectCodeRequestVia } from "./createRecorderConnectCodeRequestVia";
 
 export interface CreateRecorderConnectCodeRequest {
-  /** How the browser is being connected: from OpenBot in a browser, or by OpenBot Desktop. */
+  /** How the browser is being connected: from Mangaba Bot in a browser, or by Mangaba Bot Desktop. */
   via: CreateRecorderConnectCodeRequestVia;
 }

@@ -38,7 +38,7 @@ export const SETTINGS_GROUPS: readonly { id: SettingsGroup; label: string }[] =
   [
     { id: "you", label: "You" },
     { id: "every-bot", label: "Every Bot" },
-    { id: "openbot", label: "OpenBot" },
+    { id: "openbot", label: "Mangaba Bot" },
   ];
 
 type SettingsSidebarItem = {
@@ -56,7 +56,7 @@ type SettingsSidebarItem = {
   linkOptions: LinkOptions;
   title: string;
   setup?: boolean;
-  /** Shown only where OpenBot lists the person's organizations, which is never the personal edition. */
+  /** Shown only where Mangaba Bot lists the person's organizations, which is never the personal edition. */
   organization?: boolean;
 };
 
@@ -69,7 +69,7 @@ type SettingsSidebarItem = {
  *   Conversations is not here: it is where work happens, not something to set. Routines, Memory,
  *   Skills and Apps (Connections) are things you make and come back to, so they are in the main
  *   menu (`lib/navigation.ts`).
- * - OpenBot: what OpenBot itself has and needs, and the gallery of what a Bot can draw.
+ * - Mangaba Bot: what Mangaba Bot itself has and needs, and the gallery of what a Bot can draw.
  *
  * An entry with nothing to set in this edition is left out: Activity in the team edition, where the
  * trail is an admin's (Admin → Activity).
@@ -106,14 +106,14 @@ export const SETTINGS_SIDEBAR_ITEMS: SettingsSidebarItem[] = [
     linkOptions: { to: "/settings/organization" },
   },
   {
-    /* The keys you make for your own scripts and programs, which use OpenBot as you. */
+    /* The keys you make for your own scripts and programs, which use Mangaba Bot as you. */
     group: "you",
     title: "API keys",
     icon: IconKey,
     linkOptions: { to: "/settings/api-keys" },
   },
   {
-    /* The computer Bots work on, folders, what OpenBot runs here, and your Recorder browsers. */
+    /* The computer Bots work on, folders, what Mangaba Bot runs here, and your Recorder browsers. */
     group: "every-bot",
     title: primitive("computer").label,
     icon: primitive("computer").icon,

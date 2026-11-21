@@ -3,7 +3,7 @@
  */
 
 /**
- * The weekly maintenance window the managed updates service upgrades this OpenBot in, as the service last reported it, once connected. It is agreed for each install; the default is Tuesdays from 14:00 UTC for four hours.
+ * The weekly maintenance window the managed updates service upgrades this Mangaba Bot in, as the service last reported it, once connected. It is agreed for each install; the default is Tuesdays from 14:00 UTC for four hours.
  */
 export interface ManagementWindow {
   /**

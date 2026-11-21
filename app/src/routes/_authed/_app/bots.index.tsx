@@ -93,7 +93,7 @@ function BotsPage() {
 
 /**
  * Learns, the pair of Memory and Skills, beneath the Bots themselves: what every Bot knows about you
- * and how to do things. Both have their own page in the main menu. No Memory row where OpenBot doesn't
+ * and how to do things. Both have their own page in the main menu. No Memory row where Mangaba Bot doesn't
  * offer memory (see `offersMemory`).
  */
 function WhatYourBotsLearn() {

@@ -26,15 +26,15 @@ import { desktopShell } from "@/lib/desktop/shell";
 import { queryClient } from "@/query-client";
 
 /**
- * What has to be updated before this app and its OpenBot can work together.
+ * What has to be updated before this app and its Mangaba Bot can work together.
  *
- * - `page`: this page is older than the OpenBot serves. Loading the page again loads the new one.
- * - `desktop`: OpenBot Desktop, around this page, is older than the OpenBot serves. Only its own
- *   update fixes that, so the screen offers OpenBot Desktop's Update and restart.
- * - `server`: the OpenBot is older than this page can use. Only whoever runs it can update it.
+ * - `page`: this page is older than the Mangaba Bot serves. Loading the page again loads the new one.
+ * - `desktop`: Mangaba Bot Desktop, around this page, is older than the Mangaba Bot serves. Only its own
+ *   update fixes that, so the screen offers Mangaba Bot Desktop's Update and restart.
+ * - `server`: the Mangaba Bot is older than this page can use. Only whoever runs it can update it.
  *
  * `security` on the first two: the minimum was raised because of a security problem in older
- * releases, and the screen says so in place of "Update OpenBot".
+ * releases, and the screen says so in place of "Update Mangaba Bot".
  */
 export type UpdateVerdict =
   | { update: "page"; security?: true }
@@ -42,9 +42,9 @@ export type UpdateVerdict =
   | { update: "server" };
 
 /**
- * The verdict, from a refusal this page met and from what the OpenBot's `deployment` says. A refusal
- * comes first: it names the app the OpenBot refused, which inside OpenBot Desktop's window can be
- * OpenBot Desktop itself (its relay adds its own name to every request the page makes).
+ * The verdict, from a refusal this page met and from what the Mangaba Bot's `deployment` says. A refusal
+ * comes first: it names the app the Mangaba Bot refused, which inside Mangaba Bot Desktop's window can be
+ * Mangaba Bot Desktop itself (its relay adds its own name to every request the page makes).
  */
 export function updateVerdict(
   refusal: ClientRefusal | null,
@@ -66,11 +66,11 @@ export function updateVerdict(
 }
 
 /**
- * The app, unless it and its OpenBot can't work together; then one screen that says what to update,
+ * The app, unless it and its Mangaba Bot can't work together; then one screen that says what to update,
  * in place of the app.
  *
  * At the root, around every route, so it shows before sign-in as well as after, and so nothing that
- * would fail is drawn behind it. Two things decide it: the OpenBot's `deployment`, which it never
+ * would fail is drawn behind it. Two things decide it: the Mangaba Bot's `deployment`, which it never
  * refuses for the app's version and which the app reads first, and a refusal of any request for
  * being too old an app (`lib/client-version/refusal.ts`), which is how a tab left open across an
  * upgrade finds out. While neither has said anything, or the `deployment` could not be read, the app
@@ -97,9 +97,9 @@ export function ClientVersionGate({
 
 /**
  * The screen itself: the sign-in screen's frame (the orb, the heading, the column), so it reads as
- * OpenBot's own, with one sentence for a heading and one way forward.
+ * Mangaba Bot's own, with one sentence for a heading and one way forward.
  *
- * No "Reload the page": the same screen shows in OpenBot Desktop's window, which has no reload
+ * No "Reload the page": the same screen shows in Mangaba Bot Desktop's window, which has no reload
  * button. The buttons load the page again themselves.
  */
 export function UpdateScreen({ verdict }: { verdict: UpdateVerdict }) {
@@ -143,7 +143,7 @@ function loadAgain() {
 }
 
 /**
- * This page is older than the OpenBot serves: the OpenBot serves the new one on the next load. For a
+ * This page is older than the Mangaba Bot serves: the Mangaba Bot serves the new one on the next load. For a
  * security problem the heading says so and already says what to do, so no line repeats it.
  */
 function PageUpdate({ security }: { security: boolean }) {
@@ -154,7 +154,7 @@ function PageUpdate({ security }: { security: boolean }) {
       ) : (
         <>
           <Heading>{APP_UPDATE_SENTENCE}</Heading>
-          <Line>This page is from an older version of OpenBot.</Line>
+          <Line>This page is from an older version of Mangaba Bot.</Line>
         </>
       )}
       <Button className="mt-8 w-full" onClick={loadAgain} size="lg">
@@ -164,12 +164,12 @@ function PageUpdate({ security }: { security: boolean }) {
   );
 }
 
-/** The OpenBot is older than this page can use. Loading again shows whether it has been updated. */
+/** The Mangaba Bot is older than this page can use. Loading again shows whether it has been updated. */
 function ServerUpdate() {
   return (
     <>
       <Heading>{SERVER_UPDATE_SENTENCE}</Heading>
-      <Line>This OpenBot is on a release this page can't use yet.</Line>
+      <Line>This Mangaba Bot is on a release this page can't use yet.</Line>
       <Button
         className="mt-8 w-full"
         onClick={loadAgain}
@@ -183,7 +183,7 @@ function ServerUpdate() {
 }
 
 /**
- * OpenBot Desktop is older than the OpenBot serves. Its own Update and restart, as the update banner
+ * Mangaba Bot Desktop is older than the Mangaba Bot serves. Its own Update and restart, as the update banner
  * offers it, with how far the download has got; or, on a build that never updates itself, what to
  * do instead.
  */
@@ -206,8 +206,8 @@ function DesktopUpdate({
       </Heading>
       <Line>
         {minimum
-          ? `This OpenBot needs OpenBot Desktop ${minimum} or later.`
-          : "This OpenBot needs a newer OpenBot Desktop."}
+          ? `This Mangaba Bot needs Mangaba Bot Desktop ${minimum} or later.`
+          : "This Mangaba Bot needs a newer Mangaba Bot Desktop."}
       </Line>
       {offer.isLoading ? null : updatesItself ? (
         <Button

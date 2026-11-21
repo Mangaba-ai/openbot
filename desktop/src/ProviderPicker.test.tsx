@@ -361,7 +361,7 @@ test("a plan sign-in that downloads its image shows the download as Install does
         step: "images",
         ok: true,
         running: true,
-        detail: "Downloading OpenBot.",
+        detail: "Downloading Mangaba Bot.",
         downloads: {
           bytes: 120_000_000,
           size: 480_000_000,
@@ -373,7 +373,7 @@ test("a plan sign-in that downloads its image shows the download as Install does
     });
   });
   const shown = await view.findByRole("list", { name: "Sign-in download" });
-  expect(shown.textContent).toContain("Downloading OpenBot.");
+  expect(shown.textContent).toContain("Downloading Mangaba Bot.");
   expect(shown.querySelector(".step-spinner")).not.toBeNull();
   expect(
     shown.querySelector("progress[aria-label='Download progress']"),
@@ -385,12 +385,12 @@ test("a plan sign-in that downloads its image shows the download as Install does
         step: "images",
         ok: true,
         running: false,
-        detail: "OpenBot is downloaded.",
+        detail: "Mangaba Bot is downloaded.",
       },
     });
   });
   expect(view.queryByRole("list", { name: "Sign-in download" })).toBeNull();
-  expect(view.getByRole("status").textContent).toBe("OpenBot is downloaded.");
+  expect(view.getByRole("status").textContent).toBe("Mangaba Bot is downloaded.");
   await act(async () => {
     begun.resolve("https://claude.test");
   });
@@ -443,7 +443,7 @@ test("a pending plan sign-in completion is ignored after switching provider rows
 /*
  * A ChatGPT sign-in left behind keeps listening for the browser. Its tab can still finish, and the
  * browser then says "You're signed in" while this screen has moved on and dropped the result. So
- * leaving it stops it: the tab then gets OpenBot's own page saying the sign-in ended.
+ * leaving it stops it: the tab then gets Mangaba Bot's own page saying the sign-in ended.
  */
 test("leaving a ChatGPT sign-in that is still waiting stops it", async () => {
   invokeHandler = async (command) => {

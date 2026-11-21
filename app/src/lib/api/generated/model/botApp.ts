@@ -12,7 +12,7 @@ import type { BotAppState } from "./botAppState";
 import type { BotAppUnavailable } from "./botAppUnavailable";
 
 /**
- * One app as it stands for the person asking, on one Bot. state is OpenBot's: a client draws it and never works it out from the other fields.
+ * One app as it stands for the person asking, on one Bot. state is Mangaba Bot's: a client draws it and never works it out from the other fields.
  */
 export interface BotApp {
   /**
@@ -24,15 +24,15 @@ export interface BotApp {
   title: string;
   /** @nullable */
   logo: string | null;
-  /** Where the app comes from: OpenBot's catalogue, a server added by its address, or the directory of apps OpenBot can add. */
+  /** Where the app comes from: Mangaba Bot's catalogue, a server added by its address, or the directory of apps Mangaba Bot can add. */
   source: BotAppSource;
   /** Whose account the app's actions use: each person's own, one shared account an administrator connects, or no person's. */
   account: BotAppAccount;
-  /** How the person's account is connected: OpenBot's own sign-in, the directory's sign-in, a key, or nothing to connect. */
+  /** How the person's account is connected: Mangaba Bot's own sign-in, the directory's sign-in, a key, or nothing to connect. */
   connect: BotAppConnect;
   /** ready: usable now. not_connected and reconnect: waiting on an account the person connects (see accountHolder). shared_not_connected: waiting on the shared account. shared_not_approved: an administrator hasn't approved who may use the shared account through this Bot. disabled: turned off (see unavailable). not_granted: the Bot wasn't given it. owner_grantable: the same, and the person may give it themselves. */
   state: BotAppState;
-  /** Why the app is turned off, when state is disabled: nobody turned it on, the directory isn't set up here, OpenBot can't read how it connects, or it is missing the OAuth client or the key an administrator adds. Null otherwise. */
+  /** Why the app is turned off, when state is disabled: nobody turned it on, the directory isn't set up here, Mangaba Bot can't read how it connects, or it is missing the OAuth client or the key an administrator adds. Null otherwise. */
   unavailable: BotAppUnavailable;
   /** Whose own account the actions use for this person: theirs, or on somebody else's shared Bot the owner's, which only the owner can reconnect. Null where no person's own account is used. */
   accountHolder: BotAppAccountHolder;

@@ -117,7 +117,7 @@ export const ListComponentsResponse = zod.object({
               zod.null(),
             ])
             .describe(
-              "For a published Playground component, the source a conversation draws it from. Null for one that comes with OpenBot, and for one that isn't published.",
+              "For a published Playground component, the source a conversation draws it from. Null for one that comes with Mangaba Bot, and for one that isn't published.",
             ),
           draft: zod
             .union([
@@ -157,7 +157,7 @@ export const ListComponentsResponse = zod.object({
                   ]),
                 })
                 .describe(
-                  "A component's working copy. For one that comes with OpenBot only the description is drafted, and source is null.",
+                  "A component's working copy. For one that comes with Mangaba Bot only the description is drafted, and source is null.",
                 ),
               zod.null(),
             ])
@@ -206,7 +206,7 @@ export const ListComponentsResponse = zod.object({
 });
 
 /**
- * Tell OpenBot which components this version of the app can draw. A component the organization has not seen before is added and published, so every one of its Bots can draw it at once. One it already has is left exactly as it is: what it tells the model, whether it is published and who may use it were decided here. A description nobody here has edited follows the one this version of OpenBot ships. In OpenBot Personal a component is also given the data it reads. Anybody signed in may announce, and the web app does it on every load. The whole list is refused if one entry is missing a field or has a name that starts with @.
+ * Tell Mangaba Bot which components this version of the app can draw. A component the organization has not seen before is added and published, so every one of its Bots can draw it at once. One it already has is left exactly as it is: what it tells the model, whether it is published and who may use it were decided here. A description nobody here has edited follows the one this version of Mangaba Bot ships. In Mangaba Bot Personal a component is also given the data it reads. Anybody signed in may announce, and the web app does it on every load. The whole list is refused if one entry is missing a field or has a name that starts with @.
  * @summary Announce the components the app can draw
  */
 
@@ -362,7 +362,7 @@ export const GetComponentResponse = zod
         zod.null(),
       ])
       .describe(
-        "For a published Playground component, the source a conversation draws it from. Null for one that comes with OpenBot, and for one that isn't published.",
+        "For a published Playground component, the source a conversation draws it from. Null for one that comes with Mangaba Bot, and for one that isn't published.",
       ),
     draft: zod
       .union([
@@ -400,7 +400,7 @@ export const GetComponentResponse = zod
             ]),
           })
           .describe(
-            "A component's working copy. For one that comes with OpenBot only the description is drafted, and source is null.",
+            "A component's working copy. For one that comes with Mangaba Bot only the description is drafted, and source is null.",
           ),
         zod.null(),
       ])
@@ -436,7 +436,7 @@ export const GetComponentResponse = zod
   );
 
 /**
- * Delete a component an admin wrote in Playground: its source, its draft, and every Bot's permission to draw it. Conversations stop drawing it. A component that comes with OpenBot can't be deleted; unpublish it instead. Recorded on the audit trail. Only an admin may delete one.
+ * Delete a component an admin wrote in Playground: its source, its draft, and every Bot's permission to draw it. Conversations stop drawing it. A component that comes with Mangaba Bot can't be deleted; unpublish it instead. Recorded on the audit trail. Only an admin may delete one.
  * @summary Delete a Playground component
  */
 
@@ -473,7 +473,7 @@ export const DeleteComponentHeader = zod.object({
 export const DeleteComponentResponse = zod.void();
 
 /**
- * Replace a component's draft. Nothing a Bot sees changes until the component is published. For a component that comes with OpenBot the draft is its description, which the model reads when it decides to draw it; a title or source that differs from what it has is refused. For a Playground component the draft is its title, description and source. Saving one under a new name writes a new Playground component, unpublished: the name is custom_ and then lower-case letters, numbers and underscores. Recorded on the audit trail. Only an admin may save a draft.
+ * Replace a component's draft. Nothing a Bot sees changes until the component is published. For a component that comes with Mangaba Bot the draft is its description, which the model reads when it decides to draw it; a title or source that differs from what it has is refused. For a Playground component the draft is its title, description and source. Saving one under a new name writes a new Playground component, unpublished: the name is custom_ and then lower-case letters, numbers and underscores. Recorded on the audit trail. Only an admin may save a draft.
  * @summary Save a component's draft
  */
 
@@ -514,7 +514,7 @@ export const ReplaceComponentDraftBody = zod
     description: zod
       .string()
       .describe(
-        "Trimmed. Required for a component that comes with OpenBot. A Playground draft may leave it empty until it is published.",
+        "Trimmed. Required for a component that comes with Mangaba Bot. A Playground draft may leave it empty until it is published.",
       ),
     title: zod
       .string()
@@ -544,7 +544,7 @@ export const ReplaceComponentDraftBody = zod
       .optional(),
   })
   .describe(
-    "A draft to save. For a component that comes with OpenBot, send its description; a title or source that differs from what it has is refused. For a Playground component, send all three.",
+    "A draft to save. For a component that comes with Mangaba Bot, send its description; a title or source that differs from what it has is refused. For a Playground component, send all three.",
   );
 
 export const ReplaceComponentDraftResponse = zod
@@ -602,7 +602,7 @@ export const ReplaceComponentDraftResponse = zod
         zod.null(),
       ])
       .describe(
-        "For a published Playground component, the source a conversation draws it from. Null for one that comes with OpenBot, and for one that isn't published.",
+        "For a published Playground component, the source a conversation draws it from. Null for one that comes with Mangaba Bot, and for one that isn't published.",
       ),
     draft: zod
       .union([
@@ -640,7 +640,7 @@ export const ReplaceComponentDraftResponse = zod
             ]),
           })
           .describe(
-            "A component's working copy. For one that comes with OpenBot only the description is drafted, and source is null.",
+            "A component's working copy. For one that comes with Mangaba Bot only the description is drafted, and source is null.",
           ),
         zod.null(),
       ])
@@ -765,7 +765,7 @@ export const PublishComponentResponse = zod
         zod.null(),
       ])
       .describe(
-        "For a published Playground component, the source a conversation draws it from. Null for one that comes with OpenBot, and for one that isn't published.",
+        "For a published Playground component, the source a conversation draws it from. Null for one that comes with Mangaba Bot, and for one that isn't published.",
       ),
     draft: zod
       .union([
@@ -803,7 +803,7 @@ export const PublishComponentResponse = zod
             ]),
           })
           .describe(
-            "A component's working copy. For one that comes with OpenBot only the description is drafted, and source is null.",
+            "A component's working copy. For one that comes with Mangaba Bot only the description is drafted, and source is null.",
           ),
         zod.null(),
       ])
@@ -928,7 +928,7 @@ export const UnpublishComponentResponse = zod
         zod.null(),
       ])
       .describe(
-        "For a published Playground component, the source a conversation draws it from. Null for one that comes with OpenBot, and for one that isn't published.",
+        "For a published Playground component, the source a conversation draws it from. Null for one that comes with Mangaba Bot, and for one that isn't published.",
       ),
     draft: zod
       .union([
@@ -966,7 +966,7 @@ export const UnpublishComponentResponse = zod
             ]),
           })
           .describe(
-            "A component's working copy. For one that comes with OpenBot only the description is drafted, and source is null.",
+            "A component's working copy. For one that comes with Mangaba Bot only the description is drafted, and source is null.",
           ),
         zod.null(),
       ])
@@ -1002,7 +1002,7 @@ export const UnpublishComponentResponse = zod
   );
 
 /**
- * Return one page of the data functions this OpenBot ships, each with whether this component may read it. A component reads its own figures through one, so the numbers it shows come from OpenBot and not from the model. Anybody signed in may list them. Ordered by name. A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the data functions this Mangaba Bot ships, each with whether this component may read it. A component reads its own figures through one, so the numbers it shows come from Mangaba Bot and not from the model. Anybody signed in may list them. Ordered by name. A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List the data a component may read
  */
 
@@ -1074,7 +1074,7 @@ export const ListComponentFunctionsResponse = zod.object({
             .describe("Whether this component may read it."),
         })
         .describe(
-          "Data a component may read for itself, so the figures it shows come from OpenBot and not from the model.",
+          "Data a component may read for itself, so the figures it shows come from Mangaba Bot and not from the model.",
         ),
     )
     .describe("By name."),
@@ -1140,7 +1140,7 @@ export const GrantComponentFunctionResponse = zod
     granted: zod.boolean().describe("Whether this component may read it."),
   })
   .describe(
-    "Data a component may read for itself, so the figures it shows come from OpenBot and not from the model.",
+    "Data a component may read for itself, so the figures it shows come from Mangaba Bot and not from the model.",
   );
 
 /**

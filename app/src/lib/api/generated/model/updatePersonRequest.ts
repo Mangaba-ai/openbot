@@ -8,7 +8,7 @@ import type { AssignableRole } from "./assignableRole";
  */
 export interface UpdatePersonRequest {
   /**
-   * What OpenBot calls the person, 1 to 100 characters once trimmed. Only the person themselves may change it.
+   * What Mangaba Bot calls the person, 1 to 100 characters once trimmed. Only the person themselves may change it.
    * @minLength 1
    * @maxLength 100
    * @pattern ^[^\x00]*$

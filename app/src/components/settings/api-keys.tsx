@@ -93,8 +93,8 @@ export function apiKeyDescription(apiKey: ApiKey, now = Date.now()): string {
  * Revoke.
  *
  * A key is shown whole once, when it is made, and is kept nowhere in the app after that dialog
- * closes. Two answers from the API are not failures and read as a sentence: an OpenBot with no
- * sign-in has no keys, and OpenBot Desktop connected to an OpenBot elsewhere is sent to the browser,
+ * closes. Two answers from the API are not failures and read as a sentence: an Mangaba Bot with no
+ * sign-in has no keys, and Mangaba Bot Desktop connected to an Mangaba Bot elsewhere is sent to the browser,
  * because only a person signed in on the web can manage keys.
  */
 export function ApiKeysPage() {
@@ -111,7 +111,7 @@ export function ApiKeysPage() {
   return (
     <PageShell
       action={ready ? createButton("lg", "default") : undefined}
-      description="Create a key so a script or another program can use OpenBot as you."
+      description="Create a key so a script or another program can use Mangaba Bot as you."
       title="API keys"
     >
       {/* One section, so it carries no heading: the page title already names it. */}
@@ -123,9 +123,9 @@ export function ApiKeysPage() {
         ) : list.data.state === "unavailable" ? (
           <PageEmpty
             icon={IconKey}
-            title="API keys aren't available on this OpenBot"
+            title="API keys aren't available on this Mangaba Bot"
           >
-            This OpenBot runs on one computer for one person and has no sign-in,
+            This Mangaba Bot runs on one computer for one person and has no sign-in,
             so it has no API keys.
           </PageEmpty>
         ) : list.data.state === "browser-only" ? (
@@ -136,7 +136,7 @@ export function ApiKeysPage() {
             icon={IconKey}
             title="No API keys yet"
           >
-            A key lets a script or another program use OpenBot as you.
+            A key lets a script or another program use Mangaba Bot as you.
           </PageEmpty>
         ) : (
           <PageRows>
@@ -163,12 +163,12 @@ export function ApiKeysPage() {
 }
 
 /**
- * Where keys are managed when this window can't: OpenBot in a browser. In OpenBot Desktop a button
+ * Where keys are managed when this window can't: Mangaba Bot in a browser. In Mangaba Bot Desktop a button
  * opens this page there; anywhere else there is nothing to press, so it is only said.
  */
 function BrowserOnly() {
   /*
-   * The address of the OpenBot this window is connected to, which is where a browser finds this
+   * The address of the Mangaba Bot this window is connected to, which is where a browser finds this
    * page. The window's own address is the desktop app's, and means nothing to a browser.
    */
   const connection = useQuery({
@@ -202,7 +202,7 @@ function BrowserOnly() {
       icon={IconKey}
       title="API keys are managed in your browser"
     >
-      Create API keys from OpenBot in your browser.
+      Create API keys from Mangaba Bot in your browser.
     </PageEmpty>
   );
 }

@@ -46,7 +46,7 @@ export const GetBotBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -56,7 +56,7 @@ export const GetBotBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -234,7 +234,7 @@ export const ChangeBotBrowserTabsResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -244,7 +244,7 @@ export const ChangeBotBrowserTabsResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -413,7 +413,7 @@ export const NavigateBotBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -423,7 +423,7 @@ export const NavigateBotBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -605,7 +605,7 @@ export const RecordInBotBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -615,7 +615,7 @@ export const RecordInBotBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -879,7 +879,7 @@ export const ClearBotBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -889,7 +889,7 @@ export const ClearBotBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -984,7 +984,7 @@ export const ClearBotBrowserResponse = zod
   );
 
 /**
- * Return the browser OpenBot runs for a person: whether this OpenBot can run one at all, where it shows, whether it is open, its tabs, what the Recorder in it is doing, and what any of the person's Recorders is recording. It is the person's alone: nobody else, an administrator included, may read it. Reading it never starts a computer or opens the browser.
+ * Return the browser Mangaba Bot runs for a person: whether this Mangaba Bot can run one at all, where it shows, whether it is open, its tabs, what the Recorder in it is doing, and what any of the person's Recorders is recording. It is the person's alone: nobody else, an administrator included, may read it. Reading it never starts a computer or opens the browser.
  * @summary Read a person's own browser
  */
 
@@ -1041,7 +1041,7 @@ export const GetPersonBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -1051,7 +1051,7 @@ export const GetPersonBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -1129,7 +1129,7 @@ export const GetPersonBrowserResponse = zod
       })
       .optional()
       .describe(
-        "On OpenBot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
+        "On Mangaba Bot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
       ),
     activity: zod
       .object({
@@ -1155,13 +1155,13 @@ export const GetPersonBrowserResponse = zod
     available: zod
       .boolean()
       .describe(
-        "False when this OpenBot has no way to run a person's browser.",
+        "False when this Mangaba Bot has no way to run a person's browser.",
       ),
     note: zod
       .string()
       .optional()
       .describe(
-        "Why this OpenBot cannot run the person's browser, in one sentence.",
+        "Why this Mangaba Bot cannot run the person's browser, in one sentence.",
       ),
     problem: zod
       .string()
@@ -1187,10 +1187,10 @@ export const GetPersonBrowserResponse = zod
         "Who hears the person. own: the Recorder listens to the person's microphone itself. external: the browser has no microphone, so the page hears the person and sends each phrase as narration.",
       ),
   })
-  .describe("The browser OpenBot runs for a person.");
+  .describe("The browser Mangaba Bot runs for a person.");
 
 /**
- * Open the caller's browser, or bring it forward when it is already open, with the Recorder in it connected as them. On OpenBot Desktop it may instead bring the person's everyday Chrome or Edge forward, or open the Recorder's store page in it; the answer says which. Only the person themselves may.
+ * Open the caller's browser, or bring it forward when it is already open, with the Recorder in it connected as them. On Mangaba Bot Desktop it may instead bring the person's everyday Chrome or Edge forward, or open the Recorder's store page in it; the answer says which. Only the person themselves may.
  * @summary Open a person's own browser
  */
 
@@ -1249,7 +1249,7 @@ export const OpenPersonBrowserResponse = zod
             "Who hears the person. own: the Recorder listens to the person's microphone itself. external: the browser has no microphone, so the page hears the person and sends each phrase as narration.",
           ),
       })
-      .describe("The person's OpenBot browser opened, or came forward."),
+      .describe("The person's Mangaba Bot browser opened, or came forward."),
     zod
       .object({
         ok: zod.literal(true),
@@ -1263,7 +1263,7 @@ export const OpenPersonBrowserResponse = zod
           .describe("One of the person's own everyday browsers."),
       })
       .describe(
-        "On OpenBot Desktop, what happened in the person's own everyday browser instead.",
+        "On Mangaba Bot Desktop, what happened in the person's own everyday browser instead.",
       ),
   ])
   .describe("What an open did.");
@@ -1367,7 +1367,7 @@ export const ChangePersonBrowserTabsResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -1377,7 +1377,7 @@ export const ChangePersonBrowserTabsResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -1455,7 +1455,7 @@ export const ChangePersonBrowserTabsResponse = zod
       })
       .optional()
       .describe(
-        "On OpenBot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
+        "On Mangaba Bot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
       ),
     activity: zod
       .object({
@@ -1481,13 +1481,13 @@ export const ChangePersonBrowserTabsResponse = zod
     available: zod
       .boolean()
       .describe(
-        "False when this OpenBot has no way to run a person's browser.",
+        "False when this Mangaba Bot has no way to run a person's browser.",
       ),
     note: zod
       .string()
       .optional()
       .describe(
-        "Why this OpenBot cannot run the person's browser, in one sentence.",
+        "Why this Mangaba Bot cannot run the person's browser, in one sentence.",
       ),
     problem: zod
       .string()
@@ -1513,7 +1513,7 @@ export const ChangePersonBrowserTabsResponse = zod
         "Who hears the person. own: the Recorder listens to the person's microphone itself. external: the browser has no microphone, so the page hears the person and sends each phrase as narration.",
       ),
   })
-  .describe("The browser OpenBot runs for a person.");
+  .describe("The browser Mangaba Bot runs for a person.");
 
 /**
  * Open an address in the tab the caller is on in their browser, or go back, forward or reload. Only web addresses open. Only the person themselves may.
@@ -1605,7 +1605,7 @@ export const NavigatePersonBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -1615,7 +1615,7 @@ export const NavigatePersonBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -1693,7 +1693,7 @@ export const NavigatePersonBrowserResponse = zod
       })
       .optional()
       .describe(
-        "On OpenBot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
+        "On Mangaba Bot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
       ),
     activity: zod
       .object({
@@ -1719,13 +1719,13 @@ export const NavigatePersonBrowserResponse = zod
     available: zod
       .boolean()
       .describe(
-        "False when this OpenBot has no way to run a person's browser.",
+        "False when this Mangaba Bot has no way to run a person's browser.",
       ),
     note: zod
       .string()
       .optional()
       .describe(
-        "Why this OpenBot cannot run the person's browser, in one sentence.",
+        "Why this Mangaba Bot cannot run the person's browser, in one sentence.",
       ),
     problem: zod
       .string()
@@ -1751,7 +1751,7 @@ export const NavigatePersonBrowserResponse = zod
         "Who hears the person. own: the Recorder listens to the person's microphone itself. external: the browser has no microphone, so the page hears the person and sends each phrase as narration.",
       ),
   })
-  .describe("The browser OpenBot runs for a person.");
+  .describe("The browser Mangaba Bot runs for a person.");
 
 /**
  * Start recording what the caller does in their browser, named for the task, or stop the recording. A start connects the Recorder again first when its connection has gone. Only the person themselves may.
@@ -1856,7 +1856,7 @@ export const RecordInPersonBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -1866,7 +1866,7 @@ export const RecordInPersonBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -1944,7 +1944,7 @@ export const RecordInPersonBrowserResponse = zod
       })
       .optional()
       .describe(
-        "On OpenBot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
+        "On Mangaba Bot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
       ),
     activity: zod
       .object({
@@ -1970,13 +1970,13 @@ export const RecordInPersonBrowserResponse = zod
     available: zod
       .boolean()
       .describe(
-        "False when this OpenBot has no way to run a person's browser.",
+        "False when this Mangaba Bot has no way to run a person's browser.",
       ),
     note: zod
       .string()
       .optional()
       .describe(
-        "Why this OpenBot cannot run the person's browser, in one sentence.",
+        "Why this Mangaba Bot cannot run the person's browser, in one sentence.",
       ),
     problem: zod
       .string()
@@ -2002,7 +2002,7 @@ export const RecordInPersonBrowserResponse = zod
         "Who hears the person. own: the Recorder listens to the person's microphone itself. external: the browser has no microphone, so the page hears the person and sends each phrase as narration.",
       ),
   })
-  .describe("The browser OpenBot runs for a person.");
+  .describe("The browser Mangaba Bot runs for a person.");
 
 /**
  * Send one thing the caller said while recording in their browser: a finished phrase with when it started and ended, or that they began or stopped speaking. Times are the sender's clock; the server moves them onto its own from when the request arrived and sentAt. Only the person themselves may.
@@ -2194,7 +2194,7 @@ export const ClearPersonBrowserResponse = zod
         connected: zod
           .boolean()
           .describe(
-            "Whether the Recorder is connected to OpenBot as a person.",
+            "Whether the Recorder is connected to Mangaba Bot as a person.",
           ),
         userId: zod.string().optional().describe("The connected person's id."),
         connectionId: zod
@@ -2204,7 +2204,7 @@ export const ClearPersonBrowserResponse = zod
         openbotUrl: zod
           .string()
           .optional()
-          .describe("The address it reaches OpenBot at."),
+          .describe("The address it reaches Mangaba Bot at."),
         phase: zod
           .enum(["idle", "starting", "recording", "stopping"])
           .describe(
@@ -2282,7 +2282,7 @@ export const ClearPersonBrowserResponse = zod
       })
       .optional()
       .describe(
-        "On OpenBot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
+        "On Mangaba Bot Desktop, the person's own everyday browsers and whether a Recorder in one of them is connected.",
       ),
     activity: zod
       .object({
@@ -2308,13 +2308,13 @@ export const ClearPersonBrowserResponse = zod
     available: zod
       .boolean()
       .describe(
-        "False when this OpenBot has no way to run a person's browser.",
+        "False when this Mangaba Bot has no way to run a person's browser.",
       ),
     note: zod
       .string()
       .optional()
       .describe(
-        "Why this OpenBot cannot run the person's browser, in one sentence.",
+        "Why this Mangaba Bot cannot run the person's browser, in one sentence.",
       ),
     problem: zod
       .string()
@@ -2340,4 +2340,4 @@ export const ClearPersonBrowserResponse = zod
         "Who hears the person. own: the Recorder listens to the person's microphone itself. external: the browser has no microphone, so the page hears the person and sends each phrase as narration.",
       ),
   })
-  .describe("The browser OpenBot runs for a person.");
+  .describe("The browser Mangaba Bot runs for a person.");

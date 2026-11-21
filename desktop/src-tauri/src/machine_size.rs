@@ -11,7 +11,7 @@
 //! the machine's own configuration and use it from the next `podman machine start`. Neither may
 //! exceed this computer: "requested number of CPUs (N) greater than number of host CPUs (M)",
 //! and the same for memory (`checkMaxCPUs`, `checkMaxMemory` in `cmd/podman/machine/init.go`).
-//! Nothing about root changes: the machine OpenBot uses is already rootful (a rootless one is passed
+//! Nothing about root changes: the machine Mangaba Bot uses is already rootful (a rootless one is passed
 //! over, see `own_machine`). On Windows a machine is a WSL distribution and refuses both ("changing
 //! CPUs not supported for WSL machines"), so there is nothing to offer there, nor a command to give.
 //!
@@ -59,7 +59,7 @@ pub struct Size {
     pub memory_mib: u64,
 }
 
-/// How the machine OpenBot runs on would be made big enough, and whether OpenBot can do it.
+/// How the machine Mangaba Bot runs on would be made big enough, and whether Mangaba Bot can do it.
 #[derive(Clone, Debug, PartialEq, Eq, Serialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Plan {
@@ -70,7 +70,7 @@ pub struct Plan {
     /// What it would have. Never less than now.
     pub to_cpus: u64,
     pub to_memory_mib: u64,
-    /// OpenBot can make the change itself. Otherwise the window gives the person the commands.
+    /// Mangaba Bot can make the change itself. Otherwise the window gives the person the commands.
     pub for_them: bool,
 }
 
@@ -152,7 +152,7 @@ Make `machine` `to` in size: stop it, set its CPUs and memory, start it again wi
 that were running in it, and wait for it to be ready for setup (`ready_with`). Only what is larger
 than now is set.
 
-`run` is `podman`. `start_own` starts OpenBot's own machine, which `acquire::start_machine` brings up
+`run` is `podman`. `start_own` starts Mangaba Bot's own machine, which `acquire::start_machine` brings up
 with its networking; anybody else's is started here.
 */
 pub fn resize_with(
@@ -369,7 +369,7 @@ pub fn plan_here(short: &Short) -> Option<Plan> {
 /// machine is the one the CLI runs on, never one the window names.
 pub fn resize_here(to: Size) -> Result<(), Stopped> {
     let machine = crate::local_eval::engine_machine()
-        .ok_or_else(|| Stopped::Refused("OpenBot isn't running on a Podman machine".to_string()))?;
+        .ok_or_else(|| Stopped::Refused("Mangaba Bot isn't running on a Podman machine".to_string()))?;
     if !cfg!(target_os = "macos") {
         return Err(Stopped::Refused(
             "Podman can change a machine's size only on a Mac".to_string(),
@@ -659,7 +659,7 @@ mod tests {
                 memory_mib: 6144,
             },
             &mut |args: &[&str]| podman.run(args),
-            |_| panic!("not OpenBot's own machine"),
+            |_| panic!("not Mangaba Bot's own machine"),
         )
         .expect("resized");
         assert_eq!(
@@ -715,7 +715,7 @@ mod tests {
                 }
                 answer
             },
-            |_| panic!("not OpenBot's own machine"),
+            |_| panic!("not Mangaba Bot's own machine"),
         )
         .expect("resized and ready");
         assert!(
@@ -765,7 +765,7 @@ mod tests {
                 memory_mib: 6144,
             },
             &mut |args: &[&str]| podman.run(args),
-            |_| panic!("not OpenBot's own machine"),
+            |_| panic!("not Mangaba Bot's own machine"),
         )
         .expect_err("more CPUs than the Mac has");
         assert!(
@@ -789,7 +789,7 @@ mod tests {
             .starts_with("--connection mine-root start"));
     }
 
-    /// OpenBot's own machine is started as OpenBot starts it, with its networking, and nothing is
+    /// Mangaba Bot's own machine is started as Mangaba Bot starts it, with its networking, and nothing is
     /// set when it is already big enough.
     #[test]
     fn openbots_own_machine_starts_its_own_way_and_a_big_one_is_left_alone() {
@@ -837,7 +837,7 @@ mod tests {
                 memory_mib: 8192,
             },
             &mut |args: &[&str]| big.run(args),
-            |_| panic!("not OpenBot's own machine"),
+            |_| panic!("not Mangaba Bot's own machine"),
         )
         .expect("nothing to do");
         assert_eq!(big.ran, ["machine inspect mine"]);
@@ -872,7 +872,7 @@ mod tests {
                 )),
                 _ => podman.run(args),
             },
-            |_| panic!("not OpenBot's own machine"),
+            |_| panic!("not Mangaba Bot's own machine"),
         )
         .expect_err("set on a running machine");
         assert!(
@@ -906,7 +906,7 @@ mod tests {
 
 /**
 The button's whole path on a real Mac, against a throwaway rootful machine only (`OPENBOT_LIVE_RESIZE`,
-running, 2 CPUs and 4 GiB, with a container running in each of its engines). OpenBot is pointed at it
+running, 2 CPUs and 4 GiB, with a container running in each of its engines). Mangaba Bot is pointed at it
 through its `-root` connection as the app points the CLI at its engine; the default connection and
 every other machine are left alone. Run by hand:
 
@@ -972,13 +972,13 @@ mod live {
         assert_eq!(before["State"], "running", "start {name} first");
         assert_eq!(
             before["Rootful"], true,
-            "{name} must be rootful, as OpenBot's machine is"
+            "{name} must be rootful, as Mangaba Bot's machine is"
         );
         let containers = sorted(acquire::running_containers(&name));
         println!("[live] containers running in {name}: {containers:?}");
         assert!(!containers.is_empty(), "start a container in {name} first");
 
-        // OpenBot points the CLI at the machine's rootful connection, as the app does.
+        // Mangaba Bot points the CLI at the machine's rootful connection, as the app does.
         crate::local_eval::use_engine(&crate::engine::Address::new(
             crate::engine::Engine::Podman,
             Some(acquire::connection_for(&name, true)),
@@ -1055,7 +1055,7 @@ mod live {
                 ["machine", "stop", _] => Ok(String::new()),
                 _ => acquire::podman(args),
             },
-            |_| panic!("not OpenBot's own machine"),
+            |_| panic!("not Mangaba Bot's own machine"),
         )
         .expect_err("set on a running machine");
         println!("[live] refused while running: {refused}");

@@ -3,7 +3,7 @@
  */
 
 /**
- * stored: set here, or carried over from how OpenBot was set up. environment: set by whoever runs OpenBot, in its configuration. none: nothing set yet.
+ * stored: set here, or carried over from how Mangaba Bot was set up. environment: set by whoever runs Mangaba Bot, in its configuration. none: nothing set yet.
  */
 export type AiConnectionSource =
   (typeof AiConnectionSource)[keyof typeof AiConnectionSource];

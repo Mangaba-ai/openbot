@@ -91,7 +91,7 @@ export const Route = createFileRoute("/_authed/_app/connections/")({
   /*
    * `?connected=` is how the OAuth callback reports back, carrying a server key on success and
    * `failed` otherwise. `?linked=` is the same for the GitHub account-link callback: `github` on
-   * success, `github-taken` when that GitHub account belongs to another OpenBot user, `failed`
+   * success, `github-taken` when that GitHub account belongs to another Mangaba Bot user, `failed`
    * otherwise (see linked-notice.ts). Each is the only channel available: the callback is a
    * redirect from another company's server, so there is no response body to read.
    *
@@ -161,7 +161,7 @@ export const AUTHORIZATION_NOTICES: ReadonlyMap<string, string> = new Map([
   ],
   [
     "vendor-unavailable",
-    "The app didn't answer when OpenBot tried to finish that authorization, so nothing was recorded. Try the link again in a moment.",
+    "The app didn't answer when Mangaba Bot tried to finish that authorization, so nothing was recorded. Try the link again in a moment.",
   ],
   [
     "not-your-authorization",
@@ -181,7 +181,7 @@ export const AUTHORIZATION_NOTICES: ReadonlyMap<string, string> = new Map([
   ],
   [
     "name-changed",
-    "That authorization was started before an update changed how OpenBot signs you in to the app, so nothing was recorded. Press Connect on the app's page to start again.",
+    "That authorization was started before an update changed how Mangaba Bot signs you in to the app, so nothing was recorded. Press Connect on the app's page to start again.",
   ],
   [
     "not-permitted",
@@ -218,7 +218,7 @@ export const PERSONAL_AUTHORIZATION_NOTICES: ReadonlyMap<string, string> =
     ],
     [
       "not-recorded",
-      "Couldn't record that authorization, so nothing was saved. Start again from the app's page, or check OpenBot's logs if it keeps happening.",
+      "Couldn't record that authorization, so nothing was saved. Start again from the app's page, or check Mangaba Bot's logs if it keeps happening.",
     ],
   ]);
 
@@ -349,7 +349,7 @@ function RouteComponent() {
    * contradicting each other, with the list the more believable of the two.
    *
    * ASKED OF THE APP'S `connectsWith`, which this read already carries and the detail route already
-   * consumes. Anything that is not `nothing` is an app somebody connects, one OpenBot couldn't read
+   * consumes. Anything that is not `nothing` is an app somebody connects, one Mangaba Bot couldn't read
    * included: such an app is far likelier to take a key or a sign-in, and dropping it here would
    * hide a connection somebody does have.
    */
@@ -438,7 +438,7 @@ function RouteComponent() {
   return (
     <PageShell
       /*
-       * The page's one verb: an MCP server OpenBot doesn't list, added by its address. Its own screen,
+       * The page's one verb: an MCP server Mangaba Bot doesn't list, added by its address. Its own screen,
        * because it takes a name, an address and sometimes a key (the layout skill's Procedure 5).
        */
       action={
@@ -566,7 +566,7 @@ function RouteComponent() {
             {edition === "team"
               ? "Apps show up here once an admin turns them on."
               : edition === "personal"
-                ? "Apps show up here once OpenBot is set up to reach them."
+                ? "Apps show up here once Mangaba Bot is set up to reach them."
                 : "Apps show up here once they're turned on."}
           </PageEmpty>
         ) : (

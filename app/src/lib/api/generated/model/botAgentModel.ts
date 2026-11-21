@@ -3,7 +3,7 @@
  */
 
 /**
- * A model the catalogue offers, or null for the organization's default. Read only for an agent whose model is OpenBot's to choose.
+ * A model the catalogue offers, or null for the organization's default. Read only for an agent whose model is Mangaba Bot's to choose.
  * @minLength 1
  * @maxLength 500
  * @nullable

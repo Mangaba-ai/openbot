@@ -141,7 +141,7 @@ function SignScreen() {
   const providerButtons = (
     <div className="flex flex-col gap-2">
       {/*
-       * A hosted OpenBot's own way in, first: the person's account with OpenBot by CopilotKit
+       * A hosted Mangaba Bot's own way in, first: the person's account with Mangaba Bot by CopilotKit
        * (`hostedSignIn`). The same button as the others, as a link that looks like them, because the server takes the
        * browser on to that sign-in page and back to where sign-in would have brought them. A refusal
        * lands on the server's own page, which links back here.
@@ -165,8 +165,8 @@ function SignScreen() {
           <CopilotKitMark />
           <span className="flex-1 text-center">
             {opening === "copilotkit"
-              ? "Opening OpenBot by CopilotKit…"
-              : "Continue with OpenBot by CopilotKit"}
+              ? "Opening Mangaba Bot by CopilotKit…"
+              : "Continue with Mangaba Bot by CopilotKit"}
           </span>
           <span aria-hidden="true" className="size-[18px]" />
         </a>

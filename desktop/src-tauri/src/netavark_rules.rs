@@ -1,4 +1,4 @@
-//! OpenBot's dead port rules, removed after its machine starts on Windows.
+//! Mangaba Bot's dead port rules, removed after its machine starts on Windows.
 //!
 //! **What goes wrong.** Every WSL 2 distro runs in one utility VM and shares its network namespace
 //! ("Linux distributions running via WSL 2 will share the same network namespace", Microsoft's
@@ -8,7 +8,7 @@
 //! `/run` go, but the rules stay. Started again, the containers get new addresses, often the old
 //! ones in a different order, and netavark appends their rules after the old ones. The first match
 //! wins, so `127.0.0.1:3010` still goes to an address nothing holds, and the first Start waits
-//! about 215 seconds or fails. Seen on a Windows test machine after OpenBot's own heal and update
+//! about 215 seconds or fails. Seen on a Windows test machine after Mangaba Bot's own heal and update
 //! restarts; reproduced with netavark 1.17.2 (Podman 5.8.9, iptables) and 2.1.0 (Podman 6.1.3,
 //! nftables) in `live` below. A Mac's machine is a VM with a kernel of its own: stopping it ends its
 //! namespace and every rule in it, so nothing outlives a restart there.
@@ -21,12 +21,12 @@
 //! only when it is empty (netavark 1.x `VarkChain::remove`), and nft refuses to delete a chain that
 //! still has rules (2.x). Both commands were run on the reproduction and the port stayed dead.
 //!
-//! **What is removed, and only that.** A DNAT rule in a chain netavark keeps for one of OpenBot's
-//! own networks, whose address is in that network and held by no container running on OpenBot's
+//! **What is removed, and only that.** A DNAT rule in a chain netavark keeps for one of Mangaba Bot's
+//! own networks, whose address is in that network and held by no container running on Mangaba Bot's
 //! machine. Every other rule in the namespace belongs to somebody else and is left alone: another
-//! Podman machine's, whose networks are not OpenBot's machine's, and Docker Desktop's, which are
+//! Podman machine's, whose networks are not Mangaba Bot's machine's, and Docker Desktop's, which are
 //! not netavark's. The default network, `podman`, has the same name and id on every machine, so
-//! its chain is shared and never touched. A network of the person's named like one of OpenBot's
+//! its chain is shared and never touched. A network of the person's named like one of Mangaba Bot's
 //! would share its iptables chain, but not its subnet: Podman refuses a subnet already routed in
 //! the namespace. The rules are read before the containers are, so a container that starts in
 //! between is seen running.
@@ -38,18 +38,18 @@
 //! - nftables, netavark 2.x: `nv_<first 8 of the network id>_<subnet>_dnat` in `inet netavark`
 //!   (`get_subnet_chain_name`).
 //!
-//! **Rules a removed machine left.** A machine OpenBot's uninstall removed, with OpenBot installed
+//! **Rules a removed machine left.** A machine Mangaba Bot's uninstall removed, with Mangaba Bot installed
 //! again after it, leaves its rules in the namespace in chains no network on the new machine maps
 //! to, ahead of the new machine's. On a Windows test machine 3001, 3010, 5432, 4100 and 4206 went
-//! to its addresses, and OpenBot stopped at "Opening OpenBot". OpenBot can't see that machine's
-//! networks any more, so such a chain is taken for OpenBot's only when every one of these holds
-//! (`orphan_rules`): no network on OpenBot's machine maps to it; every rule in it publishes one of
-//! OpenBot's own host ports (published by a container on OpenBot's machine, stopped ones included,
+//! to its addresses, and Mangaba Bot stopped at "Opening Mangaba Bot". Mangaba Bot can't see that machine's
+//! networks any more, so such a chain is taken for Mangaba Bot's only when every one of these holds
+//! (`orphan_rules`): no network on Mangaba Bot's machine maps to it; every rule in it publishes one of
+//! Mangaba Bot's own host ports (published by a container on Mangaba Bot's machine, stopped ones included,
 //! or recorded for the installation, `remember_own_ports`); and every address it sends to is dead:
-//! held by no container running on OpenBot's machine, and either in one of OpenBot's networks or
+//! held by no container running on Mangaba Bot's machine, and either in one of Mangaba Bot's networks or
 //! reached by no bridge with anything attached (no route, or `linkdown`). A machine of the
 //! person's that publishes one of those ports is never taken for it: its running container keeps
-//! its bridge up. The same holds for rules in one of OpenBot's own iptables chains for an address
+//! its bridge up. The same holds for rules in one of Mangaba Bot's own iptables chains for an address
 //! outside that network, which a removed machine's network of the same name left.
 
 use std::collections::{HashMap, HashSet};
@@ -62,14 +62,14 @@ use sha2::{Digest, Sha512};
 pub const BETWEEN: &str = "--- openbot: podman network inspect ---";
 /// Printed before the namespace's routes.
 pub const ROUTES: &str = "--- openbot: ip route ---";
-/// Printed before every container on OpenBot's machine, with the ports each publishes.
+/// Printed before every container on Mangaba Bot's machine, with the ports each publishes.
 pub const PUBLISHED: &str = "--- openbot: podman ps ---";
 
 /// The default network's id, the same on every machine.
 const DEFAULT_NETWORK_ID: &str = "2f259bab93aaaaa2542ba43ef33eb990d0999ee1b9924b557b7be53c0b7a1bb9";
 
-/// Run in the machine: its firewall, then OpenBot's networks with the containers running on each,
-/// then the namespace's routes, then every container on OpenBot's machine with the ports it
+/// Run in the machine: its firewall, then Mangaba Bot's networks with the containers running on each,
+/// then the namespace's routes, then every container on Mangaba Bot's machine with the ports it
 /// publishes. In that order, so a container that starts or a bridge that comes up while this runs
 /// is seen running. Through `sudo`, as the gateway's script is: a no-op for root, passwordless for
 /// the machine's own user.
@@ -81,11 +81,11 @@ pub fn read_script() -> String {
     )
 }
 
-/// The host ports OpenBot's installation publishes, recorded by the app when it knows them.
+/// The host ports Mangaba Bot's installation publishes, recorded by the app when it knows them.
 static OWN_PORTS: std::sync::Mutex<std::collections::BTreeSet<u16>> =
     std::sync::Mutex::new(std::collections::BTreeSet::new());
 
-/// Record host ports OpenBot's installation publishes, for `orphan_rules`.
+/// Record host ports Mangaba Bot's installation publishes, for `orphan_rules`.
 pub fn remember_own_ports(ports: impl IntoIterator<Item = u16>) {
     OWN_PORTS
         .lock()
@@ -229,7 +229,7 @@ struct Address {
     ipnet: String,
 }
 
-/// The DNAT rules in `listing` that are OpenBot's and dead, given OpenBot's machine's networks as
+/// The DNAT rules in `listing` that are Mangaba Bot's and dead, given Mangaba Bot's machine's networks as
 /// `podman network inspect` lists them.
 pub fn dead_rules(listing: &str, networks: &str) -> Result<Vec<Rule>, String> {
     let networks: Vec<Network> = serde_json::from_str(networks)
@@ -337,7 +337,7 @@ pub fn delete_script(dead: &[Rule]) -> String {
     script
 }
 
-/// Remove OpenBot's dead port rules on `machine`, through `run` as `podman` runs, and say which.
+/// Remove Mangaba Bot's dead port rules on `machine`, through `run` as `podman` runs, and say which.
 pub fn clear_dead(
     mut run: impl FnMut(&[&str]) -> Result<String, String>,
     machine: &str,
@@ -379,9 +379,9 @@ pub type Chain = (String, String, String);
 
 /**
 The forwarding chains a removed machine left that `orphans` empties of DNAT rules: every DNAT rule
-in them is an orphan, and no network on OpenBot's machine maps to them. Box I after #1482's cleanup
+in them is an orphan, and no network on Mangaba Bot's machine maps to them. Box I after #1482's cleanup
 kept `nv_9251097f_…_dnat` and `nv_6bd7ac84_…_dnat` at the top of `NETAVARK-HOSTPORT-DNAT`, with only
-netavark's SETMARK jumps left in them, and traffic fell through them. A chain one of OpenBot's
+netavark's SETMARK jumps left in them, and traffic fell through them. A chain one of Mangaba Bot's
 networks maps to stays, empty or not: netavark adds to it again.
 */
 pub fn emptied_chains(
@@ -461,7 +461,7 @@ pub fn chains_script(listing: &str, chains: &[Chain]) -> String {
     script
 }
 
-/// A container on OpenBot's machine as `podman ps -a --format json` lists it: only its ports.
+/// A container on Mangaba Bot's machine as `podman ps -a --format json` lists it: only its ports.
 #[derive(Deserialize)]
 struct Listed {
     #[serde(rename = "Ports", default)]
@@ -475,7 +475,7 @@ struct Published {
     range: u16,
 }
 
-/// The host ports the containers on OpenBot's machine publish, stopped ones included.
+/// The host ports the containers on Mangaba Bot's machine publish, stopped ones included.
 fn published_ports(published: &str) -> Result<HashSet<u16>, String> {
     if published.trim().is_empty() {
         return Ok(HashSet::new());
@@ -528,14 +528,14 @@ fn forwarding_chain(rule: &Rule) -> bool {
 }
 
 /**
-The DNAT rules a machine OpenBot's uninstall removed left behind, given what OpenBot's machine
+The DNAT rules a machine Mangaba Bot's uninstall removed left behind, given what Mangaba Bot's machine
 lists: its networks with the containers running on each (`networks`), the namespace's routes
 (`routes`), and its containers with the ports each publishes (`published`). `own_ports` are the
 installation's own, recorded by the app. See the module's "Rules a removed machine left".
 
-For each forwarding chain, the rules no network on OpenBot's machine made: all of them in a chain
+For each forwarding chain, the rules no network on Mangaba Bot's machine made: all of them in a chain
 no network maps to, and in one a network maps to, those for an address outside that network. They
-go together, or not at all: only when every one of them publishes one of OpenBot's own host ports
+go together, or not at all: only when every one of them publishes one of Mangaba Bot's own host ports
 and sends to a dead address.
 */
 pub fn orphan_rules(
@@ -562,7 +562,7 @@ pub fn orphan_rules(
         .flat_map(|network| &network.subnets)
         .map(|subnet| subnet.subnet.as_str())
         .collect();
-    // Every chain a network on OpenBot's machine maps to, the shared default network's included,
+    // Every chain a network on Mangaba Bot's machine maps to, the shared default network's included,
     // with that network's subnets.
     let mut mapped: HashMap<(&str, &str, String), Vec<&str>> = HashMap::new();
     for network in &networks {
@@ -631,13 +631,13 @@ pub fn orphan_rules(
 }
 
 /**
-Every port rule of OpenBot's own networks in `listing`, held by a running container or not.
+Every port rule of Mangaba Bot's own networks in `listing`, held by a running container or not.
 
-Before OpenBot's machine is removed (`uninstall`): once it is gone none of its containers is left,
+Before Mangaba Bot's machine is removed (`uninstall`): once it is gone none of its containers is left,
 and in WSL's shared network namespace each of its rules would outlive it, ahead of the next
-OpenBot machine's rules for the same ports. Box I's next install then failed at "Opening OpenBot".
+Mangaba Bot machine's rules for the same ports. Box I's next install then failed at "Opening Mangaba Bot".
 `dead_rules` can't be used there, since the containers may still be running. The same rules are
-found, only OpenBot's machine's own networks' DNAT rules, so another machine's and Docker's stay.
+found, only Mangaba Bot's machine's own networks' DNAT rules, so another machine's and Docker's stay.
 */
 pub fn own_rules(listing: &str, networks: &str) -> Result<Vec<Rule>, String> {
     let mut networks: serde_json::Value = serde_json::from_str(networks)
@@ -649,7 +649,7 @@ pub fn own_rules(listing: &str, networks: &str) -> Result<Vec<Rule>, String> {
     dead_rules(listing, &networks.to_string())
 }
 
-/// Remove every one of OpenBot's port rules on `machine` (`own_rules`), through `run` as `podman`
+/// Remove every one of Mangaba Bot's port rules on `machine` (`own_rules`), through `run` as `podman`
 /// runs, and say which. For a machine about to be removed.
 pub fn clear_own(
     mut run: impl FnMut(&[&str]) -> Result<String, String>,
@@ -670,10 +670,10 @@ pub fn clear_own(
 
 /**
 The bug and the fix on real netavark, in WSL as a privileged container on Docker: its network
-namespace is the one every distro shares, and OpenBot's machine and the person's are two "distros",
+namespace is the one every distro shares, and Mangaba Bot's machine and the person's are two "distros",
 each a mount and PID namespace with a fresh `/run` and its own storage
 (`test-fixtures/netavark-rules/wsl-lab.sh`). Stopping one kills its PID namespace, as `wsl
---terminate` does. Each generation of Podman OpenBot's machine may run is reproduced: 5.8.9 with
+--terminate` does. Each generation of Podman Mangaba Bot's machine may run is reproduced: 5.8.9 with
 netavark 1.17.2 and the iptables driver Podman forces on WSL before 6.0, and 6.1.3 with netavark
 2.1.0 and nftables, which needs a kernel with nftables' `fib` (Linux runners have it; Docker
 Desktop's VM does not, a Podman machine does).
@@ -784,7 +784,7 @@ mod live {
             self.sh(&["start", "openbot"]);
         }
 
-        /// `podman` as OpenBot runs it, reaching OpenBot's machine.
+        /// `podman` as Mangaba Bot runs it, reaching Mangaba Bot's machine.
         fn machine(&self, args: &[&str]) -> Result<String, String> {
             match args {
                 ["machine", "ssh", "openbot", script] => {
@@ -817,7 +817,7 @@ mod live {
 
     fn stale_rules_reproduced_then_cleared(image: &str, driver: &str) {
         let lab = Lab::new(image, driver);
-        // OpenBot's first run: its two networks, a container that holds an address and answers
+        // Mangaba Bot's first run: its two networks, a container that holds an address and answers
         // nothing ahead of the server, and the server on both, publishing 3010 and 3001 as the
         // stack's does.
         lab.podman("openbot", &["network", "create", "openbot-desktop_default"]);
@@ -920,7 +920,7 @@ mod live {
         // filler takes the server's last address, where its old rules would send 3010.
         lab.restart_openbot();
         let cleared = clear_dead(|args| lab.machine(args), "openbot").unwrap();
-        assert_eq!(cleared.len(), 4, "nothing of OpenBot's runs: {cleared:#?}");
+        assert_eq!(cleared.len(), 4, "nothing of Mangaba Bot's runs: {cleared:#?}");
         lab.podman("openbot", &["start", "filler"]);
         lab.podman("openbot", &["start", "server"]);
         assert_eq!(lab.curl(3010), "200");

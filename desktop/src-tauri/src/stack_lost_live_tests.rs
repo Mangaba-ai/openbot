@@ -1,9 +1,9 @@
 /*!
 A backend whose node a prune of stopped containers removed, on a real engine.
 
-A Mac on Docker Desktop, Desktop 1.1.2: the backend's k3d node was stopped while OpenBot was closed,
+A Mac on Docker Desktop, Desktop 1.1.2: the backend's k3d node was stopped while Mangaba Bot was closed,
 `docker container prune` removed it, and from then on every `local status`, `local stop` and Retry
-failed at the CLI's ownership check (`GET /containers/k3d-<stack>-server-0/json`, 404). OpenBot only
+failed at the CLI's ownership check (`GET /containers/k3d-<stack>-server-0/json`, 404). Mangaba Bot only
 looked for a lost cluster in its own Podman machine, so on Docker the window said "Setup stopped
 partway through with an error. Retry." for good, and Quit failed the same way.
 
@@ -89,7 +89,7 @@ impl Node {
         node
     }
 
-    /// Stopped, as when OpenBot was closed, then removed as `docker container prune` removes every
+    /// Stopped, as when Mangaba Bot was closed, then removed as `docker container prune` removes every
     /// stopped container. Filtered to this node's label, so nothing else on the engine goes.
     fn stop_and_prune(&self) {
         let id = self.stack.as_str();
@@ -111,7 +111,7 @@ impl Drop for Node {
     }
 }
 
-/// Docker is OpenBot's engine, as on the Mac it was found on, so the CLI and these checks are told
+/// Docker is Mangaba Bot's engine, as on the Mac it was found on, so the CLI and these checks are told
 /// the same engine (`use_engine`).
 fn on_docker() {
     use_engine(&crate::engine::Address::new(
@@ -187,7 +187,7 @@ fn said(report: &Report) -> String {
 
 /**
 The whole recovery with the real CLI, signed in: set a backend up, stop it as Quit does, prune its
-node as `docker container prune` does, then see what OpenBot sees. Status and stop fail with no
+node as `docker container prune` does, then see what Mangaba Bot sees. Status and stop fail with no
 stack, the engine the CLI runs on has no node, and setting it up again makes the cluster again for
 the same stack, which comes up ready with the licence and keys it had.
 */
@@ -242,7 +242,7 @@ fn recovery_a_pruned_backend_is_found_gone_and_set_up_again() {
         assert_eq!(report.outcome, Outcome::Failed);
         assert!(failed_without_stack(&report));
     }
-    // What OpenBot now sees: the node is gone from the engine the CLI runs on, and it was removed
+    // What Mangaba Bot now sees: the node is gone from the engine the CLI runs on, and it was removed
     // from this engine, not left in another one.
     assert_eq!(cluster_gone(&stack), Some(true));
     assert_eq!(cluster_removed(&stack), Some(true));

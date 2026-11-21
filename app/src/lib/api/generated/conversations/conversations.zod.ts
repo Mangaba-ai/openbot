@@ -158,7 +158,7 @@ export const ListConversationsResponse = zod.object({
     zod
       .object({
         id: zod.string().describe("The conversation's id."),
-        name: zod.string().describe("The name OpenBot gave it from its Bots."),
+        name: zod.string().describe("The name Mangaba Bot gave it from its Bots."),
         botIds: zod
           .array(zod.string())
           .describe("The Bots in the conversation."),
@@ -182,7 +182,7 @@ export const ListConversationsResponse = zod.object({
           .string()
           .nullable()
           .describe(
-            "What the conversation is called: the name its owner gave it, or the few words OpenBot wrote. Null until it has one.",
+            "What the conversation is called: the name its owner gave it, or the few words Mangaba Bot wrote. Null until it has one.",
           ),
         opening: zod
           .string()
@@ -320,7 +320,7 @@ export const CreateConversationResponse = zod.object({
   conversation: zod
     .object({
       id: zod.string().describe("The conversation's id."),
-      name: zod.string().describe("The name OpenBot gave it from its Bots."),
+      name: zod.string().describe("The name Mangaba Bot gave it from its Bots."),
       botIds: zod.array(zod.string()).describe("The Bots in the conversation."),
       threadId: zod
         .string()
@@ -481,7 +481,7 @@ export const GetConversationResponse = zod.object({
   conversation: zod
     .object({
       id: zod.string().describe("The conversation's id."),
-      name: zod.string().describe("The name OpenBot gave it from its Bots."),
+      name: zod.string().describe("The name Mangaba Bot gave it from its Bots."),
       botIds: zod.array(zod.string()).describe("The Bots in the conversation."),
       threadId: zod
         .string()
@@ -539,7 +539,7 @@ export const GetConversationResponse = zod.object({
 });
 
 /**
- * Change what the conversation is called, whether the caller has it pinned, or both. Only the person who started a conversation may rename it; title null, or blank, gives the name back to OpenBot to write. A pin is the caller's own and moves nothing for anybody else. The answer holds what was changed.
+ * Change what the conversation is called, whether the caller has it pinned, or both. Only the person who started a conversation may rename it; title null, or blank, gives the name back to Mangaba Bot to write. A pin is the caller's own and moves nothing for anybody else. The answer holds what was changed.
  * @summary Rename or pin a conversation
  */
 
@@ -579,7 +579,7 @@ export const UpdateConversationBody = zod.object({
     .max(updateConversationBodyTitleMax)
     .nullish()
     .describe(
-      "The new name, on one line and at most 80 characters as a person counts them. Null or blank lets OpenBot name it.",
+      "The new name, on one line and at most 80 characters as a person counts them. Null or blank lets Mangaba Bot name it.",
     ),
   pinned: zod
     .boolean()
@@ -593,7 +593,7 @@ export const UpdateConversationResponse = zod
       .string()
       .nullish()
       .describe(
-        "What the conversation is called now, when its name was changed. Null when OpenBot has not named it yet.",
+        "What the conversation is called now, when its name was changed. Null when Mangaba Bot has not named it yet.",
       ),
     pinned: zod
       .boolean()
@@ -603,7 +603,7 @@ export const UpdateConversationResponse = zod
   .describe("What was changed, as it now stands.");
 
 /**
- * Remove the conversation from the caller's list. Deleting one that is already gone answers the same way. A conversation that comes with OpenBot cannot be deleted. discardFailedStart removes a conversation whose first message never reached its Bot, and only that.
+ * Remove the conversation from the caller's list. Deleting one that is already gone answers the same way. A conversation that comes with Mangaba Bot cannot be deleted. discardFailedStart removes a conversation whose first message never reached its Bot, and only that.
  * @summary Delete a conversation
  */
 
@@ -874,7 +874,7 @@ export const ListConversationMembersResponse = zod.object({
 });
 
 /**
- * Add somebody who has signed in to this OpenBot to a group conversation the caller is in, by their email address. They see the whole transcript. Adding somebody already in it changes nothing.
+ * Add somebody who has signed in to this Mangaba Bot to a group conversation the caller is in, by their email address. They see the whole transcript. Adding somebody already in it changes nothing.
  * @summary Add a person to a group conversation
  */
 
@@ -914,7 +914,7 @@ export const AddConversationMemberBody = zod.object({
     .email()
     .min(addConversationMemberBodyEmailMin)
     .max(addConversationMemberBodyEmailMax)
-    .describe("The email address the person signs in to this OpenBot with."),
+    .describe("The email address the person signs in to this Mangaba Bot with."),
 });
 
 export const AddConversationMemberResponse = zod.object({
@@ -1115,7 +1115,7 @@ export const ListConversationMessagesResponse = zod.object({
                 name: zod.string().describe("The file's name."),
                 mimeType: zod
                   .string()
-                  .describe("The type OpenBot recognised it as."),
+                  .describe("The type Mangaba Bot recognised it as."),
                 sizeBytes: zod
                   .int()
                   .min(
@@ -1220,7 +1220,7 @@ export const SendConversationMessageResponse = zod.object({
 });
 
 /**
- * Upload one file to send with the caller's next message in the conversation. The file is held until that message is sent, or removed, or a day has passed. OpenBot refuses a file no Bot could read, and says what the file was. A message takes up to 8 files.
+ * Upload one file to send with the caller's next message in the conversation. The file is held until that message is sent, or removed, or a day has passed. Mangaba Bot refuses a file no Bot could read, and says what the file was. A message takes up to 8 files.
  * @summary Attach a file to the next message
  */
 
@@ -1273,13 +1273,13 @@ export const UploadConversationAttachmentResponse = zod
   .object({
     id: zod.string().describe("The attachment's id."),
     name: zod.string().describe("The file's name."),
-    mimeType: zod.string().describe("The type OpenBot recognised it as."),
+    mimeType: zod.string().describe("The type Mangaba Bot recognised it as."),
     sizeBytes: zod.int().min(uploadConversationAttachmentResponseSizeBytesMin),
   })
   .describe("A file held for a message, or sent with one.");
 
 /**
- * Return the bytes of a file attached to a message, in the type OpenBot recognised it as. Only somebody in the conversation it was sent in, or the person still holding it to send, can read it. A picture is served to open in place. Every other file, a PDF or a Word, Excel or PowerPoint file among them, is served as a download.
+ * Return the bytes of a file attached to a message, in the type Mangaba Bot recognised it as. Only somebody in the conversation it was sent in, or the person still holding it to send, can read it. A picture is served to open in place. Every other file, a PDF or a Word, Excel or PowerPoint file among them, is served as a download.
  * @summary Download an attachment
  */
 
@@ -1343,7 +1343,7 @@ export const DeleteAttachmentHeader = zod.object({
 export const DeleteAttachmentResponse = zod.void();
 
 /**
- * Make the id of a new thread for a chat that is kept only as its thread, such as the chat on a Bot's own page. The id belongs to this OpenBot, so two OpenBots sharing one store of threads can tell their conversations apart. Nothing is stored until something is said in it.
+ * Make the id of a new thread for a chat that is kept only as its thread, such as the chat on a Bot's own page. The id belongs to this Mangaba Bot, so two OpenBots sharing one store of threads can tell their conversations apart. Nothing is stored until something is said in it.
  * @summary Get a thread id for a chat with one Bot
  */
 

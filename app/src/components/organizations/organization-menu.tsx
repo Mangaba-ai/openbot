@@ -31,7 +31,7 @@ import { cn } from "@/lib/utils";
  * the others one click away, its settings, the invitations waiting for their answer, and New
  * organization for somebody who may create one.
  *
- * Drawn only where OpenBot lists the person's organizations (`useOrganizationChoices`), so for
+ * Drawn only where Mangaba Bot lists the person's organizations (`useOrganizationChoices`), so for
  * everybody else the menu is the one it always was. The rows take the menu's own item spacing from
  * `itemClassName`. The account menu grows to a long name (`accountMenuClassName`), and a name too
  * long even for that reads whole in a tooltip.

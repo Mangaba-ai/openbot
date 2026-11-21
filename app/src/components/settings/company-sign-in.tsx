@@ -29,7 +29,7 @@ export function companySignInLine(
 /**
  * Settings, General: the person's company account, where their organization has identity providers. Linked, it says
  * so. Not linked, it offers Link your company account under the row: one button for one provider, a button each for
- * several. Nothing where the organization has none, or where the server has no answer for it. Nothing on OpenBot by
+ * several. Nothing where the organization has none, or where the server has no answer for it. Nothing on Mangaba Bot by
  * CopilotKit (`hostedSignIn`), where people sign in with their CopilotKit account and no organization has a company
  * sign-in of its own.
  */

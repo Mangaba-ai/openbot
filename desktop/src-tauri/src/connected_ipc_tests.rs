@@ -1,6 +1,6 @@
-// Included by main.rs: the app connected to an OpenBot that runs elsewhere, through the shell's own
+// Included by main.rs: the app connected to an Mangaba Bot that runs elsewhere, through the shell's own
 // registered commands, its window rules and its Stop and Quit. The sign-in and the relay themselves
-// are tested in the library (`connected`), against an OpenBot stand-in these tests do not have.
+// are tested in the library (`connected`), against an Mangaba Bot stand-in these tests do not have.
 mod connected_ipc {
     use super::*;
     use openbot_desktop_lib::connected::{choice, credentials};
@@ -140,8 +140,8 @@ mod connected_ipc {
         format!("http://127.0.0.1:{port}")
     }
 
-    /// The setup window asks where OpenBot runs and drives the connection; no page from anywhere
-    /// else can, OpenBot's own page through the relay included.
+    /// The setup window asks where Mangaba Bot runs and drives the connection; no page from anywhere
+    /// else can, Mangaba Bot's own page through the relay included.
     #[test]
     fn the_setup_page_may_ask_the_connection_commands_and_no_other_origin_may() {
         let shell = Connected::new();
@@ -206,7 +206,7 @@ mod connected_ipc {
         }
     }
 
-    /// OpenBot's page, served through the relay, may ask where it runs, sign out, change the
+    /// Mangaba Bot's page, served through the relay, may ask where it runs, sign out, change the
     /// connection and name the organisation. A page on another loopback port may not.
     #[test]
     fn the_relays_page_may_ask_the_page_calls_and_another_loopback_port_may_not() {
@@ -249,7 +249,7 @@ mod connected_ipc {
         }
     }
 
-    /// The relay's page is OpenBot's own page to the window: the overlay title bar and everything
+    /// The relay's page is Mangaba Bot's own page to the window: the overlay title bar and everything
     /// that goes with it. A link from it to anywhere outside, the typed address itself included,
     /// is the person's browser's to open: it is not loaded in the window or sent through the relay.
     #[test]
@@ -270,14 +270,14 @@ mod connected_ipc {
         );
         // The relay's own pages stay in the window.
         assert!(!outside_links::leaves(&page));
-        // The OpenBot it is connected to, by its own address, is a site outside the window.
+        // The Mangaba Bot it is connected to, by its own address, is a site outside the window.
         let typed: tauri::Url = format!("{ADDRESS}/settings/api-keys").parse().unwrap();
         assert!(outside_links::leaves(&typed));
         assert!(!outside_links::loads_in_a_frame(&typed));
         let mut opened = Vec::new();
         outside_links::new_window(&typed, |to| opened.push(to.to_owned()));
         assert_eq!(opened, [typed.as_str()]);
-        // The window's guard hands a site that leaves, from one of OpenBot's own pages, to the
+        // The window's guard hands a site that leaves, from one of Mangaba Bot's own pages, to the
         // browser and refuses the navigation. Read as text: the real webview cannot be built here.
         let main = include_str!("main.rs");
         let guard = &main[main.find("fn outside_links_guard").unwrap()..];
@@ -287,8 +287,8 @@ mod connected_ipc {
         assert!(guard.contains("open_in_browser(webview.app_handle(), destination);\n            false"));
     }
 
-    /// Connected to an OpenBot at an address on this computer (a developer's own, or one reached
-    /// through a port forward), with the relay on another port. A link to that OpenBot itself is
+    /// Connected to an Mangaba Bot at an address on this computer (a developer's own, or one reached
+    /// through a port forward), with the relay on another port. A link to that Mangaba Bot itself is
     /// for the person's browser, where they have a session of their own: by its host it looked
     /// like part of the window, and loaded there with no sign-in. Only the relay's own pages stay.
     #[test]
@@ -311,7 +311,7 @@ mod connected_ipc {
         assert!(outside_links::leaves(&"https://example.com/".parse().unwrap()));
 
         desktop_connected::showing_for_test(shell.handle(), RELAY);
-        // The OpenBot it is connected to, by its own address: the browser, and the window stays.
+        // The Mangaba Bot it is connected to, by its own address: the browser, and the window stays.
         assert_eq!(to(&api_keys), Some(true));
         assert_eq!(to(typed), Some(true));
         // Anything else on this computer that is not the relay, and any other site, as before.
@@ -374,12 +374,12 @@ mod connected_ipc {
         std::fs::create_dir_all(&base).unwrap();
         let record = base.join("commands.log");
         std::env::set_var("OPENBOT_TEST_ENGINE_RECORD", &record);
-        let root = base.join("OpenBot");
+        let root = base.join("Mangaba Bot");
         let asked_the_engine = || record.exists();
 
         // On this computer, as before: the same status question asks the engine.
         let local = Connected::new();
-        let local_root = base.join("OpenBot on this computer");
+        let local_root = base.join("Mangaba Bot on this computer");
         remember_selected_root(&local.app.state::<Shell>(), &local_root);
         let status = tauri::async_runtime::block_on(desktop_status(local.handle().clone(), None))
             .unwrap();
@@ -396,7 +396,7 @@ mod connected_ipc {
         remember_selected_root(&shell.app.state::<Shell>(), &root);
         assert!(desktop_connected::is_connected(shell.handle()));
 
-        // The page's status: the app's own facts, and nothing of an OpenBot here.
+        // The page's status: the app's own facts, and nothing of an Mangaba Bot here.
         let status = tauri::async_runtime::block_on(desktop_status(shell.handle().clone(), None))
             .unwrap();
         let status = serde_json::to_value(&status).unwrap();
@@ -416,8 +416,8 @@ mod connected_ipc {
             logging::folder(shell.handle()).unwrap().display().to_string()
         );
 
-        // What is about this computer's own OpenBot is refused, in the agreed words.
-        let refused = "This app is connected to an OpenBot that runs somewhere else, so there's nothing to do here on this computer.";
+        // What is about this computer's own Mangaba Bot is refused, in the agreed words.
+        let refused = "This app is connected to an Mangaba Bot that runs somewhere else, so there's nothing to do here on this computer.";
         assert_eq!(
             tauri::async_runtime::block_on(desktop_page::restart(shell.handle().clone())),
             Err(refused.to_owned())
@@ -427,7 +427,7 @@ mod connected_ipc {
             Err(refused.to_owned())
         );
         let shown = tauri::async_runtime::block_on(show_openbot(shell.handle().clone()))
-            .expect_err("there is no OpenBot here to show");
+            .expect_err("there is no Mangaba Bot here to show");
         assert_eq!(shown.said, refused);
         assert_eq!(
             desktop_connected::local_only(shell.handle()).unwrap_err().said,
@@ -542,7 +542,7 @@ mod connected_ipc {
             Some("org_A1-b")
         );
 
-        // Back to OpenBot on this computer, from the setup window.
+        // Back to Mangaba Bot on this computer, from the setup window.
         desktop_connected::set_organization_now(shell.handle(), Some("org_2".into())).unwrap();
         tauri::async_runtime::block_on(desktop_connected::use_this_computer(
             shell.handle().clone(),
@@ -554,7 +554,7 @@ mod connected_ipc {
         assert_eq!(kept.address.as_deref(), Some(address.as_str()));
         assert_eq!(kept.organization_id, None);
         assert_eq!(shell.window.url().unwrap().as_str(), SETUP);
-        // OpenBot's page on this computer is told local, and no address.
+        // Mangaba Bot's page on this computer is told local, and no address.
         assert_eq!(
             serde_json::to_value(desktop_connected::connection_now(shell.handle(), false)).unwrap(),
             serde_json::json!({ "mode": "local", "address": null, "organizationId": null })
@@ -621,7 +621,7 @@ mod connected_ipc {
         );
     }
 
-    /// The sign-in ended while OpenBot was showing: the setup window is back, it is told so once
+    /// The sign-in ended while Mangaba Bot was showing: the setup window is back, it is told so once
     /// in the agreed words, and the event went out for a page that was listening.
     #[test]
     fn an_ended_session_puts_setup_back_and_keeps_its_sentence_for_it_once() {
@@ -683,7 +683,7 @@ mod connected_ipc {
         );
     }
 
-    /// Settings' Change, while OpenBot runs on this computer: OpenBot is stopped exactly as
+    /// Settings' Change, while Mangaba Bot runs on this computer: Mangaba Bot is stopped exactly as
     /// Settings' Stop stops it, setup comes back told once to open at the choice, and the choice
     /// on record is not changed by asking.
     #[test]
@@ -715,7 +715,7 @@ mod connected_ipc {
 
         desktop_connected::change_connection_now(shell.handle()).unwrap();
         let (mut stopping, _) = compose.accept().unwrap();
-        // Not asked to choose until OpenBot has stopped.
+        // Not asked to choose until Mangaba Bot has stopped.
         assert_eq!(
             shell.ask(SETUP, "take_connection_notice"),
             Ok(serde_json::Value::Null)
@@ -745,7 +745,7 @@ mod connected_ipc {
     }
 
     /// The menus of a connected app carry Show Window, the app's log folder, Sign Out and Quit, and
-    /// nothing that starts, stops or reports on an OpenBot on this computer. Read as text, as the
+    /// nothing that starts, stops or reports on an Mangaba Bot on this computer. Read as text, as the
     /// other menu tests are: AppKit's menus cannot be built here.
     #[test]
     fn a_connected_apps_menus_offer_sign_out_and_the_log_folder_and_no_status() {

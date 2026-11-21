@@ -37,15 +37,15 @@ export function roleInSentence(role: string): string {
   return `${/^[aeiou]/.test(name) ? "an" : "a"} ${name}`;
 }
 
-/** What a row calls somebody OpenBot knows neither a name nor an address for. */
+/** What a row calls somebody Mangaba Bot knows neither a name nor an address for. */
 export const UNNAMED_PERSON = "Unnamed member";
 
-/** What a member's row says of somebody who is a member and hasn't opened OpenBot yet. */
-export const NOT_OPENED_YET = "Hasn't opened OpenBot yet";
+/** What a member's row says of somebody who is a member and hasn't opened Mangaba Bot yet. */
+export const NOT_OPENED_YET = "Hasn't opened Mangaba Bot yet";
 
 /**
  * What somebody is called: their name, or their address until they choose one. Somebody who hasn't
- * opened OpenBot yet may have neither (`notOpenedYet`), and is then a neutral label.
+ * opened Mangaba Bot yet may have neither (`notOpenedYet`), and is then a neutral label.
  */
 export function personName(person: {
   name: string | null;
@@ -56,7 +56,7 @@ export function personName(person: {
 
 /**
  * The second line of a member's row: their address when their name is the first line, their role,
- * and, for somebody who hasn't opened OpenBot yet, that they haven't.
+ * and, for somebody who hasn't opened Mangaba Bot yet, that they haven't.
  */
 export function memberLine(
   member: Pick<
@@ -91,8 +91,8 @@ export function initialsOf(person: {
  * What a member's row offers the person looking at it: to leave on their own row, to remove on
  * anybody else's when they are the owner or an admin, and nothing where the membership cannot end.
  * Whether it can is the server's verdict (`removable`): the owner stays, so nobody is offered to
- * leave their own organization, and so does somebody OpenBot's settings keep as an admin.
- * That holds for somebody who hasn't opened OpenBot yet too: they are offered for removal when the
+ * leave their own organization, and so does somebody Mangaba Bot's settings keep as an admin.
+ * That holds for somebody who hasn't opened Mangaba Bot yet too: they are offered for removal when the
  * server says they can be removed, and not otherwise.
  */
 export function memberControl(
@@ -105,7 +105,7 @@ export function memberControl(
 }
 
 /**
- * What the Remove dialog tells the admin removing somebody. Somebody who hasn't opened OpenBot yet made nothing here, so
+ * What the Remove dialog tells the admin removing somebody. Somebody who hasn't opened Mangaba Bot yet made nothing here, so
  * it says only what removing them does.
  */
 export function removeMemberWords(
@@ -113,14 +113,14 @@ export function removeMemberWords(
   organizationName: string,
 ): string {
   return member.notOpenedYet
-    ? `This takes them out of ${organizationName}. They haven't opened OpenBot yet.`
+    ? `This takes them out of ${organizationName}. They haven't opened Mangaba Bot yet.`
     : "They keep their account and their other organizations. What they made here stays here.";
 }
 
 /**
  * The roles a member's Role menu offers: the server's verdict (`assignableRoles`), less any role a
  * newer server lists that this app doesn't know. The app can't name one it doesn't know, and never
- * sends one back. None for somebody who hasn't opened OpenBot yet: their role is shown, not changed.
+ * sends one back. None for somebody who hasn't opened Mangaba Bot yet: their role is shown, not changed.
  */
 export function givableRoles(
   member: Pick<OrganizationMemberSummary, "assignableRoles" | "notOpenedYet">,

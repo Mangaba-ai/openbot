@@ -201,7 +201,7 @@ export function SetupSections({ agent }: { agent: AgentProfile }) {
                 <ItemContent>
                   <ItemTitle>System owned</ItemTitle>
                   <ItemDescription>
-                    Comes with OpenBot. It doesn't belong to a person.
+                    Comes with Mangaba Bot. It doesn't belong to a person.
                   </ItemDescription>
                 </ItemContent>
               </Item>
@@ -278,8 +278,8 @@ function VisibilityRow({
                 ? `Only you can see it and start conversations with it. ${ISOLATED_MAKING_PUBLIC}`
                 : "Only you can see it and start conversations with it."
               : agent.isolationActive
-                ? `Everyone on OpenBot can find and use it. ${ISOLATED_PUBLIC_SHARES_LOGINS}`
-                : "Everyone on OpenBot can find and use it.")}
+                ? `Everyone on Mangaba Bot can find and use it. ${ISOLATED_PUBLIC_SHARES_LOGINS}`
+                : "Everyone on Mangaba Bot can find and use it.")}
         </ItemDescription>
       </ItemContent>
       <ItemActions>
@@ -350,14 +350,14 @@ function IsolatedRow({
   const available = capabilities?.isolatedBots ?? false;
   const allowed = mine?.capabilities.isolatedComputers !== false;
   const isPublic = agent.visibility === "public";
-  // A Bot that comes with OpenBot belongs to nobody, and the switch is a person's.
+  // A Bot that comes with Mangaba Bot belongs to nobody, and the switch is a person's.
   const editable =
     agent.canManage &&
     !agent.systemOwned &&
     (agent.isolated || (available && allowed));
 
   const summary = agent.systemOwned
-    ? "Comes with OpenBot, so it runs on the computer of whoever is using it."
+    ? "Comes with Mangaba Bot, so it runs on the computer of whoever is using it."
     : agent.isolated
       ? agent.isolationActive
         ? isolatedExplained(isPublic)
@@ -565,7 +565,7 @@ function EditTextDialog({
 /**
  * Where it runs. A built-in Bot runs on the deployment's own Bot, whose process already holds the
  * deployment's tool credential, so there is nothing to connect. When it runs on an engine other
- * than OpenBot's own agent (a Bot made from New Bot runs on LangGraph (TypeScript)), the Bot API
+ * than Mangaba Bot's own agent (a Bot made from New Bot runs on LangGraph (TypeScript)), the Bot API
  * names it as the Bot's framework, and a row under Built in says so.
  *
  * A Bot that runs at an address of its own can be moved to another by whoever manages it: the row
@@ -606,7 +606,7 @@ function ConnectionSection({
               }
             >
               {builtIn
-                ? "Runs inside OpenBot. There's nothing to connect."
+                ? "Runs inside Mangaba Bot. There's nothing to connect."
                 : agent.endpoint}
             </ItemDescription>
           </ItemContent>

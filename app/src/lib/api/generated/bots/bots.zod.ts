@@ -4,7 +4,7 @@
 import * as zod from "zod";
 
 /**
- * Return one page of the Bots the caller can see: theirs, the ones shared with them, the ones assigned to them and the ones that come with OpenBot, oldest first, and by id among Bots made at the same moment. Somebody else's private Bot is never among them, an admin's list included. hidden=true lists only the Bots the caller hid from their own list instead. scope=organization lists every Bot in the organization, people's private Bots included, for an admin's screens that decide what Bots may hold; it is refused to anybody who is not an admin of the organization. Somebody else's private Bot comes withheld there: its name and avatar, and nothing from inside it (see the Bot's withheld). A missing cursor starts at the first page and nextCursor null ends the list.
+ * Return one page of the Bots the caller can see: theirs, the ones shared with them, the ones assigned to them and the ones that come with Mangaba Bot, oldest first, and by id among Bots made at the same moment. Somebody else's private Bot is never among them, an admin's list included. hidden=true lists only the Bots the caller hid from their own list instead. scope=organization lists every Bot in the organization, people's private Bots included, for an admin's screens that decide what Bots may hold; it is refused to anybody who is not an admin of the organization. Somebody else's private Bot comes withheld there: its name and avatar, and nothing from inside it (see the Bot's withheld). A missing cursor starts at the first page and nextCursor null ends the list.
  * @summary List Bots
  */
 
@@ -87,19 +87,19 @@ export const ListBotsResponse = zod.object({
         systemOwned: zod
           .boolean()
           .describe(
-            "Whether it comes with OpenBot rather than belonging to a person.",
+            "Whether it comes with Mangaba Bot rather than belonging to a person.",
           ),
         packageBotId: zod
           .string()
           .nullish()
           .describe(
-            "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+            "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
           ),
         endpoint: zod
           .string()
           .nullable()
           .describe(
-            "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+            "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
           ),
         hasAuth: zod
           .boolean()
@@ -107,7 +107,7 @@ export const ListBotsResponse = zod.object({
         hasCallbackToken: zod
           .boolean()
           .describe(
-            "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+            "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
           ),
         isolated: zod
           .boolean()
@@ -124,7 +124,7 @@ export const ListBotsResponse = zod.object({
           .string()
           .optional()
           .describe(
-            'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+            'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
           ),
         canManage: zod
           .boolean()
@@ -159,7 +159,7 @@ export const ListBotsResponse = zod.object({
         runsOnOpenBotModel: zod
           .boolean()
           .describe(
-            "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+            "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
           ),
         defaultModel: zod
           .object({
@@ -178,7 +178,7 @@ export const ListBotsResponse = zod.object({
         keyFromOpenBot: zod
           .boolean()
           .describe(
-            "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+            "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
           ),
         isolationActive: zod
           .boolean()
@@ -209,7 +209,7 @@ export const ListBotsResponse = zod.object({
 });
 
 /**
- * Create a Bot owned by the caller. With no endpoint it runs inside OpenBot on its role description; with one, OpenBot sends each turn to that AG-UI address, which the server checks before saving. A key, when given, is stored encrypted and never returned. Asking for isolated needs the caller's Isolated Bots switch and a deployment that can give a Bot a computer of its own. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Create a Bot owned by the caller. With no endpoint it runs inside Mangaba Bot on its role description; with one, Mangaba Bot sends each turn to that AG-UI address, which the server checks before saving. A key, when given, is stored encrypted and never returned. Asking for isolated needs the caller's Isolated Bots switch and a deployment that can give a Bot a computer of its own. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Create a Bot
  */
 
@@ -278,7 +278,7 @@ export const CreateBotBody = zod
       ])
       .optional()
       .describe(
-        "The AG-UI address it runs at: empty, or an absolute http or https address, the only kinds the server has ever taken. Empty or absent on create means it runs inside OpenBot; empty or absent on a change leaves it as it is. An address that fits can still be refused: the server refuses one this deployment may not reach, such as a private network address on a deployment that keeps Bots off it.",
+        "The AG-UI address it runs at: empty, or an absolute http or https address, the only kinds the server has ever taken. Empty or absent on create means it runs inside Mangaba Bot; empty or absent on a change leaves it as it is. An address that fits can still be refused: the server refuses one this deployment may not reach, such as a private network address on a deployment that keeps Bots off it.",
       ),
     auth: zod
       .object({
@@ -329,7 +329,7 @@ export const CreateBotBody = zod
       ])
       .optional()
       .describe(
-        'The framework an agent somebody runs themselves is built on, by its id in OpenBot\'s harness list (shared/harnesses.json), which the server checks every create against. Empty means none was named, as for an agent somebody already runs. "byo-url" is not one: it names no framework. Kept only with an endpoint, with one exception: "langgraph-ts" sent with no endpoint asks for a Bot that runs inside OpenBot on OpenBot\'s own LangGraph (TypeScript) engine, which is what the New Bot sheet sends. The deployment decides what each run uses: a Claude plan keeps the Claude Agent SDK engine, and an administrator may switch new Bots back to the built-in agent.',
+        'The framework an agent somebody runs themselves is built on, by its id in Mangaba Bot\'s harness list (shared/harnesses.json), which the server checks every create against. Empty means none was named, as for an agent somebody already runs. "byo-url" is not one: it names no framework. Kept only with an endpoint, with one exception: "langgraph-ts" sent with no endpoint asks for a Bot that runs inside Mangaba Bot on Mangaba Bot\'s own LangGraph (TypeScript) engine, which is what the New Bot sheet sends. The deployment decides what each run uses: a Claude plan keeps the Claude Agent SDK engine, and an administrator may switch new Bots back to the built-in agent.',
       ),
   })
   .describe(
@@ -360,19 +360,19 @@ export const CreateBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -380,7 +380,7 @@ export const CreateBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -397,7 +397,7 @@ export const CreateBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -430,7 +430,7 @@ export const CreateBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -449,7 +449,7 @@ export const CreateBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -515,19 +515,19 @@ export const GetBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -535,7 +535,7 @@ export const GetBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -552,7 +552,7 @@ export const GetBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -585,7 +585,7 @@ export const GetBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -604,7 +604,7 @@ export const GetBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -626,7 +626,7 @@ export const GetBotResponse = zod.object({
 });
 
 /**
- * Replace a Bot's name, title, role description and visibility, which are all required, and change any optional field that is present. An absent endpoint, key, isolated or default model leaves that setting as it is, so an edit to a name never drops a key or moves a Bot between computers. Only whoever may manage the Bot may change it, and a Bot that comes with OpenBot cannot be changed. Making a Bot public reports what that means for the shared app accounts it uses.
+ * Replace a Bot's name, title, role description and visibility, which are all required, and change any optional field that is present. An absent endpoint, key, isolated or default model leaves that setting as it is, so an edit to a name never drops a key or moves a Bot between computers. Only whoever may manage the Bot may change it, and a Bot that comes with Mangaba Bot cannot be changed. Making a Bot public reports what that means for the shared app accounts it uses.
  * @summary Change a Bot
  */
 
@@ -709,7 +709,7 @@ export const UpdateBotBody = zod
       ])
       .optional()
       .describe(
-        "The AG-UI address it runs at: empty, or an absolute http or https address, the only kinds the server has ever taken. Empty or absent on create means it runs inside OpenBot; empty or absent on a change leaves it as it is. An address that fits can still be refused: the server refuses one this deployment may not reach, such as a private network address on a deployment that keeps Bots off it.",
+        "The AG-UI address it runs at: empty, or an absolute http or https address, the only kinds the server has ever taken. Empty or absent on create means it runs inside Mangaba Bot; empty or absent on a change leaves it as it is. An address that fits can still be refused: the server refuses one this deployment may not reach, such as a private network address on a deployment that keeps Bots off it.",
       ),
     auth: zod
       .object({
@@ -785,19 +785,19 @@ export const UpdateBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -805,7 +805,7 @@ export const UpdateBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -822,7 +822,7 @@ export const UpdateBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -855,7 +855,7 @@ export const UpdateBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -874,7 +874,7 @@ export const UpdateBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -915,7 +915,7 @@ export const UpdateBotResponse = zod.object({
 });
 
 /**
- * Delete a Bot for everyone and retire its key. Conversations with it stay readable. Only whoever may manage the Bot may delete it, and a Bot that comes with OpenBot cannot be deleted. A Bot that is already deleted is not found.
+ * Delete a Bot for everyone and retire its key. Conversations with it stay readable. Only whoever may manage the Bot may delete it, and a Bot that comes with Mangaba Bot cannot be deleted. A Bot that is already deleted is not found.
  * @summary Delete a Bot
  */
 
@@ -950,7 +950,7 @@ export const DeleteBotHeader = zod.object({
 export const DeleteBotResponse = zod.void();
 
 /**
- * Send one short run to an AG-UI address from where OpenBot's runs will reach it, before a Bot is saved with it, and say what came back. The address is checked as saving checks it, so this can't reach an address a Bot could not be saved with. A failed test is an answer, not an error: ok is false and reason says what went wrong in words a person can act on. An address this deployment runs is tried with the token its runs use. Nothing is saved.
+ * Send one short run to an AG-UI address from where Mangaba Bot's runs will reach it, before a Bot is saved with it, and say what came back. The address is checked as saving checks it, so this can't reach an address a Bot could not be saved with. A failed test is an answer, not an error: ok is false and reason says what went wrong in words a person can act on. An address this deployment runs is tried with the token its runs use. Nothing is saved.
  * @summary Test a Bot's address
  */
 
@@ -1082,19 +1082,19 @@ export const DuplicateBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -1102,7 +1102,7 @@ export const DuplicateBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -1119,7 +1119,7 @@ export const DuplicateBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -1152,7 +1152,7 @@ export const DuplicateBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -1171,7 +1171,7 @@ export const DuplicateBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -1249,19 +1249,19 @@ export const HideBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -1269,7 +1269,7 @@ export const HideBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -1286,7 +1286,7 @@ export const HideBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -1319,7 +1319,7 @@ export const HideBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -1338,7 +1338,7 @@ export const HideBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -1416,19 +1416,19 @@ export const UnhideBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -1436,7 +1436,7 @@ export const UnhideBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -1453,7 +1453,7 @@ export const UnhideBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -1486,7 +1486,7 @@ export const UnhideBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -1505,7 +1505,7 @@ export const UnhideBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -1583,19 +1583,19 @@ export const PinBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -1603,7 +1603,7 @@ export const PinBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -1620,7 +1620,7 @@ export const PinBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -1653,7 +1653,7 @@ export const PinBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -1672,7 +1672,7 @@ export const PinBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -1750,19 +1750,19 @@ export const UnpinBotResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -1770,7 +1770,7 @@ export const UnpinBotResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -1787,7 +1787,7 @@ export const UnpinBotResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -1820,7 +1820,7 @@ export const UnpinBotResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -1839,7 +1839,7 @@ export const UnpinBotResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()
@@ -1861,7 +1861,7 @@ export const UnpinBotResponse = zod.object({
 });
 
 /**
- * Give a Bot a new credential for calling OpenBot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for a Bot that has one replaces it, which is how a leaked token is retired. Only whoever may manage the Bot may issue one.
+ * Give a Bot a new credential for calling Mangaba Bot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for a Bot that has one replaces it, which is how a leaked token is retired. Only whoever may manage the Bot may issue one.
  * @summary Issue a Bot's callback token
  */
 
@@ -1898,12 +1898,12 @@ export const IssueBotCallbackTokenResponse = zod.object({
     .string()
     .min(1)
     .describe(
-      "The Bot's credential for calling OpenBot's tools back. Returned this once and never again.",
+      "The Bot's credential for calling Mangaba Bot's tools back. Returned this once and never again.",
     ),
 });
 
 /**
- * Take away a Bot's credential for calling OpenBot's tools back. It can still hold a conversation; it can't reach anything outside one. Only whoever may manage the Bot may revoke it. Revoking a token that is not there changes nothing.
+ * Take away a Bot's credential for calling Mangaba Bot's tools back. It can still hold a conversation; it can't reach anything outside one. Only whoever may manage the Bot may revoke it. Revoking a token that is not there changes nothing.
  * @summary Revoke a Bot's callback token
  */
 
@@ -1959,19 +1959,19 @@ export const RevokeBotCallbackTokenResponse = zod.object({
       systemOwned: zod
         .boolean()
         .describe(
-          "Whether it comes with OpenBot rather than belonging to a person.",
+          "Whether it comes with Mangaba Bot rather than belonging to a person.",
         ),
       packageBotId: zod
         .string()
         .nullish()
         .describe(
-          "Which of the Bots an OpenBot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
+          "Which of the Bots an Mangaba Bot starts with this one is, so a client recognises it in whichever organization it is in. It is the id that Bot has in the install package: the same as id in the organization `default`, and the package's id on another organization's copy, whose own id is generated. Null for a Bot somebody made. Never accepted when a Bot is created or changed.",
         ),
       endpoint: zod
         .string()
         .nullable()
         .describe(
-          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside OpenBot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
+          "The AG-UI address it runs at, as it was stored. Null for a Bot that runs inside Mangaba Bot. Every address saved through this API is an absolute http or https address (see the request's endpoint), but one saved by an older release is returned as it is, so this field states no format.",
         ),
       hasAuth: zod
         .boolean()
@@ -1979,7 +1979,7 @@ export const RevokeBotCallbackTokenResponse = zod.object({
       hasCallbackToken: zod
         .boolean()
         .describe(
-          "Whether it holds a credential for calling OpenBot's tools back. Never the credential.",
+          "Whether it holds a credential for calling Mangaba Bot's tools back. Never the credential.",
         ),
       isolated: zod
         .boolean()
@@ -1996,7 +1996,7 @@ export const RevokeBotCallbackTokenResponse = zod.object({
         .string()
         .optional()
         .describe(
-          'What runs it, by the name a person reads ("LangChain", "OpenBot"). Absent when OpenBot doesn\'t know.',
+          'What runs it, by the name a person reads ("LangChain", "Mangaba Bot"). Absent when Mangaba Bot doesn\'t know.',
         ),
       canManage: zod
         .boolean()
@@ -2029,7 +2029,7 @@ export const RevokeBotCallbackTokenResponse = zod.object({
       runsOnOpenBotModel: zod
         .boolean()
         .describe(
-          "Whether it runs on OpenBot's model, so a person can pick the model per conversation.",
+          "Whether it runs on Mangaba Bot's model, so a person can pick the model per conversation.",
         ),
       defaultModel: zod
         .object({
@@ -2048,7 +2048,7 @@ export const RevokeBotCallbackTokenResponse = zod.object({
       keyFromOpenBot: zod
         .boolean()
         .describe(
-          "Whether OpenBot gives it a key for its tools on every run, because OpenBot runs it.",
+          "Whether Mangaba Bot gives it a key for its tools on every run, because Mangaba Bot runs it.",
         ),
       isolationActive: zod
         .boolean()

@@ -7,7 +7,7 @@
  */
 export interface UpdatedConversation {
   /**
-   * What the conversation is called now, when its name was changed. Null when OpenBot has not named it yet.
+   * What the conversation is called now, when its name was changed. Null when Mangaba Bot has not named it yet.
    * @nullable
    */
   summary?: string | null;

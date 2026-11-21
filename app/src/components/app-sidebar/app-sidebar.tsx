@@ -50,7 +50,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       variant="inset"
       {...props}
     >
-      {/* In OpenBot Desktop on macOS, what shows of this row past the strip moves the window too. */}
+      {/* In Mangaba Bot Desktop on macOS, what shows of this row past the strip moves the window too. */}
       <div className="flex h-full min-h-0 flex-row" data-desktop-drag="">
         <SectionStrip />
         <ConversationsPanel hidden={bots} />

@@ -60,14 +60,14 @@ const READINESS: Record<IntelligenceReadiness, string> = {
 };
 
 /**
- * What OpenBot runs on this computer, what each part costs in memory, and Restart and Stop for each:
+ * What Mangaba Bot runs on this computer, what each part costs in memory, and Restart and Stop for each:
  * the This computer part of Settings -> Computer.
  *
  * In the words the desktop app's Status window uses for the same parts: the local Intelligence is
- * "OpenBot's services", and Docker or Podman is "Software OpenBot runs on". Their technical names,
+ * "Mangaba Bot's services", and Docker or Podman is "Software Mangaba Bot runs on". Their technical names,
  * the stack id and the build are in Copy diagnostics, for support.
  *
- * Only inside OpenBot Desktop: the desktop app is what can see and control the containers, Docker and
+ * Only inside Mangaba Bot Desktop: the desktop app is what can see and control the containers, Docker and
  * the local back end. In a browser there is nothing here to read, and the page leaves it out.
  */
 export function ThisComputerSections() {
@@ -84,7 +84,7 @@ export function ThisComputerSections() {
   if (!data)
     return (
       <p className="text-destructive text-sm" role="alert">
-        Could not read what OpenBot runs on this computer.
+        Could not read what Mangaba Bot runs on this computer.
       </p>
     );
   const isMeasured = measured.data !== undefined;
@@ -206,8 +206,8 @@ function IntelligenceSection({
   const memory = totalMemory(status.intelligenceContainers);
   return (
     <PageSection
-      description="These keep your Bots' conversations and skills. OpenBot needs them while it runs."
-      title="OpenBot's services"
+      description="These keep your Bots' conversations and skills. Mangaba Bot needs them while it runs."
+      title="Mangaba Bot's services"
     >
       <PageRows>
         <Item size="sm">
@@ -312,10 +312,10 @@ function MachineSection({
           </RowMark>
           <ItemContent>
             {/* Docker or Podman, said as setup says it. Which one is in Copy diagnostics. */}
-            <ItemTitle>Software OpenBot runs on</ItemTitle>
+            <ItemTitle>Software Mangaba Bot runs on</ItemTitle>
             {!status.engine && (
               <ItemDescription className="line-clamp-none">
-                OpenBot needs this to run. If you use Docker Desktop, open it
+                Mangaba Bot needs this to run. If you use Docker Desktop, open it
                 and wait for it to start.
               </ItemDescription>
             )}
@@ -502,9 +502,9 @@ function checked(
     case "available":
       return updateOffered(found.version, ready ?? found.ready);
     case "upToDate":
-      return `OpenBot ${found.current} is up to date.`;
+      return `Mangaba Bot ${found.current} is up to date.`;
     case "installing":
-      return `OpenBot is downloading ${found.version} and restarts when it's done.`;
+      return `Mangaba Bot is downloading ${found.version} and restarts when it's done.`;
     case "notOffered":
       return DOESNT_UPDATE_ITSELF;
   }

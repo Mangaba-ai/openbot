@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { GlobalRegistrator } from "@happy-dom/global-registrator";
 
-// The shim the desktop window injects into OpenBot's pages (`outside_links.rs`).
+// The shim the desktop window injects into Mangaba Bot's pages (`outside_links.rs`).
 const SHIM = readFileSync(
   join(import.meta.dir, "../src-tauri/src/outside-links.js"),
   "utf8",
@@ -67,13 +67,13 @@ test("a link to another site meant for a new tab is handed over, not followed he
 });
 
 /*
- * Settings' API keys "Open in browser" while the window shows an OpenBot through the relay
- * (the page's origin here, 127.0.0.1:3010) and that OpenBot's own address is on this computer too
+ * Settings' API keys "Open in browser" while the window shows an Mangaba Bot through the relay
+ * (the page's origin here, 127.0.0.1:3010) and that Mangaba Bot's own address is on this computer too
  * (127.0.0.1:20001). The link is Base UI's Button rendering an <a>, and the click lands on its
  * icon. Left to the webview as a new window, nothing opened on Windows; handed over as a
  * navigation, the window's guard opens it in the browser.
  */
-test("connected, a link to the OpenBot's own address on this computer is handed over", () => {
+test("connected, a link to the Mangaba Bot's own address on this computer is handed over", () => {
   (window as Page).__openbotConnected = true;
   const link = document.createElement("a");
   link.href = "http://127.0.0.1:20001/settings/api-keys";
@@ -113,7 +113,7 @@ test("on this computer, another address on this computer is still left alone", (
   link.remove();
 });
 
-test("OpenBot's own pages are left alone", () => {
+test("Mangaba Bot's own pages are left alone", () => {
   const link = document.createElement("a");
   link.href = "http://127.0.0.1:3010/bots";
   link.target = "_blank";

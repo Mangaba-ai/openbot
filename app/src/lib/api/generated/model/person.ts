@@ -13,7 +13,7 @@ export interface Person {
   /** The address they sign in with. */
   email: string;
   /**
-   * What OpenBot calls them. Null when nothing has named them.
+   * What Mangaba Bot calls them. Null when nothing has named them.
    * @nullable
    */
   name: string | null;
@@ -23,7 +23,7 @@ export interface Person {
    */
   image: string | null;
   role: PersonRoleAnswer;
-  /** Whether they have still to choose what OpenBot calls them, because their name is missing or is only their address. */
+  /** Whether they have still to choose what Mangaba Bot calls them, because their name is missing or is only their address. */
   needsName: boolean;
   /** Where they are in first-run onboarding. Null where the deployment does not track it, which the apps read as nothing to finish. */
   onboarding: OnboardingStatus | null;

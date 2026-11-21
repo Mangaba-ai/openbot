@@ -23,7 +23,7 @@ export const Route = createFileRoute("/_authed/admin/")({
 
 /**
  * Admin's overview: every Admin page, grouped by the thing a Bot has that it sets for everybody, in
- * the order the sidebar lists them (`useAdminSections()`). Above them, on an OpenBot whose Bots share one
+ * the order the sidebar lists them (`useAdminSections()`). Above them, on an Mangaba Bot whose Bots share one
  * computer, the notice that says so: the first page an admin opens is where they learn it.
  */
 function RouteComponent() {

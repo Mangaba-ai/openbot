@@ -296,7 +296,7 @@ export const getCreateBotAgentUrl = (organizationId: string) => {
 };
 
 /**
- * Add an agent for Bots to hand work to. kind openbot runs inside OpenBot, on the model given or the organization's default. kind address runs at an AG-UI address, which the server checks before saving; a key, when given, is stored encrypted and never returned. Anybody may add a private agent, for their own Bots; only an admin of the organization may add a public one, which every member's Bots may use. A repeated request with the same Idempotency-Key and body returns the first result.
+ * Add an agent for Bots to hand work to. kind openbot runs inside Mangaba Bot, on the model given or the organization's default. kind address runs at an AG-UI address, which the server checks before saving; a key, when given, is stored encrypted and never returned. Anybody may add a private agent, for their own Bots; only an admin of the organization may add a public one, which every member's Bots may use. A repeated request with the same Idempotency-Key and body returns the first result.
  * @summary Add an agent
  */
 export const createBotAgent = async (
@@ -955,7 +955,7 @@ export const getIssueBotAgentCallbackTokenUrl = (
 };
 
 /**
- * Give an agent at an address a new credential for calling OpenBot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for an agent that has one replaces it, which is how a leaked token is retired. A call made with it is allowed only for a run of a Bot that may use this agent, as the person that run is for. Only whoever may manage the agent may issue one. An agent that runs inside OpenBot, or at an address OpenBot runs itself, needs none and is refused.
+ * Give an agent at an address a new credential for calling Mangaba Bot's tools back, and return it this once: it is never returned again, and the audit trail records that one was issued, never what it is. Issuing one for an agent that has one replaces it, which is how a leaked token is retired. A call made with it is allowed only for a run of a Bot that may use this agent, as the person that run is for. Only whoever may manage the agent may issue one. An agent that runs inside Mangaba Bot, or at an address Mangaba Bot runs itself, needs none and is refused.
  * @summary Issue an agent's callback token
  */
 export const issueBotAgentCallbackToken = async (
@@ -1109,7 +1109,7 @@ export const getRevokeBotAgentCallbackTokenUrl = (
 };
 
 /**
- * Take away an agent's credential for calling OpenBot's tools back. It still answers in a conversation; it can't reach anything outside one. Only whoever may manage the agent may revoke it. Revoking a token that is not there changes nothing.
+ * Take away an agent's credential for calling Mangaba Bot's tools back. It still answers in a conversation; it can't reach anything outside one. Only whoever may manage the agent may revoke it. Revoking a token that is not there changes nothing.
  * @summary Revoke an agent's callback token
  */
 export const revokeBotAgentCallbackToken = async (
@@ -1496,7 +1496,7 @@ export const getReplaceBotDelegationUrl = (
 };
 
 /**
- * Replace how a Bot works. Mode self takes exactly one agent, which the Bot runs on with its apps, as every Bot did before agents were a list. Mode orchestrate takes one to twenty agents, in order, the first being the default: the Bot then answers on its own model with only the tools for replying, reacting, finding a task's thread and handing work to an agent, plus reading the person's memory, and each agent works with the Bot's apps as the person who asked. model and effort are the Bot's own when it orchestrates, one the model catalogue offers, or null for the organization's default; they are ignored in mode self. instructions steer how it hands work out and answers, and are read only in mode orchestrate. Every agent named must be one the caller can see, or one the Bot already has. Only whoever may manage the Bot may change it, and a Bot that comes with OpenBot cannot be changed.
+ * Replace how a Bot works. Mode self takes exactly one agent, which the Bot runs on with its apps, as every Bot did before agents were a list. Mode orchestrate takes one to twenty agents, in order, the first being the default: the Bot then answers on its own model with only the tools for replying, reacting, finding a task's thread and handing work to an agent, plus reading the person's memory, and each agent works with the Bot's apps as the person who asked. model and effort are the Bot's own when it orchestrates, one the model catalogue offers, or null for the organization's default; they are ignored in mode self. instructions steer how it hands work out and answers, and are read only in mode orchestrate. Every agent named must be one the caller can see, or one the Bot already has. Only whoever may manage the Bot may change it, and a Bot that comes with Mangaba Bot cannot be changed.
  * @summary Set a Bot's delegation
  */
 export const replaceBotDelegation = async (

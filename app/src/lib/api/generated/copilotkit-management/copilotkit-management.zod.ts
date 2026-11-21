@@ -4,8 +4,8 @@
 import * as zod from "zod";
 
 /**
- * Return where connecting this OpenBot to CopilotKit's management service stands: not connected; connecting by itself, by its licence, with the management agent OpenBot's own chart installed; waiting for somebody at CopilotKit's page to approve the code; waiting for the management agent to be installed in the cluster with the Helm command given; connected, with the agent's last heartbeat and version; or opted out, after an administrator disconnected it. A team OpenBot whose chart installs the management agent connects by itself when it starts, and tries again every hour until it is connected, unless an administrator disconnected it or the chart turned management off (`management.enabled: false`). Management is for the whole OpenBot, so it is answered only in the organization `default`, and only to its administrators. It applies only to the team edition that a company runs itself: on the personal edition, on OpenBot Cloud, and in any other organization it answers 404 with the code MANAGEMENT_UNAVAILABLE, which a client reads as nothing to show.
- * @summary Read whether this OpenBot is connected to CopilotKit management
+ * Return where connecting this Mangaba Bot to CopilotKit's management service stands: not connected; connecting by itself, by its licence, with the management agent Mangaba Bot's own chart installed; waiting for somebody at CopilotKit's page to approve the code; waiting for the management agent to be installed in the cluster with the Helm command given; connected, with the agent's last heartbeat and version; or opted out, after an administrator disconnected it. A team Mangaba Bot whose chart installs the management agent connects by itself when it starts, and tries again every hour until it is connected, unless an administrator disconnected it or the chart turned management off (`management.enabled: false`). Management is for the whole Mangaba Bot, so it is answered only in the organization `default`, and only to its administrators. It applies only to the team edition that a company runs itself: on the personal edition, on Mangaba Bot Cloud, and in any other organization it answers 404 with the code MANAGEMENT_UNAVAILABLE, which a client reads as nothing to show.
+ * @summary Read whether this Mangaba Bot is connected to CopilotKit management
  */
 
 export const GetManagementEnrollmentParams = zod.object({
@@ -35,7 +35,7 @@ export const GetManagementEnrollmentResponse = zod
     state: zod
       .string()
       .describe(
-        "not-connected: nothing is under way. waiting-for-approval: the code is waiting for somebody to approve it at verificationUri. waiting-for-agent: approved, and waiting for the management agent to be installed with helmCommand and to report in. connected: the agent reports in. connecting: OpenBot is connecting by itself, by its licence, and the management agent its chart installed is collecting its one-time token and reporting in for the first time; nobody needs to do anything. opted-out: an administrator disconnected OpenBot, so it doesn't connect by itself; starting a connection turns managed updates back on. A later OpenBot may add a state; read one you don't know as not connected.",
+        "not-connected: nothing is under way. waiting-for-approval: the code is waiting for somebody to approve it at verificationUri. waiting-for-agent: approved, and waiting for the management agent to be installed with helmCommand and to report in. connected: the agent reports in. connecting: Mangaba Bot is connecting by itself, by its licence, and the management agent its chart installed is collecting its one-time token and reporting in for the first time; nobody needs to do anything. opted-out: an administrator disconnected Mangaba Bot, so it doesn't connect by itself; starting a connection turns managed updates back on. A later Mangaba Bot may add a state; read one you don't know as not connected.",
       ),
     userCode: zod
       .string()
@@ -63,34 +63,34 @@ export const GetManagementEnrollmentResponse = zod
       .min(1)
       .optional()
       .describe(
-        "The id the managed updates service gave this OpenBot, once the code is approved.",
+        "The id the managed updates service gave this Mangaba Bot, once the code is approved.",
       ),
     helmCommand: zod
       .string()
       .min(1)
       .optional()
       .describe(
-        "The command that installs the management agent in this OpenBot's cluster, while waiting for the agent. It holds nothing secret: the agent collects its one-time token from OpenBot itself. On a release it pins the agent chart to this OpenBot's own version with --version, so the agent always matches the server that printed it.",
+        "The command that installs the management agent in this Mangaba Bot's cluster, while waiting for the agent. It holds nothing secret: the agent collects its one-time token from Mangaba Bot itself. On a release it pins the agent chart to this Mangaba Bot's own version with --version, so the agent always matches the server that printed it.",
       ),
     helmCommandNote: zod
       .string()
       .min(1)
       .optional()
       .describe(
-        "A sentence a person reads beside helmCommand, present only when this OpenBot isn't a published release (a build of main or a development build). No published agent chart matches such a build, so helmCommand names no chart version and Helm installs the newest published one. Absent on a release.",
+        "A sentence a person reads beside helmCommand, present only when this Mangaba Bot isn't a published release (a build of main or a development build). No published agent chart matches such a build, so helmCommand names no chart version and Helm installs the newest published one. Absent on a release.",
       ),
     agentInstalledByChart: zod
       .boolean()
       .optional()
       .describe(
-        "True when OpenBot's own chart installs the management agent beside it (`management.enabled`, on by default), so connecting needs no Helm command and OpenBot connects by itself. False when the chart turned it off: connecting then gives helmCommand to install the agent by hand. Present in every state.",
+        "True when Mangaba Bot's own chart installs the management agent beside it (`management.enabled`, on by default), so connecting needs no Helm command and Mangaba Bot connects by itself. False when the chart turned it off: connecting then gives helmCommand to install the agent by hand. Present in every state.",
       ),
     installName: zod
       .string()
       .min(1)
       .optional()
       .describe(
-        "The name this OpenBot gave itself when it asked to be connected, which the approval page shows the approver, so they can match it. Present while waiting for approval.",
+        "The name this Mangaba Bot gave itself when it asked to be connected, which the approval page shows the approver, so they can match it. Present while waiting for approval.",
       ),
     window: zod
       .object({
@@ -111,7 +111,7 @@ export const GetManagementEnrollmentResponse = zod
       })
       .optional()
       .describe(
-        "The weekly maintenance window the managed updates service upgrades this OpenBot in, as the service last reported it, once connected. It is agreed for each install; the default is Tuesdays from 14:00 UTC for four hours.",
+        "The weekly maintenance window the managed updates service upgrades this Mangaba Bot in, as the service last reported it, once connected. It is agreed for each install; the default is Tuesdays from 14:00 UTC for four hours.",
       ),
     lastHeartbeatAt: zod.iso
       .datetime({ offset: true })
@@ -128,7 +128,7 @@ export const GetManagementEnrollmentResponse = zod
       .string()
       .optional()
       .describe(
-        "Whether the managed updates service can upgrade this OpenBot, as the agent last reported, once connected. on: upgrades are set up, and happen in the maintenance window. not-set-up: the agent is connected and reports health, but upgrading needs a one-time setup in the cluster first. Absent when the agent hasn't said (an older agent). A later OpenBot may add a value; read one you don't know as absent.",
+        "Whether the managed updates service can upgrade this Mangaba Bot, as the agent last reported, once connected. on: upgrades are set up, and happen in the maintenance window. not-set-up: the agent is connected and reports health, but upgrading needs a one-time setup in the cluster first. Absent when the agent hasn't said (an older agent). A later Mangaba Bot may add a value; read one you don't know as absent.",
       ),
     lastError: zod
       .string()
@@ -141,16 +141,16 @@ export const GetManagementEnrollmentResponse = zod
       .string()
       .optional()
       .describe(
-        "Which refusal lastError is, where a client acts on it. not-entitled: this OpenBot's licence doesn't include managed updates (it isn't a team licence, or managed updates were turned off for its organization), so connecting again fails the same way until they are added to it. invalid-licence: the licence wasn't accepted (invalid or expired). unreachable: the managed updates service couldn't be reached when OpenBot last tried to connect by itself; it tries again within the hour. A later OpenBot may add a code; read one you don't know as no code.",
+        "Which refusal lastError is, where a client acts on it. not-entitled: this Mangaba Bot's licence doesn't include managed updates (it isn't a team licence, or managed updates were turned off for its organization), so connecting again fails the same way until they are added to it. invalid-licence: the licence wasn't accepted (invalid or expired). unreachable: the managed updates service couldn't be reached when Mangaba Bot last tried to connect by itself; it tries again within the hour. A later Mangaba Bot may add a code; read one you don't know as no code.",
       ),
   })
   .describe(
-    "Where connecting this OpenBot to managed updates stands. Which fields are present depends on state.",
+    "Where connecting this Mangaba Bot to managed updates stands. Which fields are present depends on state.",
   );
 
 /**
- * Ask CopilotKit's management service to connect this OpenBot. OpenBot sends its CopilotKit licence and its name. Where OpenBot's own chart installs the management agent (agentInstalledByChart true), it connects by licence: a team licence is accepted at once, with no code to approve, OpenBot collects the install's one-time token on its own, the agent picks it up, and the answer is connecting. This also ends an opt-out: after an administrator disconnected OpenBot, this is how managed updates are turned back on, and OpenBot connects by itself again from then on. Where the chart turned the agent off, it is the approval flow: OpenBot gets back a short code and the page where somebody signed in to CopilotKit, as an admin of the organization the licence names, approves it (the OAuth device authorization grant, RFC 8628); OpenBot then waits for the approval on its own, and once approved the answer carries the Helm command that installs the agent, with nothing secret in it. Read getManagementEnrollment to follow either. A licence the service refuses answers 409 with the service's sentence, and the state keeps lastErrorCode. Started again while it is already under way, it changes nothing and answers where it stands. Already connected answers 409. Only an administrator of the organization `default` may start it, and only where getManagementEnrollment applies.
- * @summary Start connecting this OpenBot to CopilotKit management
+ * Ask CopilotKit's management service to connect this Mangaba Bot. Mangaba Bot sends its CopilotKit licence and its name. Where Mangaba Bot's own chart installs the management agent (agentInstalledByChart true), it connects by licence: a team licence is accepted at once, with no code to approve, Mangaba Bot collects the install's one-time token on its own, the agent picks it up, and the answer is connecting. This also ends an opt-out: after an administrator disconnected Mangaba Bot, this is how managed updates are turned back on, and Mangaba Bot connects by itself again from then on. Where the chart turned the agent off, it is the approval flow: Mangaba Bot gets back a short code and the page where somebody signed in to CopilotKit, as an admin of the organization the licence names, approves it (the OAuth device authorization grant, RFC 8628); Mangaba Bot then waits for the approval on its own, and once approved the answer carries the Helm command that installs the agent, with nothing secret in it. Read getManagementEnrollment to follow either. A licence the service refuses answers 409 with the service's sentence, and the state keeps lastErrorCode. Started again while it is already under way, it changes nothing and answers where it stands. Already connected answers 409. Only an administrator of the organization `default` may start it, and only where getManagementEnrollment applies.
+ * @summary Start connecting this Mangaba Bot to CopilotKit management
  */
 
 export const StartManagementEnrollmentParams = zod.object({
@@ -192,7 +192,7 @@ export const StartManagementEnrollmentResponse = zod
     state: zod
       .string()
       .describe(
-        "not-connected: nothing is under way. waiting-for-approval: the code is waiting for somebody to approve it at verificationUri. waiting-for-agent: approved, and waiting for the management agent to be installed with helmCommand and to report in. connected: the agent reports in. connecting: OpenBot is connecting by itself, by its licence, and the management agent its chart installed is collecting its one-time token and reporting in for the first time; nobody needs to do anything. opted-out: an administrator disconnected OpenBot, so it doesn't connect by itself; starting a connection turns managed updates back on. A later OpenBot may add a state; read one you don't know as not connected.",
+        "not-connected: nothing is under way. waiting-for-approval: the code is waiting for somebody to approve it at verificationUri. waiting-for-agent: approved, and waiting for the management agent to be installed with helmCommand and to report in. connected: the agent reports in. connecting: Mangaba Bot is connecting by itself, by its licence, and the management agent its chart installed is collecting its one-time token and reporting in for the first time; nobody needs to do anything. opted-out: an administrator disconnected Mangaba Bot, so it doesn't connect by itself; starting a connection turns managed updates back on. A later Mangaba Bot may add a state; read one you don't know as not connected.",
       ),
     userCode: zod
       .string()
@@ -220,34 +220,34 @@ export const StartManagementEnrollmentResponse = zod
       .min(1)
       .optional()
       .describe(
-        "The id the managed updates service gave this OpenBot, once the code is approved.",
+        "The id the managed updates service gave this Mangaba Bot, once the code is approved.",
       ),
     helmCommand: zod
       .string()
       .min(1)
       .optional()
       .describe(
-        "The command that installs the management agent in this OpenBot's cluster, while waiting for the agent. It holds nothing secret: the agent collects its one-time token from OpenBot itself. On a release it pins the agent chart to this OpenBot's own version with --version, so the agent always matches the server that printed it.",
+        "The command that installs the management agent in this Mangaba Bot's cluster, while waiting for the agent. It holds nothing secret: the agent collects its one-time token from Mangaba Bot itself. On a release it pins the agent chart to this Mangaba Bot's own version with --version, so the agent always matches the server that printed it.",
       ),
     helmCommandNote: zod
       .string()
       .min(1)
       .optional()
       .describe(
-        "A sentence a person reads beside helmCommand, present only when this OpenBot isn't a published release (a build of main or a development build). No published agent chart matches such a build, so helmCommand names no chart version and Helm installs the newest published one. Absent on a release.",
+        "A sentence a person reads beside helmCommand, present only when this Mangaba Bot isn't a published release (a build of main or a development build). No published agent chart matches such a build, so helmCommand names no chart version and Helm installs the newest published one. Absent on a release.",
       ),
     agentInstalledByChart: zod
       .boolean()
       .optional()
       .describe(
-        "True when OpenBot's own chart installs the management agent beside it (`management.enabled`, on by default), so connecting needs no Helm command and OpenBot connects by itself. False when the chart turned it off: connecting then gives helmCommand to install the agent by hand. Present in every state.",
+        "True when Mangaba Bot's own chart installs the management agent beside it (`management.enabled`, on by default), so connecting needs no Helm command and Mangaba Bot connects by itself. False when the chart turned it off: connecting then gives helmCommand to install the agent by hand. Present in every state.",
       ),
     installName: zod
       .string()
       .min(1)
       .optional()
       .describe(
-        "The name this OpenBot gave itself when it asked to be connected, which the approval page shows the approver, so they can match it. Present while waiting for approval.",
+        "The name this Mangaba Bot gave itself when it asked to be connected, which the approval page shows the approver, so they can match it. Present while waiting for approval.",
       ),
     window: zod
       .object({
@@ -268,7 +268,7 @@ export const StartManagementEnrollmentResponse = zod
       })
       .optional()
       .describe(
-        "The weekly maintenance window the managed updates service upgrades this OpenBot in, as the service last reported it, once connected. It is agreed for each install; the default is Tuesdays from 14:00 UTC for four hours.",
+        "The weekly maintenance window the managed updates service upgrades this Mangaba Bot in, as the service last reported it, once connected. It is agreed for each install; the default is Tuesdays from 14:00 UTC for four hours.",
       ),
     lastHeartbeatAt: zod.iso
       .datetime({ offset: true })
@@ -285,7 +285,7 @@ export const StartManagementEnrollmentResponse = zod
       .string()
       .optional()
       .describe(
-        "Whether the managed updates service can upgrade this OpenBot, as the agent last reported, once connected. on: upgrades are set up, and happen in the maintenance window. not-set-up: the agent is connected and reports health, but upgrading needs a one-time setup in the cluster first. Absent when the agent hasn't said (an older agent). A later OpenBot may add a value; read one you don't know as absent.",
+        "Whether the managed updates service can upgrade this Mangaba Bot, as the agent last reported, once connected. on: upgrades are set up, and happen in the maintenance window. not-set-up: the agent is connected and reports health, but upgrading needs a one-time setup in the cluster first. Absent when the agent hasn't said (an older agent). A later Mangaba Bot may add a value; read one you don't know as absent.",
       ),
     lastError: zod
       .string()
@@ -298,16 +298,16 @@ export const StartManagementEnrollmentResponse = zod
       .string()
       .optional()
       .describe(
-        "Which refusal lastError is, where a client acts on it. not-entitled: this OpenBot's licence doesn't include managed updates (it isn't a team licence, or managed updates were turned off for its organization), so connecting again fails the same way until they are added to it. invalid-licence: the licence wasn't accepted (invalid or expired). unreachable: the managed updates service couldn't be reached when OpenBot last tried to connect by itself; it tries again within the hour. A later OpenBot may add a code; read one you don't know as no code.",
+        "Which refusal lastError is, where a client acts on it. not-entitled: this Mangaba Bot's licence doesn't include managed updates (it isn't a team licence, or managed updates were turned off for its organization), so connecting again fails the same way until they are added to it. invalid-licence: the licence wasn't accepted (invalid or expired). unreachable: the managed updates service couldn't be reached when Mangaba Bot last tried to connect by itself; it tries again within the hour. A later Mangaba Bot may add a code; read one you don't know as no code.",
       ),
   })
   .describe(
-    "Where connecting this OpenBot to managed updates stands. Which fields are present depends on state.",
+    "Where connecting this Mangaba Bot to managed updates stands. Which fields are present depends on state.",
   );
 
 /**
- * Stop a connection that is under way, or disconnect a connected one, and record that an administrator opted out, so OpenBot doesn't connect itself again (opted-out) until somebody starts it again with startManagementEnrollment. Stopping forgets the code and the one-time token, so the agent can no longer collect it. CopilotKit's management service is told: a code nobody approved yet is withdrawn, so its approval page refuses it, and an install it already made is retired. Nothing is changed in the cluster. Not connected answers 204 too, and records the opt-out. Connected with the agent OpenBot's chart installed (agentInstalledByChart true), it retires the install at the service at once, which stops the agent's managed updates though it keeps running, and answers 204. Connected with an agent installed with the Helm command, it finishes disconnecting after that agent is uninstalled with Helm: while the service still hears from the agent it answers 409, and once the agent hasn't reported in for more than five minutes it retires the install at the service, forgets the connection and answers 204, so OpenBot can be connected again later. Telling the service is best effort: out of reach, OpenBot stops anyway and lastError says the service wasn't told. Connected with the service out of reach, the last heartbeat OpenBot saw decides, and a recent one answers 502. Only an administrator of the organization `default` may stop it, and only where getManagementEnrollment applies.
- * @summary Stop connecting this OpenBot to CopilotKit management
+ * Stop a connection that is under way, or disconnect a connected one, and record that an administrator opted out, so Mangaba Bot doesn't connect itself again (opted-out) until somebody starts it again with startManagementEnrollment. Stopping forgets the code and the one-time token, so the agent can no longer collect it. CopilotKit's management service is told: a code nobody approved yet is withdrawn, so its approval page refuses it, and an install it already made is retired. Nothing is changed in the cluster. Not connected answers 204 too, and records the opt-out. Connected with the agent Mangaba Bot's chart installed (agentInstalledByChart true), it retires the install at the service at once, which stops the agent's managed updates though it keeps running, and answers 204. Connected with an agent installed with the Helm command, it finishes disconnecting after that agent is uninstalled with Helm: while the service still hears from the agent it answers 409, and once the agent hasn't reported in for more than five minutes it retires the install at the service, forgets the connection and answers 204, so Mangaba Bot can be connected again later. Telling the service is best effort: out of reach, Mangaba Bot stops anyway and lastError says the service wasn't told. Connected with the service out of reach, the last heartbeat Mangaba Bot saw decides, and a recent one answers 502. Only an administrator of the organization `default` may stop it, and only where getManagementEnrollment applies.
+ * @summary Stop connecting this Mangaba Bot to CopilotKit management
  */
 
 export const CancelManagementEnrollmentParams = zod.object({

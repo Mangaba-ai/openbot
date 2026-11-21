@@ -16,9 +16,9 @@ import {
   seeParts,
 } from "./journey";
 
-/** What the Install step says while it downloads OpenBot's software. */
+/** What the Install step says while it downloads Mangaba Bot's software. */
 export const INSTALL_BLURB =
-  "This installs OpenBot on this computer: the app, its database, your Bots, and the computers they work on. The first install takes about 10 minutes, so you might want to grab a coffee or tea.";
+  "This installs Mangaba Bot on this computer: the app, its database, your Bots, and the computers they work on. The first install takes about 10 minutes, so you might want to grab a coffee or tea.";
 
 /**
  * A download while it runs: Install's images (`pull_metrics::Downloads`), or the back end's update
@@ -82,7 +82,7 @@ export type Progress = {
   note?: string;
   /**
    * What its download's parts are doing once every byte is in, said with the part: "Unpacking
-   * OpenBot" reads "Unpacking OpenBot (3 of 5)." Without it the row says its detail.
+   * Mangaba Bot" reads "Unpacking Mangaba Bot (3 of 5)." Without it the row says its detail.
    */
   unpacking?: string;
 };
@@ -92,9 +92,9 @@ export type Progress = {
  * step that sent them there.
  *
  * Opening Docker Desktop, or Podman's installer asking for a password, puts that app's window in
- * front of OpenBot's. Its row alone is not enough: the person waits on whichever screen they are
+ * front of Mangaba Bot's. Its row alone is not enough: the person waits on whichever screen they are
  * on, often the account step, and a row they cannot see says nothing. So the setup screens say
- * this line until the step ends, and OpenBot comes back to the front.
+ * this line until the step ends, and Mangaba Bot comes back to the front.
  */
 export function handOffNow(steps: Progress[]): string | null {
   const handedOff = [...steps]
@@ -108,7 +108,7 @@ export function handOffNow(steps: Progress[]): string | null {
  * when there is one, else the step that is preparing this computer, as setup says it ("Starting
  * the engine machine.").
  *
- * A relaunch with OpenBot's Podman machine stopped spent ten seconds starting it under "Waiting
+ * A relaunch with Mangaba Bot's Podman machine stopped spent ten seconds starting it under "Waiting
  * for the back end", and nothing on the screen said so.
  */
 export function engineNow(steps: Progress[]): string | null {
@@ -123,13 +123,13 @@ export function engineNow(steps: Progress[]): string | null {
 }
 
 /**
- * The row OpenBot asks on before it pauses the person's own Podman on a Mac
+ * The row Mangaba Bot asks on before it pauses the person's own Podman on a Mac
  * (`own_machine::PAUSE_STEP`).
  */
 export const PAUSE_PODMAN_STEP = "pause-podman";
 
 /**
- * The line of a step that waits on the person after they closed macOS's password prompt ("OpenBot
+ * The line of a step that waits on the person after they closed macOS's password prompt ("Mangaba Bot
  * needs your password to install what it needs to run…"), or null. The screens say it in a card
  * with Try again (`PodmanGoAhead`). Nothing waits on the person before a prompt.
  */
@@ -147,9 +147,9 @@ export function goAheadNow(steps: Progress[]): string | null {
 }
 
 /**
- * The offer to pause the person's own Podman while OpenBot runs, while OpenBot waits for their yes
- * ("Your Podman is set up in a way OpenBot can't use…"), or null. A Mac runs one Podman machine at
- * a time, so OpenBot's own can start only once theirs is paused, and only the person says it may
+ * The offer to pause the person's own Podman while Mangaba Bot runs, while Mangaba Bot waits for their yes
+ * ("Your Podman is set up in a way Mangaba Bot can't use…"), or null. A Mac runs one Podman machine at
+ * a time, so Mangaba Bot's own can start only once theirs is paused, and only the person says it may
  * be. The screens say it in a card with the button that says yes (`PausePodman`).
  */
 export function pauseOfferNow(steps: Progress[]): string | null {
@@ -163,7 +163,7 @@ export function pauseOfferNow(steps: Progress[]): string | null {
   return offering?.detail ?? null;
 }
 
-/** Where OpenBot's own icon is, as this computer names it: macOS has a menu bar, Windows a tray. */
+/** Where Mangaba Bot's own icon is, as this computer names it: macOS has a menu bar, Windows a tray. */
 export function trayPlace(userAgent = navigator.userAgent): string {
   return /Macintosh|Mac OS X/.test(userAgent)
     ? "the menu bar"
@@ -235,7 +235,7 @@ export function formatElapsed(elapsed: number): string {
     : `${Math.floor(elapsed / 60)}m ${elapsed % 60}s`;
 }
 
-// The native steps that make this computer ready to run anything, before OpenBot's own software.
+// The native steps that make this computer ready to run anything, before Mangaba Bot's own software.
 const PREPARING = new Set([
   "engine",
   "install-engine",
@@ -247,10 +247,10 @@ const PREPARING = new Set([
 
 /**
  * An installation's native rows as two plain ones, for local mode: "Preparing this computer" and
- * "Downloading OpenBot". A failure is shown in full under the rows.
+ * "Downloading Mangaba Bot". A failure is shown in full under the rows.
  *
- * The rest of OpenBot (`restOfOpenBot`, the back end's download) comes down alongside OpenBot's
- * own once the software OpenBot runs on answers. It is the third step, said once nothing before it
+ * The rest of Mangaba Bot (`restOfOpenBot`, the back end's download) comes down alongside Mangaba Bot's
+ * own once the software Mangaba Bot runs on answers. It is the third step, said once nothing before it
  * is still going: "Step 2 of 4" and "Step 3 of 4" in progress together read as two steps at once
  * on a live Windows run. Shown then, its download is as far along as it got meanwhile.
  *
@@ -265,7 +265,7 @@ export function plainInstallSteps(
   installing: boolean,
   /** When this install began: its running row's time so far counts from here. */
   since?: number | null,
-  /** The rest of OpenBot's download while it runs, or null. */
+  /** The rest of Mangaba Bot's download while it runs, or null. */
   restOfOpenBot?: Downloads | null,
 ): Progress[] {
   const preparing = steps.filter((step) => PREPARING.has(step.step));
@@ -300,23 +300,23 @@ export function plainInstallSteps(
     const pulling =
       restNow?.downloads != null ||
       (restNow?.step === "images" && restNow.downloadBytes != null);
-    // Not "Installing OpenBot": that is the step's heading, right above it.
+    // Not "Installing Mangaba Bot": that is the step's heading, right above it.
     rows.push({
-      step: "Downloading OpenBot",
+      step: "Downloading Mangaba Bot",
       ok: !installingFailed,
       running: installingNow,
       // The row's name says it downloads: its line says the time left, then which part unpacks.
       detail: pulling ? "" : (restNow?.detail ?? ""),
       downloadBytes: pulling ? undefined : restNow?.downloadBytes,
       downloads: restNow?.downloads,
-      unpacking: "Unpacking OpenBot",
+      unpacking: "Unpacking Mangaba Bot",
       position: { at: 2, of: INSTALL_PARTS },
       startedAt: since ?? undefined,
     });
   }
   if (restOfOpenBot && !rows.some((row) => row.running || !row.ok))
     rows.push({
-      step: "Downloading the rest of OpenBot",
+      step: "Downloading the rest of Mangaba Bot",
       ok: true,
       running: true,
       // The row says the time left from the download's own speed.
@@ -456,7 +456,7 @@ export function useDownloadWhere(
 
 /**
  * What a row with a download says: what it is doing, and how long is left. Once every byte is in,
- * which part is unpacking ("Unpacking OpenBot (3 of 5)."); before that, its own line.
+ * which part is unpacking ("Unpacking Mangaba Bot (3 of 5)."); before that, its own line.
  */
 function downloadSaid(step: Progress, where: DownloadWhere): string {
   const doing =
@@ -576,12 +576,12 @@ export function timeLeft(
 
 /**
  * The parts of a first install, counted the same on every screen that shows them: preparing this
- * computer, downloading OpenBot, setting it up, and getting it ready to start.
+ * computer, downloading Mangaba Bot, setting it up, and getting it ready to start.
  */
 export const INSTALL_PARTS = 4;
 
 /** The background install's row, on the screens that ask the person for something meanwhile. */
-export const INSTALLING_BEHIND = "Installing OpenBot in the background";
+export const INSTALLING_BEHIND = "Installing Mangaba Bot in the background";
 
 /** The back end's sequence, as far as the background install's row needs it (`LocalSequence`). */
 export type BackEndNow = {
@@ -608,10 +608,10 @@ export type BackEndNow = {
  * so far, and the time left when a download says how long. Null when nothing is installing and
  * nothing is left to say.
  *
- * A tester sat on the account step while OpenBot installed behind it for minutes, with nothing on
+ * A tester sat on the account step while Mangaba Bot installed behind it for minutes, with nothing on
  * the screen about it, and could not tell whether setup was stuck.
  *
- * `installing` and `installed` are OpenBot's own install (`prepare_installation`), whose rows are
+ * `installing` and `installed` are Mangaba Bot's own install (`prepare_installation`), whose rows are
  * `steps`; the back end's setup follows it (`backEnd`). `waitingFor` is what the rest waits on when
  * it waits on the person; `done` is what the row says once everything is installed.
  *
@@ -678,11 +678,11 @@ export function installingBehind({
       // another window keeps its words.
       const downloading = now?.elsewhere ? null : (meanwhile ?? own);
       if (downloading)
-        return row(1, "Downloading OpenBot.", {
+        return row(1, "Downloading Mangaba Bot.", {
           downloads: downloading,
           startedAt: since ?? undefined,
         });
-      return row(1, now?.detail || "Preparing this computer to run OpenBot.", {
+      return row(1, now?.detail || "Preparing this computer to run Mangaba Bot.", {
         startedAt: since ?? undefined,
       });
     }
@@ -696,11 +696,11 @@ export function installingBehind({
     return row(
       2,
       downloads
-        ? "Downloading OpenBot."
-        : now?.detail || "Downloading OpenBot.",
+        ? "Downloading Mangaba Bot."
+        : now?.detail || "Downloading Mangaba Bot.",
       {
         downloads: downloads ?? undefined,
-        unpacking: "Unpacking OpenBot",
+        unpacking: "Unpacking Mangaba Bot",
         startedAt: since ?? undefined,
       },
     );
@@ -745,11 +745,11 @@ export function installingBehind({
     return row(
       3,
       backEnd.download
-        ? "Downloading the rest of OpenBot."
+        ? "Downloading the rest of Mangaba Bot."
         : where
           ? `${where.said}. ${leftSaid(where.left)}.`
           : backEnd.detail ||
-            "Setting up OpenBot on this computer. This takes a few minutes the first time.",
+            "Setting up Mangaba Bot on this computer. This takes a few minutes the first time.",
       {
         downloads: backEnd.download ?? undefined,
         startedAt: counting,
@@ -762,7 +762,7 @@ export function installingBehind({
       backEnd.download
         ? "Downloading an update."
         : backEnd.detail ||
-            "Getting OpenBot ready to start. This can take a few minutes.",
+            "Getting Mangaba Bot ready to start. This can take a few minutes.",
       {
         downloads: backEnd.download ?? undefined,
         startedAt: counting,
@@ -770,7 +770,7 @@ export function installingBehind({
     );
   if (!installed) return null;
   if (backEnd.ready && done)
-    return { step: "OpenBot is installed", ok: true, detail: done };
+    return { step: "Mangaba Bot is installed", ok: true, detail: done };
   if (backEnd.at === null && !backEnd.running && waitingFor)
     return row(3, waitingFor, { running: false, waiting: true });
   return null;
@@ -865,19 +865,19 @@ function label(step: string): string {
   switch (step) {
     case "engine":
     case "install-engine":
-      return "Software OpenBot runs on";
+      return "Software Mangaba Bot runs on";
     case "create-machine":
       return "Preparing this computer";
     case PAUSE_PODMAN_STEP:
       return "Your Podman";
     case "start-machine":
-      return "Starting the software OpenBot runs on";
+      return "Starting the software Mangaba Bot runs on";
     case "health-gate":
-      return "Checking the software OpenBot runs on";
+      return "Checking the software Mangaba Bot runs on";
     case "deployment":
-      return "Downloading OpenBot";
+      return "Downloading Mangaba Bot";
     case "release":
-      return "OpenBot update";
+      return "Mangaba Bot update";
     case "update-images":
       return "Update software";
     case "env":
@@ -891,19 +891,19 @@ function label(step: string): string {
     case "installation":
       return "Installation";
     case "answering":
-      return "Starting OpenBot";
+      return "Starting Mangaba Bot";
     case "services":
-      return "OpenBot's services";
+      return "Mangaba Bot's services";
     case "migrate":
       return "Database";
     case "finish-update":
-      return "Finishing the OpenBot update";
+      return "Finishing the Mangaba Bot update";
     case "stop-openbot":
-      return "Stopping OpenBot";
+      return "Stopping Mangaba Bot";
     case "stop-intelligence":
-      return "Stopping OpenBot's services";
+      return "Stopping Mangaba Bot's services";
     case "stop-engine":
-      return "Stopping the software OpenBot runs on";
+      return "Stopping the software Mangaba Bot runs on";
     case "start-your-podman":
       return "Starting your Podman again";
     default:

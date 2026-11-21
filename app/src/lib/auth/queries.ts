@@ -33,7 +33,7 @@ export type AuthenticatedUser = {
   /** Null means this deployment does not track onboarding, which reads as nothing to finish. */
   onboarding: OnboardingStatus | null;
   /**
-   * The OpenBot release the server runs, such as "v0.3.1", drawn small under this person's name.
+   * The Mangaba Bot release the server runs, such as "v0.3.1", drawn small under this person's name.
    * Not the person's: the API answers it beside them (getPerson's `openbotVersion`), and it rides here
    * so the request the `_authed` gate already makes brings it. Null when the server was built without
    * one.
@@ -58,7 +58,7 @@ export type AuthProviderId = "google" | "microsoft" | "okta";
 /** What the sign-in screen may offer, answered by the process that knows. */
 export type SignInOptions = {
   providers: AuthProviderId[];
-  /** Whether people sign in through the hosted sign-in, with their account with OpenBot by CopilotKit. */
+  /** Whether people sign in through the hosted sign-in, with their account with Mangaba Bot by CopilotKit. */
   hosted: boolean;
   /**
    * Whether any enterprise identity provider is registered.
@@ -144,7 +144,7 @@ async function currentUser(
 }
 
 /**
- * What OpenBot on one computer answers a request that does not come from its app. The personal
+ * What Mangaba Bot on one computer answers a request that does not come from its app. The personal
  * edition only admits requests carrying its install's token, which only its app has, so a browser
  * opened at the same address is refused this, word for word, on every request.
  */

@@ -4,7 +4,7 @@
 import type { GitHubAuthorizationProvider } from "./gitHubAuthorizationProvider";
 
 /**
- * GitHub's consent page, which sends the person back to OpenBot once they agree.
+ * GitHub's consent page, which sends the person back to Mangaba Bot once they agree.
  */
 export interface GitHubAuthorization {
   provider: GitHubAuthorizationProvider;

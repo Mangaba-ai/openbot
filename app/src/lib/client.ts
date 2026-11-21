@@ -23,14 +23,14 @@ import { noteRefusal } from "@/lib/client-version/refusal";
 import { noteAnswer, noteNoAnswer } from "@/lib/desktop/reachability";
 
 /**
- * This app as it names itself to its OpenBot: `web/<release>`, the release it was built from
+ * This app as it names itself to its Mangaba Bot: `web/<release>`, the release it was built from
  * (shared/client-version.ts). The server refuses an app older than the oldest it serves.
  */
 export const CLIENT_NAME = clientToken("web");
 
 /**
  * `headers` with this app named in them, in the same shape they were given: a record, a `Headers`,
- * or a list of pairs. For the few requests the app makes to OpenBot without the client: the
+ * or a list of pairs. For the few requests the app makes to Mangaba Bot without the client: the
  * runtime's, sign-in's and finishing a consent. A file's own address is read like a picture's,
  * which carries no header either, and can be sent on to wherever the file is kept.
  */
@@ -82,10 +82,10 @@ export type ClientOptions = {
 
 /**
  * The one `fetch`. Each outcome is reported to `lib/desktop/reachability.ts`, which is how the app
- * knows the OpenBot it is connected to stopped answering, and answers again.
+ * knows the Mangaba Bot it is connected to stopped answering, and answers again.
  *
  * A 502 is read before it is handed back, so a read failing on the relay's own answer fails with
- * the connection already known to be lost, and waits for OpenBot (`connection-lost.ts`).
+ * the connection already known to be lost, and waits for Mangaba Bot (`connection-lost.ts`).
  *
  * Every request names this app ({@link CLIENT_NAME}). A 400 is read before it is handed back too, so
  * a refusal for being too old an app is known before the request fails, and the update screen shows
@@ -202,7 +202,7 @@ async function refusal(
       : undefined,
   );
   /*
-   * A hosted OpenBot's sign-in needing renewal, which is never being signed out: renewed in the
+   * A hosted Mangaba Bot's sign-in needing renewal, which is never being signed out: renewed in the
    * background, and the write it interrupted is sent again once the page is back.
    */
   if (renewalRequired(error))

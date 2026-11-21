@@ -193,7 +193,7 @@ function NewConversation({ composition }: { composition: string }) {
   const group = startsGroup(recipients);
   /*
    * A model can be picked before the first message when the conversation is with one Bot that runs
-   * on OpenBot's own model. The pick is saved with the conversation, before the message runs.
+   * on Mangaba Bot's own model. The pick is saved with the conversation, before the message runs.
    */
   const takesModel = useBotTakesModelChoice(
     !group && selected.length === 1 ? selected[0] : undefined,

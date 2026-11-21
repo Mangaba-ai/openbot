@@ -62,8 +62,8 @@ export function isBrokeredGithub(
 
 export const IDENTITY_SUMMARIES = {
   github:
-    "Lets OpenBot recognise you on GitHub, so a repository's events can start your Bots' work.",
-  slack: "Lets OpenBot recognise you when you message it from Slack.",
+    "Lets Mangaba Bot recognise you on GitHub, so a repository's events can start your Bots' work.",
+  slack: "Lets Mangaba Bot recognise you when you message it from Slack.",
 } as const;
 
 /**
@@ -72,7 +72,7 @@ export const IDENTITY_SUMMARIES = {
  */
 const IDENTITY_TILE_SUMMARIES = {
   github: "Repository events can start Bots.",
-  slack: "Message OpenBot from Slack.",
+  slack: "Message Mangaba Bot from Slack.",
 } as const;
 
 const IDENTITY_TITLES = { github: "GitHub", slack: "Slack" } as const;

@@ -14,7 +14,7 @@ export interface Computer {
   computer: string;
   kind: ComputerKind;
   personId?: string;
-  /** The person's name and address, where OpenBot knows them. */
+  /** The person's name and address, where Mangaba Bot knows them. */
   person?: ComputerPerson;
   /** The isolated Bot, or the Bot of one seat on a shared computer. */
   botId?: string;

@@ -3,7 +3,7 @@
  */
 
 /**
- * team is OpenBot as an organization runs it; personal is one person on their own machine, with no sign-in and none of the screens that govern other people.
+ * team is Mangaba Bot as an organization runs it; personal is one person on their own machine, with no sign-in and none of the screens that govern other people.
  */
 export type DeploymentEdition =
   (typeof DeploymentEdition)[keyof typeof DeploymentEdition];

@@ -5,7 +5,7 @@ import type { CatalogueAppEntryAuth } from "./catalogueAppEntryAuth";
 import type { CatalogueAppEntrySource } from "./catalogueAppEntrySource";
 
 /**
- * An app in OpenBot's own catalogue.
+ * An app in Mangaba Bot's own catalogue.
  */
 export interface CatalogueAppEntry {
   /** The entry's id, for createApp. */
@@ -23,10 +23,10 @@ export interface CatalogueAppEntry {
   vendor: string;
   /** The vendor's documentation. */
   docsUrl: string;
-  /** How the app is reached: needing nothing, with a key an administrator gives for everybody, as each person through their own sign-in, or inside OpenBot itself. */
+  /** How the app is reached: needing nothing, with a key an administrator gives for everybody, as each person through their own sign-in, or inside Mangaba Bot itself. */
   auth: CatalogueAppEntryAuth;
   /** Whether the vendor gives every customer their own host (instanceHost). */
   perInstance: boolean;
-  /** Whether connecting needs nothing typed first: no account at all, or a vendor OpenBot registers itself with. */
+  /** Whether connecting needs nothing typed first: no account at all, or a vendor Mangaba Bot registers itself with. */
   oneStep: boolean;
 }

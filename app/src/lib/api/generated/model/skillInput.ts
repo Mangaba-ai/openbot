@@ -18,7 +18,7 @@ export interface SkillInput {
    */
   instructions: string;
   /**
-   * Every action the skill needs, as appId/toolName, each one OpenBot has seen. Replaces what it named before; empty names none.
+   * Every action the skill needs, as appId/toolName, each one Mangaba Bot has seen. Replaces what it named before; empty names none.
    * @items.minLength 1
    * @items.pattern \S
    */

@@ -3,7 +3,7 @@
  */
 
 /**
- * What OpenBot Desktop is asked to do on the person's computer.
+ * What Mangaba Bot Desktop is asked to do on the person's computer.
  */
 export type HostAccessOperationKind =
   (typeof HostAccessOperationKind)[keyof typeof HostAccessOperationKind];

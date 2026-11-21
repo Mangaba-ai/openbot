@@ -4,7 +4,7 @@
 import type { LinkedAccountProviderId } from "./linkedAccountProviderId";
 
 /**
- * A person's account at another service, which OpenBot knows is theirs. Never the credential it holds.
+ * A person's account at another service, which Mangaba Bot knows is theirs. Never the credential it holds.
  */
 export interface LinkedAccount {
   /** The link's id. */

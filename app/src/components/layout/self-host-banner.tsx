@@ -9,10 +9,10 @@ import {
 } from "@/lib/settings/message-list";
 
 /**
- * A slim bar offering help self-hosting OpenBot, until this person closes it.
+ * A slim bar offering help self-hosting Mangaba Bot, until this person closes it.
  *
  * Hidden until both answers are in, so it never flashes on and then off: the deployment has to say
- * the banner is on (a fork running OpenBot for its own people turns it off), and this person's
+ * the banner is on (a fork running Mangaba Bot for its own people turns it off), and this person's
  * preferences have to say they have not closed it.
  */
 export function SelfHostBanner() {
@@ -28,22 +28,22 @@ export function SelfHostBanner() {
 
   return (
     <aside
-      aria-label="Self-host OpenBot"
+      aria-label="Self-host Mangaba Bot"
       className="flex shrink-0 flex-wrap items-center gap-x-2 border-b border-border bg-muted/60 px-4 py-1.5 text-sm"
     >
       {/*
        * Packed from the left rather than pushing Dismiss to the far right: on localhost CopilotKit's
-       * dev inspector floats over the top-right corner, which is where somebody trying OpenBot first
+       * dev inspector floats over the top-right corner, which is where somebody trying Mangaba Bot first
        * sees this, and a Dismiss under it cannot be clicked.
        *
        * Wraps rather than truncates, so a phone reads the whole sentence. The link and Dismiss stay
        * together and drop to the next line as one, which keeps Dismiss on the left there too.
        */}
       <p className="text-foreground">
-        Self-host OpenBot for your organization.
+        Self-host Mangaba Bot for your organization.
       </p>
       <span className="flex items-center gap-2">
-        {/* Opens the OpenBot for Business dialog, where the calendar is, in the app. */}
+        {/* Opens the Mangaba Bot for Business dialog, where the calendar is, in the app. */}
         <Button
           // Foreground, not the link variant's primary, which is a mid grey on the dark bar.
           className="px-0 text-foreground underline"

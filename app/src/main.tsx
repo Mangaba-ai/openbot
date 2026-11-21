@@ -8,13 +8,13 @@ import { router } from "./router";
 import "@copilotkit/react-core/v2/styles.css";
 import "./styles.css";
 
-// Before anything draws, so an error the first screen throws is told to OpenBot too.
+// Before anything draws, so an error the first screen throws is told to Mangaba Bot too.
 installAppErrorReporting();
 
 const rootElement = document.getElementById("root");
 
 if (!rootElement) {
-  throw new Error("OpenBot could not find the application root element.");
+  throw new Error("Mangaba Bot could not find the application root element.");
 }
 
 createRoot(rootElement).render(

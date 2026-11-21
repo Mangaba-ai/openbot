@@ -4,7 +4,7 @@
 
 export interface AddConversationMemberRequest {
   /**
-   * The email address the person signs in to this OpenBot with.
+   * The email address the person signs in to this Mangaba Bot with.
    * @minLength 3
    * @maxLength 320
    */

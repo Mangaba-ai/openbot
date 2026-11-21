@@ -93,7 +93,7 @@ export function BotRoster() {
       <NeedsYouBoard />
       {/*
        * AVAILABLE BOTS FIRST, AND ONLY SECTIONS WITH BOTS IN THEM. An empty Yours used to sit above
-       * the assistant OpenBot includes, so the first thing a new person read was "No Bots yet" over
+       * the assistant Mangaba Bot includes, so the first thing a new person read was "No Bots yet" over
        * a Bot they could talk to. The way to make one is a sentence after them instead, beside the
        * page's own New Bot.
        */}
@@ -109,7 +109,7 @@ export function BotRoster() {
       ) : null}
       {shared.length ? (
         <PageSection
-          title={personal ? "Included with OpenBot" : "Shared with you"}
+          title={personal ? "Included with Mangaba Bot" : "Shared with you"}
         >
           <RosterRows agents={shared} byId={byId} />
         </PageSection>

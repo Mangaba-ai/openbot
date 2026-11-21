@@ -6,11 +6,11 @@ import { desktopShell } from "@/lib/desktop/shell";
 let waiting: (() => void) | null = null;
 
 /**
- * Finish an app's consent at the verifier once OpenBot Desktop's window is back in front.
+ * Finish an app's consent at the verifier once Mangaba Bot Desktop's window is back in front.
  *
  * Where each action is authorized on its own, a consent ends at the verifier, which checks that the
  * person finishing it is the one signed in. The window sends the consent to the person's default
- * browser, which is not signed in to the OpenBot on this computer: the server holds what that browser
+ * browser, which is not signed in to the Mangaba Bot on this computer: the server holds what that browser
  * brought back and sends it to the page that hands the person back to the window (`/desktop-return`).
  * So the window, which is signed in, opens the verifier itself when the person comes back to it,
  * with no handle of its own, and the server finishes the one it held and sends the window on to the

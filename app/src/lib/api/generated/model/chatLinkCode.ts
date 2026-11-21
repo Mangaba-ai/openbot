@@ -4,13 +4,13 @@
 import type { ChatLinkCodePlatform } from "./chatLinkCodePlatform";
 
 /**
- * A one-time code the person sends the OpenBot app in Slack or Teams.
+ * A one-time code the person sends the Mangaba Bot app in Slack or Teams.
  */
 export interface ChatLinkCode {
   platform: ChatLinkCodePlatform;
   /** The code. It works once, and only for the person it was made for. */
   code: string;
-  /** The message to send the OpenBot app, the code in it. */
+  /** The message to send the Mangaba Bot app, the code in it. */
   command: string;
   /** When the code stops working. */
   expiresAt: string;

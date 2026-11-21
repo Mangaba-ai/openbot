@@ -20,7 +20,7 @@ export type ConnectPhase = "starting" | "checking" | "finishing";
 
 export type ConnectVariables = {
   input: AiConnectionInput;
-  /** In an OpenBot Desktop that changes the connection in place: it starts and settles engines. */
+  /** In an Mangaba Bot Desktop that changes the connection in place: it starts and settles engines. */
   desktop: boolean;
   onPhase?: (phase: ConnectPhase) => void;
 };
@@ -71,7 +71,7 @@ export async function connectAi({
         desktopProblem =
           error instanceof Error
             ? error.message
-            : "OpenBot Desktop couldn't finish the switch.";
+            : "Mangaba Bot Desktop couldn't finish the switch.";
       }
     }
     return { connection, desktopProblem };

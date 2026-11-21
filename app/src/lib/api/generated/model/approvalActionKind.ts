@@ -3,7 +3,7 @@
  */
 
 /**
- * A kind of action OpenBot recognises by name and asks about whatever a person's own switch says.
+ * A kind of action Mangaba Bot recognises by name and asks about whatever a person's own switch says.
  */
 export type ApprovalActionKind =
   (typeof ApprovalActionKind)[keyof typeof ApprovalActionKind];

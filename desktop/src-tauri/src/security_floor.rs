@@ -1,7 +1,7 @@
-//! The security floor, in OpenBot Desktop: the lowest safe release of this app and of the back end
+//! The security floor, in Mangaba Bot Desktop: the lowest safe release of this app and of the back end
 //! it runs on this computer, which CopilotKit raises only when a release has a security problem.
 //!
-//! The same rules as `shared/security-floor.ts`, which the phone app, the Recorder and OpenBot Cloud
+//! The same rules as `shared/security-floor.ts`, which the phone app, the Recorder and Mangaba Bot Cloud
 //! follow. A small document beside the update feed, signed with Ed25519 over its payload's exact
 //! bytes (Tauri's own signatures cover the installers, not `latest.json`). The app reads nothing in
 //! it until the signature verifies against a key it was built with (`keys` in
@@ -10,8 +10,8 @@
 //! An app that has never verified one runs as normal.
 //!
 //! Where it holds: always for the back end this app runs on this computer, which ships with the app.
-//! Connected to an OpenBot that runs elsewhere, only when the floor lists that OpenBot's address in
-//! `cloud` (OpenBot Cloud). A company's own OpenBot is never there, so the app connected to one
+//! Connected to an Mangaba Bot that runs elsewhere, only when the floor lists that Mangaba Bot's address in
+//! `cloud` (Mangaba Bot Cloud). A company's own Mangaba Bot is never there, so the app connected to one
 //! ignores the floor, and so does that server.
 //!
 //! Below the floor the window shows one notice and nothing else (`desktop/src/SecurityFloor.tsx`),
@@ -61,7 +61,7 @@ struct Config {
 }
 
 /// Where the floor is read, in order: beside the update feed on downloads.copilotkit.ai, then on
-/// the Latest GitHub release. Kept with the app, never in shared/, which every self-hosted OpenBot
+/// the Latest GitHub release. Kept with the app, never in shared/, which every self-hosted Mangaba Bot
 /// ships. tests/security-floor-addresses.test.ts holds it equal to the Recorder's and the phone
 /// app's.
 pub const ADDRESSES: [&str; 2] = [
@@ -123,7 +123,7 @@ pub struct Floor {
     pub serial: u64,
     /// The lowest safe release of each app the floor names, by its name there.
     pub floors: BTreeMap<String, Version>,
-    /// The OpenBot Cloud addresses (origins) it holds for, besides this app's own back end.
+    /// The Mangaba Bot Cloud addresses (origins) it holds for, besides this app's own back end.
     pub cloud: Vec<String>,
 }
 
@@ -241,11 +241,11 @@ pub fn below(floor: Option<&Floor>, app: App, version: &Version) -> Option<Versi
 pub enum Place {
     /// Running its own back end on this computer, or setting one up.
     Contained,
-    /// Connected to an OpenBot that runs somewhere else, at this address.
+    /// Connected to an Mangaba Bot that runs somewhere else, at this address.
     Connected(String),
 }
 
-/// Whether the floor holds here: always for this app's own back end, and for any other OpenBot only
+/// Whether the floor holds here: always for this app's own back end, and for any other Mangaba Bot only
 /// when the floor lists its origin in `cloud`.
 pub fn applies(floor: &Floor, place: &Place) -> bool {
     match place {
@@ -562,13 +562,13 @@ mod tests {
             ),
             Some(v("1.1.2"))
         );
-        // Connected to a company's own OpenBot: the floor is not for it.
+        // Connected to a company's own Mangaba Bot: the floor is not for it.
         let company = Place::Connected("https://openbot.acme.example/".into());
         assert_eq!(
             blocked(Some(&floor), &v("1.0.0"), &v("1.0.0"), &company),
             None
         );
-        // Connected to an OpenBot Cloud address the floor lists: it holds.
+        // Connected to an Mangaba Bot Cloud address the floor lists: it holds.
         let cloud = Place::Connected("https://cloud.openbot.example/some/page".into());
         assert_eq!(
             blocked(Some(&floor), &v("1.0.0"), &v("1.0.0"), &cloud),

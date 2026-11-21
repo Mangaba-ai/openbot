@@ -5,7 +5,7 @@ import {
   botAttentionQueryOptions,
   lastPingQueryOptions,
 } from "@/lib/bot-lifecycle/queries";
-// Whether this browser, or OpenBot Desktop, lets OpenBot interrupt: the same answer the offer to
+// Whether this browser, or Mangaba Bot Desktop, lets Mangaba Bot interrupt: the same answer the offer to
 // turn notifications on reads, so the two cannot disagree.
 import { notificationsAllowed } from "@/lib/notifications/permission";
 import { conversationTag, inSight, showNotice } from "@/lib/notifications/show";
@@ -49,7 +49,7 @@ export function waitingOnYou(bot: BotAttention): number {
 
 /**
  * How many things wait on the person across all their Bots: the one number every badge, bell and tab
- * shows, in OpenBot's sidebar and in every skin. Counted once, by the server's rule (`waitingOnYou`
+ * shows, in Mangaba Bot's sidebar and in every skin. Counted once, by the server's rule (`waitingOnYou`
  * per Bot), so a skin never counts its own way: one that counted the approval inbox said 1 while
  * the Bots badge said 2, because a failed task or a task waiting on a question is in one and not the
  * other.
@@ -198,7 +198,7 @@ export function noticePath(bot: BotAttention): string {
  */
 function useAttentionNotifications(bots: BotAttention[] | undefined) {
   const seen = useRef<Map<string, number> | null>(null);
-  // Asks OpenBot Desktop now, while OpenBot is in front, so its answer is in before anything needs
+  // Asks Mangaba Bot Desktop now, while Mangaba Bot is in front, so its answer is in before anything needs
   // the person.
   useEffect(() => {
     void notificationsAllowed();
@@ -215,7 +215,7 @@ function useAttentionNotifications(bots: BotAttention[] | undefined) {
     );
     if (rose.length === 0) return;
     void notificationsAllowed().then((allowed) => {
-      // Someone looking at OpenBot sees the badge and the conversation; a notice is for when they are not.
+      // Someone looking at Mangaba Bot sees the badge and the conversation; a notice is for when they are not.
       if (!allowed || inSight()) return;
       for (const bot of rose)
         showNotice({

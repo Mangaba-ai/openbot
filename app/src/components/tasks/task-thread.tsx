@@ -44,7 +44,7 @@ import { queryClient } from "@/query-client";
  * with, updated in place while it works; the line it says when it needs the person; the result it
  * comes back with; the links the Bot gives when asked; and the reactions it leaves instead of a line.
  *
- * Drawn from OpenBot's own pieces (the gallery's card frame and tones, the task list's icons and
+ * Drawn from Mangaba Bot's own pieces (the gallery's card frame and tones, the task list's icons and
  * dots, its buttons) so a task reads as part of the conversation, sized for the chat column, with
  * everything stacked rather than side by side.
  */

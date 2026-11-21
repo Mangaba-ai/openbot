@@ -50,7 +50,7 @@ export function useConnectInNewTab() {
   const stopWaiting = useCallback(() => setWaiting(false), []);
   /** The tab the consent is open in, while there is one to watch. */
   const handle = useRef<Window | null>(null);
-  /** OpenBot's step, while it is on screen in OpenBot Desktop's window, and the tab it holds. */
+  /** Mangaba Bot's step, while it is on screen in Mangaba Bot Desktop's window, and the tab it holds. */
   const [handoff, setHandoff] = useState<ConsentHandoff | null>(null);
   const held = useRef<Window | null>(null);
 
@@ -72,7 +72,7 @@ export function useConnectInNewTab() {
   useEffect(() => {
     if (!waiting) return;
     /*
-     * In OpenBot Desktop's window the consent ran in the person's browser, and where the verifier
+     * In Mangaba Bot Desktop's window the consent ran in the person's browser, and where the verifier
      * finishes it the window does that first, in the background ({@link finishInBackground}), so the
      * connections read below sees it.
      */
@@ -256,7 +256,7 @@ export function useConnectInNewTab() {
     open,
     openAfter,
     /**
-     * OpenBot's step before a sign-in through Composio, as a dialog, in OpenBot Desktop's window.
+     * Mangaba Bot's step before a sign-in through Composio, as a dialog, in Mangaba Bot Desktop's window.
      * Whoever draws the buttons draws this beside them; it is empty everywhere else.
      */
     consentStep,

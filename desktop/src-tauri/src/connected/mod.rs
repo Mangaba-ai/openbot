@@ -1,14 +1,14 @@
 /*!
-OpenBot Desktop connected to an OpenBot that runs somewhere else.
+Mangaba Bot Desktop connected to an Mangaba Bot that runs somewhere else.
 
-The person types one address. The app signs in to that OpenBot in the system browser (OAuth 2.1
+The person types one address. The app signs in to that Mangaba Bot in the system browser (OAuth 2.1
 authorization code with PKCE and a loopback redirect, `sign_in`), keeps the sign-in in the operating
-system's credential store (`credentials`), and shows that OpenBot's own pages in the window through
+system's credential store (`credentials`), and shows that Mangaba Bot's own pages in the window through
 a relay on `127.0.0.1` (`relay`), which is the only thing that ever holds a token. Nothing of a local
 installation is started, read or written while the app is connected.
 
 - `choice`: which of the two the person chose, in `connection.json`.
-- `address`: a typed address made into one the app can use, and checked to be an OpenBot it can
+- `address`: a typed address made into one the app can use, and checked to be an Mangaba Bot it can
   connect to.
 - `sign_in`: the browser sign-in, the token exchange, refresh and sign-out.
 - `credentials`: the refresh token, in Keychain, Credential Manager or the Secret Service.
@@ -41,13 +41,13 @@ pub enum Kind {
     NotOpenBot,
     SinglePerson,
     TooOld,
-    /// This app is older than that OpenBot serves: the window offers this app's own update.
+    /// This app is older than that Mangaba Bot serves: the window offers this app's own update.
     AppTooOld,
-    /// The same, for a minimum that OpenBot raised because of a security problem.
+    /// The same, for a minimum that Mangaba Bot raised because of a security problem.
     AppTooOldSecurity,
     SignInCancelled,
     SignInFailed,
-    /// Signed in, and then the OpenBot refused the new sign-in on the app's screens (401 or 403).
+    /// Signed in, and then the Mangaba Bot refused the new sign-in on the app's screens (401 or 403).
     AccessRefused,
     SessionEnded,
     CredentialStore,
@@ -71,47 +71,47 @@ impl Kind {
         }
     }
 
-    /// The sentence for the person. `host` is the OpenBot's, as they typed it.
+    /// The sentence for the person. `host` is the Mangaba Bot's, as they typed it.
     pub fn said(self, host: &str) -> String {
         match self {
-            Kind::AddressInvalid => "That isn't an address OpenBot can connect to. Use one that \
+            Kind::AddressInvalid => "That isn't an address Mangaba Bot can connect to. Use one that \
                                      starts with https://, such as https://openbot.example.com."
                 .into(),
             Kind::Unreachable => format!(
-                "OpenBot couldn't reach {host}. Check the address and your network, then try again."
+                "Mangaba Bot couldn't reach {host}. Check the address and your network, then try again."
             ),
             Kind::NotOpenBot => format!(
-                "There's no OpenBot at {host}. Check the address with whoever runs your OpenBot."
+                "There's no Mangaba Bot at {host}. Check the address with whoever runs your Mangaba Bot."
             ),
             Kind::SinglePerson => format!(
-                "The OpenBot at {host} is set up for one person on its own computer, so the app \
+                "The Mangaba Bot at {host} is set up for one person on its own computer, so the app \
                  can't connect to it."
             ),
             Kind::TooOld => format!(
-                "The OpenBot at {host} is on a release this app can't connect to yet. Ask whoever \
-                 runs it to update OpenBot, or open it in your browser."
+                "The Mangaba Bot at {host} is on a release this app can't connect to yet. Ask whoever \
+                 runs it to update Mangaba Bot, or open it in your browser."
             ),
             Kind::AppTooOld => format!(
-                "The OpenBot at {host} needs a newer version of this app. Update OpenBot, then \
+                "The Mangaba Bot at {host} needs a newer version of this app. Update Mangaba Bot, then \
                  connect again."
             ),
             Kind::AppTooOldSecurity => crate::client_version::SECURITY_UPDATE.into(),
             Kind::SignInCancelled => "Sign-in didn't finish. Try again when you're ready.".into(),
             Kind::SignInFailed => format!(
-                "OpenBot couldn't sign you in at {host}. Try again, or ask whoever runs your OpenBot."
+                "Mangaba Bot couldn't sign you in at {host}. Try again, or ask whoever runs your Mangaba Bot."
             ),
             Kind::AccessRefused => format!(
-                "You signed in, but the OpenBot at {host} didn't let this app in. Ask whoever runs \
+                "You signed in, but the Mangaba Bot at {host} didn't let this app in. Ask whoever runs \
                  it to give you access, then sign in again."
             ),
             Kind::SessionEnded => {
                 format!("Your sign-in to {host} has ended. Sign in again to keep going.")
             }
             Kind::CredentialStore => if cfg!(windows) {
-                "OpenBot couldn't save your sign-in on this computer. Check Windows Credential \
+                "Mangaba Bot couldn't save your sign-in on this computer. Check Windows Credential \
                  Manager, then try again."
             } else {
-                "OpenBot couldn't save your sign-in on this computer. Unlock your keychain, then \
+                "Mangaba Bot couldn't save your sign-in on this computer. Unlock your keychain, then \
                  try again."
             }
             .into(),
@@ -162,7 +162,7 @@ pub fn host_of(address: &str) -> String {
         .unwrap_or_else(|| address.to_owned())
 }
 
-/// A client for the few requests the shell itself makes to that OpenBot: short timeouts, a
+/// A client for the few requests the shell itself makes to that Mangaba Bot: short timeouts, a
 /// redirect followed only while it stays on the same host, and this app named on every one
 /// (`client_version`).
 pub(crate) fn http() -> Result<reqwest::blocking::Client, String> {
@@ -212,12 +212,12 @@ mod tests {
         assert_eq!(sent["kind"], "unreachable");
         assert_eq!(
             sent["said"],
-            "OpenBot couldn't reach openbot.example.com. Check the address and your network, then try again."
+            "Mangaba Bot couldn't reach openbot.example.com. Check the address and your network, then try again."
         );
         assert_eq!(sent["detail"], "connection refused");
         assert_eq!(kind_of(&problem), Some(Kind::Unreachable));
         // A problem from anywhere else carries none, and reads as it always did.
-        let plain = serde_json::to_value(Problem::plain("OpenBot has stopped.")).unwrap();
+        let plain = serde_json::to_value(Problem::plain("Mangaba Bot has stopped.")).unwrap();
         assert!(plain.get("kind").is_none());
         assert_eq!(
             Kind::SessionEnded.said("openbot.example.com"),
@@ -225,16 +225,16 @@ mod tests {
         );
         assert_eq!(
             Kind::TooOld.said("127.0.0.1:4000"),
-            "The OpenBot at 127.0.0.1:4000 is on a release this app can't connect to yet. Ask whoever runs it to update OpenBot, or open it in your browser."
+            "The Mangaba Bot at 127.0.0.1:4000 is on a release this app can't connect to yet. Ask whoever runs it to update Mangaba Bot, or open it in your browser."
         );
-        // This app too old for that OpenBot, as every OpenBot app says it (`shared/client-version.ts`).
+        // This app too old for that Mangaba Bot, as every Mangaba Bot app says it (`shared/client-version.ts`).
         assert_eq!(
             Kind::AppTooOld.said("openbot.example.com"),
-            "The OpenBot at openbot.example.com needs a newer version of this app. Update OpenBot, then connect again."
+            "The Mangaba Bot at openbot.example.com needs a newer version of this app. Update Mangaba Bot, then connect again."
         );
         assert_eq!(
             Kind::AppTooOldSecurity.said("openbot.example.com"),
-            "This version of OpenBot has a security problem. Update to keep using it."
+            "This version of Mangaba Bot has a security problem. Update to keep using it."
         );
         let insecure = Kind::AppTooOldSecurity.problem("openbot.example.com", "security");
         assert_eq!(kind_of(&insecure), Some(Kind::AppTooOldSecurity));
@@ -256,7 +256,7 @@ mod tests {
         );
         assert_eq!(
             refused.said,
-            "You signed in, but the OpenBot at openbot.example.com didn't let this app in. Ask whoever runs it to give you access, then sign in again."
+            "You signed in, but the Mangaba Bot at openbot.example.com didn't let this app in. Ask whoever runs it to give you access, then sign in again."
         );
     }
 

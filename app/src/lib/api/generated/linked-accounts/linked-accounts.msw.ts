@@ -38,7 +38,7 @@ export const getLinkAccountResponseMock = (): AccountLinkStart => ({
   code: "K7Q2-M9XD",
   expiresAt: "2026-11-14T09:15:00.000Z",
   instruction:
-    "Send this message to the OpenBot app in a direct message in Slack: link K7Q2-M9XD",
+    "Send this message to the Mangaba Bot app in a direct message in Slack: link K7Q2-M9XD",
 });
 
 export const getListLinkedAccountProvidersResponseMock =
