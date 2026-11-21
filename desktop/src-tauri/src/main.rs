@@ -6000,7 +6000,7 @@ enum QuitStep {
     /// (`local_eval::close_for_quit_reporting`).
     FinishUpdate,
     /// Host processes, Compose down, and on Linux the Podman API.
-    Mangaba Bot,
+    OpenBot,
     /// The local Intelligence stack Mangaba Bot created.
     Intelligence,
     /// Mangaba Bot's own Podman machine, when it runs (`stop_own_machine`).
@@ -6014,7 +6014,7 @@ impl QuitStep {
     fn id(self) -> &'static str {
         match self {
             QuitStep::FinishUpdate => "finish-update",
-            QuitStep::Mangaba Bot => "stop-openbot",
+            QuitStep::OpenBot => "stop-openbot",
             QuitStep::Intelligence => "stop-intelligence",
             QuitStep::StopEngine => "stop-engine",
             QuitStep::GiveBackPodman => "start-your-podman",
@@ -6026,7 +6026,7 @@ impl QuitStep {
     fn running_detail(self) -> &'static str {
         match self {
             QuitStep::FinishUpdate
-            | QuitStep::Mangaba Bot
+            | QuitStep::OpenBot
             | QuitStep::Intelligence
             | QuitStep::StopEngine
             | QuitStep::GiveBackPodman => "",
@@ -7496,7 +7496,7 @@ where
     }) {
         progress(QuitStep::FinishUpdate, QuitStepState::Complete);
     }
-    progress(QuitStep::Mangaba Bot, QuitStepState::Running);
+    progress(QuitStep::OpenBot, QuitStepState::Running);
     shell
         .start_generation
         .fetch_add(1, std::sync::atomic::Ordering::SeqCst);
@@ -7525,7 +7525,7 @@ where
     }
     drop(startup);
     progress(
-        QuitStep::Mangaba Bot,
+        QuitStep::OpenBot,
         if failures.is_empty() {
             QuitStepState::Complete
         } else {
@@ -21391,8 +21391,8 @@ mod tests {
         let mut status = QuitStatus::default();
         status.begin();
         let started = status.seq;
-        status.record(QuitStep::Mangaba Bot, QuitStepState::Running);
-        status.record(QuitStep::Mangaba Bot, QuitStepState::Failed);
+        status.record(QuitStep::OpenBot, QuitStepState::Running);
+        status.record(QuitStep::OpenBot, QuitStepState::Failed);
         status.record(QuitStep::Intelligence, QuitStepState::Running);
         assert!(status.seq > started);
         assert_eq!(
